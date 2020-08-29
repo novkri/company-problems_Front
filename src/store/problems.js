@@ -9,9 +9,10 @@ export default {
   },
   getters: {
     problems: state => {
-      console.log('getters', state.problems.sort(function (a, b) {
-          return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1}))
-      return state.problems
+      // state.problems.sort(function (a, b) {
+      //     return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1})
+      return state.problems = state.problems.sort(function (a, b) {
+        return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1})
     },
     error: state => {
       return state.error
@@ -41,7 +42,7 @@ export default {
       await axios.get(BASEURL)
         .then(response => {
             if (response.status == 200) {
-              console.log('data: ', response.data);
+              commit('setError', '')
               commit('setProblems', response.data) 
             }
           })
@@ -55,34 +56,30 @@ export default {
         if (response.status == 201) {
           commit('setError', '')
           commit('addProblem', response.data)
-          // commit('setProblems', response.data) 
         }
         })
       .catch(error => commit('setError', error.response.data.errors.name[0]))
-      
-      // .catch(error => {return error.response.data.message})
+
     }, 
     deleteProblem: async ({commit}, param) => {
       await axios.delete(BASEURL + `/${param.id}`).then(response => {
         if (response.status == 200) { 
-            commit('deleteProblem', param.id)
+          commit('setError', '')
+          commit('deleteProblem', param.id)
         }
         })
-      .catch(error => commit('setError', error.response.data.message))
+      .catch(error => commit('setError', error.response.data.errors.name[0]))
     },
+    
     editProblem: async ({commit}, param) => {
-      console.log(param);
       axios.put(BASEURL + `/${param.id}`, {name: param.name}).then(response => {
-        console.log(response);
         if (response.status == 200) { 
             commit('setError', '')
             commit('editProblem', response.data)
         }
         })
       .catch((error) => {
-        console.log(error.response);
-        commit('setError', "Такой проблемы не существует")})
-      // .catch(error => console.log(error.response)) //data: {…}, status: 404, statusText: "Not Found",
+        commit('setError', error.response.data.errors.name[0])})
     }
   }
 }

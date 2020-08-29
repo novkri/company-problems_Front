@@ -5,23 +5,23 @@ const BASEURL = "http://localhost:3000/users"
 export default {
   state: {
     users: [],
-    errorU: ''
+    error: ''
   },
   getters: {
     users: state => {
       return state.users
     },
-    errorU: state => {
-      return state.errorU
+    error: state => {
+      return state.error
     }
   },
   mutations: {
     setUsers: (state, payload) => {
       state.users = payload
     },
-    // addProblem: (state, payload) => {
-    //     state.problems.push(payload)
-    // },
+    addUser: (state, payload) => {
+        state.users.push(payload)
+    },
     // deleteProblem: (state, payload) => {
     //     state.problems = state.problems.filter(problem => problem.id !== payload)
     // },
@@ -34,6 +34,13 @@ export default {
     
   },
   actions: {
+    // ??????
+    async getUid() {
+      const user = await axios.get(BASEURL)
+      console.log(user);
+      return user ? user.uid : null
+    },
+    // &??
     getUsers: async ({commit}) => {
       await axios.get(BASEURL)
         .then(response => {
@@ -46,6 +53,17 @@ export default {
           commit('setError', error.response.data.message)
         )
     },
+    register: async ({commit}, formData) => {
+      console.log(formData);
+      await axios.post(BASEURL, formData).then(response => {
+        if (response.status == 200) { 
+            commit('setError', '')
+            commit('addUser', response.data)
+        }
+        })
+      .catch((error) => {
+        commit('setError', error.response.data.errors.name[0])})
+    }
     // postProblem: async ({commit}, param) => {
     //   // await axios.post('http://31.31.199.37/api/problem', {name: param.name})
     //   await axios.post(BASEURL, param)

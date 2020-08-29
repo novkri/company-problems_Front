@@ -6,9 +6,11 @@
           <div class="modal-header">
             <form @submit.prevent="editProblem()" class="form-group">
               <input @input="setTitle($event.target.value)" ref="input" class="form-control"
-                :class="{ 'form-control--error': $v.name.$invalid }" id="new-problem-title" v-model="name" @click.prevent="editProblem()">
+                :class="{ 'form-control--error': $v.name.$invalid }" id="new-problem-title" v-model="name" @keyup.enter="close">
               <div class="error" v-if="!$v.name.maxLength">Название проблемы должно быть не более
                 {{$v.name.$params.maxLength.max}} символов</div>
+                <!-- <div class="error" v-if="!$v.name.minLength">{{error}}</div> -->
+                <div class="error" v-if="error">{{error}}</div>
             </form>
             <button type="button" id="close" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
@@ -25,21 +27,17 @@
 </template>
 
 <script>
-  import {
-    maxLength
-  } from 'vuelidate/lib/validators'
+    import {maxLength} from 'vuelidate/lib/validators'
     import {mapGetters} from 'vuex'
 
   export default {
     name: 'popup',
     props: ['open', 'val'],
-    // data: () => ({
-    //   name: '',
-    //   permission: false
-    // }),
+
     data: function () {
       return {
-        name: ''
+        name: '',
+
       }
     },
     mounted() {
@@ -47,11 +45,18 @@
     },
     validations: {
       name: {
+        // minLength: minLength(6),
         maxLength: maxLength(250)
       }
     },
     computed: {
-      ...mapGetters(['error'])
+      ...mapGetters(['error']) 
+    },
+    watch: {
+      error(newValue, oldValue) {
+        console.log(`Updating from ${oldValue} to ${newValue}`);
+       
+      }
     },
     methods: {
       setTitle(value) {
@@ -59,11 +64,10 @@
         this.$v.name.$touch()
       },
       async editProblem() {
-        this.val.name = this.name
-        await this.$emit('editProblem', this.val)
-        if (this.error) {
-          document.getElementById('close').click();
-        }
+        await this.$store.dispatch('editProblem', {id: this.val.id, name: this.name})
+      },
+      close() {
+        document.getElementById('close').click()
       }
     }
   }
@@ -85,6 +89,10 @@
   .modal-body {
     font-size: 16px;
     color: #CDCDCD;
+  }
+
+  form {
+    margin-bottom: 0;
   }
 
   .form-control {

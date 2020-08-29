@@ -54,12 +54,9 @@
       openCreate: false,
       openEdit: false,
       openDelete: false,
-      paramsModal: {
-        // title: '',
-        // description: ''
-      },
+      paramsModal: {},
       pageNumber: 0,
-      size: 25
+      size: 25,
     }),
     components: {
       PopupCreate,
@@ -79,7 +76,6 @@
         return Math.ceil(l/s);
       },
       paginatedData(){
-        console.log(this.problems);
         const start = this.pageNumber * this.size,
           end = start + this.size;
         return this.problems.slice(start, end);
@@ -88,13 +84,11 @@
 
     methods: {
       nextPage(){
-         this.pageNumber++;
-        //  this.$router.push({ name: 'Home', params: { page: this.pageNumber}})
+        this.pageNumber++;
       },
       prevPage(){
         if (this.pageNumber > 0) {
           this.pageNumber--;
-          // this.$router.push({ name: 'Home', params: { page: this.pageNumber}})
         }  
       },
       create() {
@@ -102,33 +96,21 @@
       },
       async createProblem(param) {
         if (param.name.length < 250) {
-          await this.$store.dispatch('postProblem', param).then(() => {if (this.error) {
-            this.$vToastify.error(this.error)
-          }})
+          await this.$store.dispatch('postProblem', param)
         }
       },
 
       edit(obj) {
         this.openEdit = true
-        // this.paramsModal = {
-        //   id,
-        //   name,
-        //   created,
-        //   updated
-        // }
         this.paramsModal = obj
-        // console.log(obj);
       },
-      async editProblem(param) {
-        if (param.name.length < 250) {
-          await this.$store.dispatch('editProblem', param).catch(r => console.log(r))
-          .then(async () => {if (this.error) {
-            await this.$store.dispatch('getProblems')
-            this.$vToastify.error(this.error)
-          }})
-          
-        }
-      },
+      // async editProblem(param) {
+      //   if (param.name.length < 250) {
+      //     await this.$store.dispatch('editProblem', param)
+      //     .then(() => console.log(this.problems)) 
+      //   }
+      // },
+
 
       deleteP(id, name) {
         this.openDelete = true

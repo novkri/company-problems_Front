@@ -5,7 +5,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Предложить проблему</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="close">
+            <button type="button" id="close" class="close" data-dismiss="modal" aria-label="Close" @click="close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -13,11 +13,13 @@
             <form @submit="addProblem()" class="form-group">
               <input ref="input" type="text" class="form-control" :class="{ 'form-control--error': $v.name.$invalid }"
                 id="new-problem-title" v-model="name" placeholder="Название проблемы..." @keyup.enter="addProblem()">
-              <div class="error" v-if="!$v.name.maxLength">Название проблемы должно быть не более
+                <div class="error" v-if="!$v.name.maxLength">Название проблемы должно быть не более
                 {{$v.name.$params.maxLength.max}} символов</div>
+                <div class="error" v-if="!$v.name.minLength">{{error}}</div>
             </form>
-            <button type="submit" class="btn btnMain" data-dismiss="modal" @click="addProblem()"
-              :disabled="$v.name.$invalid">
+            <!-- data-dismiss="modal"  -->
+            <button type="submit" class="btn btnMain" @click="addProblem()"
+              :disabled="!name">
               <img src="@/assets/Vector.png" alt="send">
             </button>
           </div>
@@ -29,9 +31,8 @@
 </template>
 
 <script>
-  import {
-    maxLength
-  } from 'vuelidate/lib/validators'
+  import {maxLength, minLength} from 'vuelidate/lib/validators'
+  import {mapGetters} from 'vuex'
 
   export default {
     name: 'popup',
@@ -41,17 +42,29 @@
     }),
     validations: {
       name: {
+        minLength: minLength(6),
         maxLength: maxLength(250)
       }
     },
+    computed: {
+      ...mapGetters(['error'])
+    },
+
     methods: {
       async addProblem() {
+        console.log(this.error);
         await this.$emit('createProblem', {
-          name: this.name,
-          // created_at: new Date(),
-          // updated_at: ""
+          name: this.name
         })
-        this.name = ''
+        // if (!this.error) {
+        //   this.name = ''
+        //   document.getElementById('close').click();
+        // //   // console.log(this.error);
+        // //   // this.$vToastify.error(this.error)
+        // //   // document.getElementById('close').click();
+        // }
+
+        // this.name = ''
       },
 
       close() {

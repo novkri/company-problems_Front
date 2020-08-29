@@ -1,30 +1,48 @@
 <template>
-  <div class="container" >
+  <div class="container">
     <form v-if="!success">
       <div class="form-group">
-        <label for="username">Имя пользователя</label> 
-        <input type="text" class="form-control" id="username">
-        <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+        <label for="username">Имя пользователя</label>
+        <input type="text" class="form-control" id="username" v-model="username"
+          :class="{ 'form-control--error': $v.username.$invalid }">
+        <div class="error" v-if="!$v.username.maxLength">username проблемы должно быть не более
+          {{$v.username.$params.maxLength.max}} символов</div>
+        <div class="error" v-if="!$v.username.minLength">username проблемы должно быть не менее
+          {{$v.username.$params.minLength.min}} символов</div>
       </div>
       <div class="form-group">
         <label for="password">Пароль</label>
         <div class="input-group" id="show_hide_password">
-          <input type="password" class="form-control" id="password">
-          <span tabindex="100" title="Click here to show/hide password" class="add-on input-group-addon" style="cursor: pointer;"><img src="@/assets/password/eye.png" alt=""></span>
+          <input type="password" class="form-control" id="password" v-model="password"
+            :class="{ 'form-control--error': $v.password.$invalid }">
+          <span tabindex="100" title="Click here to show/hide password" class="add-on input-group-addon"
+            style="cursor: pointer;"><img src="@/assets/password/eye.png" alt=""></span>
         </div>
+        <div class="error" v-if="!$v.password.maxLength">password проблемы должно быть не более
+          {{$v.password.$params.maxLength.max}} символов</div>
+        <div class="error" v-if="!$v.password.minLength">password проблемы должно быть не менее
+          {{$v.password.$params.minLength.min}} символов</div>
       </div>
       <div class="form-group">
         <label for="password">Повторите пароль</label>
         <div class="input-group" id="show_hide_password">
-          <input type="password" class="form-control" id="password" data-toggle="password">
-          <span tabindex="100" title="Click here to show/hide password" class="add-on input-group-addon" style="cursor: pointer;"><img src="@/assets/password/eye.png" alt=""></span>
+          <input type="password" class="form-control" id="passwordConfirm" data-toggle="password" v-model="confirm"
+            :class="{ 'form-control--error': $v.confirm.$error }">
+          <span tabindex="100" title="Click here to show/hide password" class="add-on input-group-addon"
+            style="cursor: pointer;"><img src="@/assets/password/eye.png" alt=""></span>
         </div>
+        <div class="error" v-if="!$v.confirm.sameAsPassword"> Passwords must be identical.</div>
       </div>
       <div class="form-group">
         <label for="email">Электронная почта</label>
-        <input type="email" class="form-control" id="email">
+        <input type="email" class="form-control" id="email" v-model="email"
+          :class="{ 'form-control--error': $v.email.$invalid }">
       </div>
-      <button type="submit" class="btn" @click="register">Зарегистрироваться</button>
+      <div class="error" v-if="!$v.email.maxLength">email проблемы должно быть не более
+        {{$v.email.$params.maxLength.max}} символов</div>
+      <div class="error" v-if="!$v.email.minLength">email проблемы должно быть не менее
+        {{$v.email.$params.minLength.min}} символов</div>
+      <button type="submit" class="btn" @click.prevent="register">Зарегистрироваться</button>
     </form>
 
     <div v-else class="successfully">
@@ -32,7 +50,7 @@
       <img src="@/assets/thumbs-up.png">
       <button type="button" class="btn" @click="goToLogin">
         На страницу авторизации
-      </button> 
+      </button>
     </div>
   </div>
 
@@ -42,14 +60,42 @@
 
 <script>
   // import {mapGetters} from 'vuex'
+  import {
+    maxLength,
+    minLength,
+    sameAs
+  } from 'vuelidate/lib/validators'
 
   export default {
     name: "Register",
     data: () => ({
-      success: false
+      success: false,
+
+      form: false,
+      email: '',
+      password: '',
+      confirm: '',
+      username: '',
     }),
+    validations: {
+      username: {
+        minLength: minLength(4),
+        maxLength: maxLength(20)
+      },
+      password: {
+        minLength: minLength(8),
+        maxLength: maxLength(20)
+      },
+      confirm: {
+        sameAsPassword: sameAs('password')
+      },
+      email: {
+        minLength: minLength(3),
+        maxLength: maxLength(256)
+      }
+    },
     // computed: {
-    //   ...mapGetters(['users', 'errorU'])
+    //   ...mapGetters(['users', 'error'])
     // },
     // async mounted() {
     //   await this.$store.dispatch('getUsers')
@@ -58,8 +104,16 @@
       goToLogin() {
         this.$router.push('/login')
       },
-      register() {
-        console.log('register');
+      async register() {
+        if (!this.$v.$invalid) {
+          const formData = {
+            email: this.email,
+            password: this.password,
+            username: this.username
+          }
+          await this.$store.dispatch('register', formData).then(this.success = true)
+        } else {console.log('no!')}
+        
       }
     }
   };
@@ -93,7 +147,7 @@
     letter-spacing: 0.15px;
     color: #828282;
   }
-  
+
   label {
     display: flex;
     justify-content: space-between;
@@ -128,13 +182,16 @@
     margin-bottom: 22px;
     border-radius: 12px;
   }
+
   label {
     margin: 0 7px 12px 18px;
   }
+
   .add-on {
     background-color: #F7F7F7;
     border-radius: 0 12px 12px 0;
     border-bottom: 2px solid #92D2C3;
+
     img {
       margin: 7px 25px;
     }
@@ -157,11 +214,13 @@
     text-align: center;
     margin: auto;
     align-items: center;
+
     img {
       width: fit-content;
       padding-top: 27px;
       padding-bottom: 33px;
     }
+
     .btn {
       margin: 0;
       width: 294px;

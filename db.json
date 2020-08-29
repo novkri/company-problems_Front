@@ -17,6 +17,48 @@
       "email": "test3@test.ru",
       "username": "name3",
       "password": "12345"
+    },
+    {
+      "email": "nov.kri@yandex.ru",
+      "password": "123",
+      "username": "Admqwewreein",
+      "id": 9
+    },
+    {
+      "email": "",
+      "password": "eeeeee",
+      "username": "fneeeeeeeeeeeeeeeeeeeeeeeeee",
+      "id": 10
+    },
+    {
+      "email": "nov.kri@yandex.ru",
+      "password": "12345678",
+      "username": "fneeeeeeeeeeeeeeeeeeeeeeeeee",
+      "id": 11
+    },
+    {
+      "email": "tert",
+      "password": "eeeeee",
+      "username": "fneeeeeeeeeeeeeeeeeeeeeeeeee",
+      "id": 12
+    },
+    {
+      "email": "nov.kri@yandex.ru",
+      "password": "12345678",
+      "username": "fneeeeeeeee",
+      "id": 13
+    },
+    {
+      "email": "nov.kri@yandex.ru",
+      "password": "12345678",
+      "username": "fneeeeeeeee",
+      "id": 14
+    },
+    {
+      "email": "novarina045@gmail.com",
+      "password": "12345678",
+      "username": "fneeeeeeeee",
+      "id": 15
     }
   ]
 }
