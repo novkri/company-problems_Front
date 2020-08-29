@@ -7,12 +7,14 @@ import store from "./store";
 import "./registerServiceWorker";
 
 import Vuelidate from 'vuelidate'
+import VueToastify from 'vue-toastify';
+
 
 // eslint-disable-next-line 
 import styles from './scss/app.scss';
 
 Vue.use(Vuelidate)
-
+Vue.use(VueToastify);
 
 Vue.config.productionTip = false;
 

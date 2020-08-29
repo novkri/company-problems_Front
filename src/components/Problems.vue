@@ -39,7 +39,6 @@
     <PopupEdit v-if="openEdit" :open="openEdit" :val="paramsModal" @editProblem="editProblem(param = $event)" />
     <popupDelete v-if="openDelete" :open="openDelete" :val="paramsModal"
       @deleteProblem="deleteProblem(param = $event)" />
-
   </div>
 </template>
 
@@ -48,6 +47,7 @@
   import PopupEdit from '@/components/Popup/Edit'
   import popupDelete from '@/components/Popup/Delete'
   import {mapGetters} from 'vuex'
+  // import VueToastify from 'vue-toastify';
 
   export default {
     name: "Problems",
@@ -71,6 +71,7 @@
     async mounted() {
       await this.$store.dispatch('getProblems')
       console.log('mounted', this.problems);
+      // this.$vToastify.error("Примерчик");
     },
 
     computed: {
@@ -104,7 +105,9 @@
       },
       async createProblem(param) {
         if (param.name.length < 250) {
-          await this.$store.dispatch('postProblem', param)
+          await this.$store.dispatch('postProblem', param).then(() => {if (this.error) {
+            this.$vToastify.error(this.error)
+          }})
         }
       },
 

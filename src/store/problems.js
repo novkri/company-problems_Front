@@ -50,15 +50,17 @@ export default {
         )
     },
     postProblem: async ({commit}, param) => {
-      // await axios.post('http://31.31.199.37/api/problem', {name: param.name})
       await axios.post(BASEURL, param)
       .then(response => {
         if (response.status == 201) {
+          commit('setError', '')
           commit('addProblem', response.data)
           // commit('setProblems', response.data) 
         }
         })
-      .catch(error => commit('setError', error.response.data.message))
+      .catch(error => commit('setError', error.response.data.errors.name[0]))
+      
+      // .catch(error => {return error.response.data.message})
     }, 
     deleteProblem: async ({commit}, param) => {
       await axios.delete(BASEURL + `/${param.id}`).then(response => {
