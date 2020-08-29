@@ -1,16 +1,16 @@
 <template>
   <div class="container">
-    <button type="button" class="btn btnMain" @click="create" data-toggle="modal" data-target="#popupCreate"><img class="plus"
-        src="@/assets/plus.png" alt="+"><span>Предложить проблему</span></button>
+    <button type="button" class="btn btnMain" @click="create" data-toggle="modal" data-target="#popupCreate"><plus-icon size="1.5x" class="custom-class" style="color: white; margin-right: 5px;"></plus-icon><span>Предложить проблему</span></button>
 
     <p></p>
-    <!-- {{error}} -->
     <ul class="list-group">
       <li class="list-group-item" v-for="(problem, idx) in paginatedData" :key="idx">
         <p> {{ problem.name }}  </p>
-        <div class="icons"><img @click="edit(problem)" data-toggle="modal" data-target="#popupEdit"
-            src="@/assets/edit.png" alt="edit"> <img @click="deleteP(problem.id, problem.name)" data-toggle="modal"
-            data-target="#popupDelete" src="@/assets/trash.png" alt="delete"></div>
+        <div class="icons">
+            <edit-icon size="1x" class="custom-class" @click="edit(problem)" data-toggle="modal" data-target="#popupEdit" style="margin-left: 30px;"></edit-icon>
+            <trash-icon size="1x" @click="deleteP(problem.id, problem.name)" class="custom-class" data-toggle="modal" style="margin-left: 30px;"
+            data-target="#popupDelete"></trash-icon> 
+            </div>
       </li>
     </ul>
 
@@ -19,7 +19,7 @@
         <ul class="pagination">
           <li class="page-item">
             <a class="page-link"  @click="prevPage" aria-label="Previous" :class="{'block' : pageNumber==0}">
-              <img src="@/assets/chevron-left.png" alt="<">
+              <chevron-left-icon size="1.5x" class="custom-class" style="color: #5F5F5F;"></chevron-left-icon>
             </a>
           </li>
           <li class="page-item">
@@ -28,7 +28,7 @@
           </li>
           <li class="page-item">
             <a class="page-link" @click="nextPage" aria-label="Next" :class="{'block' : pageNumber >= pageCount - 1}">
-              <img src="@/assets/chevron-right.png" alt=">">
+              <chevron-right-icon size="1.5x" class="custom-class" style="color: #5F5F5F;"></chevron-right-icon>
             </a>
           </li>
         </ul>
@@ -47,6 +47,7 @@
   import PopupEdit from '@/components/Popup/Edit'
   import popupDelete from '@/components/Popup/Delete'
   import {mapGetters} from 'vuex'
+  import { EditIcon, TrashIcon, PlusIcon, ChevronRightIcon, ChevronLeftIcon } from 'vue-feather-icons'
 
   export default {
     name: "Problems",
@@ -61,7 +62,12 @@
     components: {
       PopupCreate,
       PopupEdit,
-      popupDelete
+      popupDelete,
+      EditIcon,
+      TrashIcon,
+      PlusIcon,
+      ChevronRightIcon,
+      ChevronLeftIcon 
     },
 
     async mounted() {
@@ -175,8 +181,9 @@
     }
   }
 
-  img {
-    margin-left: 30px;
+  svg {
+    
+    color: #AFAFAF;
     cursor: pointer;
   }
 

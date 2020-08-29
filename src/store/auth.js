@@ -5,14 +5,14 @@ const BASEURL = "http://localhost:3000/users"
 export default {
   state: {
     users: [],
-    error: ''
+    errorU: ''
   },
   getters: {
     users: state => {
       return state.users
     },
-    error: state => {
-      return state.error
+    errorU: state => {
+      return state.errorU
     }
   },
   mutations: {
@@ -28,8 +28,8 @@ export default {
     // editProblem: (state, payload) => {
     //     state.problems.find(problem => problem.id == payload.id).name = payload.name
     // },
-    // setError: (state, payload) => {
-    //   state.error = payload
+    // setErrorU: (state, payload) => {
+    //   state.errorU = payload
     // },
     
   },
@@ -49,20 +49,20 @@ export default {
               commit('setUsers', response.data) 
             }
           })
-        .catch(error => 
-          commit('setError', error.response.data.message)
+        .catch(errorU => 
+          commit('setErrorU', errorU.response.data.message)
         )
     },
     register: async ({commit}, formData) => {
       console.log(formData);
       await axios.post(BASEURL, formData).then(response => {
         if (response.status == 200) { 
-            commit('setError', '')
+            commit('setErrorU', '')
             commit('addUser', response.data)
         }
         })
-      .catch((error) => {
-        commit('setError', error.response.data.errors.name[0])})
+      .catch((errorU) => {
+        commit('setErrorU', errorU.response.data.errorUs.name[0])})
     }
     // postProblem: async ({commit}, param) => {
     //   // await axios.post('http://31.31.199.37/api/problem', {name: param.name})
@@ -72,7 +72,7 @@ export default {
     //       commit('addProblem', response.data)
     //     }
     //     })
-    //   .catch(error => commit('setError', error.response.data.message))
+    //   .catch(errorU => commit('setErrorU', errorU.response.data.message))
     // }, 
     // deleteProblem: async ({commit}, param) => {
     //   await axios.delete(BASEURL + `/${param.id}`).then(response => {
@@ -80,7 +80,7 @@ export default {
     //         commit('deleteProblem', param.id)
     //     }
     //     })
-    //   .catch(error => commit('setError', error.response.data.message))
+    //   .catch(errorU => commit('setErrorU', errorU.response.data.message))
     // },
     // editProblem: async ({commit}, param) => {
     //   console.log(param);
@@ -90,7 +90,7 @@ export default {
     //         commit('editProblem', response.data)
     //     }
     //     })
-    //   .catch(error => commit('setError', error.response.data.message))
+    //   .catch(errorU => commit('setErrorU', errorU.response.data.message))
     // }
   }
 }
