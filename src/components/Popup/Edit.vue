@@ -10,7 +10,7 @@
               <div class="error" v-if="!$v.name.maxLength">Название проблемы должно быть не более
                 {{$v.name.$params.maxLength.max}} символов</div>
             </form>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" id="close" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -28,6 +28,7 @@
   import {
     maxLength
   } from 'vuelidate/lib/validators'
+    import {mapGetters} from 'vuex'
 
   export default {
     name: 'popup',
@@ -49,17 +50,20 @@
         maxLength: maxLength(250)
       }
     },
-    // computed: {
-    //   name: this.val
-    // },
+    computed: {
+      ...mapGetters(['error'])
+    },
     methods: {
       setTitle(value) {
         this.name = value
         this.$v.name.$touch()
       },
       async editProblem() {
-          this.val.name = this.name
-          await this.$emit('editProblem', this.val)
+        this.val.name = this.name
+        await this.$emit('editProblem', this.val)
+        if (this.error) {
+          document.getElementById('close').click();
+        }
       }
     }
   }

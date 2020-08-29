@@ -16,7 +16,7 @@
               <div class="error" v-if="!$v.name.maxLength">Название проблемы должно быть не более
                 {{$v.name.$params.maxLength.max}} символов</div>
             </form>
-            <button type="submit" class="btn btn-secondary" data-dismiss="modal" @click="addProblem()"
+            <button type="submit" class="btn btnMain" data-dismiss="modal" @click="addProblem()"
               :disabled="$v.name.$invalid">
               <img src="@/assets/Vector.png" alt="send">
             </button>

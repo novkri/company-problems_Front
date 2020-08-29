@@ -26,18 +26,25 @@
     outline: none;
     box-shadow: none;
   }
-  .btn:hover {
+  .btnMain:hover {
     background-color: #76DFC7 !important;
   }
+  .btn-secondary:hover {
+    background-color: #d5d5d5 !important;
+  }
+  
   
   p {
     word-break: break-all;
     margin: 0;
   }
 
-  .btn:active {
+  .btnMain:active {
     background-color: #4EAD96 !important;
   }
+  .btn-secondary:active {
+      background-color: #545b62 !important;
+    }
 
   .btn-secondary:not(:disabled):not(.disabled):active:focus {
     box-shadow: none;

@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <button type="button" class="btn" @click="create" data-toggle="modal" data-target="#popupCreate"><img class="plus"
+    <button type="button" class="btn btnMain" @click="create" data-toggle="modal" data-target="#popupCreate"><img class="plus"
         src="@/assets/plus.png" alt="+"><span>Предложить проблему</span></button>
 
     <p></p>
@@ -47,7 +47,6 @@
   import PopupEdit from '@/components/Popup/Edit'
   import popupDelete from '@/components/Popup/Delete'
   import {mapGetters} from 'vuex'
-  // import VueToastify from 'vue-toastify';
 
   export default {
     name: "Problems",
@@ -70,8 +69,6 @@
 
     async mounted() {
       await this.$store.dispatch('getProblems')
-      console.log('mounted', this.problems);
-      // this.$vToastify.error("Примерчик");
     },
 
     computed: {
@@ -123,10 +120,13 @@
         // console.log(obj);
       },
       async editProblem(param) {
-        console.log(param);
         if (param.name.length < 250) {
-          console.log(param);
-          await this.$store.dispatch('editProblem', param)
+          await this.$store.dispatch('editProblem', param).catch(r => console.log(r))
+          .then(async () => {if (this.error) {
+            await this.$store.dispatch('getProblems')
+            this.$vToastify.error(this.error)
+          }})
+          
         }
       },
 

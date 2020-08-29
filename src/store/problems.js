@@ -75,10 +75,14 @@ export default {
       axios.put(BASEURL + `/${param.id}`, {name: param.name}).then(response => {
         console.log(response);
         if (response.status == 200) { 
+            commit('setError', '')
             commit('editProblem', response.data)
         }
         })
-      .catch(error => commit('setError', error.response.data.message))
+      .catch((error) => {
+        console.log(error.response);
+        commit('setError', "Такой проблемы не существует")})
+      // .catch(error => console.log(error.response)) //data: {…}, status: 404, statusText: "Not Found",
     }
   }
 }
