@@ -1,32 +1,82 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
     </div>
-    <router-view/>
+
+    <router-view />
+    
   </div>
 </template>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+  #app {
+    font-family: 'GothamPro', sans-serif;
+    font-size: 18px;
+    line-height: 17px;
+    font-weight: 500;
+    letter-spacing: 0.15px;
   }
-}
+  .container {
+    width: 293px;
+    margin: 50px;
+    padding: 0;
+  }
+
+  button:focus, .btn:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  .btn:hover {
+    background-color: #76DFC7 !important;
+  }
+  
+  p {
+    word-break: break-all;
+    margin: 0;
+  }
+
+  .btn:active {
+    background-color: #4EAD96 !important;
+  }
+
+  .btn-secondary:not(:disabled):not(.disabled):active:focus {
+    box-shadow: none;
+  }
+  .form-control:focus {
+    box-shadow: none;
+  }
+  .form-control {
+    border: transparent;
+    border-bottom: 2px solid #92D2C3;
+    border-radius: 6px;
+    background-color: #FAFAFA;
+    color: #2D453F;
+    margin-bottom: 3px;
+    caret-color: #92D2C3;
+  }
+
+  .error {
+    font-size: 12px;
+    color: red;
+  }
+
+  form {
+    margin-right: 30px;
+    width: 85%;
+  }
+
+  .form-control--error {
+    border: 1px solid red;
+    border-bottom: 2px solid red;
+  }
+
+  //   a {
+  //     font-weight: bold;
+  //     color: #2c3e50;
+
+  //     &.router-link-exact-active {
+  //       color: #42b983;
+  //     }
+  //   }
+  // }
 </style>
