@@ -5,7 +5,8 @@ const BASEURL = 'http://31.31.199.37/api/problem'
 export default {
   state: {
     problems: [],
-    error: ''
+    error: '',
+    error404: ''
   },
   getters: {
     problems: state => {
@@ -16,6 +17,10 @@ export default {
     },
     error: state => {
       return state.error
+    },
+    error404: state => {
+      console.log(state.error404);
+      return state.error404
     }
   },
   mutations: {
@@ -35,10 +40,14 @@ export default {
     setError: (state, payload) => {
       state.error = payload
     },
+    setError404: (state, payload) => {
+      state.error404 = payload
+    },
     
   },
   actions: {
     getProblems: async ({commit}) => {
+      axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
       await axios.get(BASEURL)
         .then(response => {
             if (response.status == 200) {
@@ -51,6 +60,7 @@ export default {
         )
     },
     postProblem: async ({commit}, param) => {
+      axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
       await axios.post(BASEURL, param)
       .then(response => {
         if (response.status == 201) {
@@ -62,6 +72,7 @@ export default {
 
     }, 
     deleteProblem: async ({commit}, param) => {
+      axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
       await axios.delete(BASEURL + `/${param.id}`).then(response => {
         if (response.status == 200) { 
           commit('setError', '')
@@ -70,15 +81,22 @@ export default {
         })
       .catch(error => commit('setError', error.response.data.errors.name[0]))
     },
-    
+    checkIfExists: async ({commit}, param) => {
+      axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+      axios.get(BASEURL + `/${param.id}`).catch((error) => {
+        console.log(error.response);
+        commit('setError404', error.response.data.message)})
+    },
+
     editProblem: async ({commit}, param) => {
-      axios.put(BASEURL + `/${param.id}`, {name: param.name}).then(response => {
+      axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+        axios.put(BASEURL + `/${param.id}`, {name: param.name}).then(response => {
         if (response.status == 200) { 
             commit('setError', '')
             commit('editProblem', response.data)
         }
-        })
-      .catch((error) => {
+      }).catch((error) => {
+        console.log(error.response);
         commit('setError', error.response.data.errors.name[0])})
     }
   }

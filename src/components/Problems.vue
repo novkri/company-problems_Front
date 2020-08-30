@@ -36,7 +36,7 @@
     </div>
 
     <PopupCreate v-if="openCreate" :open="openCreate" @createProblem="createProblem(param = $event)" />
-    <PopupEdit v-if="openEdit" :open="openEdit" :val="paramsModal" @editProblem="editProblem(param = $event)" />
+    <PopupEdit v-if="openEdit" :open="openEdit" :val="paramsModal" @editProblem="editProblem(param = $event)"/>
     <popupDelete v-if="openDelete" :open="openDelete" :val="paramsModal"
       @deleteProblem="deleteProblem(param = $event)" />
   </div>
@@ -89,6 +89,9 @@
     },
 
     methods: {
+      reloadPage() {
+        document.location.reload(true)
+      },
       nextPage(){
         this.pageNumber++;
       },
@@ -100,22 +103,24 @@
       create() {
         this.openCreate = true
       },
-      async createProblem(param) {
-        if (param.name.length < 250) {
-          await this.$store.dispatch('postProblem', param)
-        }
-      },
+      // async createProblem(param) {
+      //   if (param.length < 250) {
+      //     await this.$store.dispatch('postProblem', param)
+      //   }
+      // },
 
       edit(obj) {
         this.openEdit = true
         this.paramsModal = obj
       },
-      // async editProblem(param) {
+      async editProblem(param) {
+        console.log(param);
+        window.location.reload(true)
       //   if (param.name.length < 250) {
       //     await this.$store.dispatch('editProblem', param)
       //     .then(() => console.log(this.problems)) 
       //   }
-      // },
+      },
 
 
       deleteP(id, name) {

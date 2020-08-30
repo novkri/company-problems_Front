@@ -27,7 +27,7 @@
 </template>
 
 <script>
-    import {maxLength} from 'vuelidate/lib/validators'
+    import {maxLength, minLength} from 'vuelidate/lib/validators'
     import {mapGetters} from 'vuex'
 
   export default {
@@ -45,17 +45,19 @@
     },
     validations: {
       name: {
-        // minLength: minLength(6),
+        minLength: minLength(6),
         maxLength: maxLength(250)
       }
     },
     computed: {
-      ...mapGetters(['error']) 
+      ...mapGetters(['error', 'error404']) 
     },
     watch: {
-      error(newValue, oldValue) {
-        console.log(`Updating from ${oldValue} to ${newValue}`);
-       
+      error404(newValue, oldValue) {
+        console.log(`Updating from ${oldValue} to ${newValue}`)
+        if (this.error404) {
+          this.$vToastify.error(this.error404)
+        }
       }
     },
     methods: {
@@ -64,10 +66,27 @@
         this.$v.name.$touch()
       },
       async editProblem() {
-        await this.$store.dispatch('editProblem', {id: this.val.id, name: this.name})
+        // if (!this.$v.$invalid) {
+          await this.$store.dispatch('checkIfExists', {id: this.val.id})
+          .then(async () => {
+            await this.$store.dispatch('editProblem', {id: this.val.id, name: this.name}).then(() => {
+              // if (this.error) {
+              //   this.$vToastify.error(this.error)
+              //   this.$store.commit('setError', '')
+              // }
+            })
+            // .then(() => console.log('d', this.error))
+            // .catch(() => console.log('d', this.error))
+          })
+          .catch(() => console.log('d', this.error404))
+        
       },
       close() {
+        this.name = this.val.name
         document.getElementById('close').click()
+        this.$store.commit('setError', '')
+        this.$emit('editProblem')
+        // location.reload(true)
       }
     }
   }

@@ -140,11 +140,14 @@
       async register() {
         if (!this.$v.$invalid) {
           const formData = {
-            email: this.email,
+            name: this.username,
             password: this.password,
-            username: this.username
+            'password confirmation': this.confirm,
+            email: this.email
+            
           }
-          await this.$store.dispatch('register', formData).then(this.success = true)
+          await this.$store.dispatch('register', formData).then(resp => console.log(resp))
+          // .then(this.success = true)
         } else {console.log('no!')}
       }
     }
@@ -210,7 +213,7 @@
 
   input, input:active {
     background-color: #F6F6F6;
-    margin-bottom: 22px;
+    // margin-bottom: 22px;
     border-radius: 12px;
     font-size: 18px;
     line-height: 24px;

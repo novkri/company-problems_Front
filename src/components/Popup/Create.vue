@@ -10,12 +10,14 @@
             </button>
           </div>
           <div class="modal-body">
-            <form @submit="addProblem()" class="form-group">
+            <!-- @submit="addProblem()" -->
+            <form @keyup.enter="addProblem()" class="form-group">
               <input ref="input" type="text" class="form-control form-control--valid" :class="{ 'form-control--error': $v.name.$invalid }"
-                id="new-problem-title" v-model="name" placeholder="Название проблемы..." @keyup.enter="addProblem()">
+                id="new-problem-title" v-model="name" placeholder="Название проблемы..." >
                 <div class="error" v-if="!$v.name.maxLength">Название проблемы должно быть не более
                 {{$v.name.$params.maxLength.max}} символов</div>
-                <div class="error" v-if="!$v.name.minLength">{{error}}</div>
+                <!-- <div class="error" v-if="!$v.name.minLength">{{error}}</div> -->
+                <div class="error" v-if="error">{{error}}</div>
             </form>
             <!-- data-dismiss="modal"  -->
             <button type="submit" class="btn btnMain" @click="addProblem()"
@@ -46,29 +48,26 @@
         maxLength: maxLength(250)
       }
     },
+    watch: {
+      error(newValue, oldValue) {
+        console.log(`Updating from ${oldValue} to ${newValue}`);
+      }
+    },
     computed: {
       ...mapGetters(['error'])
     },
 
     methods: {
       async addProblem() {
-        console.log(this.error);
-        await this.$emit('createProblem', {
-          name: this.name
+        await this.$store.dispatch('postProblem', {name: this.name}).then(() => {
+          this.name = ''
+          document.getElementById('close').click()
         })
-        // if (!this.error) {
-        //   this.name = ''
-        //   document.getElementById('close').click();
-        // //   // console.log(this.error);
-        // //   // this.$vToastify.error(this.error)
-        // //   // document.getElementById('close').click();
-        // }
-
-        // this.name = ''
       },
 
       close() {
         this.name = ''
+        this.$store.commit('setError', '')
       }
     }
   }

@@ -2,43 +2,73 @@
   <div class="container">
     <form>
       <div class="form-group">
-        <label for="username">Имя пользователя<span>4</span></label> 
-        <input type="text" class="form-control" id="username" v-model="userData.username">
-        <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+        <label for="username">Имя пользователя<span v-if="username.length >= 15 && username.length <= 20">{{$v.username.$params.maxLength.max - username.length}}</span></label> 
+        <input type="text" class="form-control" id="username" v-model="username"
+          :class="{ 'form-control--error': $v.username.$invalid, 'form-control--valid': username && !$v.username.$invalid}">
+        <div class="error" v-if="!$v.username.maxLength">username проблемы должно быть не более
+          {{$v.username.$params.maxLength.max}} символов</div>
+        <div class="error" v-if="!$v.username.minLength">username проблемы должно быть не менее
+          {{$v.username.$params.minLength.min}} символов</div>
       </div>
       <div class="form-group">
-        <label for="password">Пароль<span>0</span></label>
-        <input type="password" class="form-control" id="password" v-model="userData.password">
+        <label for="password">Пароль<span v-if="password.length >= 15 && password.length <= 20">{{$v.password.$params.maxLength.max - password.length}}</span></label>
+        <input type="password" class="form-control" id="password" v-model="password" 
+          :class="{ 'form-control--error': $v.password.$invalid, 'form-control--valid': username && !$v.password.$invalid}">
+        <div class="error" v-if="!$v.password.maxLength">password проблемы должно быть не более
+          {{$v.password.$params.maxLength.max}} символов</div>
+        <div class="error" v-if="!$v.password.minLength">password проблемы должно быть не менее
+          {{$v.password.$params.minLength.min}} символов</div>
       </div>
       <div class="form-group">
         <router-link :to="{ name: 'Register' }">Регистрация</router-link>
       </div>
-      <button type="submit" class="btn" @click="login">Войти</button>
+      <button type="submit" class="btn" @click.prevent="login">Войти</button>
     </form>
   </div>
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+// import {mapGetters} from 'vuex'
+import {
+    maxLength,
+    minLength
+  } from 'vuelidate/lib/validators'
+
   export default {
     name: "Login",
     data: () => ({
       success: false,
-      userData: {
-        username: '',
-        password: ''
-      }
+      username: '',
+      password: ''
+      
     }),
-    computed: {
-      ...mapGetters(['users', 'errorU'])
+    validations: {
+      username: {
+        minLength: minLength(4),
+        maxLength: maxLength(20)
+      },
+      password: {
+        minLength: minLength(8),
+        maxLength: maxLength(20)
+      },
     },
-    async mounted() {
-      await this.$store.dispatch('getUsers')
-    },
+    // computed: {
+    //   ...mapGetters(['users', 'errorU'])
+    // },
+    // async mounted() {
+    //   await this.$store.dispatch('getUsers')
+    // },
     methods: {
-      login() {
-
+      async login() {
+        if (!this.$v.$invalid) {
+          const formData = {
+            name: this.username,
+            password: this.password,
+          }
+          await this.$store.dispatch('login', formData)
+        } else {console.log('no!')}
       }
+      
     }
   };
 </script>

@@ -65,6 +65,20 @@
       "password": "123123123",
       "username": "fneeeeeeeee",
       "id": 16
+    },
+    {
+      "name": "novkri1111",
+      "password": "123123123",
+      "password confirmation": "123123123",
+      "email": "nov.kri@yandex.ru",
+      "id": 17
+    }
+  ],
+  "auth": [
+    {
+      "name": "novkri1111",
+      "password": "123123123",
+      "id": 1
     }
   ]
 }
