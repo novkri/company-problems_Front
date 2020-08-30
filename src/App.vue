@@ -82,8 +82,13 @@
   }
 
   .error {
-    font-size: 12px;
     color: red;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
   }
 
   form {

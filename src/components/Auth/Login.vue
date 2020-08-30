@@ -5,25 +5,25 @@
         <label for="username">Имя пользователя<span v-if="username.length >= 15 && username.length <= 20">{{$v.username.$params.maxLength.max - username.length}}</span></label> 
         <input type="text" class="form-control" id="username" v-model="username"
           :class="{ 'form-control--error': $v.username.$invalid, 'form-control--valid': username && !$v.username.$invalid}">
-        <!-- <div class="error" v-if="errorU.name">{{errorU.name[0]}}</div> -->
-        <div class="error" v-if="errorU.name">{{errorU.name[1]}} </div>
-        <!--<div class="error" v-if="!$v.username.maxLength">username проблемы должно быть не более
+        <!-- <div class="errorAuth" v-if="errorU.name">{{errorU.name[0]}}</div> -->
+        <div class="errorAuth" v-if="errorU.name">{{errorU.name[1]}} </div>
+        <!--<div class="errorAuth" v-if="!$v.username.maxLength">username проблемы должно быть не более
           {{$v.username.$params.maxLength.max}} символов</div>
-         <div class="error" v-if="!$v.username.minLength">username проблемы должно быть не менее
+         <div class="errorAuth" v-if="!$v.username.minLength">username проблемы должно быть не менее
           {{$v.username.$params.minLength.min}} символов</div> -->
       </div>
       <div class="form-group">
         <label for="password">Пароль<span v-if="password.length >= 15 && password.length <= 20">{{$v.password.$params.maxLength.max - password.length}}</span></label>
         <input type="password" class="form-control" id="password" v-model="password" 
           :class="{ 'form-control--error': $v.password.$invalid, 'form-control--valid': username && !$v.password.$invalid}">
-        <div class="error" v-if="errorU.password">{{errorU.password[0]}} {{errorU.password[1]}} </div>
-        <!--<div class="error" v-if="!$v.password.maxLength">password проблемы должно быть не более
+        <div class="errorAuth" v-if="errorU.password">{{errorU.password[0]}} {{errorU.password[1]}} </div>
+        <!--<div class="errorAuth" v-if="!$v.password.maxLength">password проблемы должно быть не более
           {{$v.password.$params.maxLength.max}} символов</div>
-         <div class="error" v-if="!$v.password.minLength">password проблемы должно быть не менее
+         <div class="errorAuth" v-if="!$v.password.minLength">password проблемы должно быть не менее
           {{$v.password.$params.minLength.min}} символов</div> -->
       </div>
       <br>
-      <div class="error" v-if="errorU.name" style="text-align: center;">{{errorU.name[0]}}</div>
+      <div class="errorAuth" v-if="errorU.name" style="text-align: center;">{{errorU.name[0]}}</div>
       <div class="form-group">
         <router-link :to="{ name: 'Register' }">Регистрация</router-link>
       </div>
@@ -87,6 +87,15 @@ import {
     width: 100%;
   }
 
+  .errorAuth {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    color: #BDBDBD;
+  }
   a {
     display: flex;
     justify-content: center;
