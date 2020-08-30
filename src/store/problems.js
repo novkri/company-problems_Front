@@ -2,6 +2,9 @@ import axios from "axios";
 // const baseURL = "http://localhost:3000/problems" 
 const BASEURL = 'http://31.31.199.37/api/problem'
 
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+axios.defaults.headers.common['Accept'] = 'application/json'
+
 export default {
   state: {
     problems: [],
@@ -47,7 +50,6 @@ export default {
   },
   actions: {
     getProblems: async ({commit}) => {
-      axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
       await axios.get(BASEURL)
         .then(response => {
             if (response.status == 200) {
@@ -60,7 +62,6 @@ export default {
         )
     },
     postProblem: async ({commit}, param) => {
-      axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
       await axios.post(BASEURL, param)
       .then(response => {
         if (response.status == 201) {
@@ -72,7 +73,6 @@ export default {
 
     }, 
     deleteProblem: async ({commit}, param) => {
-      axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
       await axios.delete(BASEURL + `/${param.id}`).then(response => {
         if (response.status == 200) { 
           commit('setError', '')
@@ -82,14 +82,12 @@ export default {
       .catch(error => commit('setError', error.response.data.errors.name[0]))
     },
     checkIfExists: async ({commit}, param) => {
-      axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
       axios.get(BASEURL + `/${param.id}`).catch((error) => {
         console.log(error.response);
         commit('setError404', error.response.data.message)})
     },
 
     editProblem: async ({commit}, param) => {
-      axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
         axios.put(BASEURL + `/${param.id}`, {name: param.name}).then(response => {
         if (response.status == 200) { 
             commit('setError', '')

@@ -9,6 +9,8 @@ import "./registerServiceWorker";
 import Vuelidate from 'vuelidate'
 import VueToastify from 'vue-toastify';
 
+// axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+// axios.defaults.headers.common['Accept'] = 'application/json'
 
 // eslint-disable-next-line 
 import styles from './scss/app.scss';

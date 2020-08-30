@@ -5,10 +5,12 @@
         <label for="username">Имя пользователя</label>
         <input type="text" class="form-control" id="username" v-model="username"
           :class="{ 'form-control--error': $v.username.$invalid, 'form-control--valid': username && !$v.username.$invalid}">
-        <div class="error" v-if="!$v.username.maxLength">username проблемы должно быть не более
+          <br>
+          <div class="error" v-if="errorU.name">{{errorU.name[0]}} </div>
+        <!-- <div class="error" v-if="!$v.username.maxLength">username проблемы должно быть не более
           {{$v.username.$params.maxLength.max}} символов</div>
         <div class="error" v-if="!$v.username.minLength">username проблемы должно быть не менее
-          {{$v.username.$params.minLength.min}} символов</div>
+          {{$v.username.$params.minLength.min}} символов</div> -->
       </div>
       <div class="form-group">
         <label for="password">Пароль</label>
@@ -21,10 +23,12 @@
             <eye-off-icon size="1.5x" class="custom-class" v-else></eye-off-icon>
           </span>
         </div>
-        <div class="error" v-if="!$v.password.maxLength">password проблемы должно быть не более
+        <!-- <div class="error" v-if="!$v.password.maxLength">password проблемы должно быть не более
           {{$v.password.$params.maxLength.max}} символов</div>
         <div class="error" v-if="!$v.password.minLength">password проблемы должно быть не менее
-          {{$v.password.$params.minLength.min}} символов</div>
+          {{$v.password.$params.minLength.min}} символов</div> -->
+          <br>
+          <div class="error" v-if="errorU.password">{{errorU.password[0]}} </div>
       </div>
       <div class="form-group">
         <label for="password">Повторите пароль</label>
@@ -36,19 +40,22 @@
             <eye-icon size="1.5x" class="custom-class" v-if="eyeC"></eye-icon>
             <eye-off-icon size="1.5x" class="custom-class" v-else></eye-off-icon>
           </span>
-
         </div>
-        <div class="error" v-if="!$v.confirm.sameAsPassword"> Passwords must be identical.</div>
+        <!-- <div class="error" v-if="!$v.confirm.sameAsPassword"> Passwords must be identical.</div> -->
+        <br>
+        <div class="error" v-if="errorU.password">{{errorU.password[1]}} </div>
       </div>
       <div class="form-group">
         <label for="email">Электронная почта</label>
         <input type="email" class="form-control" id="email" v-model="email"
            :class="{ 'form-control--error': $v.email.$invalid, 'form-control--valid': email && !$v.email.$invalid}">
+          <br>
+        <div class="error" v-if="errorU.email">{{errorU.email[0]}} </div>
       </div>
-      <div class="error" v-if="!$v.email.maxLength">email проблемы должно быть не более
+      <!-- <div class="error" v-if="!$v.email.maxLength">email проблемы должно быть не более
         {{$v.email.$params.maxLength.max}} символов</div>
       <div class="error" v-if="!$v.email.minLength">email проблемы должно быть не менее
-        {{$v.email.$params.minLength.min}} символов</div>
+        {{$v.email.$params.minLength.min}} символов</div> -->
       <button type="submit" class="btn" @click.prevent="register">Зарегистрироваться</button>
     </form>
 
@@ -73,13 +80,13 @@
     minLength,
     sameAs
   } from 'vuelidate/lib/validators'
+  import {mapGetters} from 'vuex'
 
   export default {
     name: "Register",
     data: () => ({
       success: false,
 
-      form: false,
       email: '',
       password: '',
       confirm: '',
@@ -109,12 +116,17 @@
         maxLength: maxLength(256)
       }
     },
-    // computed: {
-    //   ...mapGetters(['users', 'error'])
-    // },
-    // async mounted() {
-    //   await this.$store.dispatch('getUsers')
-    // },
+    computed: {
+      ...mapGetters(['errorU']) 
+    },
+    watch: {
+      errorU() {
+        console.log(this.errorU)
+        // if (this.errorU) {
+        //   this.$vToastify.error(this.errorU)
+        // }
+      }
+    },
     methods: {
       goToLogin() {
         this.$router.push('/login')
@@ -138,17 +150,17 @@
         }
       },
       async register() {
-        if (!this.$v.$invalid) {
+        // if (!this.$v.$invalid) {
           const formData = {
             name: this.username,
             password: this.password,
-            'password confirmation': this.confirm,
+            password_confirmation: this.confirm,
             email: this.email
             
           }
-          await this.$store.dispatch('register', formData).then(resp => console.log(resp))
+          await this.$store.dispatch('register', formData)
           // .then(this.success = true)
-        } else {console.log('no!')}
+        // } else {console.log('no!')}
       }
     }
   };
@@ -242,7 +254,7 @@
 
   .form-group {
     margin: 0;
-    margin-bottom: 56px;
+    margin-bottom: 36px;
   }
 
   .successfully {
@@ -268,9 +280,5 @@
       margin: 0;
       width: 294px;
     }
-
- 
-
-
   }
 </style>
