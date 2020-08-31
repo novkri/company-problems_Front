@@ -12,7 +12,8 @@
           <div class="modal-body">
             <!-- @submit="addProblem()" -->
             <form @keyup.enter="addProblem()" class="form-group">
-              <input ref="input" type="text" class="form-control form-control--valid" :class="{ 'form-control--error': $v.name.$invalid }"
+              <!-- :class="{ 'form-control--error': $v.name.$invalid }" -->
+              <input ref="input" type="text" class="form-control form-control--valid"
                 id="new-problem-title" v-model="name" placeholder="Название проблемы..." >
                 <div class="error" v-if="!$v.name.maxLength">Название проблемы должно быть не более
                 {{$v.name.$params.maxLength.max}} символов</div>
