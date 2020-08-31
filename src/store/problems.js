@@ -2,14 +2,29 @@ import axios from "axios";
 // const baseURL = "http://localhost:3000/problems" 
 const BASEURL = 'http://31.31.199.37/api/problem'
 
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+// axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 axios.defaults.headers.common['Accept'] = 'application/json'
+axios.interceptors.request.use(
+  (config) => {
+    let token = localStorage.getItem('token');
+
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${ token }`;
+    }
+
+    return config;
+  }, 
+
+  (error) => {
+    return Promise.reject(error);
+})
 
 export default {
   state: {
     problems: [],
     error: '',
-    error404: ''
+    error404: '',
+    token: localStorage.getItem('user-token') || '',
   },
   getters: {
     problems: state => {

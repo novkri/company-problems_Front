@@ -2,15 +2,29 @@ import axios from "axios";
 // const BASEURL = "http://localhost:3000" 
 const BASEURL = 'http://31.31.199.37/api'
 
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+// axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 axios.defaults.headers.common['Accept'] = 'application/json'
+axios.interceptors.request.use(
+  (config) => {
+    let token = localStorage.getItem('user-token');
+
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${ token }`;
+    }
+
+    return config;
+  }, 
+
+  (error) => {
+    return Promise.reject(error);
+  })
 
 export default {
   state: {
     users: [],
     errorU: [],
     errorUReg: [],
-    token: localStorage.getItem('user-token') || '',
+    token: localStorage.getItem('token') || '',
     status: '',
  
   },
@@ -26,7 +40,8 @@ export default {
     errorUReg: state => {
       return state.errorUReg
     },
-    isLoggedIn: state => !!state.token,
+    isLoggedIn: state => {
+      return !!state.token},
     authStatus: state => state.status,
   },
   mutations: {
@@ -65,6 +80,7 @@ export default {
       commit('auth_request')
       await axios.post(BASEURL + '/register', formData).then(response => {
         if (response.status == 201) { 
+          console.log(response);
           const token = response.data.access_token
           localStorage.setItem('token', token)
           axios.defaults.headers.common['Authorization'] = token
@@ -91,8 +107,15 @@ export default {
             console.log(resp, token);
           })
         .catch(err => {
+          console.log(err.response.data);
+          console.log(err.response.data.errors);
           commit('setErrorU', '')
-          commit('setErrorU', err.response.data.errors)
+          // if (!err.response.data.errors) {
+          //   commit('setErrorU', err.response.data.message)
+          // } else if (err.response.data.errors) {
+            commit('setErrorU', err.response.data.errors)
+          // }
+          
           commit('auth_error')
           localStorage.removeItem('token')
         })

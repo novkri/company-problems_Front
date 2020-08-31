@@ -24,6 +24,7 @@
       </div>
       <br>
       <div class="errorAuth" v-if="errorU.name" style="text-align: center;">{{errorU.name[0]}}</div>
+      <div class="errorAuth" v-if="!errorU.name" style="text-align: center;">{{errorU}}</div>
       <div class="form-group">
         <router-link :to="{ name: 'Register' }">Регистрация</router-link>
       </div>
@@ -96,6 +97,7 @@ import {
     letter-spacing: 0.15px;
     color: #BDBDBD;
     margin-top: 10px;
+    color: red;
   }
   a {
     display: flex;

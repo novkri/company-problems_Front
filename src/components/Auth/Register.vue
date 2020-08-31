@@ -180,7 +180,7 @@
     line-height: 24px;
     letter-spacing: 0.15px;
     // color: #BDBDBD;
-    color: black;
+    color: red;
     margin-top: 10px;
   }
   a {

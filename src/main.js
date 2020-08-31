@@ -10,8 +10,8 @@ import Vuelidate from 'vuelidate'
 import VueToastify from 'vue-toastify';
 
 import axios from "axios";
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-axios.defaults.headers.common['Accept'] = 'application/json'
+// axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+// axios.defaults.headers.common['Accept'] = 'application/json'
 const token = localStorage.getItem('token')
 if (token) {
   axios.defaults.headers.common['Authorization'] = token

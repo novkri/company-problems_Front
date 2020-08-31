@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Main from "../views/Main.vue";
 import store from '../store'
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -30,14 +31,6 @@ const routes = [
     component: () =>
       import("../components/Auth/Register.vue")
   },
-  // {
-  //   path: '/secure',
-  //   name: 'Secure',
-  //   component: () => import("../components/Secure.vue"),
-  //   meta: { 
-  //     requiresAuth: true
-  //   }
-  // },
   { path: '*', component: () =>  import("../views/NotFound.vue")}
 ];
 
@@ -48,6 +41,7 @@ const router = new VueRouter({
 });
 router.beforeEach((to, from, next) => {
   if(to.matched.some(record => record.meta.requiresAuth)) {
+    // if (localStorage.token) {
     if (store.getters.isLoggedIn) {
       next()
       return
