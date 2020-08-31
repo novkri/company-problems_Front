@@ -5,8 +5,8 @@
         <label for="username">Имя пользователя</label>
         <input type="text" class="form-control" id="username" v-model="username"
           :class="{ 'form-control--error': $v.username.$invalid, 'form-control--valid': username && !$v.username.$invalid}">
-          <br>
-          <div class="errorAuth" v-if="errorU.name">{{errorU.name[0]}} </div>
+          
+          <div class="errorAuth" v-if="errorUReg.name">{{errorUReg.name[0]}} </div>
         <!-- <div class="errorAuth" v-if="!$v.username.maxLength">username проблемы должно быть не более
           {{$v.username.$params.maxLength.max}} символов</div>
         <div class="errorAuth" v-if="!$v.username.minLength">username проблемы должно быть не менее
@@ -27,8 +27,8 @@
           {{$v.password.$params.maxLength.max}} символов</div>
         <div class="errorAuth" v-if="!$v.password.minLength">password проблемы должно быть не менее
           {{$v.password.$params.minLength.min}} символов</div> -->
-          <br>
-          <div class="errorAuth" v-if="errorU.password">{{errorU.password[0]}} </div>
+          
+          <div class="errorAuth" v-if="errorUReg.password">{{errorUReg.password[0]}} </div>
       </div>
       <div class="form-group">
         <label for="password">Повторите пароль</label>
@@ -42,15 +42,15 @@
           </span>
         </div>
         <!-- <div class="errorAuth" v-if="!$v.confirm.sameAsPassword"> Passwords must be identical.</div> -->
-        <br>
-        <div class="errorAuth" v-if="errorU.password">{{errorU.password[1]}} </div>
+        
+        <div class="errorAuth" v-if="errorUReg.password">{{errorUReg.password[1]}} </div>
       </div>
       <div class="form-group">
         <label for="email">Электронная почта</label>
         <input type="email" class="form-control" id="email" v-model="email"
            :class="{ 'form-control--error': $v.email.$invalid, 'form-control--valid': email && !$v.email.$invalid}">
-          <br>
-        <div class="errorAuth" v-if="errorU.email">{{errorU.email[0]}} </div>
+          
+        <div class="errorAuth" v-if="errorUReg.email">{{errorUReg.email[0]}} </div>
       </div>
       <!-- <div class="errorAuth" v-if="!$v.email.maxLength">email проблемы должно быть не более
         {{$v.email.$params.maxLength.max}} символов</div>
@@ -117,13 +117,13 @@
       }
     },
     computed: {
-      ...mapGetters(['errorU']) 
+      ...mapGetters(['errorUReg']) 
     },
     watch: {
-      errorU() {
-        console.log(this.errorU)
-        // if (this.errorU) {
-        //   this.$vToastify.error(this.errorU)
+      errorUReg() {
+        console.log(this.errorUReg)
+        // if (this.errorUReg) {
+        //   this.$vToastify.error(this.errorUReg)
         // }
       }
     },
@@ -150,7 +150,6 @@
         }
       },
       async register() {
-        // if (!this.$v.$invalid) {
           const formData = {
             name: this.username,
             password: this.password,
@@ -158,9 +157,11 @@
             email: this.email
             
           }
-          await this.$store.dispatch('register', formData)
-          // .then(this.success = true)
-        // } else {console.log('no!')}
+          await this.$store.dispatch('register', formData).then(() => {
+            if (!this.errorUReg) {
+              this.success = true
+            }
+          })
       }
     }
   };
@@ -179,6 +180,7 @@
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #BDBDBD;
+    margin-top: 10px;
   }
   a {
     display: flex;
@@ -232,7 +234,7 @@
   }
 
   input, input:active {
-    background-color: #F6F6F6;
+    background-color: #F7F7F7;
     // margin-bottom: 22px;
     border-radius: 12px;
     font-size: 18px;
@@ -262,7 +264,7 @@
 
   .form-group {
     margin: 0;
-    margin-bottom: 36px;
+    margin-bottom: 46px;
   }
 
   .successfully {
@@ -288,5 +290,6 @@
       margin: 0;
       width: 294px;
     }
+
   }
 </style>

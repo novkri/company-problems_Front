@@ -16,7 +16,9 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body" @click="editProblem()"></div>
+          <div class="modal-body" @click="editProblem()">
+                {{name}} {{val.name}}
+          </div>
         </div>
          
       </div>
@@ -50,7 +52,8 @@
       }
     },
     computed: {
-      ...mapGetters(['error', 'error404']) 
+      ...mapGetters(['error', 'error404']),
+      
     },
     watch: {
       error404(newValue, oldValue) {
@@ -58,6 +61,10 @@
         if (this.error404) {
           this.$vToastify.error(this.error404)
         }
+      },
+      val(newValue, oldValue) {
+        console.log(`Updating from ${oldValue.name} to ${newValue.name}`)
+        this.name = newValue.name
       }
     },
     methods: {
@@ -82,7 +89,7 @@
         
       },
       close() {
-        this.name = this.val.name
+        // this.name = this.val.name
         document.getElementById('close').click()
         this.$store.commit('setError', '')
         this.$emit('editProblem')

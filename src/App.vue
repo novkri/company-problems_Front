@@ -1,12 +1,32 @@
 <template>
   <div id="app">
     <div id="nav">
+      <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand">Navbar</a>
+        <span v-if="isLoggedIn"><a @click="logout">Logout</a></span>
+      </nav>
     </div>
 
     <router-view />
     
   </div>
 </template>
+
+<script>
+  export default {
+    computed : {
+      isLoggedIn : function(){ return this.$store.getters.isLoggedIn}
+    },
+    methods: {
+      logout: function () {
+        this.$store.dispatch('logout')
+        .then(() => {
+          this.$router.push('/login')
+        })
+      }
+    },
+  }
+</script>
 
 <style lang="scss">
   #app {
@@ -20,6 +40,9 @@
     width: 293px;
     margin: 50px;
     padding: 0;
+  }
+  a {
+    cursor: pointer;
   }
 
   button:focus, .btn:focus {

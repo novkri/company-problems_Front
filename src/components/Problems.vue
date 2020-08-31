@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <button type="button" class="btn btnMain" @click="create" data-toggle="modal" data-target="#popupCreate"><plus-icon size="1.5x" class="custom-class" style="color: white; margin-right: 5px;"></plus-icon><span>Предложить проблему</span></button>
-
     <p></p>
     <ul class="list-group">
       <li class="list-group-item" v-for="(problem, idx) in paginatedData" :key="idx">

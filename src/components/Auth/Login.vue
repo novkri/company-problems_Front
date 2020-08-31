@@ -63,20 +63,20 @@ import {
     },
     watch: {
       errorU() {
-        console.log(this.errorU.name.length);
       }
     },
     methods: {
       async login() {
-        // if (!this.$v.$invalid) {
           const formData = {
             name: this.username,
             password: this.password,
           }
-          await this.$store.dispatch('login', formData)
-        // } else {console.log('no!')}
-      }
-      
+          await this.$store.dispatch('login', formData).then(() => {
+            if (!this.errorU) {
+              this.$router.push('/problems')
+            }
+          })
+      },
     }
   };
 </script>
@@ -95,6 +95,7 @@ import {
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #BDBDBD;
+    margin-top: 10px;
   }
   a {
     display: flex;
@@ -146,14 +147,21 @@ import {
     line-height: 17px;
   }
 
-  input {
+  input, input:active {
     background-color: #F7F7F7;
-    border-bottom: none;
     margin-bottom: 22px;
     border-radius: 12px;
+
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    color: #4F4F4F
   }
 
   .form-group {
-    margin: 0;
+    margin: 0 0 15px 0;
   }
+  .form-control:active, .form-control:focus {
+    background-color: #F7F7F7;
+  } 
 </style>

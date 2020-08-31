@@ -60,8 +60,11 @@
     methods: {
       async addProblem() {
         await this.$store.dispatch('postProblem', {name: this.name}).then(() => {
-          this.name = ''
-          document.getElementById('close').click()
+          if (!this.error) {
+            this.name = ''
+            document.getElementById('close').click()
+          }
+          
         })
       },
 
