@@ -179,7 +179,8 @@
     font-size: 16px;
     line-height: 24px;
     letter-spacing: 0.15px;
-    color: #BDBDBD;
+    // color: #BDBDBD;
+    color: black;
     margin-top: 10px;
   }
   a {

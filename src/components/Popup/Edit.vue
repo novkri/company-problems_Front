@@ -17,7 +17,6 @@
             </button>
           </div>
           <div class="modal-body" @click="editProblem()">
-                {{name}} {{val.name}}
           </div>
         </div>
          
