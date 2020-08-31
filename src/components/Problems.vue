@@ -101,6 +101,7 @@
       },
       create() {
         this.openCreate = true
+         this.$store.commit('setError', '')
       },
       // async createProblem(param) {
       //   if (param.length < 250) {
@@ -111,6 +112,7 @@
       edit(obj) {
         this.openEdit = true
         this.paramsModal = obj
+        this.$store.commit('setError', '')
       },
       async editProblem(param) {
         console.log(param);

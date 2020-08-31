@@ -90,8 +90,8 @@ export default {
     editProblem: async ({commit}, param) => {
         axios.put(BASEURL + `/${param.id}`, {name: param.name}).then(response => {
         if (response.status == 200) { 
-            commit('setError', '')
-            commit('editProblem', response.data)
+          commit('setError', '')
+          commit('editProblem', response.data)
         }
       }).catch((error) => {
         console.log(error.response);
