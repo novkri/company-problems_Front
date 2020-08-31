@@ -21,7 +21,7 @@
               <chevron-left-icon size="1.5x" class="custom-class" style="color: #5F5F5F;"></chevron-left-icon>
             </a>
           </li>
-          <li class="page-item">{{pageNumber}} {{pageCount}}
+          <li class="page-item">
             <span v-if="pageNumber ==0">1-25</span> 
             <span v-else>{{(25 * pageNumber)+1}}-{{(25 * pageNumber)+26}}</span>
           </li>

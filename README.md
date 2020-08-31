@@ -1,5 +1,19 @@
 # project4
 
+## Для интеграции
+
+1.
+```
+npm install
+```
+2. 
+```
+npm run build
+```
+
+
+
+
 ## Project setup
 ```
 npm install
