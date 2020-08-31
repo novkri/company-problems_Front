@@ -106,7 +106,7 @@
       // async createProblem(param) {
       //   if (param.length < 250) {
       //     await this.$store.dispatch('postProblem', param)
-      //   }
+      //   } 
       // },
 
       edit(obj) {
