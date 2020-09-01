@@ -23,6 +23,7 @@ export default {
   state: {
     users: [],
     errorU: [],
+    error401: '',
     errorUReg: [],
     token: localStorage.getItem('token') || '',
     status: '',
@@ -36,6 +37,9 @@ export default {
     },
     errorU: state => {
       return state.errorU
+    },
+    error401: state => {
+      return state.error401
     },
     errorUReg: state => {
       return state.errorUReg
@@ -69,6 +73,9 @@ export default {
     },
     setErrorU: (state, payload) => {
       state.errorU = payload
+    },
+    setError401: (state, payload) => {
+      state.error401 = payload
     },
     setErrorUReg: (state, payload) => {
       state.errorUReg = payload
@@ -107,7 +114,10 @@ export default {
             console.log(resp, token);
           })
         .catch(err => {
-          console.log(err.response.data);
+          console.log(err.response);
+          if (err.response.status == 401) {
+            commit('setError401', err.response.data.errors)
+          }
           commit('setErrorU', '')
           commit('setErrorU', err.response.data.errors)
           
