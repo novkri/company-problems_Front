@@ -6,7 +6,8 @@
           <div class="modal-header">
             <form @submit.prevent="editProblem()" class="form-group">
               <input @input="setTitle($event.target.value)" ref="input" class="form-control"
-                :class="{ 'form-control--error': $v.name.$invalid }" id="new-problem-title" v-model="name" @keyup.enter="close">
+                :class="{ 'form-control--error': $v.name.$invalid }" id="new-problem-title" v-model="name">
+                <!-- @keyup.enter="editProblem()" -->
               <div class="error" v-if="!$v.name.maxLength">Название проблемы должно быть не более
                 {{$v.name.$params.maxLength.max}} символов</div>
                 <!-- <div class="error" v-if="!$v.name.minLength">{{error}}</div> -->
@@ -72,27 +73,19 @@
         this.$v.name.$touch()
       },
       async editProblem() {
-        // if (!this.$v.$invalid) {
           await this.$store.dispatch('checkIfExists', {id: this.val.id})
           .then(async () => {
-            await this.$store.dispatch('editProblem', {id: this.val.id, name: this.name}).then(() => {
-              // if (this.error) {
-              //   this.$vToastify.error(this.error)
-              //   this.$store.commit('setError', '')
-              // }
-            })
-            // .then(() => console.log('d', this.error))
-            // .catch(() => console.log('d', this.error))
+            if (this.val.name !== this.name) {
+              await this.$store.dispatch('editProblem', {id: this.val.id, name: this.name})
+            }
           })
           .catch(() => console.log('d', this.error404))
         
       },
       close() {
-        // this.name = this.val.name
         document.getElementById('close').click()
         this.$store.commit('setError', '')
         this.$emit('editProblem')
-        // location.reload(true)
       }
     }
   }

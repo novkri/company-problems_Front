@@ -106,10 +106,7 @@
     },
     watch: {
       errorUReg() {
-        console.log(this.errorUReg)
-        // if (this.errorUReg) {
-        //   this.$vToastify.error(this.errorUReg)
-        // }
+        // console.log(this.errorUReg)
       }
     },
     methods: {

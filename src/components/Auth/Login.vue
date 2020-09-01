@@ -17,9 +17,6 @@
       <br>
       <div class="errorAuth" v-if="errorU.name" style="text-align: center;">{{errorU.name[0]}}</div>
       <div class="errorAuth" v-if="error401" style="text-align: center;">{{error401}}</div>
-      <!-- <div class="errorAuth" v-if="!errorU.name && errorU" style="text-align: center;">here</div> -->
-      <!-- <div class="errorAuth" v-if="!errorU.name && errorU != ''" style="text-align: center;">{{errorU}}</div> -->
-      <!-- {{errorU}}  !errorU.name && -->
       <div class="form-group">
         <router-link :to="{ name: 'Register' }">Регистрация</router-link>
       </div>

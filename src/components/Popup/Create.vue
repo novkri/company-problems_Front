@@ -50,8 +50,8 @@
       }
     },
     watch: {
-      error(newValue, oldValue) {
-        console.log(`Updating from ${oldValue} to ${newValue}`);
+      error() {
+        // console.log(`Updating from ${oldValue} to ${newValue}`);
       }
     },
     computed: {

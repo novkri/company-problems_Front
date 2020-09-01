@@ -61,8 +61,6 @@ export default {
     auth_success(state, token){
       state.status = 'success'
       state.token = token
-      // state.user = user
-      console.log(state.status, state.token);
     },
     auth_error(state){
       state.status = 'error'
@@ -87,7 +85,6 @@ export default {
       commit('auth_request')
       await axios.post(BASEURL + '/register', formData).then(response => {
         if (response.status == 201) { 
-          console.log(response);
           const token = response.data.access_token
           localStorage.setItem('token', token)
           axios.defaults.headers.common['Authorization'] = token
@@ -111,10 +108,8 @@ export default {
             axios.defaults.headers.common['Authorization'] = token
             commit('auth_success', token, resp.data.user)
             commit('setErrorU', '')
-            console.log(resp, token);
           })
         .catch(err => {
-          console.log(err.response);
           if (err.response.status == 401) {
             commit('setError401', err.response.data.errors)
           }

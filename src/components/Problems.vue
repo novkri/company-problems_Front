@@ -114,13 +114,9 @@
         this.paramsModal = obj
         this.$store.commit('setError', '')
       },
-      async editProblem(param) {
-        console.log(param);
+      // async editProblem(param) {
+      async editProblem() {
         window.location.reload(true)
-      //   if (param.name.length < 250) {
-      //     await this.$store.dispatch('editProblem', param)
-      //     .then(() => console.log(this.problems)) 
-      //   }
       },
 
 

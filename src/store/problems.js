@@ -37,7 +37,6 @@ export default {
       return state.error
     },
     error404: state => {
-      console.log(state.error404);
       return state.error404
     }
   },
@@ -46,8 +45,7 @@ export default {
       state.problems = payload
     },
     addProblem: (state, payload) => {
-      console.log('addProblem', payload);
-        state.problems.push(payload)
+      state.problems.push(payload)
     },
     deleteProblem: (state, payload) => {
         state.problems = state.problems.filter(problem => problem.id !== payload)
@@ -73,9 +71,7 @@ export default {
             }
           })
         .catch(error => 
-          {console.log(error.response)
-          commit('setError', error.response.data.message)}
-          ////////////////////
+          commit('setError', error.response.data.message)
         )
     },
     postProblem: async ({commit}, param) => {
@@ -100,9 +96,7 @@ export default {
     },
     checkIfExists: async ({commit}, param) => {
       axios.get(BASEURL + `/${param.id}`).catch((error) => {
-        console.log(error.response);
         commit('setError404', error.response.data.message)})
-        // ////////////
     },
 
     editProblem: async ({commit}, param) => {
@@ -112,7 +106,6 @@ export default {
           commit('editProblem', response.data)
         }
       }).catch((error) => {
-        console.log(error.response);
         commit('setError', error.response.data.errors.name[0])})
     }
   }
