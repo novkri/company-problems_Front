@@ -83,7 +83,7 @@
     border: none;
     padding: 30px 20px 40px 20px;
     width: 530px;
-    height: 163px;
+    height: 186px;
   }
 
   .modal-header {
