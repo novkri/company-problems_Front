@@ -34,7 +34,7 @@
         <div class="errorAuth" v-if="errorUReg.password">{{errorUReg.password[1]}} </div>
       </div>
       <div class="form-group">
-        <label for="email">Электронная почта <span v-if="email.length >= 251 && email.length <= 256">{{$v.email.$params.maxLength.max - email.length}}</span></label>
+        <label for="email">Электронная почта <span v-if="email.length >= 250 && email.length <= 255">{{$v.email.$params.maxLength.max - email.length}}</span></label>
         <input type="email" class="form-control" id="email" v-model="email"
            :class="{ 'form-control--error': $v.email.$invalid, 'form-control--valid': email && !$v.email.$invalid}">
         <div class="errorAuth" v-if="errorUReg.email">{{errorUReg.email[0]}} </div>

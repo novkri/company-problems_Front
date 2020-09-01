@@ -16,8 +16,8 @@
       </div>
       <br>
       <div class="errorAuth" v-if="errorU.name" style="text-align: center;">{{errorU.name[0]}}</div>
-      <!-- <div class="errorAuth" v-if="!errorU.name" style="text-align: center;">{{errorU}}</div> 2
-      {{errorU}} -->
+      <div class="errorAuth" v-if="!errorU.name" style="text-align: center;">{{errorU}}</div>
+      <!-- {{errorU}}  -->
       <div class="form-group">
         <router-link :to="{ name: 'Register' }">Регистрация</router-link>
       </div>

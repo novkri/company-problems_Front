@@ -108,13 +108,8 @@ export default {
           })
         .catch(err => {
           console.log(err.response.data);
-          // console.log(err.response.data.errors);
           commit('setErrorU', '')
-          // if (!err.response.data.errors) {
-          //   commit('setErrorU', err.response.data.message)
-          // } else if (err.response.data.errors) {
-            commit('setErrorU', err.response.data.errors)
-          // }
+          commit('setErrorU', err.response.data.errors)
           
           commit('auth_error')
           localStorage.removeItem('token')

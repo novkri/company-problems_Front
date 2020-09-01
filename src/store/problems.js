@@ -73,7 +73,9 @@ export default {
             }
           })
         .catch(error => 
-          commit('setError', error.response.data.message)
+          {console.log(error.response)
+          commit('setError', error.response.data.message)}
+          ////////////////////
         )
     },
     postProblem: async ({commit}, param) => {
@@ -100,6 +102,7 @@ export default {
       axios.get(BASEURL + `/${param.id}`).catch((error) => {
         console.log(error.response);
         commit('setError404', error.response.data.message)})
+        // ////////////
     },
 
     editProblem: async ({commit}, param) => {
