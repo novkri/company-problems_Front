@@ -132,7 +132,7 @@
 
   .error {
     font-size: 12px;
-    color: red;
+    color: #FF8585;
   }
 
   #new-problem-desc {

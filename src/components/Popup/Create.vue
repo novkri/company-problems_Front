@@ -86,21 +86,6 @@
     height: 163px;
   }
 
-  /* .form-control {
-    border: transparent;
-    border-bottom: 2px solid #92D2C3;
-    border-radius: 6px;
-    background-color: #FAFAFA;
-    color: #2D453F;
-    margin-bottom: 3px;
-    caret-color: #92D2C3;
-  }
-
-  .error {
-    font-size: 12px;
-    color: red;
-  } */
-
   .modal-header {
     border: none;
     margin-bottom: 23px;
@@ -117,15 +102,6 @@
     padding: 0;
   }
 
-  /* form {
-    margin-right: 30px;
-    width: 85%;
-  }
-
-  .form-control--error {
-    border: 1px solid red;
-    border-bottom: 2px solid red;
-  } */
 
   .btn {
     background-color: #92D2C3;

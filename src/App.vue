@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <div id="nav">
-      <nav class="navbar navbar-light bg-light">
+      <nav class="navbar navbar-light bg-light" v-if="isLoggedIn">
         <a class="navbar-brand">Navbar</a>
-        <span v-if="isLoggedIn"><a @click="logout">Logout</a></span>
+        <span><a @click="logout">Logout</a></span>
       </nav>
     </div>
 
@@ -106,6 +106,7 @@
   }
 
   .error {
+    // color: #FF8585;
     color: red;
     font-family: 'Roboto';
     font-style: normal;
@@ -127,11 +128,12 @@
     background-color: #FAFAFA;
     color: #2D453F;
     // margin-bottom: 3px;
-    caret-color: red;
-    border-bottom: 2px solid red;
+    // color: #FF8585;
+    caret-color: #FF8585;
+    border-bottom: 2px solid #FF8585;
     &:focus {
       box-shadow: none;
-      border-bottom: 2px solid red;
+      border-bottom: 2px solid #FF8585;
     }
   }
 

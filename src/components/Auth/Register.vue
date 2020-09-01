@@ -2,36 +2,26 @@
   <div class="container">
     <form v-if="!success">
       <div class="form-group">
-        <label for="username">Имя пользователя</label>
+        <label for="username">Имя пользователя <span v-if="username.length >= 15 && username.length <= 20">{{$v.username.$params.maxLength.max - username.length}}</span></label>
         <input type="text" class="form-control" id="username" v-model="username"
           :class="{ 'form-control--error': $v.username.$invalid, 'form-control--valid': username && !$v.username.$invalid}">
-          
           <div class="errorAuth" v-if="errorUReg.name">{{errorUReg.name[0]}} </div>
-        <!-- <div class="errorAuth" v-if="!$v.username.maxLength">username проблемы должно быть не более
-          {{$v.username.$params.maxLength.max}} символов</div>
-        <div class="errorAuth" v-if="!$v.username.minLength">username проблемы должно быть не менее
-          {{$v.username.$params.minLength.min}} символов</div> -->
       </div>
       <div class="form-group">
-        <label for="password">Пароль</label>
+        <label for="password">Пароль <span v-if="password.length >= 15 && password.length <= 20">{{$v.password.$params.maxLength.max - password.length}}</span></label>
         <div class="input-group" id="show_hide_password">
           <input type="password" class="form-control" id="password" v-model="password" ref="password"
-             :class="{ 'form-control--error': $v.password.$invalid, 'form-control--valid': username && !$v.password.$invalid}">
+             :class="{ 'form-control--error': $v.password.$invalid, 'form-control--valid': password && !$v.password.$invalid}">
           <span tabindex="100" class="add-on input-group-addon"  style="cursor: pointer;" @click="togglePassword"
-            :class="{ 'form-control--error': $v.password.$invalid, 'form-control--valid': username && !$v.password.$invalid}">
+            :class="{ 'form-control--error': $v.password.$invalid, 'form-control--valid': password && !$v.password.$invalid}">
             <eye-icon size="1.5x" class="custom-class" v-if="eye"></eye-icon>
             <eye-off-icon size="1.5x" class="custom-class" v-else></eye-off-icon>
           </span>
         </div>
-        <!-- <div class="errorAuth" v-if="!$v.password.maxLength">password проблемы должно быть не более
-          {{$v.password.$params.maxLength.max}} символов</div>
-        <div class="errorAuth" v-if="!$v.password.minLength">password проблемы должно быть не менее
-          {{$v.password.$params.minLength.min}} символов</div> -->
-          
-          <div class="errorAuth" v-if="errorUReg.password">{{errorUReg.password[0]}} </div>
+        <div class="errorAuth" v-if="errorUReg.password">{{errorUReg.password[0]}} </div>
       </div>
       <div class="form-group">
-        <label for="password">Повторите пароль</label>
+        <label for="password">Повторите пароль <span v-if="confirm.length >= 15 && confirm.length <= 20">{{$v.confirm.$params.maxLength.max - confirm.length}}</span></label>
         <div class="input-group" id="show_hide_password">
           <input type="password" class="form-control" id="passwordConfirm" data-toggle="password" v-model="confirm" ref="confirm"
              :class="{ 'form-control--error': $v.confirm.$invalid, 'form-control--valid': confirm && !$v.confirm.$invalid}">
@@ -41,21 +31,14 @@
             <eye-off-icon size="1.5x" class="custom-class" v-else></eye-off-icon>
           </span>
         </div>
-        <!-- <div class="errorAuth" v-if="!$v.confirm.sameAsPassword"> Passwords must be identical.</div> -->
-        
         <div class="errorAuth" v-if="errorUReg.password">{{errorUReg.password[1]}} </div>
       </div>
       <div class="form-group">
-        <label for="email">Электронная почта</label>
+        <label for="email">Электронная почта <span v-if="email.length >= 251 && email.length <= 256">{{$v.email.$params.maxLength.max - email.length}}</span></label>
         <input type="email" class="form-control" id="email" v-model="email"
            :class="{ 'form-control--error': $v.email.$invalid, 'form-control--valid': email && !$v.email.$invalid}">
-          
         <div class="errorAuth" v-if="errorUReg.email">{{errorUReg.email[0]}} </div>
       </div>
-      <!-- <div class="errorAuth" v-if="!$v.email.maxLength">email проблемы должно быть не более
-        {{$v.email.$params.maxLength.max}} символов</div>
-      <div class="errorAuth" v-if="!$v.email.minLength">email проблемы должно быть не менее
-        {{$v.email.$params.minLength.min}} символов</div> -->
       <button type="submit" class="btn" @click.prevent="register">Зарегистрироваться</button>
     </form>
 
@@ -109,6 +92,8 @@
         maxLength: maxLength(20)
       },
       confirm: {
+        minLength: minLength(8),
+        maxLength: maxLength(20),
         sameAsPassword: sameAs('password')
       },
       email: {
@@ -179,8 +164,8 @@
     font-size: 16px;
     line-height: 24px;
     letter-spacing: 0.15px;
-    // color: #BDBDBD;
-    color: red;
+    color: #FF8585;
+    // color: red;
     margin-top: 10px;
   }
   a {
