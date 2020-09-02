@@ -28,8 +28,8 @@
 </template>
 
 <script>
-    import {maxLength, minLength} from 'vuelidate/lib/validators'
-    import {mapGetters} from 'vuex'
+  import {maxLength, minLength} from 'vuelidate/lib/validators'
+  import {mapGetters} from 'vuex'
 
   export default {
     name: 'popup',
@@ -52,15 +52,14 @@
     },
     computed: {
       ...mapGetters(['error', 'error404']),
-      
     },
     watch: {
-      error404(newValue, oldValue) {
-        console.log(`Updating from ${oldValue} to ${newValue}`)
-        if (this.error404) {
-          this.$vToastify.error(this.error404)
-        }
-      },
+    //   error404(newValue, oldValue) {
+    //     console.log(`Updating from ${oldValue} to ${newValue}`)
+    //     if (this.error404) {
+    //       this.$vToastify.error(this.error404)
+    //     }
+    //   },
       val(newValue, oldValue) {
         console.log(`Updating from ${oldValue.name} to ${newValue.name}`)
         this.name = newValue.name
@@ -78,8 +77,7 @@
               await this.$store.dispatch('editProblem', {id: this.val.id, name: this.name})
             }
           })
-          .catch(() => console.log('d', this.error404))
-        
+          .catch(() => this.$store.commit('setError404', ''))
       },
       close() {
         document.getElementById('close').click()

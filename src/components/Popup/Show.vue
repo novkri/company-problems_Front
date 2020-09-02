@@ -5,7 +5,6 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">{{val.name}}</h5>
-            <!-- <div>{{val.name}}</div> -->
             <button type="button" id="close" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -13,6 +12,7 @@
           
           <div class="modal-body">
             <div>
+              выюрано {{selected}}
               <span>Решения в работе:</span>
               <ol>
                 <li>
@@ -26,7 +26,9 @@
                     </select>
                   </div> -->
                   <!-- <div class="input-group"> -->
-                    <select class="form-control" id="exampleFormControlSelect1" style="width: 190px;">
+                     
+                    <select v-model="selected" class="form-control" id="exampleFormControlSelect1" style="width: 190px;">
+                      <!-- <option disabled value="">Выберите один из вариантов</option> -->
                       <option>В работе</option>
                       <option>Решено</option>
                       <option>Пусто ?</option>
@@ -37,16 +39,16 @@
                     <input type="date" id="start" name="trip-start" class="date"
                       value="2018-07-22"
                       min="2018-01-01" max="2018-12-31">
+                      
                     <button type="button" class="close">
                       <span aria-hidden="true">&times;</span>
                     </button>
-                  <!-- </div> -->
                   </li>
                   <li>dummy 2</li>
                   <li>dummy 3</li>
                 </ol>
                    
-              <button type="button" class="btn btnMain"><span>Посмотреть/Добавить решение</span></button>
+              <button type="button" class="btn btnMain" @click.prevent="showSolutions(val)" data-toggle="modal" data-target="#popupSolutions"><span>Посмотреть/Добавить решение</span></button>
             </div>
           </div>
         </div>
@@ -54,16 +56,30 @@
       </div>
     </div>
 
+    <PopupSolutions v-if="openSolutions" :open="openSolutions" :solutions="solutions" />
   </div>
 </template>
 
 <script>
+import PopupSolutions from '@/components/Popup/Solutions'
 export default {
   name: 'popup',
   props: ['open', 'val'],
-  // mounted() {
-  //   console.log('mounted', this.val);
-  // }
+  data: () => ({
+    selected: '',
+    openSolutions: false,
+    solutions: {}
+  }),
+  components: {
+    PopupSolutions,
+  },
+  methods: {
+    showSolutions(obj) {
+      this.solutions = {...obj, test: 'test'}
+      //передать все решения по проблеме
+      console.log(this.solutions);
+    }
+  }
 }
 </script>
 
@@ -120,8 +136,14 @@ export default {
     }
   }
 
-  .date {
+  .date, .date:focus {
+    outline: none;
     border: none;
   }
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    background: url('~@/assets/calendar.png') 100%;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
 
 </style>

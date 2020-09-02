@@ -1,15 +1,24 @@
 <template>
   <div class="container">
-    <button type="button" class="btn btnMain" @click="create" data-toggle="modal" data-target="#popupCreate"><plus-icon size="1.5x" class="custom-class" style="color: white; margin-right: 5px;"></plus-icon><span>Предложить проблему</span></button>
+    <button type="button" class="btn btnMain" @click="create" data-toggle="modal" data-target="#popupCreate">
+      <plus-icon size="1.5x" class="custom-class" style="color: white; margin-right: 5px;"></plus-icon><span>Предложить
+        проблему</span>
+    </button>
     <p></p>
     <ul class="list-group">
-      <li class="list-group-item" v-for="(problem, idx) in paginatedData" :key="idx" @click.prevent="show(problem)" data-toggle="modal" data-target="#popupShow">
-        <p> {{ problem.name }}  </p>
+      <!-- @click.prevent="show(problem)" -->
+      <li class="list-group-item" v-for="(problem, idx) in paginatedData" :key="idx" >
+        <div class="toggle-area" @click.prevent="show(problem)"
+        data-toggle="modal" data-target="#popupShow">
+          <p> {{ problem.name }} </p>
+        </div>
+        
         <div class="icons">
-            <edit-icon size="1x" class="custom-class" @click="edit(problem)" data-toggle="modal" data-target="#popupEdit" style="margin-left: 30px;"></edit-icon>
-            <trash-icon size="1x" @click="deleteP(problem.id, problem.name)" class="custom-class" data-toggle="modal" style="margin-left: 30px;"
-            data-target="#popupDelete"></trash-icon> 
-          </div>
+          <edit-icon size="1x" class="custom-class" @click="edit(problem)" data-toggle="modal" data-target="#popupEdit"
+            style="margin-left: 0px;"></edit-icon>
+          <trash-icon size="1x" @click="deleteP(problem.id, problem.name)" class="custom-class" data-toggle="modal"
+            style="margin-left: 30px;" data-target="#popupDelete"></trash-icon>
+        </div>
       </li>
     </ul>
 
@@ -17,12 +26,12 @@
       <nav>
         <ul class="pagination">
           <li class="page-item">
-            <a class="page-link"  @click="prevPage" aria-label="Previous" :class="{'block' : pageNumber==0}">
+            <a class="page-link" @click="prevPage" aria-label="Previous" :class="{'block' : pageNumber==0}">
               <chevron-left-icon size="1.5x" class="custom-class" style="color: #5F5F5F;"></chevron-left-icon>
             </a>
           </li>
           <li class="page-item">
-            <span v-if="pageNumber ==0">1-25</span> 
+            <span v-if="pageNumber ==0">1-25</span>
             <span v-else>{{(25 * pageNumber)+1}}-{{(25 * pageNumber)+26}}</span>
           </li>
           <li class="page-item">
@@ -34,13 +43,12 @@
       </nav>
     </div>
 
-
-    <PopupCreate v-if="openCreate" :open="openCreate" @createProblem="createProblem(param = $event)" />
-    <PopupEdit v-if="openEdit" :open="openEdit" :val="paramsModal" @editProblem="editProblem(param = $event)"/>
-    <PopupDelete v-if="openDelete" :open="openDelete" :val="paramsModal"
+<!-- :open="openCreate"  -->
+    <PopupCreate v-if="openCreate" @createProblem="createProblem(param = $event)" />
+    <PopupEdit v-if="openEdit" :val="paramsModal" @editProblem="editProblem(param = $event)" />
+    <PopupDelete v-if="openDelete" :val="paramsModal"
       @deleteProblem="deleteProblem(param = $event)" />
-    <PopupShow v-if="openShow" :open="openShow" :val="paramsModal" />  
-    {{openShow}}
+    <PopupShow v-if="openShow" :val="paramsModal" />
     <!-- @showProblem="showProblem(param = $event)" -->
   </div>
 </template>
@@ -50,8 +58,16 @@
   import PopupEdit from '@/components/Popup/Edit'
   import PopupDelete from '@/components/Popup/Delete'
   import PopupShow from '@/components/Popup/Show'
-  import {mapGetters} from 'vuex'
-  import { EditIcon, TrashIcon, PlusIcon, ChevronRightIcon, ChevronLeftIcon } from 'vue-feather-icons'
+  import {
+    mapGetters
+  } from 'vuex'
+  import {
+    EditIcon,
+    TrashIcon,
+    PlusIcon,
+    ChevronRightIcon,
+    ChevronLeftIcon
+  } from 'vue-feather-icons'
 
   export default {
     name: "Problems",
@@ -73,21 +89,32 @@
       TrashIcon,
       PlusIcon,
       ChevronRightIcon,
-      ChevronLeftIcon 
+      ChevronLeftIcon
     },
 
     async mounted() {
       await this.$store.dispatch('getProblems')
     },
-
-    computed: {
-      ...mapGetters(['problems', 'error']),
-      pageCount(){
-        let l = this.problems.length,
-            s = this.size;
-        return Math.ceil(l/s);
+    watch: {
+      error404(newValue, oldValue) {
+        console.log(`Updating from ${oldValue} to ${newValue}`)
+        if (this.error404) {
+          this.$vToastify.error(this.error404)
+        }
       },
-      paginatedData(){
+      val(newValue, oldValue) {
+        console.log(`Updating from ${oldValue.name} to ${newValue.name}`)
+        this.name = newValue.name
+      }
+    },
+    computed: {
+      ...mapGetters(['problems', 'error', 'error404']),
+      pageCount() {
+        let l = this.problems.length,
+          s = this.size;
+        return Math.ceil(l / s);
+      },
+      paginatedData() {
         const start = this.pageNumber * this.size,
           end = start + this.size;
         return this.problems.slice(start, end);
@@ -98,13 +125,13 @@
       reloadPage() {
         document.location.reload(true)
       },
-      nextPage(){
+      nextPage() {
         this.pageNumber++;
       },
-      prevPage(){
+      prevPage() {
         if (this.pageNumber > 0) {
           this.pageNumber--;
-        }  
+        }
       },
       create() {
         this.openCreate = true
@@ -112,6 +139,7 @@
       },
 
       edit(obj) {
+        this.openShow = false
         this.openEdit = true
         this.paramsModal = obj
         this.$store.commit('setError', '')
@@ -121,6 +149,7 @@
       },
 
       deleteP(id, name) {
+        this.openShow = false
         this.openDelete = true
         this.paramsModal = {
           id,
@@ -131,9 +160,10 @@
         await this.$store.dispatch('deleteProblem', param)
       },
       show(obj) {
+        this.openEdit = false,
+        this.openDelete = false,
         this.openShow = true
         this.paramsModal = obj
-        console.log(this.openShow , this.paramsModal);
         this.$store.commit('setError', '')
       }
     }
@@ -176,12 +206,21 @@
     justify-content: space-between;
     display: flex;
     align-items: center;
-    padding: 1.08rem 1.25rem;
+    // padding: 1.08rem 1.25rem;
+    padding: 0 23px 0 0;
 
     &:last-child {
       margin-bottom: 43px;
     }
   }
+
+  .toggle-area {
+    width: 100%;
+    cursor: pointer;
+    // margin: 23px;
+    padding: 23px 0 23px 23px;
+  }
+
 
   svg {
     color: #AFAFAF;

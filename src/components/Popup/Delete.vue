@@ -20,19 +20,45 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex'
+
   export default {
     name: 'popup',
     props: ['open', 'val'],
     data: () => ({
       name: ''
     }),
-
+    computed: {
+      ...mapGetters(['error', 'error404']),
+    },
+    // watch: {
+    //   error404(newValue, oldValue) {
+    //     console.log(`Updating from ${oldValue} to ${newValue}`)
+    //     if (this.error404) {
+    //       this.$vToastify.error(this.error404)
+    //     }
+    //   },
+    //   val(newValue, oldValue) {
+    //     console.log(`Updating from ${oldValue.name} to ${newValue.name}`)
+    //     this.name = newValue.name
+    //   }
+    // },
     methods: {
+      // async deleteProblem() {
+      //   await this.$emit('deleteProblem', {
+      //     id: this.val.id
+      //   })
+      // }
+
       async deleteProblem() {
-        await this.$emit('deleteProblem', {
-          id: this.val.id
-        })
-      }
+          await this.$store.dispatch('checkIfExists', {id: this.val.id})
+          .then(async () => {
+            // if (this.val.name !== this.name) {
+              await this.$store.dispatch('deleteProblem', {id: this.val.id})
+            // }
+          })
+          .catch(() => this.$store.commit('setError404', ''))
+      },
     }
   }
 </script>

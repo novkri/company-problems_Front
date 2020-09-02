@@ -3,7 +3,7 @@
     <div id="nav">
       <nav class="navbar navbar-light bg-light" v-if="isLoggedIn">
         <a class="navbar-brand">Navbar</a>
-        <span>{{userLoggedIn}}</span>
+        <span>{{userLoggedIn}} (имя здесь для разработки)</span>
         <span><a @click="logout">Logout</a></span>
       </nav>
     </div>
