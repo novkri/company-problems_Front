@@ -3,6 +3,7 @@
     <div id="nav">
       <nav class="navbar navbar-light bg-light" v-if="isLoggedIn">
         <a class="navbar-brand">Navbar</a>
+        <span>{{userLoggedIn}}</span>
         <span><a @click="logout">Logout</a></span>
       </nav>
     </div>
@@ -16,7 +17,10 @@
   export default {
     computed : {
       isLoggedIn : function(){ 
-        return this.$store.getters.isLoggedIn}
+        return this.$store.getters.isLoggedIn},
+      userLoggedIn : function(){ 
+        // console.log(localStorage.getItem('user'));
+      return localStorage.getItem('user')}
     },
     methods: {
       logout: function () {
@@ -38,9 +42,10 @@
     letter-spacing: 0.15px;
   }
   .container {
-    width: 293px;
+    width: 436px;
     margin: 50px;
     padding: 0;
+    margin: 50px auto 0;
   }
   a {
     cursor: pointer;
@@ -73,13 +78,9 @@
   .btn-secondary:not(:disabled):not(.disabled):active:focus {
     box-shadow: none;
   }
-  // .form-control:focus {
-  //   box-shadow: none;
-  //   border-bottom: none;
-  // }
+
   .form-control {
     border: transparent;
-    // border-bottom: 2px solid #92D2C3;
     border-bottom: none;
     border-radius: 6px;
     background-color: #FAFAFA;
@@ -96,7 +97,6 @@
     border-radius: 6px;
     background-color: #FAFAFA;
     color: #2D453F;
-    // margin-bottom: 3px;
     caret-color: #92D2C3;
     border-bottom: 2px solid #92D2C3;
     &:focus {
@@ -106,7 +106,6 @@
   }
 
   .error {
-    // color: #FF8585;
     color: red;
     font-family: 'Roboto';
     font-style: normal;
@@ -127,8 +126,6 @@
     border-radius: 6px;
     background-color: #FAFAFA;
     color: #2D453F;
-    // margin-bottom: 3px;
-    // color: #FF8585;
     caret-color: #FF8585;
     border-bottom: 2px solid #FF8585;
     &:focus {
@@ -136,14 +133,4 @@
       border-bottom: 2px solid #FF8585;
     }
   }
-
-  //   a {
-  //     font-weight: bold;
-  //     color: #2c3e50;
-
-  //     &.router-link-exact-active {
-  //       color: #42b983;
-  //     }
-  //   }
-  // }
 </style>

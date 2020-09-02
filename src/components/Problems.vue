@@ -3,13 +3,13 @@
     <button type="button" class="btn btnMain" @click="create" data-toggle="modal" data-target="#popupCreate"><plus-icon size="1.5x" class="custom-class" style="color: white; margin-right: 5px;"></plus-icon><span>Предложить проблему</span></button>
     <p></p>
     <ul class="list-group">
-      <li class="list-group-item" v-for="(problem, idx) in paginatedData" :key="idx">
+      <li class="list-group-item" v-for="(problem, idx) in paginatedData" :key="idx" @click.prevent="show(problem)" data-toggle="modal" data-target="#popupShow">
         <p> {{ problem.name }}  </p>
         <div class="icons">
             <edit-icon size="1x" class="custom-class" @click="edit(problem)" data-toggle="modal" data-target="#popupEdit" style="margin-left: 30px;"></edit-icon>
             <trash-icon size="1x" @click="deleteP(problem.id, problem.name)" class="custom-class" data-toggle="modal" style="margin-left: 30px;"
             data-target="#popupDelete"></trash-icon> 
-            </div>
+          </div>
       </li>
     </ul>
 
@@ -34,17 +34,22 @@
       </nav>
     </div>
 
+
     <PopupCreate v-if="openCreate" :open="openCreate" @createProblem="createProblem(param = $event)" />
     <PopupEdit v-if="openEdit" :open="openEdit" :val="paramsModal" @editProblem="editProblem(param = $event)"/>
-    <popupDelete v-if="openDelete" :open="openDelete" :val="paramsModal"
+    <PopupDelete v-if="openDelete" :open="openDelete" :val="paramsModal"
       @deleteProblem="deleteProblem(param = $event)" />
+    <PopupShow v-if="openShow" :open="openShow" :val="paramsModal" />  
+    {{openShow}}
+    <!-- @showProblem="showProblem(param = $event)" -->
   </div>
 </template>
 
 <script>
   import PopupCreate from '@/components/Popup/Create'
   import PopupEdit from '@/components/Popup/Edit'
-  import popupDelete from '@/components/Popup/Delete'
+  import PopupDelete from '@/components/Popup/Delete'
+  import PopupShow from '@/components/Popup/Show'
   import {mapGetters} from 'vuex'
   import { EditIcon, TrashIcon, PlusIcon, ChevronRightIcon, ChevronLeftIcon } from 'vue-feather-icons'
 
@@ -54,6 +59,7 @@
       openCreate: false,
       openEdit: false,
       openDelete: false,
+      openShow: false,
       paramsModal: {},
       pageNumber: 0,
       size: 25,
@@ -61,7 +67,8 @@
     components: {
       PopupCreate,
       PopupEdit,
-      popupDelete,
+      PopupDelete,
+      PopupShow,
       EditIcon,
       TrashIcon,
       PlusIcon,
@@ -101,24 +108,17 @@
       },
       create() {
         this.openCreate = true
-         this.$store.commit('setError', '')
+        this.$store.commit('setError', '')
       },
-      // async createProblem(param) {
-      //   if (param.length < 250) {
-      //     await this.$store.dispatch('postProblem', param)
-      //   } 
-      // },
 
       edit(obj) {
         this.openEdit = true
         this.paramsModal = obj
         this.$store.commit('setError', '')
       },
-      // async editProblem(param) {
       async editProblem() {
         window.location.reload(true)
       },
-
 
       deleteP(id, name) {
         this.openDelete = true
@@ -130,22 +130,22 @@
       async deleteProblem(param) {
         await this.$store.dispatch('deleteProblem', param)
       },
+      show(obj) {
+        this.openShow = true
+        this.paramsModal = obj
+        console.log(this.openShow , this.paramsModal);
+        this.$store.commit('setError', '')
+      }
     }
   };
 </script>
 
 <style scoped lang="scss">
-  // .container {
-  //   width: 293px;
-  //   margin: 50px;
-  //   padding: 0;
-  // }
-
   .btn {
     padding: 0;
     border-radius: 12px;
-    width: 100%;
-    height: 54px;
+    width: 302px;
+    height: 58px;
     background: #92D2C3;
     color: #fff;
     margin-bottom: 30px;
@@ -184,7 +184,6 @@
   }
 
   svg {
-    
     color: #AFAFAF;
     cursor: pointer;
   }

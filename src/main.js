@@ -9,13 +9,12 @@ import "./registerServiceWorker";
 import Vuelidate from 'vuelidate'
 import VueToastify from 'vue-toastify';
 
-import axios from "axios";
-// axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-// axios.defaults.headers.common['Accept'] = 'application/json'
-const token = localStorage.getItem('token')
-if (token) {
-  axios.defaults.headers.common['Authorization'] = token
-}
+// import axios from "axios";
+
+// const token = localStorage.getItem('token')
+// if (token) {
+//   axios.defaults.headers.common['Authorization'] = token
+// }
 // eslint-disable-next-line 
 import styles from './scss/app.scss';
 

@@ -2,15 +2,16 @@
   <div class="container">
     <form>
       <div class="form-group">
-        <label for="username">Имя пользователя<span v-if="username.length >= 15 && username.length <= 20">{{$v.username.$params.maxLength.max - username.length}}</span></label> 
+        <label for="username">Имя пользователя<span
+            v-if="username.length >= 15 && username.length <= 20">{{$v.username.$params.maxLength.max - username.length}}</span></label>
         <input type="text" class="form-control" id="username" v-model="username"
           :class="{ 'form-control--error': $v.username.$invalid, 'form-control--valid': username && !$v.username.$invalid}">
-        <!-- <div class="errorAuth" v-if="errorU.name">{{errorU.name[0]}}</div> -->
         <div class="errorAuth" v-if="errorU.name">{{errorU.name[1]}} </div>
       </div>
       <div class="form-group">
-        <label for="password">Пароль<span v-if="password.length >= 15 && password.length <= 20">{{$v.password.$params.maxLength.max - password.length}}</span></label>
-        <input type="password" class="form-control" id="password" v-model="password" 
+        <label for="password">Пароль<span
+            v-if="password.length >= 15 && password.length <= 20">{{$v.password.$params.maxLength.max - password.length}}</span></label>
+        <input type="password" class="form-control" id="password" v-model="password"
           :class="{ 'form-control--error': $v.password.$invalid, 'form-control--valid': password && !$v.password.$invalid}">
         <div class="errorAuth" v-if="errorU.password">{{errorU.password[0]}} {{errorU.password[1]}} </div>
       </div>
@@ -26,12 +27,14 @@
 </template>
 
 <script>
-// import {mapGetters} from 'vuex'
-import {
+  // import {mapGetters} from 'vuex'
+  import {
     maxLength,
     minLength
   } from 'vuelidate/lib/validators'
-  import {mapGetters} from 'vuex'
+  import {
+    mapGetters
+  } from 'vuex'
 
   export default {
     name: "Login",
@@ -39,7 +42,7 @@ import {
       success: false,
       username: '',
       password: ''
-      
+
     }),
     validations: {
       username: {
@@ -51,26 +54,24 @@ import {
         maxLength: maxLength(20)
       },
     },
-     computed: {
-      ...mapGetters(['errorU', 'error401']) 
+    computed: {
+      ...mapGetters(['errorU', 'error401'])
     },
     watch: {
-      errorU() {
-      },
-      error401() {
-      },
+      errorU() {},
+      error401() {},
     },
     methods: {
       async login() {
-          const formData = {
-            name: this.username,
-            password: this.password,
+        const formData = {
+          name: this.username,
+          password: this.password,
+        }
+        await this.$store.dispatch('login', formData).then(() => {
+          if (!this.errorU) {
+            this.$router.push('/problems')
           }
-          await this.$store.dispatch('login', formData).then(() => {
-            if (!this.errorU) {
-              this.$router.push('/problems')
-            }
-          })
+        })
       },
     }
   };
@@ -94,6 +95,7 @@ import {
     color: #FF8585;
     // color: red;
   }
+
   a {
     display: flex;
     justify-content: center;
@@ -116,7 +118,7 @@ import {
     letter-spacing: 0.15px;
     color: #828282;
   }
-  
+
   label {
     display: flex;
     justify-content: space-between;
@@ -144,7 +146,8 @@ import {
     line-height: 17px;
   }
 
-  input, input:active {
+  input,
+  input:active {
     background-color: #F7F7F7;
     margin-bottom: 22px;
     border-radius: 12px;
@@ -158,7 +161,9 @@ import {
   .form-group {
     margin: 0 0 15px 0;
   }
-  .form-control:active, .form-control:focus {
+
+  .form-control:active,
+  .form-control:focus {
     background-color: #F7F7F7;
-  } 
+  }
 </style>

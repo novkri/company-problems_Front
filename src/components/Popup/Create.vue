@@ -15,14 +15,14 @@
               <!-- :class="{ 'form-control--error': $v.name.$invalid }" -->
               <input ref="input" type="text" class="form-control form-control--valid"
                 id="new-problem-title" v-model="name" placeholder="Название проблемы..." >
-                <div class="error" v-if="!$v.name.maxLength">Название проблемы должно быть не более
-                {{$v.name.$params.maxLength.max}} символов</div>
+                <!-- <div class="error" v-if="!$v.name.maxLength">Название проблемы должно быть не более
+                {{$v.name.$params.maxLength.max}} символов</div> -->
                 <!-- <div class="error" v-if="!$v.name.minLength">{{error}}</div> -->
                 <div class="error" v-if="error">{{error}}</div>
             </form>
-            <!-- data-dismiss="modal"  -->
+            <!-- data-dismiss="modal" :disabled="!name" -->
             <button type="submit" class="btn btnMain" @click="addProblem()"
-              :disabled="!name">
+              >
               <img src="@/assets/Vector.png" alt="send">
             </button>
           </div>

@@ -8,8 +8,8 @@
               <input @input="setTitle($event.target.value)" ref="input" class="form-control"
                 :class="{ 'form-control--error': $v.name.$invalid }" id="new-problem-title" v-model="name">
                 <!-- @keyup.enter="editProblem()" -->
-              <div class="error" v-if="!$v.name.maxLength">Название проблемы должно быть не более
-                {{$v.name.$params.maxLength.max}} символов</div>
+              <!-- <div class="error" v-if="!$v.name.maxLength">Название проблемы должно быть не более
+                {{$v.name.$params.maxLength.max}} символов</div> -->
                 <!-- <div class="error" v-if="!$v.name.minLength">{{error}}</div> -->
                 <div class="error" v-if="error">{{error}}</div>
             </form>
@@ -25,7 +25,6 @@
     </div>
 
   </div>
-
 </template>
 
 <script>

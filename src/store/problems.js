@@ -28,8 +28,6 @@ export default {
   },
   getters: {
     problems: state => {
-      // state.problems.sort(function (a, b) {
-      //     return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1})
       return state.problems = state.problems.sort(function (a, b) {
         return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1})
     },

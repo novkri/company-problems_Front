@@ -21,7 +21,7 @@ axios.interceptors.request.use(
 
 export default {
   state: {
-    users: [],
+    // currentUser: [],
     errorU: [],
     error401: '',
     errorUReg: [],
@@ -30,11 +30,9 @@ export default {
  
   },
   getters: {
-    // isAuthenticated: state => !!state.token,
-    // authStatus: state => state.status,
-    users: state => {
-      return state.users
-    },
+    // currentUser: state => {
+    //   return state.currentUser
+    // },
     errorU: state => {
       return state.errorU
     },
@@ -49,9 +47,6 @@ export default {
     authStatus: state => state.status,
   },
   mutations: {
-    setUsers: (state, payload) => {
-      state.users = payload
-    },
     addUser: (state, payload) => {
       state.users.push(payload)
     },
@@ -61,6 +56,7 @@ export default {
     auth_success(state, token){
       state.status = 'success'
       state.token = token
+      // state.users = user
     },
     auth_error(state){
       state.status = 'error'
@@ -104,9 +100,12 @@ export default {
         await axios.post( BASEURL+'/login', user)
           .then(resp => {
             const token = resp.data.access_token
+            const user = resp.data.user.name
             localStorage.setItem('token', token)
+            localStorage.setItem('user', user)
             axios.defaults.headers.common['Authorization'] = token
-            commit('auth_success', token, resp.data.user)
+            
+            commit('auth_success', token)
             commit('setErrorU', '')
           })
         .catch(err => {
@@ -118,16 +117,17 @@ export default {
           
           commit('auth_error')
           localStorage.removeItem('token')
+          localStorage.removeItem('user')
         })
     },
     logout({commit}){
       return new Promise((resolve) => {
         commit('logout')
         localStorage.removeItem('token')
+        localStorage.removeItem('user')
         delete axios.defaults.headers.common['Authorization']
         resolve()
       })
      }
-  
   }
 }
