@@ -12,11 +12,11 @@
           
           <div class="modal-body">
             <div>
-              выюрано {{selected}}
-              <span>Решения в работе:</span>
+              <span class="subtitle">Решения в работе:</span>
               <ol>
                 <li>
-                  dummy 1
+                  <span>1. dummy 1</span>
+                  
                   <!-- <div class="input-group mb-3">
                     <select class="custom-select" id="inputGroupSelect02">
                       <option selected>Choose...</option>
@@ -26,15 +26,17 @@
                     </select>
                   </div> -->
                   <!-- <div class="input-group"> -->
-                     
-                    <select v-model="selected" class="form-control" id="exampleFormControlSelect1" style="width: 190px;">
-                      <!-- <option disabled value="">Выберите один из вариантов</option> -->
-                      <option>В работе</option>
-                      <option>Решено</option>
-                      <option>Пусто ?</option>
-                      <option>4</option>
-                      <option>5</option>
-                    </select>
+                     <div class="select">
+                        <select v-model="selected" class="form-control form-control--in-work" id="exampleFormControlSelect1">
+                          <!--  <option disabled value="">Выберите один из вариантов</option> -->
+                          <option>В работе</option>
+                          <option>Решено</option>
+                          <option>Пусто ?</option>
+                          <option>4</option>
+                          <option>5</option>
+                        </select>
+                     </div>
+
 
                     <input type="date" id="start" name="trip-start" class="date"
                       value="2018-07-22"
@@ -75,48 +77,66 @@ export default {
   },
   methods: {
     showSolutions(obj) {
-      this.solutions = {...obj, test: 'test'}
+      this.openSolutions = true
+      // this.solutions = {...obj, test: 'test'}
       //передать все решения по проблеме
-      console.log(this.solutions);
+      // console.log(this.solutions);
+      console.log(obj);
     }
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   .modal-header {
     border: none;
-    margin-bottom: 23px;
+  }
+  .modal-title {
+    border: none;
+    margin-bottom: 35px;
     padding: 0;
-    font-family: 'Roboto';
-    font-weight: 500;
+    font-family: 'GothamPro-Medium';
+    font-style: normal;
+    font-size: 24px;
+    line-height: 24px;
+    color: #2D453F;
+  }
+  .subtitle {
+    font-family: 'GothamPro-Medium';
     font-size: 18px;
     line-height: 24px;
+    letter-spacing: 0.15px;
+    color: #2D453F;
   }
 
   .modal-content {
     border-radius: 12px;
     border: none;
-    width: 860px;
-    /* height: 340px; */
-    padding: 41px 45px 35px 45px;
+    max-width: 1096px;
+    padding: 36px 30px 37px 62px;
   }
   ol {
     margin-top: 30px;
     margin-bottom: 20px;
+    line-height: 24px;
+    color: #2D453F;
+    margin-bottom: 30px;
   }
   li {
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
     align-items: center;
+    span {
+      width: 555px;
+    }
   }
 
   .btn {
     padding: 0;
     border-radius: 12px;
-    width: 302px;
-    height: 58px;
+    width: 335px;
+    height: 50px;
     background: #92D2C3;
     color: #fff;
     margin: 0 auto;
@@ -131,19 +151,74 @@ export default {
   }
   @media (min-width: 576px) {
     .modal-dialog {
-      max-width: 860px;
+      max-width: 1096px;
       margin: 1.75rem auto;
     }
   }
 
+  .close {
+    margin-left: 91px;
+  }
   .date, .date:focus {
     outline: none;
     border: none;
+    position: relative;
+    margin-left: 61px;
   }
   input[type="date"]::-webkit-calendar-picker-indicator {
     background: url('~@/assets/calendar.png') 100%;
     background-repeat: no-repeat;
     cursor: pointer;
+    color: #6D6D6D;
+    position: absolute;
+    top: -2%;
+    left: 75%;
+
+  }
+
+  .select {
+    width: 158px;
+    border-radius: 10px;
+ 
+    padding: 0;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    select {
+      display: block;
+      width: 100%; 
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+  }
+ .select:before {
+    content: url('~@/assets/Select.png');
+    display: block;
+    border: none;
+    pointer-events: none;
+    position: absolute;
+    z-index: 1;
+    top: 27%;
+    left: 68%;
 }
+  .form-control {
+    border-radius: 10px;
+    padding: 7px 13px;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+  }
+  .form-control--in-work {
+    background: #C4C4C4;
+    border-radius: 10px;
+    color: #2D453F;
+  }
+  .form-control--done {
+    background: #4EAD96;
+    border-radius: 10px;
+    color: #FFFFFF;
+  }
+
 
 </style>

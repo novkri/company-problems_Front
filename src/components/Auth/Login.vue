@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <div class="header">Вход в систему</div>
     <form>
       <div class="form-group">
         <label for="username">Имя пользователя<span
@@ -18,10 +19,14 @@
       <br>
       <div class="errorAuth" v-if="errorU.name" style="text-align: center;">{{errorU.name[0]}}</div>
       <div class="errorAuth" v-if="error401" style="text-align: center;">{{error401}}</div>
-      <div class="form-group">
+      <!-- <div class="form-group">
         <router-link :to="{ name: 'Register' }">Регистрация</router-link>
+      </div> -->
+      <div class="btn-and-link">
+        <button type="submit" class="btn" @click.prevent="login">Войти</button>
+        <router-link to="/register">Регистрация</router-link>
       </div>
-      <button type="submit" class="btn" @click.prevent="login">Войти</button>
+      
     </form>
   </div>
 </template>
@@ -78,6 +83,16 @@
 </script>
 
 <style lang="scss" scoped>
+  .header {
+    font-family: 'GothamPro-Medium';
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 23px;
+    color: #4F4F4F;
+    margin-bottom: 144px;
+  }
+
   form {
     margin: 0;
     width: 100%;
@@ -93,7 +108,6 @@
     color: #BDBDBD;
     margin-top: 10px;
     color: #FF8585;
-    // color: red;
   }
 
   a {
@@ -104,6 +118,7 @@
   }
 
   .container {
+    flex-direction: column;
     width: 344px;
     display: flex;
     margin: auto;
@@ -128,7 +143,8 @@
   .btn {
     display: flex;
     justify-content: center;
-    margin: 0 auto;
+    // margin: 0 auto;
+    margin-right: 22px;
     padding: 0;
     border-radius: 12px;
     width: 109px;
@@ -165,5 +181,21 @@
   .form-control:active,
   .form-control:focus {
     background-color: #F7F7F7;
+  }
+
+  .btn-and-link {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 100px;
+  }
+
+  a {
+    margin: 0;
+    font-size: 18px;
+    line-height: 17px;
+    font-family: 'GothamPro-Medium';
+    color: #92D2C3;
   }
 </style>

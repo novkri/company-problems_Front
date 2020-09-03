@@ -4,7 +4,7 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">{{val.name}}</h5>
+            <h5 class="modal-title"></h5>
             <button type="button" id="close" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -33,6 +33,9 @@ export default {
     // openSolutions: false,
     // solutions: {}
   }),
+  mounted() {
+    console.log("mounted");
+  }
 //   methods: {
 //     showSolutions(obj) {
 //       this.solutions = obj //передать все решения по проблеме

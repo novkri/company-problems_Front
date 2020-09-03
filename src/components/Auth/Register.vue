@@ -1,6 +1,8 @@
 <template>
   <div class="container">
+    <!-- <div class="header">Регистрация</div> -->
     <form v-if="!success">
+      <div class="header">Регистрация</div>
       <div class="form-group">
         <label for="username">Имя пользователя <span
             v-if="username.length >= 15 && username.length <= 20">{{$v.username.$params.maxLength.max - username.length}}</span></label>
@@ -54,6 +56,8 @@
         На страницу авторизации
       </button>
     </div>
+
+    <div class="to-login">Уже зарегистрированы? <router-link to="/login">Вход</router-link> </div>
   </div>
 
 
@@ -161,6 +165,17 @@
 </script>
 
 <style lang="scss" scoped>
+  .header {
+    font-family: 'GothamPro-Medium';
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 23px;
+    color: #4F4F4F;
+    margin-bottom: 53px;
+    text-align: center;
+  }
+
   form {
     margin: 0;
     width: 100%;
@@ -199,6 +214,7 @@
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #828282;
+    flex-direction: column;
   }
 
   label {
@@ -281,16 +297,26 @@
     margin: auto;
     align-items: center;
 
-    // img {
-    //   width: fit-content;
-    //   padding-top: 27px;
-    //   padding-bottom: 33px;
-    // }
-
     .btn {
       margin: 0;
       width: 294px;
     }
+  }
 
+  .to-login {
+    display: flex;
+    margin-top: 56px;
+    font-size: 18px;
+    line-height: 17px;
+    color: #9B9B9B;
+    font-family: 'GothamPro';
+    font-style: normal;
+    font-weight: normal;
+  }
+  a {
+    margin: 0;
+    margin-left: 19px;
+    color: #92D2C3;
+    font-family: 'GothamPro-Medium';
   }
 </style>
