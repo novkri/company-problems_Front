@@ -255,6 +255,9 @@
     letter-spacing: 0.15px;
     color: #4F4F4F
   }
+  input[type="email" i] {
+    -webkit-text-security: circle !important;
+  }   
 
   .form-control:active,
   .form-control:focus {

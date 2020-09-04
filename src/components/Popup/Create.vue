@@ -10,9 +10,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <!-- @submit="addProblem()" -->
             <form @keyup.enter="addProblem()" class="form-group">
-              <!-- :class="{ 'form-control--error': $v.name.$invalid }" -->
               <input ref="input" type="text" class="form-control form-control--valid"
                 id="new-problem-title" v-model="name" placeholder="Название проблемы..." >
                 <!-- <div class="error" v-if="!$v.name.maxLength">Название проблемы должно быть не более
@@ -20,9 +18,7 @@
                 <!-- <div class="error" v-if="!$v.name.minLength">{{error}}</div> -->
                 <div class="error" v-if="error">{{error}}</div>
             </form>
-            <!-- data-dismiss="modal" :disabled="!name" -->
-            <button type="submit" class="btn btnMain" @click="addProblem()"
-              >
+            <button type="submit" class="btn btnMain" @click="addProblem()">
               <img src="@/assets/Vector.png" alt="send">
             </button>
           </div>

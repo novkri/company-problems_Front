@@ -1,10 +1,10 @@
 <template>
-  <div class="container">
-    <button type="button" class="btn btnMain" @click="create" data-toggle="modal" data-target="#popupCreate">
+  <div class="container" style="width: 1350px;">
+    <!-- <button type="button" class="btn btnMain" @click="create" data-toggle="modal" data-target="#popupCreate">
       <plus-icon size="1.5x" class="custom-class" style="color: white; margin-right: 5px;"></plus-icon><span>Предложить
         проблему</span>
     </button>
-    <p></p>
+    <p></p> -->
     <ul class="list-group">
       <!-- @click.prevent="show(problem)" -->
       <li class="list-group-item" v-for="(problem, idx) in paginatedData" :key="idx" >
@@ -21,6 +21,7 @@
         </div>
       </li>
     </ul>
+
 
     <div class="pagination">
       <nav>
@@ -42,6 +43,11 @@
         </ul>
       </nav>
     </div>
+
+    <button type="button" class="btn btnMain" @click="create" data-toggle="modal" data-target="#popupCreate">
+      <plus-icon size="1.5x" class="custom-class" style="color: white; margin-right: 5px;"></plus-icon><span>Предложить
+        проблему</span>
+    </button>
 
 <!-- :open="openCreate"  -->
     <PopupCreate v-if="openCreate" @createProblem="createProblem(param = $event)" />
@@ -178,7 +184,7 @@
     height: 58px;
     background: #92D2C3;
     color: #fff;
-    margin-bottom: 30px;
+    margin: auto;
 
     font-size: 18px;
     line-height: 17px;
@@ -206,21 +212,18 @@
     justify-content: space-between;
     display: flex;
     align-items: center;
-    // padding: 1.08rem 1.25rem;
     padding: 0 23px 0 0;
 
-    &:last-child {
-      margin-bottom: 43px;
-    }
+    // &:last-child {
+    //   margin-bottom: 43px;
+    // }
   }
 
   .toggle-area {
     width: 100%;
     cursor: pointer;
-    // margin: 23px;
     padding: 23px 0 23px 23px;
   }
-
 
   svg {
     color: #AFAFAF;
@@ -233,7 +236,8 @@
 
   .pagination {
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
+    margin-bottom: 0;
   }
 
   .page-link {
