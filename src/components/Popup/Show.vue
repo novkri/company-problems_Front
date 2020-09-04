@@ -35,12 +35,16 @@
                     </ul>
                   </div>
 
-                  <div class="select">
-                    <select v-model="selected" class="form-control" :style="{'background-color': selected == 'Выполнено' ? '#4EAD96' : '#C4C4C4', 'color': selected == 'Выполнено' ? '#FFFFFF' : '#2D453F'}" 
+                  <div class="select" style="position: relative;">
+                    <select v-model="selected" class="form-control" :style="{'background-color': selected == 'Выполнено' ? '#4EAD96' : '#C4C4C4'}" 
                       id="exampleFormControlSelect1">
+                      
                       <option>В работе</option>
                       <option>Выполнено</option>
                     </select>
+                    <!-- <chevron-down-icon size="1.5x" class="custom-class" style="position: absolute;
+    top: 20%;
+    right: 6%;"></chevron-down-icon> -->
                   </div>
 
                   <input type="date" id="start" name="trip-start" class="date" value="2018-07-22">
@@ -49,8 +53,7 @@
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </li>
-                <li>dummy 2</li>
-                <li>dummy 3</li>
+
               </ol>
 
               <button type="button" class="btn btnMain" @click.prevent="showSolutions(val)" data-toggle="modal"
@@ -74,11 +77,12 @@
               <ul class="list-group">
                 <li class="list-group-item" >
                   1. Решение 1
-                  <div class="icons">
+                  <div class="icons" ref="iconInWork">
                     <!-- <check-icon size="1.5x" class="custom-class"></check-icon> -->
                     <!-- <edit-icon size="1x" class="custom-class" @click="edit(problem)" data-toggle="modal" data-target="#popupEdit"
                       style="margin-left: 0px;"></edit-icon> -->
-                      <img src="~@/assets/checkd.png">
+                      <img src="~@/assets/checkd.png" v-if="!inWork" @click="changeinWork(0)">
+                      <check-icon size="1.5x" class="custom-class" style="color: #D0D0D0" v-if="inWork" @click="changeinWork(0)"></check-icon>
                   </div>
                 </li>
               </ul>
@@ -86,8 +90,9 @@
              <ul class="list-group">
                 <li class="list-group-item" >
                   1. Решение 1
-                  <div class="icons">
-                    <check-icon size="1.5x" class="custom-class" style="color: #D0D0D0"></check-icon>
+                  <div class="icons" ref="iconInWork">
+                    <img src="~@/assets/checkd.png" v-if="!inWork" @click="changeinWork(1)">
+                    <check-icon size="1.5x" class="custom-class" style="color: #D0D0D0" v-if="inWork" @click="changeinWork(1)"></check-icon>
                   </div>
                 </li>
               </ul>
@@ -99,15 +104,14 @@
               <form class="form-group">
                 <!-- ref="input" id="new-problem-title" v-model="name" -->
                 <input type="text" class="form-control form-control--valid"
-                placeholder="Предложите ваше решение..." >
+                placeholder="Предложите ваше решение..." v-model="solutionName">
                   <!-- <div class="error" v-if="!$v.name.maxLength">Название проблемы должно быть не более
                   {{$v.name.$params.maxLength.max}} символов</div> -->
                   <!-- <div class="error" v-if="!$v.name.minLength">{{error}}</div> -->
 
                   <!-- <div class="error" v-if="error">{{error}}</div> -->
               </form>
-              <!-- @click="addProblem()" -->
-              <button type="submit" class="btn btnMain" style="height: 34px; width: 34px; border-radius: 50px;">
+              <button type="submit" class="btn btnMain" style="height: 34px; width: 34px; border-radius: 50px;" @click="addSolution()">
                 <img src="@/assets/Vector.png" alt="send">
               </button>
             </div>
@@ -125,6 +129,7 @@
 <script>
   // import PopupSolutions from '@/components/Popup/Solutions'
   import { CheckIcon } from 'vue-feather-icons'
+  // import { ChevronDownIcon } from 'vue-feather-icons'
   // import { StarIcon } from 'vue-feather-icons'
 
   export default {
@@ -134,14 +139,20 @@
       selected: '',
       openSolutions: false,
       solutions: {},
-      showTasks: false
+      showTasks: false,
+      solutionName: '',
+      inWork: true
     }),
     components: {
       CheckIcon,
+      // ChevronDownIcon
       // StarIcon
       // PopupSolutions,
     },
     methods: {
+      select() {
+        console.log(this.$refs);
+      },
       displayTasks() {
         this.showTasks = !this.showTasks
         if (this.showTasks) {
@@ -150,12 +161,21 @@
           this.$refs.desc.classList.remove('clicked')
         }
       },
+      changeinWork(i) {
+        this.inWork = !this.inWork
+        console.log(i,this.$refs);
+          if (this.inWork) {
+            this.$refs.iconInWork.classList.add('in-work')
+          } else {
+            this.$refs.iconInWork.classList.remove('not-in-work')
+          }
+      },
       showSolutions(obj) {
         this.openSolutions = true
-        // this.solutions = {...obj, test: 'test'}
-        //передать все решения по проблеме
-        // console.log(this.solutions);
         console.log(obj);
+      },
+      addSolution() {
+        console.log(this.solutionName);
       }
     }
   }
@@ -177,16 +197,18 @@
     color: #2D453F;
     justify-content: center;
     text-align: center;
+
+    h6 {
+      font-family: 'GothamPro-Medium';
+      font-style: normal;
+      font-size: 18px;
+      line-height: 24px;
+      letter-spacing: 0.15px;
+      color: #2D453F;
+      // margin-top: 11px;
+    }
   }
 
-  h6 {
-    font-family: 'GothamPro-Medium';
-    font-style: normal;
-    font-size: 18px;
-    line-height: 24px;
-    letter-spacing: 0.15px;
-    color: #2D453F;
-  }
 
   .subtitle {
     display: flex;
@@ -207,6 +229,7 @@
       line-height: 13px;
       text-align: justify;
       color: #2D453F;
+       margin-top: 11px;
     }
   }
 
@@ -271,9 +294,16 @@
   .tasks {
     margin-top: 12px;
     transition: all 1s ease 0s;
-
+    // list-style-image: url("~@/assets/listStyleFirst.png");
+    list-style: none;
     li {
-      margin-bottom: 6px;
+      // list-style-image: url("~@/assets/listStyleFirst.png");
+      margin-bottom: 10px;
+      display: list-item;
+    }
+    li::before {
+      // content: url("~@/assets/listStyleFirst.png");
+
     }
   }
 
@@ -319,7 +349,7 @@
   .icons {
     display: flex;
     flex-direction: column;
-    font-family: 'GothamPro';
+    // font-family: 'GothamPro';
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
@@ -346,14 +376,35 @@
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;
+    // &::after {
+    //   content: ">";
+    //   color: #666;
+    //   -webkit-transform: rotate(90deg);
+    //   -moz-transform: rotate(90deg);
+    //   -ms-transform: rotate(90deg);
+    //   transform: rotate(90deg);
+    //   right: 8px; 
+    //   top:2px;
+    //   padding: 0 0 2px;
+    //   // border-bottom: 1px solid #ddd;
+    //   font-weight: 900;
+    //   position: absolute;
+    //   pointer-events: none;
+    //   font-family: "GothamPro-Medium";
+    // }
 
     select {
       width: 158px;
       appearance: none;
       background: url('~@/assets/Select.png') no-repeat #C4C4C4;
-      background-position: right 1.2em top 50%, 0 0;
+      background-position: right 0.6em top 50%, 0 0;
       outline: 0;
+      -webkit-appearance:none;
+      -moz-appearance: none;
+      cursor: pointer;
+
     }
+    
     option {
       background-color: #C4C4C4;
       color: #2D453F;
