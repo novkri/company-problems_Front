@@ -51,8 +51,8 @@
                   <input type="date" id="start" name="trip-start" class="date" v-model="formData">
                   <!-- {{solution.updated_at}} -->
                   <!-- {{new Date(solution.updated_at).toISOString().split('T')[0]}} -->
-                  {{formData}}
-                  {{solution.status}}
+                  <!-- {{formData}}
+                  {{solution.status}} -->
                   <button type="button" class="close" style="margin: 0 -1rem -1rem auto;"
                     @click="solution.in_work = false">
                     <span aria-hidden="true">&times;</span>
@@ -64,7 +64,7 @@
               <button type="button" class="btn btnMain" @click.prevent="showSolutions(val)" data-toggle="modal"
                 data-target="#popupSolutions"><span>Посмотреть/Добавить решение</span></button>
 
-              {{solutions}}
+              <!-- {{solutions}} -->
             </div>
           </div>
         </div>
@@ -83,8 +83,8 @@
             <h6>В работе</h6>
             <ul class="list-group">
               <li class="list-group-item" v-for="(sol, idx) in solutions" :key="idx">
-                <input @input="setTitle($event.target.value)" ref="input" class="form-control" id="new-problem-title"
-                  v-model="sol.name">
+                <!-- <input @input="setTitle($event.target.value)" ref="input" class="form-control" id="new-problem-title"
+                  v-model="sol.name"> -->
                 {{idx+1}}. {{sol.name}}
                 <div class="icons" ref="iconInWork">
                   <img src="~@/assets/checkd.png" v-if="!inWork" @click="changeinWork(0)">
@@ -96,7 +96,7 @@
             <h6>Прочие решения</h6>
             <ul class="list-group">
               <li class="list-group-item" v-for="(notinworksol, idx) in solutionsOther" :key="idx">
-                {{idx}}. {{notinworksol.name}}
+                {{idx+1}}. {{notinworksol.name}}
                 <div class="icons" ref="iconInWork">
                   <img src="~@/assets/checkd.png" v-if="!inWork" @click="changeinWork(1)">
                   <check-icon size="1.5x" class="custom-class" style="color: #D0D0D0" v-if="inWork"
@@ -105,7 +105,7 @@
               </li>
             </ul>
             <br>
-            {{solutionsOther}}
+            <!-- {{solutionsOther}} -->
 
             <h6>Добавить решение</h6>
             <!-- @keyup.enter="addProblem()"  -->
@@ -118,7 +118,7 @@
                   {{$v.name.$params.maxLength.max}} символов</div> -->
                 <!-- <div class="error" v-if="!$v.name.minLength">{{error}}</div> -->
 
-                <!-- <div class="error" v-if="error">{{error}}</div> -->
+                <div class="error" v-if="error">{{error}}</div>
               </form>
               <button type="submit" class="btn btnMain" style="height: 34px; width: 34px; border-radius: 50px;"
                 @click="addSolution(val)">

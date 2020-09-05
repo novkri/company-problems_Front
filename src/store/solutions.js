@@ -72,8 +72,8 @@ export default {
               commit('setSolution', response.data)
             }
           })
-        .catch(error => 
-          commit('setError', error.response.data.message)
+        .catch(error =>
+            commit('setError', error.response.data.errors)
         )
     },
     postSolution: async ({commit}, param) => {
@@ -85,11 +85,15 @@ export default {
           commit('addSolution', response.data)
         }
         })
-      .catch(error => {
-        console.log(error.response);
-        commit('setError', error.response.data.errors.name[0])})
-
-    }, 
+      .catch(error => 
+        {
+          if (error.response.data.message) {
+            commit('setError', error.response.data.errors.name[0])}
+          else if (!error.response.data.message) {
+            commit('setError', error.response.data.errors)
+          }
+        }
+      )}, 
     /////////
     deleteSolution: async ({commit}, param) => {
       await axios.delete(URLSOLUTION + `/${param.id}`).then(response => {
