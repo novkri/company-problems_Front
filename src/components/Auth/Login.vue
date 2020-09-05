@@ -3,11 +3,11 @@
     <div class="header">Вход в систему</div>
     <form>
       <div class="form-group">
-        <label for="username">Имя пользователя<span
-            v-if="username.length >= 15 && username.length <= 20">{{$v.username.$params.maxLength.max - username.length}}</span></label>
-        <input type="text" class="form-control" id="username" v-model="username"
-          :class="{ 'form-control--error': $v.username.$invalid, 'form-control--valid': username && !$v.username.$invalid}">
-        <div class="errorAuth" v-if="errorU.name">{{errorU.name[1]}} </div>
+        <label for="email">Адрес электронной почты<span
+            v-if="email.length >= 15 && email.length <= 20">{{$v.email.$params.maxLength.max - email.length}}</span></label>
+        <input type="text" class="form-control" id="email" v-model="email"
+          :class="{ 'form-control--error': $v.email.$invalid, 'form-control--valid': email && !$v.email.$invalid}">
+        <div class="errorAuth" v-if="errorU.email">{{errorU.email[1]}} </div>
       </div>
       <div class="form-group">
         <label for="password">Пароль<span
@@ -19,9 +19,7 @@
       <br>
       <div class="errorAuth" v-if="errorU.name" style="text-align: center;">{{errorU.name[0]}}</div>
       <div class="errorAuth" v-if="error401" style="text-align: center;">{{error401}}</div>
-      <!-- <div class="form-group">
-        <router-link :to="{ name: 'Register' }">Регистрация</router-link>
-      </div> -->
+
       <div class="btn-and-link">
         <button type="submit" class="btn" @click.prevent="login">Войти</button>
         <router-link to="/register">Регистрация</router-link>
@@ -45,14 +43,14 @@
     name: "Login",
     data: () => ({
       success: false,
-      username: '',
+      email: '',
       password: ''
 
     }),
     validations: {
-      username: {
-        minLength: minLength(4),
-        maxLength: maxLength(20)
+      email: {
+        minLength: minLength(3),
+        maxLength: maxLength(256)
       },
       password: {
         minLength: minLength(8),
@@ -69,7 +67,7 @@
     methods: {
       async login() {
         const formData = {
-          name: this.username,
+          email: this.email,
           password: this.password,
         }
         await this.$store.dispatch('login', formData).then(() => {
