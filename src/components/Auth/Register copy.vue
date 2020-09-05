@@ -1,14 +1,13 @@
 <template>
   <div class="container">
-    <!-- <div class="header">Регистрация</div> -->
     <form v-if="!success">
       <div class="header">Регистрация</div>
       <div class="form-group">
-        <label for="username">Имя пользователя <span
-            v-if="username.length >= 15 && username.length <= 20">{{$v.username.$params.maxLength.max - username.length}}</span></label>
-        <input type="text" class="form-control" id="username" v-model="username"
-          :class="{ 'form-control--error': $v.username.$invalid, 'form-control--valid': username && !$v.username.$invalid}">
-        <div class="errorAuth" v-if="errorUReg.name">{{errorUReg.name[0]}} </div>
+        <label for="email">Адрес электронной почты<span
+            v-if="email.length >= 250 && email.length <= 255">{{$v.email.$params.maxLength.max - email.length}}</span></label>
+        <input type="email" class="form-control" id="email" v-model="email"
+          :class="{ 'form-control--error': $v.email.$invalid, 'form-control--valid': email && !$v.email.$invalid}">
+        <div class="errorAuth" v-if="errorUReg.email">{{errorUReg.email[0]}} </div>
       </div>
       <div class="form-group">
         <label for="password">Пароль <span
@@ -39,12 +38,27 @@
         </div>
         <div class="errorAuth" v-if="errorUReg.password">{{errorUReg.password[1]}} </div>
       </div>
+
       <div class="form-group">
-        <label for="email">Электронная почта <span
-            v-if="email.length >= 250 && email.length <= 255">{{$v.email.$params.maxLength.max - email.length}}</span></label>
-        <input type="email" class="form-control" id="email" v-model="email"
-          :class="{ 'form-control--error': $v.email.$invalid, 'form-control--valid': email && !$v.email.$invalid}">
-        <div class="errorAuth" v-if="errorUReg.email">{{errorUReg.email[0]}} </div>
+        <label for="text">Фамилия<span
+            v-if="surname.length >= 250 && surname.length <= 255">{{$v.surname.$params.maxLength.max - surname.length}}</span></label>
+        <input type="text" class="form-control" id="surname" v-model="surname"
+          :class="{ 'form-control--error': $v.surname.$invalid, 'form-control--valid': surname && !$v.surname.$invalid}">
+        <div class="errorAuth" v-if="errorUReg.surname">{{errorUReg.surname[0]}} </div>
+      </div>
+       <div class="form-group">
+        <label for="text">Имя<span
+            v-if="name.length >= 250 && name.length <= 255">{{$v.name.$params.maxLength.max - name.length}}</span></label>
+        <input type="text" class="form-control" id="name" v-model="name"
+          :class="{ 'form-control--error': $v.name.$invalid, 'form-control--valid': name && !$v.name.$invalid}">
+        <div class="errorAuth" v-if="errorUReg.name">{{errorUReg.name[0]}} </div>
+      </div>
+       <div class="form-group">
+        <label for="text">Отчество<span
+            v-if="patronymic.length >= 250 && patronymic.length <= 255">{{$v.patronymic.$params.maxLength.max - patronymic.length}}</span></label>
+        <input type="text" class="form-control" id="patronymic" v-model="patronymic"
+          :class="{ 'form-control--error': $v.patronymic.$invalid, 'form-control--valid': patronymic && !$v.patronymic.$invalid}">
+        <div class="errorAuth" v-if="errorUReg.patronymic">{{errorUReg.patronymic[0]}} </div>
       </div>
       <button type="submit" class="btn" @click.prevent="register">Зарегистрироваться</button>
     </form>
@@ -65,7 +79,6 @@
 </template>
 
 <script>
-  // import {mapGetters} from 'vuex'
   import {
     EyeIcon,
     EyeOffIcon,
@@ -88,7 +101,9 @@
       email: '',
       password: '',
       confirm: '',
-      username: '',
+      surname: '',
+      patronymic: '',
+      name: '',
       eye: undefined,
       eyeC: undefined
     }),
@@ -98,7 +113,15 @@
       ThumbsUpIcon
     },
     validations: {
-      username: {
+      name: {
+        minLength: minLength(4),
+        maxLength: maxLength(20)
+      },
+      surname: {
+        minLength: minLength(4),
+        maxLength: maxLength(20)
+      },
+      patronymic: {
         minLength: minLength(4),
         maxLength: maxLength(20)
       },
@@ -148,7 +171,9 @@
       },
       async register() {
         const formData = {
-          name: this.username,
+          name: this.name,
+          surname: this.surname,
+          patronymic: this.patronymic,
           password: this.password,
           password_confirmation: this.confirm,
           email: this.email

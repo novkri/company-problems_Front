@@ -22,10 +22,7 @@
             </div>
 
             <div>
-              <div class="subtitle"><span style="width: 55%;">Решения в работе:</span> <span>Статус выполнения</span> <span>Срок исполнения</span> <span>Ответственный</span></div>
-              <!-- <span class="subtitle">Решения в работе:</span>
-              <span class="subtitle">Решения в работе:</span>
-              <span class="subtitle">Решения в работе:</span> -->
+              <div class="subtitle"><span style="width: 45%;">Решения в работе:</span> <span>Статус выполнения</span> <span>Срок исполнения</span> <span>Ответственный</span></div>
               <ol>
                 <li v-for="(solution, idx) in solutions" :key="idx">
                   <div class="list-item">
@@ -37,16 +34,16 @@
                     </ul>
                   </div>
 
-                  <div class="select" style="position: relative;">
+                  <div class="select gray" style="position: relative;" ref="select">
                     <select v-model="solution.status" class="form-control"
-                      :style="{'background-color': solution.status == 'Выполнено' ? '#4EAD96' : '#C4C4C4', 'color': solution.status == 'Выполнено' ? '#fff' : '#2D453F' }"
-                      id="exampleFormControlSelect1" @change="changeStatus">
-
+                      
+                      id="exampleFormControlSelect1" @change="changeStatus($event)">
+<!-- :style="{'background-color': solution.status == 'Выполнено' ? '#4EAD96' : '#C4C4C4', 'color': solution.status == 'Выполнено' ? '#fff' : '#2D453F' }" -->
                       <option value="В работе"
-                        :style="{'background-color': solution.status == 'Выполнено' ? '#4EAD96' : '#C4C4C4', 'color': solution.status == 'Выполнено' ? '#fff' : '#2D453F' }">
+                        >
                         В работе</option>
                       <option value="Выполнено"
-                        :style="{'background-color': solution.status == 'Выполнено' ? '#4EAD96' : '#C4C4C4', 'color': solution.status == 'Выполнено' ? '#fff' : '#2D453F' }">
+                        >
                         Выполнено</option>
                     </select>
                   </div>
@@ -151,11 +148,9 @@
     name: 'popup',
     props: ['open', 'val'],
     data: () => ({
-      // selected: '',
       openSolutions: false,
       showTasks: false,
       solutionName: '',
-      // inWork: true,
       formData: '',
       progress: ''
 
@@ -164,28 +159,33 @@
       CheckIcon,
     },
 
-    // async mounted() {
-    //   console.log(this.val.id);
-
-    // //   // await this.$store.dispatch('getSolutions', this.val.id) //2
-    // },
     computed: {
       ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404']),
-      selected: {
-        get() {
-          return this.value
-        },
-        set(v) {
-          this.$emit('input', v)
-        }
-      },
+      // selected: {
+      //   get() {
+      //     return this.value
+      //   },
+      //   set(v) {
+      //     console.log(v);
+      //     this.$emit('input', v)
+      //   }
+      // },
     },
     methods: {
       changeStatus(event) {
         this.$emit('input', event.target.value);
+       
         if (this.solutions.filter(s => s.status == 'Выполнено').length !== 0) {
           this.progress = (this.solutions.filter(s => s.status == 'Выполнено').length / this.solutions.length) * 100
         }
+        if (event.target.value === 'Выполнено') {
+          event.path[1].classList.remove('gray')
+          event.path[1].classList.add('green')
+        } else {
+          event.path[1].classList.remove('green')
+          event.path[1].classList.add('gray')
+        }
+        console.log( event.path[1]);
       },
       displayTasks(event) {
         this.showTasks = !this.showTasks
@@ -281,7 +281,7 @@
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #2D453F;
-    width: 82%;
+    // width: 82%;
 
     h6 {
       font-family: 'GothamPro';
@@ -316,6 +316,9 @@
     color: #2D453F;
     margin-bottom: 30px;
     padding: 0;
+    li {
+      padding: 0 0 10px 0;
+    }
   }
 
   li {
@@ -356,18 +359,11 @@
   .tasks {
     margin-top: 12px;
     transition: all 1s ease 0s;
-    // list-style-image: url("~@/assets/listStyleFirst.png");
     list-style: none;
 
     li {
-      // list-style-image: url("~@/assets/listStyleFirst.png");
       margin-bottom: 10px;
       display: list-item;
-    }
-
-    li::before {
-      // content: url("~@/assets/listStyleFirst.png");
-
     }
   }
 
@@ -441,33 +437,17 @@
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;
-    // &::after {
-    //   content: ">";
-    //   color: #666;
-    //   -webkit-transform: rotate(90deg);
-    //   -moz-transform: rotate(90deg);
-    //   -ms-transform: rotate(90deg);
-    //   transform: rotate(90deg);
-    //   right: 8px; 
-    //   top:2px;
-    //   padding: 0 0 2px;
-    //   // border-bottom: 1px solid #ddd;
-    //   font-weight: 900;
-    //   position: absolute;
-    //   pointer-events: none;
-    //   font-family: "GothamPro-Medium";
-    // }
 
     select {
       width: 158px;
       appearance: none;
-      background: url('~@/assets/Select.png') no-repeat;
-      background-position: right 0.6em top 50%, 0 0;
+      // background: url('~@/assets/SelectWhite.png') no-repeat;
+      // background: url('~@/assets/Select.png') no-repeat;
+      // background-position: right 0.6em top 50%, 0 0;
       outline: 0;
       -webkit-appearance: none;
       -moz-appearance: none;
       cursor: pointer;
-
     }
 
     option {
@@ -484,6 +464,23 @@
     }
   }
 
+  .green {
+    background-color: #4EAD96;
+    select {
+      background: url('~@/assets/SelectWhite.png') no-repeat;
+          background-position: right 0.6em top 50%, 0 0;
+          color: #fff;
+    }
+  }
+  .gray {
+    background-color: #C4C4C4;
+    select {
+      background: url('~@/assets/Select.png') no-repeat;
+          background-position: right 0.6em top 50%, 0 0;
+          color: #2D453F;
+    }
+  }
+
   .form-control {
     border-radius: 10px;
     padding: 7px 13px;
@@ -494,7 +491,6 @@
 
   .list-group-item {
     border-radius: 7px;
-    // width: 840px;
     width: 100%;
     height: 60px;
     background-color: #F0F0F0;
@@ -507,7 +503,6 @@
     justify-content: space-between;
     display: flex;
     align-items: center;
-    // padding: 1.08rem 1.25rem;
     padding: 18px auto 18px 32px;
 
     &:last-child {
