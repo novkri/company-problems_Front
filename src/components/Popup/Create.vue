@@ -61,7 +61,6 @@
             this.name = ''
             document.getElementById('close').click()
           }
-          
         })
       },
 

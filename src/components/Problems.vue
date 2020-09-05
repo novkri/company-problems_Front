@@ -165,12 +165,16 @@
       async deleteProblem(param) {
         await this.$store.dispatch('deleteProblem', param)
       },
-      show(obj) {
+      async show(obj) {
         this.openEdit = false,
         this.openDelete = false,
         this.openShow = true
         this.paramsModal = obj
+        // console.log(obj);
         this.$store.commit('setError', '')
+
+        console.log(obj.id);
+        await this.$store.dispatch('getSolutions', obj.id)
       }
     }
   };

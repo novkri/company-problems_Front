@@ -1,5 +1,5 @@
 <template>
-  <div class="popup-show" >
+  <div class="popup-show">
     <div class="modal fade" id="popupShow" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered" :style="{'width': openSolutions ? '1434px' : '1096px'}">
         <div class="modal-content" v-if="!openSolutions">
@@ -12,22 +12,21 @@
           <div class="modal-body">
             <div class="subtitle">
               <h5 class="modal-title">{{val.name}}</h5>
-              <h6>Прогресс решения {{(1/4)*100}}%</h6> 
-              <!-- прогресс решения вычислять в computed -->
-              <!-- <star-icon size="1.5x" class="custom-class"></star-icon> -->
+              <h6 v-if="progress !== ''">Прогресс решения {{progress}}%</h6>
+              <h6 v-else>Прогресс решения 0%</h6>
               <div class="icons">
                 <img src="~@/assets/star.png">
                 <span>95</span>
               </div>
-              
+
             </div>
 
             <div>
               <span class="subtitle">Решения в работе:</span>
               <ol>
-                <li>
+                <li v-for="(solution, idx) in solutions" :key="idx">
                   <div class="list-item">
-                    <div class="desc" ref="desc" @click="displayTasks"><span>1. dummy 1</span></div>
+                    <div class="desc" ref="desc" @click="displayTasks"><span>{{idx+1}}.{{solution.name}}</span></div>
                     <ul class="tasks" ref="hiddenList" v-if="showTasks">
                       <li>Задача1</li>
                       <li>Задача2</li>
@@ -36,20 +35,26 @@
                   </div>
 
                   <div class="select" style="position: relative;">
-                    <select v-model="selected" class="form-control" :style="{'background-color': selected == 'Выполнено' ? '#4EAD96' : '#C4C4C4'}" 
-                      id="exampleFormControlSelect1">
-                      
-                      <option>В работе</option>
-                      <option>Выполнено</option>
+                    <select v-model="solution.status" class="form-control"
+                      :style="{'background-color': solution.status == 'Выполнено' ? '#4EAD96' : '#C4C4C4', 'color': solution.status == 'Выполнено' ? '#fff' : '#2D453F' }"
+                      id="exampleFormControlSelect1" @change="changeStatus">
+
+                      <option value="В работе"
+                        :style="{'background-color': solution.status == 'Выполнено' ? '#4EAD96' : '#C4C4C4', 'color': solution.status == 'Выполнено' ? '#fff' : '#2D453F' }">
+                        В работе</option>
+                      <option value="Выполнено"
+                        :style="{'background-color': solution.status == 'Выполнено' ? '#4EAD96' : '#C4C4C4', 'color': solution.status == 'Выполнено' ? '#fff' : '#2D453F' }">
+                        Выполнено</option>
                     </select>
-                    <!-- <chevron-down-icon size="1.5x" class="custom-class" style="position: absolute;
-    top: 20%;
-    right: 6%;"></chevron-down-icon> -->
                   </div>
-
-                  <input type="date" id="start" name="trip-start" class="date" value="2018-07-22">
-
-                  <button type="button" class="close" style="margin: 0 -1rem -1rem auto;">
+                  <!-- :value="new Date(solution.updated_at).toISOString().split('T')[0] -->
+                  <input type="date" id="start" name="trip-start" class="date" v-model="formData">
+                  <!-- {{solution.updated_at}} -->
+                  <!-- {{new Date(solution.updated_at).toISOString().split('T')[0]}} -->
+                  {{formData}}
+                  {{solution.status}}
+                  <button type="button" class="close" style="margin: 0 -1rem -1rem auto;"
+                    @click="solution.in_work = false">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </li>
@@ -58,100 +63,128 @@
 
               <button type="button" class="btn btnMain" @click.prevent="showSolutions(val)" data-toggle="modal"
                 data-target="#popupSolutions"><span>Посмотреть/Добавить решение</span></button>
+
+              {{solutions}}
             </div>
           </div>
         </div>
 
 
-    <!-- /////////////////////////////////////////////////////////////////////////////////// -->
+        <!-- /////////////////////////////////////////////////////////////////////////////////// -->
         <div class="modal-content" v-else style="padding: 36px 300px;">
           <div class="modal-header" style="width: 130%;">
             <button type="button" id="close" class="close" @click="openSolutions = false">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          
+
           <div class="modal-body">
             <h5 class="modal-title">Список решений</h5>
             <h6>В работе</h6>
-              <ul class="list-group">
-                <li class="list-group-item" >
-                  1. Решение 1
-                  <div class="icons" ref="iconInWork">
-                    <!-- <check-icon size="1.5x" class="custom-class"></check-icon> -->
-                    <!-- <edit-icon size="1x" class="custom-class" @click="edit(problem)" data-toggle="modal" data-target="#popupEdit"
-                      style="margin-left: 0px;"></edit-icon> -->
-                      <img src="~@/assets/checkd.png" v-if="!inWork" @click="changeinWork(0)">
-                      <check-icon size="1.5x" class="custom-class" style="color: #D0D0D0" v-if="inWork" @click="changeinWork(0)"></check-icon>
-                  </div>
-                </li>
-              </ul>
+            <ul class="list-group">
+              <li class="list-group-item" v-for="(sol, idx) in solutions" :key="idx">
+                <input @input="setTitle($event.target.value)" ref="input" class="form-control" id="new-problem-title"
+                  v-model="sol.name">
+                {{idx+1}}. {{sol.name}}
+                <div class="icons" ref="iconInWork">
+                  <img src="~@/assets/checkd.png" v-if="!inWork" @click="changeinWork(0)">
+                  <check-icon size="1.5x" class="custom-class" style="color: #D0D0D0" v-if="inWork"
+                    @click="changeinWork(0)"></check-icon>
+                </div>
+              </li>
+            </ul>
             <h6>Прочие решения</h6>
-             <ul class="list-group">
-                <li class="list-group-item" >
-                  1. Решение 1
-                  <div class="icons" ref="iconInWork">
-                    <img src="~@/assets/checkd.png" v-if="!inWork" @click="changeinWork(1)">
-                    <check-icon size="1.5x" class="custom-class" style="color: #D0D0D0" v-if="inWork" @click="changeinWork(1)"></check-icon>
-                  </div>
-                </li>
-              </ul>
-              <br>
+            <ul class="list-group">
+              <li class="list-group-item" v-for="(notinworksol, idx) in solutionsOther" :key="idx">
+                {{idx}}. {{notinworksol.name}}
+                <div class="icons" ref="iconInWork">
+                  <img src="~@/assets/checkd.png" v-if="!inWork" @click="changeinWork(1)">
+                  <check-icon size="1.5x" class="custom-class" style="color: #D0D0D0" v-if="inWork"
+                    @click="changeinWork(1)"></check-icon>
+                </div>
+              </li>
+            </ul>
+            <br>
+            {{solutionsOther}}
 
             <h6>Добавить решение</h6>
             <!-- @keyup.enter="addProblem()"  -->
             <div class="new-solution">
               <form class="form-group">
                 <!-- ref="input" id="new-problem-title" v-model="name" -->
-                <input type="text" class="form-control form-control--valid"
-                placeholder="Предложите ваше решение..." v-model="solutionName">
-                  <!-- <div class="error" v-if="!$v.name.maxLength">Название проблемы должно быть не более
+                <input type="text" class="form-control form-control--valid" placeholder="Предложите ваше решение..."
+                  v-model="solutionName">
+                <!-- <div class="error" v-if="!$v.name.maxLength">Название проблемы должно быть не более
                   {{$v.name.$params.maxLength.max}} символов</div> -->
-                  <!-- <div class="error" v-if="!$v.name.minLength">{{error}}</div> -->
+                <!-- <div class="error" v-if="!$v.name.minLength">{{error}}</div> -->
 
-                  <!-- <div class="error" v-if="error">{{error}}</div> -->
+                <!-- <div class="error" v-if="error">{{error}}</div> -->
               </form>
-              <button type="submit" class="btn btnMain" style="height: 34px; width: 34px; border-radius: 50px;" @click="addSolution()">
+              <button type="submit" class="btn btnMain" style="height: 34px; width: 34px; border-radius: 50px;"
+                @click="addSolution(val)">
                 <img src="@/assets/Vector.png" alt="send">
               </button>
             </div>
           </div>
         </div>
-            
+
 
       </div>
     </div>
-
-    <!-- <PopupSolutions v-if="openSolutions" :open="openSolutions" :solutions="solutions" /> -->
   </div>
 </template>
 
 <script>
-  // import PopupSolutions from '@/components/Popup/Solutions'
-  import { CheckIcon } from 'vue-feather-icons'
-  // import { ChevronDownIcon } from 'vue-feather-icons'
-  // import { StarIcon } from 'vue-feather-icons'
+  import {
+    CheckIcon
+  } from 'vue-feather-icons'
+  import {
+    mapGetters
+  } from 'vuex'
 
   export default {
     name: 'popup',
     props: ['open', 'val'],
     data: () => ({
-      selected: '',
+      // selected: '',
       openSolutions: false,
-      solutions: {},
       showTasks: false,
       solutionName: '',
-      inWork: true
+      inWork: true,
+      formData: '',
+      progress: ''
+
     }),
     components: {
       CheckIcon,
-      // ChevronDownIcon
-      // StarIcon
-      // PopupSolutions,
+    },
+
+    // async mounted() {
+    //   console.log(this.val.id);
+
+    // //   // await this.$store.dispatch('getSolutions', this.val.id) //2
+    // },
+    computed: {
+      ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404']),
+      selected: {
+        get() {
+          return this.value
+        },
+        set(v) {
+          this.$emit('input', v)
+        }
+      },
     },
     methods: {
-      select() {
-        console.log(this.$refs);
+      changeStatus(event) {
+        // console.log(event);
+        this.$emit('input', event.target.value);
+        console.log(this.solutions.length, this.solutions.filter(s => s.status == 'Выполнено').length);
+        if (this.solutions.filter(s => s.status == 'Выполнено').length !== 0) {
+          this.progress = (this.solutions.filter(s => s.status == 'Выполнено').length / this.solutions.length) * 100
+          // return progress
+          console.log(this.progress);
+        }
       },
       displayTasks() {
         this.showTasks = !this.showTasks
@@ -162,21 +195,33 @@
         }
       },
       changeinWork(i) {
+        console.log(i);
         this.inWork = !this.inWork
-        console.log(i,this.$refs);
-          if (this.inWork) {
-            this.$refs.iconInWork.classList.add('in-work')
-          } else {
-            this.$refs.iconInWork.classList.remove('not-in-work')
-          }
+        if (this.inWork) {
+          this.$refs.iconInWork.classList.add('in-work')
+        } else {
+          this.$refs.iconInWork.classList.remove('not-in-work')
+        }
       },
-      showSolutions(obj) {
+      async showSolutions(obj) {
         this.openSolutions = true
-        console.log(obj);
+        console.log('showSolutions');
+        console.log(obj.id);
       },
-      addSolution() {
-        console.log(this.solutionName);
-      }
+
+      async addSolution(obj) {
+        console.log(this.solutionName, obj.id);
+        await this.$store.dispatch('postSolution', {
+          problemId: obj.id,
+          name: this.solutionName
+        }).then(() => {
+          if (!this.error) {
+            this.solutionName = ''
+            //   document.getElementById('close').click()
+          }
+
+        })
+      },
     }
   }
 </script>
@@ -221,6 +266,7 @@
     letter-spacing: 0.15px;
     color: #2D453F;
     width: 82%;
+
     h6 {
       font-family: 'GothamPro';
       font-style: normal;
@@ -229,7 +275,7 @@
       line-height: 13px;
       text-align: justify;
       color: #2D453F;
-       margin-top: 11px;
+      margin-top: 11px;
     }
   }
 
@@ -244,7 +290,7 @@
 
   .modal-body {
     padding: 0;
-    
+
   }
 
   ol {
@@ -296,11 +342,13 @@
     transition: all 1s ease 0s;
     // list-style-image: url("~@/assets/listStyleFirst.png");
     list-style: none;
+
     li {
       // list-style-image: url("~@/assets/listStyleFirst.png");
       margin-bottom: 10px;
       display: list-item;
     }
+
     li::before {
       // content: url("~@/assets/listStyleFirst.png");
 
@@ -358,6 +406,7 @@
     text-align: center;
     cursor: pointer;
   }
+
   input[type="date"]::-webkit-calendar-picker-indicator {
     background: url('~@/assets/calendar.png') 100%;
     background-repeat: no-repeat;
@@ -396,18 +445,23 @@
     select {
       width: 158px;
       appearance: none;
-      background: url('~@/assets/Select.png') no-repeat #C4C4C4;
+      background: url('~@/assets/Select.png') no-repeat;
       background-position: right 0.6em top 50%, 0 0;
       outline: 0;
-      -webkit-appearance:none;
+      -webkit-appearance: none;
       -moz-appearance: none;
       cursor: pointer;
 
     }
-    
+
     option {
       background-color: #C4C4C4;
       color: #2D453F;
+      font-size: 18px;
+      line-height: 24px;
+      letter-spacing: 0.15px;
+      border-radius: 10px;
+      outline: none;
       font-size: 18px;
       line-height: 24px;
       letter-spacing: 0.15px;
@@ -448,5 +502,4 @@
   .new-solution {
     display: flex;
   }
-
 </style>
