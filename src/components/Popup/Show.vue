@@ -12,21 +12,24 @@
           <div class="modal-body">
             <div class="subtitle">
               <h5 class="modal-title">{{val.name}}</h5>
-              <h6 v-if="progress !== ''">Прогресс решения {{progress}}%</h6>
+              <!-- <h6 v-if="progress !== ''">Прогресс решения {{progress}}%</h6>
               <h6 v-else>Прогресс решения 0%</h6>
               <div class="icons">
                 <img src="~@/assets/star.png">
                 <span>95</span>
-              </div>
+              </div> -->
 
             </div>
 
             <div>
+              <div class="subtitle"><span style="width: 55%;">Решения в работе:</span> <span>Статус выполнения</span> <span>Срок исполнения</span> <span>Ответственный</span></div>
+              <!-- <span class="subtitle">Решения в работе:</span>
               <span class="subtitle">Решения в работе:</span>
+              <span class="subtitle">Решения в работе:</span> -->
               <ol>
                 <li v-for="(solution, idx) in solutions" :key="idx">
                   <div class="list-item">
-                    <div class="desc" ref="desc" @click="displayTasks"><span>{{idx+1}}.{{solution.name}}</span></div>
+                    <div class="desc" ref="desc" @click="displayTasks($event)"><span>{{idx+1}}.{{solution.name}}</span></div>
                     <ul class="tasks" ref="hiddenList" v-if="showTasks">
                       <li>Задача1</li>
                       <li>Задача2</li>
@@ -48,11 +51,13 @@
                     </select>
                   </div>
                   <!-- :value="new Date(solution.updated_at).toISOString().split('T')[0] -->
-                  <input type="date" id="start" name="trip-start" class="date" v-model="formData">
+                  <input type="date" id="start" name="trip-start" class="date" v-model="solution.formData">
+                  <!-- {{solution.formData}} -->
                   <!-- {{solution.updated_at}} -->
                   <!-- {{new Date(solution.updated_at).toISOString().split('T')[0]}} -->
                   <!-- {{formData}}
                   {{solution.status}} -->
+                  <!-- {{solution.in_work}} -->
                   <button type="button" class="close" style="margin: 0 -1rem -1rem auto;"
                     @click="solution.in_work = false">
                     <span aria-hidden="true">&times;</span>
@@ -87,9 +92,10 @@
                   v-model="sol.name"> -->
                 {{idx+1}}. {{sol.name}}
                 <div class="icons" ref="iconInWork">
-                  <img src="~@/assets/checkd.png" v-if="!inWork" @click="changeinWork(0)">
-                  <check-icon size="1.5x" class="custom-class" style="color: #D0D0D0" v-if="inWork"
-                    @click="changeinWork(0)"></check-icon>
+                  {{sol.in_work}}
+                  <img src="~@/assets/checkd.png" @click="changeinWork(sol)" v-if="sol.in_work">
+                  <check-icon size="1.5x" class="custom-class" style="color: #D0D0D0" v-else
+                    @click="changeinWork(sol)"></check-icon>
                 </div>
               </li>
             </ul>
@@ -98,9 +104,10 @@
               <li class="list-group-item" v-for="(notinworksol, idx) in solutionsOther" :key="idx">
                 {{idx+1}}. {{notinworksol.name}}
                 <div class="icons" ref="iconInWork">
-                  <img src="~@/assets/checkd.png" v-if="!inWork" @click="changeinWork(1)">
-                  <check-icon size="1.5x" class="custom-class" style="color: #D0D0D0" v-if="inWork"
-                    @click="changeinWork(1)"></check-icon>
+                  {{notinworksol.in_work}}
+                  <img src="~@/assets/checkd.png"  @click="changeinWork(notinworksol)" v-if="notinworksol.in_work">
+                  <check-icon size="1.5x" class="custom-class" style="color: #D0D0D0" v-else
+                    @click="changeinWork(notinworksol)"></check-icon>
                 </div>
               </li>
             </ul>
@@ -108,12 +115,11 @@
             <!-- {{solutionsOther}} -->
 
             <h6>Добавить решение</h6>
-            <!-- @keyup.enter="addProblem()"  -->
             <div class="new-solution">
-              <form class="form-group">
+              <form class="form-group" @submit.prevent="addSolution(val)">
                 <!-- ref="input" id="new-problem-title" v-model="name" -->
                 <input type="text" class="form-control form-control--valid" placeholder="Предложите ваше решение..."
-                  v-model="solutionName">
+                  v-model="solutionName" >
                 <!-- <div class="error" v-if="!$v.name.maxLength">Название проблемы должно быть не более
                   {{$v.name.$params.maxLength.max}} символов</div> -->
                 <!-- <div class="error" v-if="!$v.name.minLength">{{error}}</div> -->
@@ -127,7 +133,6 @@
             </div>
           </div>
         </div>
-
 
       </div>
     </div>
@@ -150,7 +155,7 @@
       openSolutions: false,
       showTasks: false,
       solutionName: '',
-      inWork: true,
+      // inWork: true,
       formData: '',
       progress: ''
 
@@ -177,31 +182,42 @@
     },
     methods: {
       changeStatus(event) {
-        // console.log(event);
         this.$emit('input', event.target.value);
-        console.log(this.solutions.length, this.solutions.filter(s => s.status == 'Выполнено').length);
         if (this.solutions.filter(s => s.status == 'Выполнено').length !== 0) {
           this.progress = (this.solutions.filter(s => s.status == 'Выполнено').length / this.solutions.length) * 100
-          // return progress
-          console.log(this.progress);
         }
       },
-      displayTasks() {
+      displayTasks(event) {
         this.showTasks = !this.showTasks
         if (this.showTasks) {
-          this.$refs.desc.classList.add('clicked')
+          event.target.classList.add('clicked')
         } else {
-          this.$refs.desc.classList.remove('clicked')
+          event.target.classList.remove('clicked')
         }
       },
-      changeinWork(i) {
-        console.log(i);
-        this.inWork = !this.inWork
-        if (this.inWork) {
-          this.$refs.iconInWork.classList.add('in-work')
+      changeinWork(obj) {
+        obj.in_work = !obj.in_work
+        console.log(obj, this.solutions, this.solutionsOther);
+
+        if (obj.in_work == true) {
+          this.solutions.push(obj)
+          // this.solutionsOther = this.solutionsOther.filter(sol => sol.id !== obj.id)
+          console.log(this.solutionsOther);
+          this.solutionsOther.splice(this.solutionsOther.indexOf(obj), 1);
+          // this.$store.commit('deleteOtherSolution', obj)
+          // this.$store.commit('addSolution', obj)
+
         } else {
-          this.$refs.iconInWork.classList.remove('not-in-work')
+          // this.solutionsOther.push(obj)
         }
+  
+        console.log(obj, this.solutions, this.solutionsOther);
+        // this.inWork = !this.inWork
+        // if (obj.in_work) {
+        //   this.$refs.iconInWork.classList.add('in-work')
+        // } else {
+        //   this.$refs.iconInWork.classList.remove('not-in-work')
+        // }
       },
       async showSolutions(obj) {
         this.openSolutions = true

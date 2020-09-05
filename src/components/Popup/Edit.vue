@@ -38,7 +38,6 @@
     data: function () {
       return {
         name: '',
-
       }
     },
     mounted() {

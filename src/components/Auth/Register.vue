@@ -3,12 +3,19 @@
     <!-- <div class="header">Регистрация</div> -->
     <form v-if="!success">
       <div class="header">Регистрация</div>
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label for="username">Имя пользователя <span
             v-if="username.length >= 15 && username.length <= 20">{{$v.username.$params.maxLength.max - username.length}}</span></label>
         <input type="text" class="form-control" id="username" v-model="username"
           :class="{ 'form-control--error': $v.username.$invalid, 'form-control--valid': username && !$v.username.$invalid}">
         <div class="errorAuth" v-if="errorUReg.name">{{errorUReg.name[0]}} </div>
+      </div> -->
+      <div class="form-group">
+        <label for="email">Электронная почта <span
+            v-if="email.length >= 250 && email.length <= 255">{{$v.email.$params.maxLength.max - email.length}}</span></label>
+        <input type="email" class="form-control" id="email" v-model="email"
+          :class="{ 'form-control--error': $v.email.$invalid, 'form-control--valid': email && !$v.email.$invalid}">
+        <div class="errorAuth" v-if="errorUReg.email">{{errorUReg.email[0]}} </div>
       </div>
       <div class="form-group">
         <label for="password">Пароль <span
@@ -39,13 +46,7 @@
         </div>
         <div class="errorAuth" v-if="errorUReg.password">{{errorUReg.password[1]}} </div>
       </div>
-      <div class="form-group">
-        <label for="email">Электронная почта <span
-            v-if="email.length >= 250 && email.length <= 255">{{$v.email.$params.maxLength.max - email.length}}</span></label>
-        <input type="email" class="form-control" id="email" v-model="email"
-          :class="{ 'form-control--error': $v.email.$invalid, 'form-control--valid': email && !$v.email.$invalid}">
-        <div class="errorAuth" v-if="errorUReg.email">{{errorUReg.email[0]}} </div>
-      </div>
+
       <button type="submit" class="btn" @click.prevent="register">Зарегистрироваться</button>
     </form>
 

@@ -30,15 +30,14 @@ export default {
   },
   getters: {
     solutions: state => {
+      console.log(state.solutions, 'getter');
       return state.solutions = state.solutions.sort(function (a, b) {
         return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1})
     },
     solutionsOther: state => {
       return state.solutionsOther = state.solutionsOther.sort(function (a, b) {
-        console.log(new Date(a.created_at).toISOString(), new Date(b.created_at).toISOString());
         return (new Date(a.created_at).toISOString() > new Date(b.created_at).toISOString()) ? 1 : -1})
     },
-
   },
   mutations: {
     setSolution: (state, payload) => {
@@ -48,12 +47,23 @@ export default {
       // state.solutionsOther = payload
       state.solutionsOther = payload.filter(sol => !sol.in_work)
     },
-    addSolution: (state, payload) => {
-      state.solutionsOther.push(payload)
-    },
-    deleteSolution: (state, payload) => {
-      state.solutions = state.solutions.filter(solution => solution.id !== payload)
-    },
+    // addSolution: (state, payload) => {
+    //    state.solutions.push(payload)
+    //   //  state.solutions = state.solutions.filter(s => s.problem_id == payload.problem_id)
+    // },
+    // deleteSolution: (state, payload) => {
+    //   state.solutions = state.solutions.filter(solution => solution.id !== payload)
+    //   // state.solutions = state.solutions.filter(s => s.problem_id == payload.problem_id)
+    // },
+    // addOtherSolution: (state, payload) => {
+    //   state.solutionsOther.push(payload)
+    // },
+    // deleteOtherSolution: (state, payload) => {
+    //   state.solutionsOther.filter(solution => solution.id !== payload)
+    //   // state.solutionsOther = state.solutionsOther.filter(s => s.problem_id == payload.problem_id)
+    // },
+
+
     editSolution: (state, payload) => {
       state.solutions.find(solution => solution.id == payload.id).name = payload.name
     },
@@ -94,6 +104,9 @@ export default {
           }
         }
       )}, 
+
+
+
     /////////
     deleteSolution: async ({commit}, param) => {
       await axios.delete(URLSOLUTION + `/${param.id}`).then(response => {

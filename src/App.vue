@@ -2,8 +2,8 @@
   <div id="app">
     <div id="nav">
       <nav class="navbar navbar-light bg-light" v-if="isLoggedIn">
-        <a class="navbar-brand">Navbar</a>
-        <span>{{userLoggedIn}} (имя здесь для разработки)</span>
+        <a class="navbar-brand">Navbar (временно)</a>
+        <span>{{userLoggedIn}} (здесь временно)</span>
         <span><a @click="logout">Logout</a></span>
       </nav>
     </div>
