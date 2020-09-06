@@ -1,10 +1,10 @@
 <template>
   <div id="app">
     <div id="nav">
-      <nav class="navbar navbar-light bg-light" v-if="isLoggedIn">
-        <a class="navbar-brand">Navbar (временно)</a>
-        <span>{{userLoggedIn}} (здесь временно)</span>
-        <span><a @click="logout">Logout</a></span>
+      <nav class="navbar navbar-light bg-light" v-if="isLoggedIn" style="height: 78px;">
+        <!-- <a class="navbar-brand">Navbar (временно)</a> -->
+        <!-- <span>{{userLoggedIn}} (здесь временно)</span> -->
+        <span style="margin: 0 55px;">Вы вошли как: {{userLoggedIn}} (потом ФИО)</span> <log-in-icon @click="logout" size="1.5x" class="custom-class"></log-in-icon>
       </nav>
     </div>
 
@@ -14,7 +14,11 @@
 </template>
 
 <script>
+import { LogInIcon } from 'vue-feather-icons'
   export default {
+    components: {
+      LogInIcon
+    },
     computed : {
       isLoggedIn : function(){ 
         return this.$store.getters.isLoggedIn},
@@ -40,6 +44,10 @@
     line-height: 17px;
     font-weight: 500;
     letter-spacing: 0.15px;
+  }
+  .navbar {
+    justify-content: flex-end;
+    padding: .5rem 3rem;
   }
   .container {
     width: 436px;

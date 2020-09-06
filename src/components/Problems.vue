@@ -7,12 +7,11 @@
     <p></p> -->
     <ul class="list-group">
       <!-- @click.prevent="show(problem)" -->
-      <li class="list-group-item" v-for="(problem, idx) in paginatedData" :key="idx" >
-        <div class="toggle-area" @click.prevent="show(problem)"
-        data-toggle="modal" data-target="#popupShow">
+      <li class="list-group-item" v-for="(problem, idx) in paginatedData" :key="idx">
+        <div class="toggle-area" @click.prevent="show(problem)" data-toggle="modal" data-target="#popupShow">
           <p> {{ problem.name }} </p>
         </div>
-        
+
         <div class="icons">
           <edit-icon size="1x" class="custom-class" @click="edit(problem)" data-toggle="modal" data-target="#popupEdit"
             style="margin-left: 0px;"></edit-icon>
@@ -49,11 +48,10 @@
         проблему</span>
     </button>
 
-<!-- :open="openCreate"  -->
+    <!-- :open="openCreate"  -->
     <PopupCreate v-if="openCreate" @createProblem="createProblem(param = $event)" />
     <PopupEdit v-if="openEdit" :val="paramsModal" @editProblem="editProblem(param = $event)" />
-    <PopupDelete v-if="openDelete" :val="paramsModal"
-      @deleteProblem="deleteProblem(param = $event)" />
+    <PopupDelete v-if="openDelete" :val="paramsModal" @deleteProblem="deleteProblem(param = $event)" />
     <PopupShow v-if="openShow" :val="paramsModal" />
     <!-- @showProblem="showProblem(param = $event)" -->
   </div>
@@ -102,14 +100,14 @@
       await this.$store.dispatch('getProblems')
     },
     watch: {
-      error404(newValue, oldValue) {
-        console.log(`Updating from ${oldValue} to ${newValue}`)
+      error404() {
+        // console.log(`Updating from ${oldValue} to ${newValue}`)
         if (this.error404) {
           this.$vToastify.error(this.error404)
         }
       },
-      val(newValue, oldValue) {
-        console.log(`Updating from ${oldValue.name} to ${newValue.name}`)
+      val(newValue) {
+        // console.log(`Updating from ${oldValue.name} to ${newValue.name}`)
         this.name = newValue.name
       }
     },
@@ -167,13 +165,13 @@
       },
       async show(obj) {
         this.openEdit = false,
-        this.openDelete = false,
-        this.openShow = true
+          this.openDelete = false,
+          this.openShow = true
         this.paramsModal = obj
         // console.log(obj);
         this.$store.commit('setError', '')
 
-        console.log(obj.id);
+        // console.log(obj.id);
         await this.$store.dispatch('getSolutions', obj.id)
       }
     }

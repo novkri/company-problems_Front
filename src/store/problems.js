@@ -65,6 +65,7 @@ export default {
         .then(response => {
             if (response.status == 200) {
               commit('setError', '')
+              commit('setError404', '')
               commit('setProblems', response.data) 
             }
           })
@@ -77,6 +78,7 @@ export default {
       .then(response => {
         if (response.status == 201) {
           commit('setError', '')
+          commit('setError404', '')
           commit('addProblem', response.data)
         }
         })
@@ -87,6 +89,7 @@ export default {
       await axios.delete(BASEURL + `/${param.id}`).then(response => {
         if (response.status == 200) { 
           commit('setError', '')
+          commit('setError404', '')
           commit('deleteProblem', param.id)
         }
         })
@@ -101,6 +104,7 @@ export default {
         axios.put(BASEURL + `/${param.id}`, {name: param.name}).then(response => {
         if (response.status == 200) { 
           commit('setError', '')
+          commit('setError404', '')
           commit('editProblem', response.data)
         }
       }).catch((error) => {

@@ -1,7 +1,7 @@
 <template>
   <div class="popup-show">
     <div class="modal fade" id="popupShow" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered" :style="{'width': openSolutions ? '1434px' : '1096px'}">
+      <div class="modal-dialog modal-dialog-centered" :style="{'width': openSolutions ? '1434px' : '1212px'}">
         <div class="modal-content" v-if="!openSolutions">
           <div class="modal-header">
             <button type="button" id="close" class="close" data-dismiss="modal" aria-label="Close">
@@ -22,28 +22,73 @@
             </div>
 
             <div>
-              <div class="subtitle"><span style="width: 45%;">Решения в работе:</span> <span>Статус выполнения</span> <span>Срок исполнения</span> <span>Ответственный</span></div>
+              <div class="subtitle"><span style="width: 44%;">Решения в работе:</span> <span>Статус выполнения</span>
+                <span>Срок исполнения</span> <span>Ответственный</span></div>
               <ol>
                 <li v-for="(solution, idx) in solutions" :key="idx">
                   <div class="list-item">
-                    <div class="desc" ref="desc" @click="displayTasks($event)"><span>{{idx+1}}.{{solution.name}}</span></div>
-                    <ul class="tasks" ref="hiddenList" v-if="showTasks">
-                      <li>Задача1</li>
-                      <li>Задача2</li>
-                      <li>+ Добавить задачу</li>
+                    <div class="desc" ref="desc" @click="displayTasks($event)"><span>{{idx+1}}.{{solution.name}}</span>
+                    </div>
+                    <!--  v-if="showTasks" -->
+                    <ul class="tasks" ref="hiddenList">
+                      <li>
+                        <span>Задача1</span>
+                        <div class="select gray" style="position: relative;" ref="select">
+                          <select v-model="solution.status" class="form-control" @change="changeStatus($event)">
+                            <!-- :style="{'background-color': solution.status == 'Выполнено' ? '#4EAD96' : '#C4C4C4', 'color': solution.status == 'Выполнено' ? '#fff' : '#2D453F' }" -->
+                            <option value="В работе">
+                              В работе</option>
+                            <option value="Выполнено">
+                              Выполнено</option>
+                          </select>
+                        </div>
+                        <input type="date" id="start" name="trip-start" class="date" v-model="solution.formData">
+                        <div class="selectResponsible">
+                          <!-- v-model="solution.status" -->
+                          <select class="form-control" style="height: fit-content; padding: 0;">
+                            <option value="0">
+                              Человек1 Ч. Ч.</option>
+                            <option value="1">
+                              Человек2</option>
+                          </select>
+                        </div>
+                        <!-- <button type="button" class="close" style="margin: 0 -1rem -1rem auto;"
+                          @click="solution.in_work = false">
+                          <span aria-hidden="true">&times;</span>
+                        </button> -->
+                        <!-- <div class="icons"> -->
+                        <!-- @click="deleteP(problem.id, problem.name)" data-toggle="modal" data-target="#popupDelete" -->
+                        <trash-icon size="1.5x" class="custom-class"
+                          @click="deleteTask(task.id)"></trash-icon>
+                        <!-- </div> -->
+                      </li>
+
+                      <li>
+                        <!-- v-model="name" -->
+                        <input type="text" class="form-control" placeholder="+ Добавить задачу...">
+                        <div class="addNewTask">
+                          <input type="date" id="start" name="trip-start" class="date">
+                          <div class="selectResponsible">
+                            <select class="form-control" style="height: fit-content; padding: 0;">
+                              <option selected disabled>Выбрать</option>
+                              <option value="0">
+                                Человек1 Ч. Ч.</option>
+                              <option value="1">
+                                Человек2</option>
+                            </select>
+                          </div>
+                        </div>
+                        
+                      </li>
                     </ul>
                   </div>
 
                   <div class="select gray" style="position: relative;" ref="select">
-                    <select v-model="solution.status" class="form-control"
-                      
-                      id="exampleFormControlSelect1" @change="changeStatus($event)">
-<!-- :style="{'background-color': solution.status == 'Выполнено' ? '#4EAD96' : '#C4C4C4', 'color': solution.status == 'Выполнено' ? '#fff' : '#2D453F' }" -->
-                      <option value="В работе"
-                        >
+                    <select v-model="solution.status" class="form-control" @change="changeStatus($event)">
+                      <!-- :style="{'background-color': solution.status == 'Выполнено' ? '#4EAD96' : '#C4C4C4', 'color': solution.status == 'Выполнено' ? '#fff' : '#2D453F' }" -->
+                      <option value="В работе">
                         В работе</option>
-                      <option value="Выполнено"
-                        >
+                      <option value="Выполнено">
                         Выполнено</option>
                     </select>
                   </div>
@@ -55,8 +100,20 @@
                   <!-- {{formData}}
                   {{solution.status}} -->
                   <!-- {{solution.in_work}} -->
+
+                  <div class="selectResponsible">
+                    <!-- v-model="solution.status" -->
+                    <select class="form-control" style="height: fit-content; padding: 0;">
+                      <option value="0">
+                        Человек1</option>
+                      <option value="1">
+                        Человек2</option>
+                    </select>
+                  </div>
+
+                  <!-- {{solution.in_work}} -->
                   <button type="button" class="close" style="margin: 0 -1rem -1rem auto;"
-                    @click="solution.in_work = false">
+                    @click="removeFromWork(solution)">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </li>
@@ -71,64 +128,8 @@
           </div>
         </div>
 
-
-        <!-- /////////////////////////////////////////////////////////////////////////////////// -->
-        <div class="modal-content" v-else style="padding: 36px 300px;">
-          <div class="modal-header" style="width: 130%;">
-            <button type="button" id="close" class="close" @click="openSolutions = false">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-
-          <div class="modal-body">
-            <h5 class="modal-title">Список решений</h5>
-            <h6>В работе</h6>
-            <ul class="list-group">
-              <li class="list-group-item" v-for="(sol, idx) in solutions" :key="idx">
-                <!-- <input @input="setTitle($event.target.value)" ref="input" class="form-control" id="new-problem-title"
-                  v-model="sol.name"> -->
-                {{idx+1}}. {{sol.name}}
-                <div class="icons" ref="iconInWork">
-                  {{sol.in_work}}
-                  <img src="~@/assets/checkd.png" @click="changeinWork(sol)" v-if="sol.in_work">
-                  <check-icon size="1.5x" class="custom-class" style="color: #D0D0D0" v-else
-                    @click="changeinWork(sol)"></check-icon>
-                </div>
-              </li>
-            </ul>
-            <h6>Прочие решения</h6>
-            <ul class="list-group">
-              <li class="list-group-item" v-for="(notinworksol, idx) in solutionsOther" :key="idx">
-                {{idx+1}}. {{notinworksol.name}}
-                <div class="icons" ref="iconInWork">
-                  {{notinworksol.in_work}}
-                  <img src="~@/assets/checkd.png"  @click="changeinWork(notinworksol)" v-if="notinworksol.in_work">
-                  <check-icon size="1.5x" class="custom-class" style="color: #D0D0D0" v-else
-                    @click="changeinWork(notinworksol)"></check-icon>
-                </div>
-              </li>
-            </ul>
-            <br>
-            <!-- {{solutionsOther}} -->
-
-            <h6>Добавить решение</h6>
-            <div class="new-solution">
-              <form class="form-group" @submit.prevent="addSolution(val)">
-                <!-- ref="input" id="new-problem-title" v-model="name" -->
-                <input type="text" class="form-control form-control--valid" placeholder="Предложите ваше решение..."
-                  v-model="solutionName" >
-                <!-- <div class="error" v-if="!$v.name.maxLength">Название проблемы должно быть не более
-                  {{$v.name.$params.maxLength.max}} символов</div> -->
-                <!-- <div class="error" v-if="!$v.name.minLength">{{error}}</div> -->
-
-                <div class="error" v-if="error">{{error}}</div>
-              </form>
-              <button type="submit" class="btn btnMain" style="height: 34px; width: 34px; border-radius: 50px;"
-                @click="addSolution(val)">
-                <img src="@/assets/Vector.png" alt="send">
-              </button>
-            </div>
-          </div>
+        <div class="modal-content" v-if="openSolutions">
+          <Solutions :openS="openSolutions" @closeSolutions="closeSolutions($event)" :val="val" />
         </div>
 
       </div>
@@ -138,12 +139,13 @@
 
 <script>
   import {
-    CheckIcon
+    TrashIcon,
+    // CheckIcon
   } from 'vue-feather-icons'
   import {
     mapGetters
   } from 'vuex'
-
+  import Solutions from './Solutions'
   export default {
     name: 'popup',
     props: ['open', 'val'],
@@ -156,25 +158,18 @@
 
     }),
     components: {
-      CheckIcon,
+      // CheckIcon,
+      TrashIcon,
+      Solutions
     },
 
     computed: {
       ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404']),
-      // selected: {
-      //   get() {
-      //     return this.value
-      //   },
-      //   set(v) {
-      //     console.log(v);
-      //     this.$emit('input', v)
-      //   }
-      // },
     },
     methods: {
       changeStatus(event) {
         this.$emit('input', event.target.value);
-       
+
         if (this.solutions.filter(s => s.status == 'Выполнено').length !== 0) {
           this.progress = (this.solutions.filter(s => s.status == 'Выполнено').length / this.solutions.length) * 100
         }
@@ -185,64 +180,70 @@
           event.path[1].classList.remove('green')
           event.path[1].classList.add('gray')
         }
-        console.log( event.path[1]);
       },
       displayTasks(event) {
         this.showTasks = !this.showTasks
-        if (this.showTasks) {
-          event.target.classList.add('clicked')
-        } else {
-          event.target.classList.remove('clicked')
-        }
-      },
-      changeinWork(obj) {
-        obj.in_work = !obj.in_work
-        console.log(obj, this.solutions, this.solutionsOther);
-
-        if (obj.in_work == true) {
-          this.solutions.push(obj)
-          // this.solutionsOther = this.solutionsOther.filter(sol => sol.id !== obj.id)
-          console.log(this.solutionsOther);
-          this.solutionsOther.splice(this.solutionsOther.indexOf(obj), 1);
-          // this.$store.commit('deleteOtherSolution', obj)
-          // this.$store.commit('addSolution', obj)
-
-        } else {
-          // this.solutionsOther.push(obj)
-        }
-  
-        console.log(obj, this.solutions, this.solutionsOther);
-        // this.inWork = !this.inWork
-        // if (obj.in_work) {
-        //   this.$refs.iconInWork.classList.add('in-work')
-        // } else {
-        //   this.$refs.iconInWork.classList.remove('not-in-work')
-        // }
-      },
-      async showSolutions(obj) {
-        this.openSolutions = true
-        console.log('showSolutions');
-        console.log(obj.id);
-      },
-
-      async addSolution(obj) {
-        console.log(this.solutionName, obj.id);
-        await this.$store.dispatch('postSolution', {
-          problemId: obj.id,
-          name: this.solutionName
-        }).then(() => {
-          if (!this.error) {
-            this.solutionName = ''
-            //   document.getElementById('close').click()
+        if (event.target.tagName === 'DIV') {
+          if (this.showTasks) {
+            event.target.classList.add('clicked')
+            event.path[1].lastChild.classList.add('show')
+          } else {
+            event.target.classList.remove('clicked')
+            event.path[1].lastChild.classList.remove('show')
           }
+        } else if (event.target.tagName === 'SPAN') {
+          if (this.showTasks) {
+            event.target.classList.add('clicked')
+            event.path[2].lastChild.classList.add('show')
+          } else {
+            event.target.classList.remove('clicked')
+            event.path[2].lastChild.classList.remove('show')
+          }
+        }
 
-        })
+
       },
+
+      showSolutions() {
+        this.openSolutions = true
+      },
+      closeSolutions() {
+        this.openSolutions = false
+      },
+
+      removeFromWork(obj) {
+        console.log(obj);
+        this.solutions.splice(this.solutions.indexOf(obj), 1);
+        //send to server changes
+      },
+
+      deleteTask(id) {
+        console.log('delete task', id);
+      }
+
+      // async addSolution(obj) {
+      //   await this.$store.dispatch('postSolution', {
+      //     problemId: obj.id,
+      //     name: this.solutionName
+      //   }).then(() => {
+      //     if (!this.error) {
+      //       this.solutionName = ''
+      //       //   document.getElementById('close').click()
+      //     }
+
+      //   })
+      // },
     }
   }
 </script>
 
 <style scoped lang="scss">
+  svg {
+    color: #AFAFAF;
+    cursor: pointer;
+    margin: 0 -1px 0 0;
+  }
+
   .modal-header {
     border: none;
     justify-content: space-between;
@@ -281,7 +282,7 @@
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #2D453F;
-    // width: 82%;
+    width: 97%;
 
     h6 {
       font-family: 'GothamPro';
@@ -316,6 +317,7 @@
     color: #2D453F;
     margin-bottom: 30px;
     padding: 0;
+
     li {
       padding: 0 0 10px 0;
     }
@@ -342,6 +344,7 @@
     display: flex;
     flex-direction: row;
     width: fit-content;
+    cursor: pointer;
   }
 
   .desc::after {
@@ -357,14 +360,52 @@
   }
 
   .tasks {
-    margin-top: 12px;
+    margin-top: 27px;
     transition: all 1s ease 0s;
     list-style: none;
-
+    display: none;
+    width: 504px;
+ 
     li {
-      margin-bottom: 10px;
       display: list-item;
+      // margin-right: -125%;
+      width: 234%;
+      display: flex;
+      justify-content: space-between;
+
+      span {
+        width: 48%;
+        margin: 0;
+      }
+
+      // input {
+      //   padding: 0;
+      // }
     }
+
+    li:last-child {
+      justify-content: center;
+      input .form-control {
+        padding: 0;
+        // width: 100%;
+        // width: 504px;
+      }
+      input .date {
+        margin: 0;
+      }
+    }
+  }
+  .selectResponsible { 
+    // margin: 0 33px; 
+    // width: 179px;
+    margin: 0 20px 0 33px;
+    width: 220px;
+  }
+
+  .show {
+    visibility: visible;
+    display: flex;
+    flex-direction: column;
   }
 
   .btn {
@@ -408,7 +449,7 @@
 
   .icons {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     // font-family: 'GothamPro';
     font-style: normal;
     font-weight: normal;
@@ -417,6 +458,10 @@
     color: #000000;
     text-align: center;
     cursor: pointer;
+
+    img {
+      margin: 0 10px;
+    }
   }
 
   input[type="date"]::-webkit-calendar-picker-indicator {
@@ -466,18 +511,21 @@
 
   .green {
     background-color: #4EAD96;
+
     select {
       background: url('~@/assets/SelectWhite.png') no-repeat;
-          background-position: right 0.6em top 50%, 0 0;
-          color: #fff;
+      background-position: right 0.6em top 50%, 0 0;
+      color: #fff;
     }
   }
+
   .gray {
     background-color: #C4C4C4;
+
     select {
       background: url('~@/assets/Select.png') no-repeat;
-          background-position: right 0.6em top 50%, 0 0;
-          color: #2D453F;
+      background-position: right 0.6em top 50%, 0 0;
+      color: #2D453F;
     }
   }
 
@@ -512,5 +560,13 @@
 
   .new-solution {
     display: flex;
+  }
+
+  .addNewTask {
+    display: flex;
+    margin: 0 22px;
+    .selectResponsible {
+      width: 197px;
+    }
   }
 </style>
