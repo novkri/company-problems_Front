@@ -9,12 +9,14 @@
     <div class="modal-body">
       
       <h5 class="modal-title">Список решений</h5>
-      <h6>В работе</h6>
+      <h6>Решения в работе</h6>
       <ul class="list-group">
         <li class="list-group-item" v-for="(sol, idx) in solutions" :key="idx">
           <!-- @input="setTitle($event.target.value)" ref="input" -->
           <input class="form-control" style="background-color: #F9F9F9;" @keyup.enter="editSolClick(sol.name, sol.id)" @blur="editSolClick(sol.name, sol.id)"
-                  v-model="sol.name">
+            v-model="sol.name" :class="{ 'form-control--error': sol.name.length < 6 ||  sol.name.length > 100 || sol.name.length == 0 }">
+            {{sol.name.length}}
+          <!-- <div class="error" v-if="error">{{error}} {{idx}} </div> -->
           <!-- <div>
             <span>{{idx+1}}. </span> -->
             <!-- @keyup.enter="editSolClick(sol.name, sol.id)" -->
@@ -30,7 +32,7 @@
           </div>
         </li>
       </ul>
-      <h6>Прочие решения</h6>
+      <h6>Остальные решения</h6>
       <ul class="list-group">
         <li class="list-group-item" v-for="(notinworksol, idx) in solutionsOther" :key="idx">
           <!-- {{idx+1}}. {{notinworksol.name}} -->
@@ -91,7 +93,7 @@
       formData: '',
       progress: '',
       editBtn: false,
-      isDisabled: true
+      isDisabled: true,
 
     }),
     components: {
@@ -104,13 +106,18 @@
     },
     methods: {
 
-      onInput(event, name) {
-        // const value = event.target.innerText;
-        // this.content[index].value = value;
-        name = event.target.innerText
-        // this.editBtn = true
-        console.log(name);
-      },
+      // onInput(event) {
+      //   // const value = event.target.innerText;
+      //   // this.content[index].value = value;
+      //   let name = event.target.innerText
+      //   // if (name.length < 6) {
+      //   //   console.log(event);
+      //   //   console.log(event.target);
+      //   //   event.target.classList.add('error')
+      //   // }
+      //   // this.editBtn = true
+      //   // console.log(name, event.target);
+      // },
       onFocus() {
         this.editBtn = true
       },
@@ -118,13 +125,13 @@
         // const value = event.target.innerText;
         // this.content[index].value = value;
         name = event.target.innerText
-        console.log(event, name, id);
+        // console.log(event, name, id);
 
         await this.$store.dispatch('editSolution', {name, id})
         this.editBtn = false
       },
       async editSolClick(name, id) {
-        console.log(name, id);
+        await this.$store.commit('setError404', '')
         await this.$store.dispatch('editSolution', {name, id})
       },
 
@@ -132,17 +139,18 @@
         this.$emit('closeSolutions')
       },
 
-      changeinWork(obj) {
+      async changeinWork(obj) {
         obj.in_work = !obj.in_work
-        console.log(obj, this.solutions, this.solutionsOther);
+        // console.log(obj, this.solutions, this.solutionsOther);
 
-        if (obj.in_work == true) {
-          this.solutions.push(obj)
-          this.solutionsOther.splice(this.solutionsOther.indexOf(obj), 1);
-        } else {
-          this.solutionsOther.push(obj)
-          this.solutions.splice(this.solutions.indexOf(obj), 1);
-        }
+        await this.$store.dispatch('changeinWork', obj)
+        // if (obj.in_work == true) {
+        //   this.solutions.push(obj)
+        //   this.solutionsOther.splice(this.solutionsOther.indexOf(obj), 1);
+        // } else {
+        //   this.solutionsOther.push(obj)
+        //   this.solutions.splice(this.solutions.indexOf(obj), 1);
+        // }
       },
 
 
@@ -171,6 +179,15 @@
     color: #AFAFAF;
     cursor: pointer;
     margin: 0 10px;
+  }
+  h6 {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    color: #000000;
+    font-family: 'Roboto';
   }
 
   .modal-header {

@@ -28,10 +28,12 @@ export default {
   },
   getters: {
     solutions: state => {
-      return state.solutions = state.solutions.sort(function (a, b) {
-        return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1
-      })
+      return state.solutions 
+      // = state.solutions.sort(function (a, b) {
+      //   return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1
+      // })
     },
+
     solutionsOther: state => {
       return state.solutionsOther = state.solutionsOther.sort(function (a, b) {
         return (new Date(a.created_at).toISOString() > new Date(b.created_at).toISOString()) ? 1 : -1
@@ -53,9 +55,23 @@ export default {
       state.solutionsOther = state.solutionsOther.filter(s=> s.id !== payload)
       //&
     },
+    sortSolutions: state => {
+      state.solutions = state.solutions.sort(function (a, b) {
+        return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1
+      })
+    },
 
     editSolution: (state, payload) => {
       state.solutions.find(solution => solution.id == payload.id).name = payload.name
+    },
+    editStatus: (state, payload) => {
+      if (payload.in_work) {
+        state.solutions.push(payload)
+        state.solutionsOther = state.solutionsOther.filter(s=> s.id !== payload.id)
+      } else {
+        state.solutionsOther.push(payload)
+        state.solutions = state.solutions.filter(s=> s.id !== payload.id)
+      }
     },
 
   },
@@ -89,6 +105,7 @@ export default {
           }
         })
         .catch(error => {
+          commit('setError404', '')
           if (error.response.status == 422) {
             if (error.response.data.errors.name) {
               commit('setError', error.response.data.errors.name[0])
@@ -96,6 +113,7 @@ export default {
               commit('setError', error.response.data.errors)
             } 
           } else if (error.response.status == 404) {
+            
             commit('setError404', error.response.data.message)
           }
           
@@ -124,30 +142,50 @@ export default {
     //   })
     // },
 
-    editSolution: async ({
-      commit
-    }, param) => {
-      // console.log(param);
+    editSolution: async ({commit}, param) => {
       // param.id = 10000000000
       axios.put(URLSOLUTION + `/${param.id}`, {
         name: param.name
       }).then(response => {
+        commit('setError404', '')
         if (response.status == 200) {
           commit('setError', '')
-          commit('editProblem', response.data)
+          commit('editSolution', response.data)
+          commit('sortSolutions')
         }
-      }).catch((error) => {console.log(error.response);
+      }).catch((error) => {
+        commit('setError404', '')
+        if (error.response.status == 404) {
+          commit('setError404', '')
+          commit('setError404', error.response.data.message)
+        }
+        else if (error.response.status == 422) {
+          commit('setError404', '')
+          // console.log(error.response);
+          // commit('setError', error.response.data.errors.name[0])
+          // временно:
+          
+          commit('setError404', error.response.data.errors.name[0])
+        }
+      })
+    },
+    changeinWork: async ({commit}, param) => {
+      // console.log(param);
+      // param.id = 10000000000
+      axios.put(URLSOLUTION + `/${param.id}/change-in-work`, {
+        in_work: param.in_work
+      }).then(response => {
+        // console.log(response);
+          commit('setError', '')
+          commit('editStatus', response.data)
+      }).catch((error) => {
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
         }
         else if (error.response.status == 422) {
-          // commit('setError', error.response.data.errors.name[0])
-          // временно:
-          commit('setError404', error.response.data.errors.name[0])
+          commit('setError404', error.response.data.errors)
         }
-        
-        // commit('setError', error.response.data.errors.name[0])
       })
-    }
+    },
   }
 }

@@ -212,7 +212,7 @@
       },
 
       removeFromWork(obj) {
-        console.log(obj);
+        // console.log(obj);
         this.solutions.splice(this.solutions.indexOf(obj), 1);
         //send to server changes
       },
