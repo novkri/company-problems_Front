@@ -7,25 +7,27 @@
     </div>
 
     <div class="modal-body">
-      
+
       <h5 class="modal-title">Список решений</h5>
       <h6>Решения в работе</h6>
       <ul class="list-group">
         <li class="list-group-item" v-for="(sol, idx) in solutions" :key="idx">
           <!-- @input="setTitle($event.target.value)" ref="input" -->
-          <input class="form-control" style="background-color: #F9F9F9;" @keyup.enter="editSolClick(sol.name, sol.id)" @blur="editSolClick(sol.name, sol.id)"
-            v-model="sol.name" :class="{ 'form-control--error': sol.name.length < 6 ||  sol.name.length > 100 || sol.name.length == 0 }">
-            {{sol.name.length}}
+          <input class="form-control" style="background-color: #F9F9F9;" @keyup.enter="editSolClick(sol.name, sol.id)"
+            @blur="editSolClick(sol.name, sol.id)" v-model="sol.name"
+            :class="{ 'form-control--error': sol.name.length < 6 ||  sol.name.length > 100 || sol.name.length == 0 }">
+
           <!-- <div class="error" v-if="error">{{error}} {{idx}} </div> -->
           <!-- <div>
             <span>{{idx+1}}. </span> -->
-            <!-- @keyup.enter="editSolClick(sol.name, sol.id)" -->
-            <!-- <span @focus="onFocus" @input="event => onInput(event, sol.name)" @blur="event => editSolution(event, sol.name, sol.id)" contenteditable style="padding: 10px;">{{sol.name}}</span>
+          <!-- @keyup.enter="editSolClick(sol.name, sol.id)" -->
+          <!-- <span @focus="onFocus" @input="event => onInput(event, sol.name)" @blur="event => editSolution(event, sol.name, sol.id)" contenteditable style="padding: 10px;">{{sol.name}}</span>
             <button v-if="editBtn" @click="editSolClick(sol.name, sol.id)">ok</button>
           </div> -->
           <div class="icons" ref="iconInWork">
-            <!-- {{sol.in_work}} -->
-            <trash-icon @click="deleteSolution(sol.id)" size="1.5x" class="custom-class" style="margin-left: 30px;"></trash-icon>
+            <!-- {{sol.in_work}} @click="deleteSolution(sol.id)" -->
+            <trash-icon size="1.5x" class="custom-class" style="margin-left: 30px;" @click="showDelete(sol.id)"
+              data-toggle="modal" data-target="#popupDeleteSolution"></trash-icon>
             <img src="~@/assets/checkd.png" @click="changeinWork(sol)" v-if="sol.in_work">
             <check-icon size="1.5x" class="custom-class" style="color: #D0D0D0" v-else @click="changeinWork(sol)">
             </check-icon>
@@ -36,16 +38,18 @@
       <ul class="list-group">
         <li class="list-group-item" v-for="(notinworksol, idx) in solutionsOther" :key="idx">
           <!-- {{idx+1}}. {{notinworksol.name}} -->
-          <input class="form-control" style="background-color: #F9F9F9;" @keyup.enter="editSolClick(notinworksol.name, notinworksol.id)" @blur="editSolClick(notinworksol.name, notinworksol.id)"
-                  v-model="notinworksol.name">
-                  <!-- <div class="error" v-if="error">{{error}}</div> -->
+          <input class="form-control" style="background-color: #F9F9F9;"
+            @keyup.enter="editSolClick(notinworksol.name, notinworksol.id)"
+            @blur="editSolClick(notinworksol.name, notinworksol.id)" v-model="notinworksol.name" :class="{ 'form-control--error': notinworksol.name.length < 6 ||  notinworksol.name.length > 100 || notinworksol.name.length == 0 }">
+          <!-- <div class="error" v-if="error">{{error}}</div> -->
           <div class="icons" ref="iconInWork">
-            <!-- {{notinworksol.in_work}} --> <!-- @click="deleteP(problem.id, problem.name)" data-toggle="modal" data-target="#popupDelete" -->
-            <trash-icon @click="deleteSolution(notinworksol.id)" size="1.5x" class="custom-class" style="margin-left: 30px;"></trash-icon>
+            <!-- {{notinworksol.in_work}} -->
+            <!-- @click="deleteP(problem.id, problem.name)" data-toggle="modal" data-target="#popupDelete" -->
+            <trash-icon size="1.5x" class="custom-class" style="margin-left: 30px;" @click="showDelete(notinworksol.id)"
+              data-toggle="modal" data-target="#popupDeleteSolution"></trash-icon>
             <img src="~@/assets/checkd.png" @click="changeinWork(notinworksol)" v-if="notinworksol.in_work">
             <check-icon size="1.5x" class="custom-class" style="color: #D0D0D0;" v-else
               @click="changeinWork(notinworksol)"></check-icon>
-           
           </div>
         </li>
       </ul>
@@ -63,18 +67,20 @@
 
           <div class="error" v-if="error">{{error}}</div>
         </form>
-        <button type="submit" class="btn btnMain" style="height: 34px; width: 34px; border-radius: 50px;"
+        <button type="submit" class="btn btnMain" style="height: 35px; width: 35px; border-radius: 50px;"
           @click="addSolution(val)">
           <img src="@/assets/Vector.png" alt="send">
         </button>
       </div>
     </div>
+        <DeleteSolution  v-if="showDeleteSol" :openDeleteS="showDeleteSol" @closeDeleteSolutions="closeDeleteSolutions($event)" :val="solutionIdDelete" />
   </div>
 </template>
 
 
 
 <script>
+import DeleteSolution from './DeleteSolution'
   import {
     TrashIcon,
     CheckIcon
@@ -91,48 +97,40 @@
       showTasks: false,
       solutionName: '',
       formData: '',
-      progress: '',
+      // progress: '',
       editBtn: false,
-      isDisabled: true,
+      solutionIdDelete: '',
+      showDeleteSol: false
 
     }),
     components: {
       CheckIcon,
-      TrashIcon
+      TrashIcon,
+      DeleteSolution
     },
 
     computed: {
       ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404']),
     },
     methods: {
-
-      // onInput(event) {
-      //   // const value = event.target.innerText;
-      //   // this.content[index].value = value;
-      //   let name = event.target.innerText
-      //   // if (name.length < 6) {
-      //   //   console.log(event);
-      //   //   console.log(event.target);
-      //   //   event.target.classList.add('error')
-      //   // }
-      //   // this.editBtn = true
-      //   // console.log(name, event.target);
-      // },
       onFocus() {
         this.editBtn = true
       },
       async editSolution(event, name, id) {
-        // const value = event.target.innerText;
-        // this.content[index].value = value;
         name = event.target.innerText
-        // console.log(event, name, id);
 
-        await this.$store.dispatch('editSolution', {name, id})
+        await this.$store.dispatch('editSolution', {
+          name,
+          id
+        })
         this.editBtn = false
       },
       async editSolClick(name, id) {
         await this.$store.commit('setError404', '')
-        await this.$store.dispatch('editSolution', {name, id})
+        await this.$store.dispatch('editSolution', {
+          name,
+          id
+        })
       },
 
       closeSolutions() {
@@ -141,16 +139,7 @@
 
       async changeinWork(obj) {
         obj.in_work = !obj.in_work
-        // console.log(obj, this.solutions, this.solutionsOther);
-
         await this.$store.dispatch('changeinWork', obj)
-        // if (obj.in_work == true) {
-        //   this.solutions.push(obj)
-        //   this.solutionsOther.splice(this.solutionsOther.indexOf(obj), 1);
-        // } else {
-        //   this.solutionsOther.push(obj)
-        //   this.solutions.splice(this.solutions.indexOf(obj), 1);
-        // }
       },
 
 
@@ -161,15 +150,17 @@
         }).then(() => {
           if (!this.error) {
             this.solutionName = ''
-            //   document.getElementById('close').click()
           }
         })
       },
-      async deleteSolution(id) {
-        console.log('удаление решения: ', id);
-        await this.$store.dispatch('deleteSolution', id)
-
-      }
+      showDelete(id) {
+        this.showDeleteSol = true
+        this.solutionIdDelete = id
+        console.log(id);
+      },
+      closeDeleteSolutions() {
+        this.showDeleteSol = false
+      },
     }
   }
 </script>
@@ -180,6 +171,7 @@
     cursor: pointer;
     margin: 0 10px;
   }
+
   h6 {
     font-style: normal;
     font-weight: normal;
@@ -256,9 +248,11 @@
 
   }
 
-  input:active, input:focus {
+  input:active,
+  input:focus {
     border: 2px solid #92D2C3;
   }
+
   ol {
     margin-top: 30px;
     margin-bottom: 20px;
