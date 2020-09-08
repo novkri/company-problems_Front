@@ -90,6 +90,7 @@ export default {
         }
         })
       .catch((error) => {
+        console.log(error.response);
         commit('auth_error')
         localStorage.removeItem('token')
         commit('setErrorUReg', '')
@@ -109,6 +110,7 @@ export default {
             commit('setErrorU', '')
           })
         .catch(err => {
+          
           if (err.response.status == 401) {
             commit('setError401', err.response.data.errors)
           }

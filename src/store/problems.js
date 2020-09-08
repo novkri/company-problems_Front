@@ -28,6 +28,7 @@ export default {
   },
   getters: {
     problems: state => {
+      console.log(state.problems);
       return state.problems = state.problems.sort(function (a, b) {
         return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1})
     },
@@ -70,7 +71,13 @@ export default {
             }
           })
         .catch(error => 
-          commit('setError', error.response.data.message)
+          {
+            if (error.response.status == 401) {
+            commit('setError404', error.response.data.errors)
+          } else {
+             commit('setError', error.response.data.message)
+          }
+         }
         )
     },
     postProblem: async ({commit}, param) => {

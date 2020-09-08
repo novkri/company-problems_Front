@@ -1,8 +1,8 @@
 <template>
   <div class="popup-show">
-    <div class="modal fade" id="popupShow" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered" :style="{'width': openSolutions ? '1434px' : '1212px'}">
-        <div class="modal-content" v-if="!openSolutions">
+    <div id="popupShow" tabindex="-1" class="modal fade">
+      <div class="modal-dialog modal-dialog-centered" style="width:1411px;">
+        <div class="modal-content">
           <div class="modal-header">
             <button type="button" id="close" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
@@ -18,134 +18,113 @@
                 <img src="~@/assets/star.png">
                 <span>95</span>
               </div> -->
-
             </div>
 
             <div>
-              <div class="subtitle"><span style="width: 44%;">Решения в работе:</span> <span>Статус выполнения</span>
-                <span>Срок исполнения</span> <span>Ответственный</span></div>
+              <div class="subtitle"><span style="width: 35%;">Решения в работе:</span> <span style="color: #000;">Статус выполнения</span>
+                <span style="color: #000;">Срок исполнения</span> <span style="color: #000;">Ответственный</span></div>
               <ol>
-                <li v-for="(solution, idx) in solutions" :key="idx">
+                <!-- @mouseover="(event) => btnRemoveShow(event)" @mouseleave="(event) => btnRemoveHide(event)" -->
+                <li v-for="(solution, idx) in solutions" :key="idx" id="list">
                   <div class="list-item">
                     <div class="desc" ref="desc" @click="displayTasks($event)"><span>{{idx+1}}.{{solution.name}}</span>
                     </div>
-                    <!--  v-if="showTasks" -->
+
+
+                    <!-- tasks -->
+                    <!-- отдельным компонетом? -->
                     <ul class="tasks" ref="hiddenList">
                       <li>
                         <span>Задача1</span>
                         <div class="select gray" style="position: relative;" ref="select">
                           <select v-model="solution.status" class="form-control" @change="changeStatus($event)">
-                            <!-- :style="{'background-color': solution.status == 'Выполнено' ? '#4EAD96' : '#C4C4C4', 'color': solution.status == 'Выполнено' ? '#fff' : '#2D453F' }" -->
-                            <option value="В работе">
-                              В работе</option>
+                            <option value="В процессе">
+                             В процессе</option>
                             <option value="Выполнено">
                               Выполнено</option>
+                            <option value="">
+                              Отсутсвует</option>
                           </select>
                         </div>
                         <input type="date" id="start" name="trip-start" class="date" v-model="solution.formData">
                         <div class="selectResponsible">
-                          <!-- v-model="solution.status" -->
                           <select class="form-control" style="height: fit-content; padding: 0;">
-                            <option value="0">
-                              Человек1 Ч. Ч.</option>
-                            <option value="1">
-                              Человек2</option>
+                            <option default disabled>Выбрать</option>
+                            <option v-for="(u, i) in allUsers" :key="i">{{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}}</option>
                           </select>
                         </div>
-                        <!-- <button type="button" class="close" style="margin: 0 -1rem -1rem auto;"
-                          @click="solution.in_work = false">
-                          <span aria-hidden="true">&times;</span>
-                        </button> -->
-                        <!-- <div class="icons"> -->
-                        <!-- @click="deleteP(problem.id, problem.name)" data-toggle="modal" data-target="#popupDelete" -->
                         <trash-icon size="1.5x" class="custom-class"
                           @click="deleteTask(task.id)"></trash-icon>
-                        <!-- </div> -->
                       </li>
 
                       <li>
-                        <!-- v-model="name" -->
                         <input type="text" class="form-control" placeholder="+ Добавить задачу...">
                         <div class="addNewTask">
                           <input type="date" id="start" name="trip-start" class="date">
-                          <div class="selectResponsible">
+                          <div class="selectResponsible" style="margin: 0px 19px 0px 67px; width: 112px;">
                             <select class="form-control" style="height: fit-content; padding: 0;">
-                              <option selected disabled>Выбрать</option>
-                              <option value="0">
-                                Человек1 Ч. Ч.</option>
-                              <option value="1">
-                                Человек2</option>
+                              <option v-for="(u, i) in allUsers" :key="i">{{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}}</option>
                             </select>
                           </div>
                         </div>
                         
                       </li>
                     </ul>
+                    <!-- tasks -->
                   </div>
 
-                  <div class="select gray" style="position: relative;" ref="select">
-                    <select v-model="solution.status" class="form-control" @change="changeStatus($event)">
-                      <!-- :style="{'background-color': solution.status == 'Выполнено' ? '#4EAD96' : '#C4C4C4', 'color': solution.status == 'Выполнено' ? '#fff' : '#2D453F' }" -->
-                      <option value="В работе">
-                        В работе</option>
+                  <div class="select" style="position: relative;" ref="select" :class="[solution.status == 'Выполнено' ? 'green' : 'gray']">
+                    <select v-model="solution.status" class="form-control" @change="changeStatus(solution.status, solution.id)">
+                      <option value="В процессе">
+                        В процессе</option>
                       <option value="Выполнено">
                         Выполнено</option>
+                        <option value="">Отсутсвует</option>
                     </select>
                   </div>
-                  <!-- :value="new Date(solution.updated_at).toISOString().split('T')[0] -->
-                  <input type="date" id="start" name="trip-start" class="date" v-model="solution.formData">
-                  <!-- {{solution.formData}} -->
-                  <!-- {{solution.updated_at}} -->
-                  <!-- {{new Date(solution.updated_at).toISOString().split('T')[0]}} -->
-                  <!-- {{formData}}
-                  {{solution.status}} -->
-                  <!-- {{solution.in_work}} -->
+
+                  <input type="date" id="start" name="trip-start" class="date" v-model="solution.deadline" @change="changeDeadline(solution.deadline, solution.id)">
 
                   <div class="selectResponsible">
-                    <!-- v-model="solution.status" -->
-                    <select class="form-control" style="height: fit-content; padding: 0;">
-                      <option value="0">
-                        Человек1</option>
-                      <option value="1">
-                        Человек2</option>
+                    <user-icon size="1.5x" class="custom-class"></user-icon>
+                    <select class="form-control" style="height: fit-content; padding: 0;" v-model="solution.executor" @change="selectExecutor(solution.id)">
+                      <option v-for="(u, i) in allUsers" :key="i" :value="u.id" >{{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}}</option>
                     </select>
                   </div>
+                  <div style="width: 50px;">
+                    <button type="button" class="close" id="remove" style="margin: auto;"
+                      @click="removeFromWork(solution)" data-toggle="modal" data-target="#popupRemoveFromWOrk">
+                      <trash-icon size="1x" class="custom-class"></trash-icon>
+                    </button>
+                  </div>
 
-                  <!-- {{solution.in_work}} -->
-                  <button type="button" class="close" style="margin: 0 -1rem -1rem auto;"
-                    @click="removeFromWork(solution)">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </li>
-
+                </li>         
               </ol>
 
               <button type="button" class="btn btnMain" @click.prevent="showSolutions(val)" data-toggle="modal"
-                data-target="#popupSolutions"><span>Посмотреть/Добавить решение</span></button>
-
-              <!-- {{solutions}} -->
+                data-target="#popupSol"><span>Посмотреть/Добавить решение</span></button>
             </div>
           </div>
         </div>
-
-        <div class="modal-content" v-if="openSolutions">
-          <Solutions :openS="openSolutions" @closeSolutions="closeSolutions($event)" :val="val" />
-        </div>
-
       </div>
     </div>
+    <Solutions  v-if="openSolutions" :openS="openSolutions" @closeSolutions="closeSolutions($event)" :val="val" />
+    <RemoveFromWork v-if="openRemoveFromWork" :openRemoveFromWork="openRemoveFromWork"
+      @closeRemoveSolutions="closeRemoveSolutions($event)" :val="solutionIdRemove" />
   </div>
 </template>
 
 <script>
   import {
     TrashIcon,
-    // CheckIcon
+    UserIcon
   } from 'vue-feather-icons'
   import {
     mapGetters
   } from 'vuex'
   import Solutions from './Solutions'
+  import RemoveFromWork from './RemoveFromWork'
+
   export default {
     name: 'popup',
     props: ['open', 'val'],
@@ -154,54 +133,72 @@
       showTasks: false,
       solutionName: '',
       formData: '',
-      progress: ''
+      progress: '',
+      openRemoveFromWork: false,
+      solutionIdRemove: '',
+      btnRemove: false
 
     }),
     components: {
-      // CheckIcon,
+      UserIcon,
       TrashIcon,
-      Solutions
+      Solutions,
+      RemoveFromWork
     },
 
     computed: {
-      ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404']),
+      ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404', 'allUsers']),
     },
     methods: {
-      changeStatus(event) {
-        this.$emit('input', event.target.value);
-
-        if (this.solutions.filter(s => s.status == 'Выполнено').length !== 0) {
-          this.progress = (this.solutions.filter(s => s.status == 'Выполнено').length / this.solutions.length) * 100
-        }
-        if (event.target.value === 'Выполнено') {
-          event.path[1].classList.remove('gray')
-          event.path[1].classList.add('green')
-        } else {
-          event.path[1].classList.remove('green')
-          event.path[1].classList.add('gray')
-        }
+      // btnRemoveShow(event) {
+      //   if (event.target.tagName == 'LI') {
+      //     event.path[0].childNodes[4].style.display = "flex"
+      //   } else {
+      //     event.path[3].childNodes[4].style.display = "flex"
+      //   }
+      // },
+      // btnRemoveHide(event) {
+      //   if (event.target.tagName == 'LI') {
+      //     event.path[0].childNodes[4].style.display = "none"
+      //   } else {
+      //     event.path[3].childNodes[4].style.display = "none"
+      //   }
+      // },
+      async selectExecutor(id) {
+        console.log(id);
+        console.log(event.target.value); //id
+        let uid = event.target.value
+        await this.$store.dispatch('changeExecutor', {id, uid})
+      },
+      async changeStatus(status, id) {
+        await this.$store.dispatch('changeStatus', {status, id})
+      },
+      async changeDeadline(deadline, id) {
+        await this.$store.dispatch('changeDeadline', {deadline, id})
       },
       displayTasks(event) {
         this.showTasks = !this.showTasks
         if (event.target.tagName === 'DIV') {
           if (this.showTasks) {
             event.target.classList.add('clicked')
+            // document.getElementById('hiddenTasks').classList.add('show')
             event.path[1].lastChild.classList.add('show')
           } else {
             event.target.classList.remove('clicked')
             event.path[1].lastChild.classList.remove('show')
+            // document.getElementById('hiddenTasks').classList.remove('show')
           }
         } else if (event.target.tagName === 'SPAN') {
           if (this.showTasks) {
             event.target.classList.add('clicked')
             event.path[2].lastChild.classList.add('show')
+            // document.getElementById('hiddenTasks').classList.add('show')
           } else {
             event.target.classList.remove('clicked')
             event.path[2].lastChild.classList.remove('show')
+            // document.getElementById('hiddenTasks').classList.remove('show')
           }
         }
-
-
       },
 
       showSolutions() {
@@ -209,30 +206,19 @@
       },
       closeSolutions() {
         this.openSolutions = false
+        console.log(this.openSolutions);
       },
 
-      removeFromWork(obj) {
-        // console.log(obj);
-        this.solutions.splice(this.solutions.indexOf(obj), 1);
-        //send to server changes
+      async removeFromWork(obj) {
+        this.solutionIdRemove = obj.id
+        this.openRemoveFromWork = true
+        console.log(obj.id, this.openRemoveFromWork);
+        // await this.$store.dispatch('changeinWork', {in_work: false, id: obj.id})
       },
 
       deleteTask(id) {
         console.log('delete task', id);
       }
-
-      // async addSolution(obj) {
-      //   await this.$store.dispatch('postSolution', {
-      //     problemId: obj.id,
-      //     name: this.solutionName
-      //   }).then(() => {
-      //     if (!this.error) {
-      //       this.solutionName = ''
-      //       //   document.getElementById('close').click()
-      //     }
-
-      //   })
-      // },
     }
   }
 </script>
@@ -243,7 +229,12 @@
     cursor: pointer;
     margin: 0 -1px 0 0;
   }
-
+  #remove {
+    display: none;
+  }
+  #list:hover #remove{ 
+    display:block;
+  }
   .modal-header {
     border: none;
     justify-content: space-between;
@@ -259,6 +250,7 @@
     color: #2D453F;
     justify-content: center;
     text-align: center;
+    margin-bottom: 26px;
 
     h6 {
       font-family: 'GothamPro-Medium';
@@ -282,7 +274,8 @@
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #2D453F;
-    width: 97%;
+    width: 90%;
+    margin-left: 20px;
 
     h6 {
       font-family: 'GothamPro';
@@ -319,7 +312,22 @@
     padding: 0;
 
     li {
-      padding: 0 0 10px 0;
+      // padding: 8px 32px;
+      padding: 15px 32px 12px;
+      border-radius: 9px;
+      background-color: #F9F9F9;
+      // margin-bottom: 16px;
+      // margin: 0 39px 16px;
+      margin: 0 24px 16px 0;
+      // align-items: center;
+      align-items: flex-start;
+    }
+    li:hover {
+      background-color: #F0F0F0;
+      .date,
+      .date:focus, input, input:focus, input:active, .selectResponsible, .selectResponsible select, .selectResponsible:active, .selectResponsible:focus {
+        background-color: #F0F0F0;
+      }
     }
   }
 
@@ -337,7 +345,7 @@
   .list-item {
     display: flex;
     flex-direction: column;
-    width: 545px;
+    width: 538px;
   }
 
   .desc {
@@ -345,12 +353,15 @@
     flex-direction: row;
     width: fit-content;
     cursor: pointer;
+    margin-right: 57px;
+        // width: 89%;
   }
 
   .desc::after {
     content: url('~@/assets/Select.png');
     transition: all 1s ease 0s;
     cursor: pointer;
+    margin: auto;
   }
 
   .clicked::after {
@@ -368,19 +379,14 @@
  
     li {
       display: list-item;
-      // margin-right: -125%;
-      width: 234%;
+      width: 231%;
       display: flex;
       justify-content: space-between;
 
       span {
-        width: 48%;
+        width: 54%;
         margin: 0;
       }
-
-      // input {
-      //   padding: 0;
-      // }
     }
 
     li:last-child {
@@ -392,14 +398,22 @@
       }
       input .date {
         margin: 0;
+        color: #828282;
+        background-color: #F9F9F9;
+        &:hover {
+          background-color: #F0F0F0;
+        }
       }
     }
   }
   .selectResponsible { 
-    // margin: 0 33px; 
-    // width: 179px;
-    margin: 0 20px 0 33px;
-    width: 220px;
+    display: flex;
+    width: 185px;
+    margin: 0 0 0 65px;
+    background-color: #F9F9F9;
+    &:hover {
+      background-color: #F0F0F0;
+    }
   }
 
   .show {
@@ -445,6 +459,8 @@
     border: none;
     position: relative;
     margin-left: 61px;
+    color: #828282;
+    background-color: #F9F9F9;
   }
 
   .icons {
@@ -468,20 +484,26 @@
     background: url('~@/assets/calendar.png') 100%;
     background-repeat: no-repeat;
     cursor: pointer;
-    color: #6D6D6D;
+    color: #828282;
     position: absolute;
-    top: -2%;
-    left: 63%;
+    top: 0;
+    left: -55%;
+    // align-items: flex-start;
   }
 
   .select {
     width: 158px;
     border-radius: 10px;
+    height: 36px;
 
     padding: 0;
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;
+    // margin-right: 138px;
+    margin-right: 85px;
+    letter-spacing: 0.15px;
+    color: #828282;
 
     select {
       width: 158px;
@@ -493,6 +515,7 @@
       -webkit-appearance: none;
       -moz-appearance: none;
       cursor: pointer;
+      height: fit-content;
     }
 
     option {
@@ -510,21 +533,21 @@
   }
 
   .green {
-    background-color: #4EAD96;
+    background-color: #4EAD96 !important;
 
     select {
       background: url('~@/assets/SelectWhite.png') no-repeat;
-      background-position: right 0.6em top 50%, 0 0;
+      background-position: right 0.6em top 46%, 0 0;
       color: #fff;
     }
   }
 
   .gray {
-    background-color: #C4C4C4;
+    background-color: #C4C4C4 !important;
 
     select {
       background: url('~@/assets/Select.png') no-repeat;
-      background-position: right 0.6em top 50%, 0 0;
+      background-position: right 0.6em top 46%, 0 0;
       color: #2D453F;
     }
   }
@@ -535,6 +558,7 @@
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;
+    background-color: #F9F9F9;
   }
 
   .list-group-item {
@@ -565,8 +589,5 @@
   .addNewTask {
     display: flex;
     margin: 0 22px;
-    .selectResponsible {
-      width: 197px;
-    }
   }
 </style>

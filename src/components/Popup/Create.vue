@@ -11,12 +11,20 @@
           </div>
           <div class="modal-body">
             <form @keyup.enter="addProblem()" class="form-group">
-              <input ref="input" type="text" class="form-control form-control--valid"
-                id="new-problem-title" v-model="name" placeholder="Название проблемы..." >
-                <!-- <div class="error" v-if="!$v.name.maxLength">Название проблемы должно быть не более
-                {{$v.name.$params.maxLength.max}} символов</div> -->
-                <!-- <div class="error" v-if="!$v.name.minLength">{{error}}</div> -->
+              <div class="input-group">
+                <input type="text" ref="input" v-model="name" class="form-control form-control--valid"
+                  id="new-problem-title" placeholder="Название проблемы..." @blur="showClear = false" @focus="onFocus">
+                <div class="input-group-append" v-if="showClear" @click="onClear">
+                  <span class="input-group-text">&times;</span>
+                </div>
                 <div class="error" v-if="error">{{error}}</div>
+              </div>
+              <!-- <input ref="input" type="text" class="form-control form-control--valid "
+                id="new-problem-title" v-model="name" placeholder="Название проблемы..." > -->
+              <!-- <div class="error" v-if="!$v.name.maxLength">Название проблемы должно быть не более
+                {{$v.name.$params.maxLength.max}} символов</div> -->
+              <!-- <div class="error" v-if="!$v.name.minLength">{{error}}</div> -->
+              <!-- <div class="error" v-if="error">{{error}}</div> -->
             </form>
             <button type="submit" class="btn btnMain" @click="addProblem()">
               <img src="@/assets/Vector.png" alt="send">
@@ -30,14 +38,20 @@
 </template>
 
 <script>
-  import {maxLength, minLength} from 'vuelidate/lib/validators'
-  import {mapGetters} from 'vuex'
+  import {
+    maxLength,
+    minLength
+  } from 'vuelidate/lib/validators'
+  import {
+    mapGetters
+  } from 'vuex'
 
   export default {
     name: 'popup',
     props: ['open'],
     data: () => ({
-      name: ''
+      name: '',
+      showClear: false
     }),
     validations: {
       name: {
@@ -55,8 +69,16 @@
     },
 
     methods: {
+      onFocus() {
+        this.showClear = true
+      },
+      onClear() {
+        this.name = ''
+      },
       async addProblem() {
-        await this.$store.dispatch('postProblem', {name: this.name}).then(() => {
+        await this.$store.dispatch('postProblem', {
+          name: this.name
+        }).then(() => {
           if (!this.error) {
             this.name = ''
             document.getElementById('close').click()
@@ -72,7 +94,7 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   .modal-content {
     border-radius: 12px;
     border: none;
@@ -97,6 +119,22 @@
     padding: 0;
   }
 
+  .form-control {
+    background-color: #F7F7F7;
+  }
+
+  .form-control:active,
+  .form-control:focus {
+    background-color: #FFF;
+  }
+
+  .input-group-text {
+    border: none;
+    cursor: pointer;
+    background-color: #F7F7F7;
+    border-radius: 6px;
+    border-bottom: 2px solid #92D2C3;
+  }
 
   .btn {
     background-color: #92D2C3;

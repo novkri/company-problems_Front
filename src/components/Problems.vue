@@ -98,6 +98,7 @@
 
     async mounted() {
       await this.$store.dispatch('getProblems')
+      await this.$store.dispatch('getAllUsers')
     },
     watch: {
       error404() {

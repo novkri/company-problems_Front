@@ -2,6 +2,7 @@ import axios from "axios";
 
 const BASEURL = 'http://31.31.199.37/api/solutions' //все решения
 const URLSOLUTION = 'http://31.31.199.37/api/solution' //одно решение
+const ALLUSERS = 'http://31.31.199.37/api/users'
 
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 axios.defaults.headers.common['Accept'] = 'application/json'
@@ -24,20 +25,21 @@ export default {
   state: {
     solutions: [],
     solutionsOther: [],
+    allUsers: [],
     token: localStorage.getItem('user-token') || '',
   },
   getters: {
     solutions: state => {
       return state.solutions 
-      // = state.solutions.sort(function (a, b) {
-      //   return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1
-      // })
     },
 
     solutionsOther: state => {
       return state.solutionsOther = state.solutionsOther.sort(function (a, b) {
         return (new Date(a.created_at).toISOString() > new Date(b.created_at).toISOString()) ? 1 : -1
       })
+    },
+    allUsers: state => {
+      return state.allUsers 
     },
   },
   mutations: {
@@ -53,7 +55,6 @@ export default {
     deleteSolution: (state, payload) => {
       state.solutions = state.solutions.filter(s=> s.id !== payload)
       state.solutionsOther = state.solutionsOther.filter(s=> s.id !== payload)
-      //&
     },
     sortSolutions: state => {
       state.solutions = state.solutions.sort(function (a, b) {
@@ -64,7 +65,7 @@ export default {
     editSolution: (state, payload) => {
       state.solutions.find(solution => solution.id == payload.id).name = payload.name
     },
-    editStatus: (state, payload) => {
+    editinWork: (state, payload) => {
       if (payload.in_work) {
         state.solutions.push(payload)
         state.solutionsOther = state.solutionsOther.filter(s=> s.id !== payload.id)
@@ -72,6 +73,24 @@ export default {
         state.solutionsOther.push(payload)
         state.solutions = state.solutions.filter(s=> s.id !== payload.id)
       }
+    },
+    editStatus: (state, payload) => {
+      state.solutions.find(solution => solution.id == payload.id).status = payload.status
+    },
+    editDeadline: (state, payload) => {
+      state.solutions.find(solution => solution.id == payload.id).deadline = payload.deadline
+    },
+    setAllUsers: (state, payload) => {
+      // console.log(...payload);
+      // let usersPayload = {...payload}
+      let usersPayload = Object.values(payload)
+      console.log(usersPayload)
+      // state.allUsers.push(payload)
+
+      state.allUsers = usersPayload
+    },
+    editExecutor: (state, payload) => {
+      state.solutions.find(solution => solution.id == payload.id).executor = payload.executor
     },
 
   },
@@ -133,14 +152,6 @@ export default {
           commit('setError404', error.response.data.message)
         })
     },
-    // checkIfExists: async ({
-    //   commit
-    // }, param) => {
-    //   // URLSOLUTION ?
-    //   axios.get(BASEURL + `/${param.id}`).catch((error) => {
-    //     commit('setError404', error.response.data.message)
-    //   })
-    // },
 
     editSolution: async ({commit}, param) => {
       // param.id = 10000000000
@@ -161,29 +172,95 @@ export default {
         }
         else if (error.response.status == 422) {
           commit('setError404', '')
-          // console.log(error.response);
-          // commit('setError', error.response.data.errors.name[0])
-          // временно:
-          
           commit('setError404', error.response.data.errors.name[0])
         }
       })
     },
     changeinWork: async ({commit}, param) => {
-      // console.log(param);
       // param.id = 10000000000
       axios.put(URLSOLUTION + `/${param.id}/change-in-work`, {
         in_work: param.in_work
       }).then(response => {
-        // console.log(response);
           commit('setError', '')
-          commit('editStatus', response.data)
+          commit('editinWork', response.data)
+          commit('sortSolutions')
       }).catch((error) => {
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
         }
         else if (error.response.status == 422) {
           commit('setError404', error.response.data.errors)
+        }
+      })
+    },
+
+    changeStatus: async ({commit}, param) => {
+      // param.id = 10000000000
+      console.log(param);
+      axios.put(URLSOLUTION + `/${param.id}/change-status`, {
+        status: param.status
+      }).then(response => {
+        console.log(response);
+          commit('setError', '')
+          commit('editStatus', response.data)
+      }).catch((error) => {
+        console.log(error.response);
+        if (error.response.status == 404) {
+          commit('setError404', error.response.data.message)
+        }
+        else if (error.response.status == 422) {
+          commit('setError404', error.response.data.errors)
+        }
+      })
+    },
+
+    changeDeadline: async ({commit}, param) => {
+      // param.id = 10000000000
+      axios.put(URLSOLUTION + `/${param.id}/set-deadline`, {
+        deadline: param.deadline
+      }).then(response => {
+          commit('setError', '')
+          commit('editDeadline', response.data)
+      }).catch((error) => {
+        console.log(error.response);
+        if (error.response.status == 404) {
+          commit('setError404', error.response.data.message)
+        }
+        else if (error.response.status == 422) {
+          commit('setError404', error.response.data.errors.deadline[0])
+        }
+      })
+    },
+
+    getAllUsers: async({commit}) => {
+      axios.get(ALLUSERS).then(response => {
+        console.log(response);
+        if (response.status == 200) {
+          commit('setError', '')
+          commit('setError404', '')
+          commit('setAllUsers', response.data)
+          commit('setSolution', response.data)
+        }
+      })
+        .catch(error => {
+          console.log(error.response);
+        })
+    },
+    changeExecutor: async ({commit}, param) => {
+      // param.id = 10000000000
+      console.log(param);
+      axios.put(URLSOLUTION + `/${param.id}/set-executor`, {
+        executor: param.uid
+      }).then(response => {
+          commit('setError', '')
+          commit('editExecutor', response.data)
+      }).catch((error) => {
+        console.log(error.response);
+        if (error.response.status == 404) {
+          commit('setError404', error.response.data.message)
+        }
+        else if (error.response.status == 422) {
+          commit('setError404', error.response.data.errors.executor)
         }
       })
     },
