@@ -8,7 +8,7 @@ import "./registerServiceWorker";
 
 import Vuelidate from 'vuelidate'
 import VueToastify from 'vue-toastify';
-import vClickOutside from 'v-click-outside'
+
 
 
 // import axios from "axios";
@@ -22,7 +22,7 @@ import styles from './scss/app.scss';
 
 Vue.use(Vuelidate)
 Vue.use(VueToastify);
-Vue.use(vClickOutside)
+
 
 Vue.config.productionTip = false;
 

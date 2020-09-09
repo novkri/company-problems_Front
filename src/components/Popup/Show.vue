@@ -21,7 +21,8 @@
             </div>
 
             <div>
-              <div class="subtitle"><span style="width: 35%;">Решения в работе:</span> <span style="color: #000;">Статус выполнения</span>
+              <div class="subtitle"><span style="width: 35%;">Решения в работе:</span> <span style="color: #000;">Статус
+                  выполнения</span>
                 <span style="color: #000;">Срок исполнения</span> <span style="color: #000;">Ответственный</span></div>
               <ol>
                 <!-- @mouseover="(event) => btnRemoveShow(event)" @mouseleave="(event) => btnRemoveHide(event)" -->
@@ -39,22 +40,23 @@
                         <div class="select gray" style="position: relative;" ref="select">
                           <select v-model="solution.status" class="form-control" @change="changeStatus($event)">
                             <option value="В процессе">
-                             В процессе</option>
+                              В процессе</option>
                             <option value="Выполнено">
                               Выполнено</option>
                             <option value="">
                               Отсутсвует</option>
                           </select>
                         </div>
-                        <input type="date" id="start" name="trip-start" class="date" v-model="solution.formData">
+                        <input type="date" id="start" name="trip-start" class="date">
                         <div class="selectResponsible">
                           <select class="form-control" style="height: fit-content; padding: 0;">
                             <option default disabled>Выбрать</option>
-                            <option v-for="(u, i) in allUsers" :key="i">{{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}}</option>
+                            <option v-for="(u, i) in allUsers" :key="i">
+                              {{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}}
+                            </option>
                           </select>
                         </div>
-                        <trash-icon size="1.5x" class="custom-class"
-                          @click="deleteTask(task.id)"></trash-icon>
+                        <trash-icon size="1.5x" class="custom-class" @click="deleteTask(task.id)"></trash-icon>
                       </li>
 
                       <li>
@@ -63,32 +65,40 @@
                           <input type="date" id="start" name="trip-start" class="date">
                           <div class="selectResponsible" style="margin: 0px 19px 0px 67px; width: 112px;">
                             <select class="form-control" style="height: fit-content; padding: 0;">
-                              <option v-for="(u, i) in allUsers" :key="i">{{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}}</option>
+                              <option v-for="(u, i) in allUsers" :key="i">
+                                {{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}}
+                              </option>
                             </select>
                           </div>
                         </div>
-                        
+
                       </li>
                     </ul>
                     <!-- tasks -->
                   </div>
 
-                  <div class="select" style="position: relative;" ref="select" :class="[solution.status == 'Выполнено' ? 'green' : 'gray']">
-                    <select v-model="solution.status" class="form-control" @change="changeStatus(solution.status, solution.id)">
+                  <div class="select" style="position: relative;" ref="select"
+                    :class="[solution.status == 'Выполнено' ? 'green' : 'gray']">
+                    <select v-model="solution.status" class="form-control"
+                      @change="changeStatus(solution.status, solution.id)">
                       <option value="В процессе">
                         В процессе</option>
                       <option value="Выполнено">
                         Выполнено</option>
-                        <option value="">Отсутсвует</option>
+                      <option value="">Отсутсвует</option>
                     </select>
                   </div>
 
-                  <input type="date" id="start" name="trip-start" class="date" v-model="solution.deadline" @change="changeDeadline(solution.deadline, solution.id)">
+                  <input type="date" id="start" name="trip-start" class="date" v-model="solution.deadline"
+                    @change="changeDeadline(solution.deadline, solution.id)">
 
                   <div class="selectResponsible">
                     <user-icon size="1.5x" class="custom-class"></user-icon>
-                    <select class="form-control" style="height: fit-content; padding: 0;" v-model="solution.executor" @change="selectExecutor(solution.id)">
-                      <option v-for="(u, i) in allUsers" :key="i" :value="u.id" >{{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}}</option>
+                    <select class="form-control" style="height: fit-content; padding: 0;" v-model="solution.executor"
+                      @change="selectExecutor(solution.id)">
+                      <option v-for="(u, i) in allUsers" :key="i" :value="u.id">
+                        {{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}}
+                      </option>
                     </select>
                   </div>
                   <div style="width: 50px;">
@@ -98,7 +108,7 @@
                     </button>
                   </div>
 
-                </li>         
+                </li>
               </ol>
 
               <button type="button" class="btn btnMain" @click.prevent="showSolutions(val)" data-toggle="modal"
@@ -108,7 +118,7 @@
         </div>
       </div>
     </div>
-    <Solutions  v-if="openSolutions" :openS="openSolutions" @closeSolutions="closeSolutions($event)" :val="val" />
+    <Solutions v-if="openSolutions" :openS="openSolutions" @closeSolutions="closeSolutions($event)" :val="val" />
     <RemoveFromWork v-if="openRemoveFromWork" :openRemoveFromWork="openRemoveFromWork"
       @closeRemoveSolutions="closeRemoveSolutions($event)" :val="solutionIdRemove" />
   </div>
@@ -132,12 +142,10 @@
       openSolutions: false,
       showTasks: false,
       solutionName: '',
-      formData: '',
       progress: '',
       openRemoveFromWork: false,
       solutionIdRemove: '',
       btnRemove: false
-
     }),
     components: {
       UserIcon,
@@ -150,53 +158,44 @@
       ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404', 'allUsers']),
     },
     methods: {
-      // btnRemoveShow(event) {
-      //   if (event.target.tagName == 'LI') {
-      //     event.path[0].childNodes[4].style.display = "flex"
-      //   } else {
-      //     event.path[3].childNodes[4].style.display = "flex"
-      //   }
-      // },
-      // btnRemoveHide(event) {
-      //   if (event.target.tagName == 'LI') {
-      //     event.path[0].childNodes[4].style.display = "none"
-      //   } else {
-      //     event.path[3].childNodes[4].style.display = "none"
-      //   }
-      // },
       async selectExecutor(id) {
         console.log(id);
         console.log(event.target.value); //id
         let uid = event.target.value
-        await this.$store.dispatch('changeExecutor', {id, uid})
+        await this.$store.dispatch('changeExecutor', {
+          id,
+          uid
+        })
       },
       async changeStatus(status, id) {
-        await this.$store.dispatch('changeStatus', {status, id})
+        await this.$store.dispatch('changeStatus', {
+          status,
+          id
+        })
       },
       async changeDeadline(deadline, id) {
-        await this.$store.dispatch('changeDeadline', {deadline, id})
+        await this.$store.dispatch('changeDeadline', {
+          deadline,
+          id
+        })
       },
       displayTasks(event) {
         this.showTasks = !this.showTasks
         if (event.target.tagName === 'DIV') {
           if (this.showTasks) {
             event.target.classList.add('clicked')
-            // document.getElementById('hiddenTasks').classList.add('show')
             event.path[1].lastChild.classList.add('show')
           } else {
             event.target.classList.remove('clicked')
             event.path[1].lastChild.classList.remove('show')
-            // document.getElementById('hiddenTasks').classList.remove('show')
           }
         } else if (event.target.tagName === 'SPAN') {
           if (this.showTasks) {
             event.target.classList.add('clicked')
             event.path[2].lastChild.classList.add('show')
-            // document.getElementById('hiddenTasks').classList.add('show')
           } else {
             event.target.classList.remove('clicked')
             event.path[2].lastChild.classList.remove('show')
-            // document.getElementById('hiddenTasks').classList.remove('show')
           }
         }
       },
@@ -206,13 +205,11 @@
       },
       closeSolutions() {
         this.openSolutions = false
-        console.log(this.openSolutions);
       },
 
       async removeFromWork(obj) {
         this.solutionIdRemove = obj.id
         this.openRemoveFromWork = true
-        console.log(obj.id, this.openRemoveFromWork);
         // await this.$store.dispatch('changeinWork', {in_work: false, id: obj.id})
       },
 
@@ -229,12 +226,15 @@
     cursor: pointer;
     margin: 0 -1px 0 0;
   }
+
   #remove {
     display: none;
   }
-  #list:hover #remove{ 
-    display:block;
+
+  #list:hover #remove {
+    display: block;
   }
+
   .modal-header {
     border: none;
     justify-content: space-between;
@@ -259,10 +259,8 @@
       line-height: 24px;
       letter-spacing: 0.15px;
       color: #2D453F;
-      // margin-top: 11px;
     }
   }
-
 
   .subtitle {
     display: flex;
@@ -292,15 +290,11 @@
   .modal-content {
     border-radius: 12px;
     border: none;
-    // max-width: 1096px;
     padding: 36px 30px 37px 62px;
-
   }
-
 
   .modal-body {
     padding: 0;
-
   }
 
   ol {
@@ -312,20 +306,26 @@
     padding: 0;
 
     li {
-      // padding: 8px 32px;
       padding: 15px 32px 12px;
       border-radius: 9px;
       background-color: #F9F9F9;
-      // margin-bottom: 16px;
-      // margin: 0 39px 16px;
       margin: 0 24px 16px 0;
       // align-items: center;
       align-items: flex-start;
     }
+
     li:hover {
       background-color: #F0F0F0;
+
       .date,
-      .date:focus, input, input:focus, input:active, .selectResponsible, .selectResponsible select, .selectResponsible:active, .selectResponsible:focus {
+      .date:focus,
+      input,
+      input:focus,
+      input:active,
+      .selectResponsible,
+      .selectResponsible select,
+      .selectResponsible:active,
+      .selectResponsible:focus {
         background-color: #F0F0F0;
       }
     }
@@ -354,7 +354,6 @@
     width: fit-content;
     cursor: pointer;
     margin-right: 57px;
-        // width: 89%;
   }
 
   .desc::after {
@@ -376,7 +375,7 @@
     list-style: none;
     display: none;
     width: 504px;
- 
+
     li {
       display: list-item;
       width: 231%;
@@ -391,26 +390,29 @@
 
     li:last-child {
       justify-content: center;
+
       input .form-control {
         padding: 0;
-        // width: 100%;
-        // width: 504px;
       }
+
       input .date {
         margin: 0;
         color: #828282;
         background-color: #F9F9F9;
+
         &:hover {
           background-color: #F0F0F0;
         }
       }
     }
   }
-  .selectResponsible { 
+
+  .selectResponsible {
     display: flex;
     width: 185px;
     margin: 0 0 0 65px;
     background-color: #F9F9F9;
+
     &:hover {
       background-color: #F0F0F0;
     }
@@ -466,7 +468,6 @@
   .icons {
     display: flex;
     flex-direction: row;
-    // font-family: 'GothamPro';
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
@@ -488,7 +489,6 @@
     position: absolute;
     top: 0;
     left: -55%;
-    // align-items: flex-start;
   }
 
   .select {
@@ -500,7 +500,6 @@
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;
-    // margin-right: 138px;
     margin-right: 85px;
     letter-spacing: 0.15px;
     color: #828282;
@@ -508,9 +507,6 @@
     select {
       width: 158px;
       appearance: none;
-      // background: url('~@/assets/SelectWhite.png') no-repeat;
-      // background: url('~@/assets/Select.png') no-repeat;
-      // background-position: right 0.6em top 50%, 0 0;
       outline: 0;
       -webkit-appearance: none;
       -moz-appearance: none;
@@ -580,10 +576,6 @@
     &:last-child {
       margin-bottom: 43px;
     }
-  }
-
-  .new-solution {
-    display: flex;
   }
 
   .addNewTask {

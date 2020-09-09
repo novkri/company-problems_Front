@@ -95,18 +95,14 @@
       solutionName: '',
       formData: '',
       // progress: '',
-      editBtn: false,
       solutionIdDelete: '',
       showDeleteSol: false,
       showClear: false
-
     }),
     components: {
       CheckIcon,
       TrashIcon,
       DeleteSolution,
-
-
     },
     computed: {
       ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404', 'allUsers']),
@@ -135,9 +131,7 @@
       async changeinWork(obj) {
         obj.in_work = !obj.in_work
         await this.$store.dispatch('changeinWork', obj)
-
       },
-
 
       async addSolution(obj) {
         await this.$store.dispatch('postSolution', {
@@ -208,10 +202,8 @@
       line-height: 24px;
       letter-spacing: 0.15px;
       color: #2D453F;
-      // margin-top: 11px;
     }
   }
-
 
   .subtitle {
     display: flex;
@@ -240,15 +232,11 @@
   .modal-content {
     border-radius: 12px;
     border: none;
-    // max-width: 1096px;
     padding: 36px 30px 37px 62px;
-
   }
-
 
   .modal-body {
     padding: 0;
-
   }
 
   input:active,
@@ -276,7 +264,6 @@
 
     span {
       width: fit-content;
-      // margin-right: 14px;
     }
   }
 
@@ -284,49 +271,6 @@
     display: flex;
     flex-direction: column;
     width: 545px;
-  }
-
-  .desc {
-    display: flex;
-    flex-direction: row;
-    width: fit-content;
-  }
-
-  .desc::after {
-    content: url('~@/assets/Select.png');
-    transition: all 1s ease 0s;
-    cursor: pointer;
-  }
-
-  .clicked::after {
-    transform: rotate(180deg);
-    transition: all 1s ease 0s;
-    cursor: pointer;
-  }
-
-  .tasks {
-    margin-top: 27px;
-    transition: all 1s ease 0s;
-    list-style: none;
-    display: none;
-
-    li {
-      display: list-item;
-      margin-right: -116%;
-      display: flex;
-      justify-content: space-between;
-
-      span {
-        width: 60%;
-        margin: 0;
-      }
-    }
-  }
-
-  .show {
-    visibility: visible;
-    display: flex;
-    flex-direction: column;
   }
 
   .btn {
@@ -359,19 +303,9 @@
     padding: 0;
   }
 
-
-  .date,
-  .date:focus {
-    outline: none;
-    border: none;
-    position: relative;
-    margin-left: 61px;
-  }
-
   .icons {
     display: flex;
     flex-direction: row;
-    // font-family: 'GothamPro';
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
@@ -382,71 +316,6 @@
 
     img {
       margin: 0 10px;
-    }
-  }
-
-  input[type="date"]::-webkit-calendar-picker-indicator {
-    background: url('~@/assets/calendar.png') 100%;
-    background-repeat: no-repeat;
-    cursor: pointer;
-    color: #6D6D6D;
-    position: absolute;
-    top: -2%;
-    left: 63%;
-  }
-
-  .select {
-    width: 158px;
-    border-radius: 10px;
-
-    padding: 0;
-    font-size: 18px;
-    line-height: 24px;
-    letter-spacing: 0.15px;
-
-    select {
-      width: 158px;
-      appearance: none;
-      // background: url('~@/assets/SelectWhite.png') no-repeat;
-      // background: url('~@/assets/Select.png') no-repeat;
-      // background-position: right 0.6em top 50%, 0 0;
-      outline: 0;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      cursor: pointer;
-    }
-
-    option {
-      background-color: #C4C4C4;
-      color: #2D453F;
-      font-size: 18px;
-      line-height: 24px;
-      letter-spacing: 0.15px;
-      border-radius: 10px;
-      outline: none;
-      font-size: 18px;
-      line-height: 24px;
-      letter-spacing: 0.15px;
-    }
-  }
-
-  .green {
-    background-color: #4EAD96;
-
-    select {
-      background: url('~@/assets/SelectWhite.png') no-repeat;
-      background-position: right 0.4em top 50%, 0 0;
-      color: #fff;
-    }
-  }
-
-  .gray {
-    background-color: #C4C4C4;
-
-    select {
-      background: url('~@/assets/Select.png') no-repeat;
-      background-position: right 0.6em top 50%, 0 0;
-      color: #2D453F;
     }
   }
 
@@ -463,7 +332,6 @@
   .form-control:focus {
     background-color: #FFF;
   }
-
 
   .list-group-item {
     border-radius: 7px;

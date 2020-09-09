@@ -48,8 +48,6 @@
   .modal-content {
     border-radius: 12px;
     border: none;
-    /* width: 487px; */
-  
     padding: 30px 87px 31px;
     line-height: 24px;
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
@@ -65,15 +63,6 @@
     margin-left: -20px;
     margin-top: 10px;
     text-align: center;
-  }
-
-  #new-problem-title {
-    border: none;
-    border-bottom: 2px solid #92D2C3;
-    border-radius: 6px;
-    background-color: #FAFAFA;
-    color: #CDCDCD;
-    margin: 0 10px;
   }
 
   .modal-header {
