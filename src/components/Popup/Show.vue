@@ -232,7 +232,7 @@
   }
 
   #list:hover #remove {
-    display: block;
+    display: flex;
   }
 
   .modal-header {
@@ -488,7 +488,7 @@
     color: #828282;
     position: absolute;
     top: 0;
-    left: -55%;
+    left: 75%;
   }
 
   .select {
