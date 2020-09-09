@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const BASEURL = 'http://31.31.199.37/api/solutions' //все решения
-const URLSOLUTION = 'http://31.31.199.37/api/solution' //одно решение
+const BASEURL = 'http://31.31.199.37/api/solution' //все решения
+const URLSOLUTION = 'http://31.31.199.37/api/problem' //одно решение
 const ALLUSERS = 'http://31.31.199.37/api/users'
 
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
@@ -90,7 +90,7 @@ export default {
       state.allUsers = usersPayload
     },
     editExecutor: (state, payload) => {
-      state.solutions.find(solution => solution.id == payload.id).executor = payload.executor
+      state.solutions.find(solution => solution.id == payload.id).executor_id = payload.executor_id
     },
 
   },
@@ -98,7 +98,7 @@ export default {
     getSolutions: async ({
       commit
     }, problemId) => {
-      await axios.get(BASEURL + `/${problemId}`)
+      await axios.get(URLSOLUTION + `/${problemId}/solution`)
         .then(response => {
           if (response.status == 200) {
             commit('setError', '')
@@ -113,7 +113,7 @@ export default {
     },
     postSolution: async ({commit}, param) => {
       // param.problemId = 100000000
-      await axios.post(URLSOLUTION + `/${param.problemId}`, {
+      await axios.post(URLSOLUTION + `/${param.problemId}/solution`, {
           name: param.name
         })
         .then(response => {
@@ -141,7 +141,7 @@ export default {
 
     deleteSolution: async ({commit}, id) => {
       // id = 10000000000
-      await axios.delete(URLSOLUTION + `/${id}`).then(response => {
+      await axios.delete(BASEURL + `/${id}`).then(response => {
           if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
@@ -155,7 +155,7 @@ export default {
 
     editSolution: async ({commit}, param) => {
       // param.id = 10000000000
-      axios.put(URLSOLUTION + `/${param.id}`, {
+      axios.put(BASEURL + `/${param.id}`, {
         name: param.name
       }).then(response => {
         commit('setError404', '')
@@ -178,7 +178,7 @@ export default {
     },
     changeinWork: async ({commit}, param) => {
       // param.id = 10000000000
-      axios.put(URLSOLUTION + `/${param.id}/change-in-work`, {
+      axios.put(BASEURL + `/${param.id}/change-in-work`, {
         in_work: param.in_work
       }).then(response => {
           commit('setError', '')
@@ -197,7 +197,7 @@ export default {
     changeStatus: async ({commit}, param) => {
       // param.id = 10000000000
       console.log(param);
-      axios.put(URLSOLUTION + `/${param.id}/change-status`, {
+      axios.put(BASEURL + `/${param.id}/change-status`, {
         status: param.status
       }).then(response => {
         console.log(response);
@@ -216,7 +216,7 @@ export default {
 
     changeDeadline: async ({commit}, param) => {
       // param.id = 10000000000
-      axios.put(URLSOLUTION + `/${param.id}/set-deadline`, {
+      axios.put(BASEURL + `/${param.id}/set-deadline`, {
         deadline: param.deadline
       }).then(response => {
           commit('setError', '')
@@ -249,8 +249,9 @@ export default {
     changeExecutor: async ({commit}, param) => {
       // param.id = 10000000000
       console.log(param);
-      axios.put(URLSOLUTION + `/${param.id}/set-executor`, {
-        executor: param.uid
+      axios.put(BASEURL + `/${param.id}/set-executor`, {
+        executor_id
+        : param.uid
       }).then(response => {
           commit('setError', '')
           commit('editExecutor', response.data)

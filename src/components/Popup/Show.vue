@@ -94,13 +94,60 @@
 
                   <div class="selectResponsible">
                     <user-icon size="1.5x" class="custom-class"></user-icon>
-                    <select class="form-control" style="height: fit-content; padding: 0;" v-model="solution.executor"
+                    <select class="form-control" style="height: fit-content; padding: 0;" v-model="solution.executor_id"
                       @change="selectExecutor(solution.id)">
                       <option v-for="(u, i) in allUsers" :key="i" :value="u.id">
                         {{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}}
                       </option>
                     </select>
                   </div>
+
+
+
+
+
+<!-- <div class="selectResponsible">
+                  <ss-select v-model="solution.executor"
+                    :options="allUsers"
+                    track-by="name"
+                    search-by="name"
+                    disable-by="disabled"
+                    class="form-control"
+                    id="ss-select"
+                  >
+                  <div
+                    slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+                  >
+                    <ss-select-toggle class="px-3 py-1 flex items-center justify-between">
+                      {{ $get(selectedOption, 'name') || `${allUsers.find(u => u.id == solution.executor).name}`}}
+                       <user-icon size="1.5x" class="custom-class"></user-icon>
+                    </ss-select-toggle>
+
+                    <section v-show="isOpen" class="absolute border-l border-r min-w-full">
+                      <div class="px-px" >
+                        <ss-select-search-input class="w-full px-3 py-1" style="width: 238px; border: none; background-color: #F2F2F2;" placeholder="Впишите имя"></ss-select-search-input>
+                      </div>
+
+                      <ss-select-option
+                        v-for="(option, index) in filteredOptions"
+                        :value="option.id"
+                        :index="index"
+                        :key="index"
+                        class="px-5 py-3 border-b cursor-pointer"
+                        :class="[
+                          pointerIndex == index ? 'bg-light text-dark' : '',
+                          $selected(option) ? 'bg-light text-dark' : '',
+                          $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
+                        ]"
+                      >{{ option.name }}</ss-select-option>
+                    </section>
+                  </div>
+                </ss-select>
+</div> -->
+
+
+
+
                   <div style="width: 50px;">
                     <button type="button" class="close" id="remove" style="margin: auto;"
                       @click="removeFromWork(solution)" data-toggle="modal" data-target="#popupRemoveFromWOrk">
@@ -134,6 +181,7 @@
   } from 'vuex'
   import Solutions from './Solutions'
   import RemoveFromWork from './RemoveFromWork'
+  // import { SsSelect, SsSelectToggle, SsSelectOption, SsSelectSearchInput } from 'ss-select'
 
   export default {
     name: 'popup',
@@ -151,7 +199,8 @@
       UserIcon,
       TrashIcon,
       Solutions,
-      RemoveFromWork
+      RemoveFromWork,
+      // SsSelect, SsSelectToggle, SsSelectOption, SsSelectSearchInput
     },
 
     computed: {
@@ -325,7 +374,8 @@
       .selectResponsible,
       .selectResponsible select,
       .selectResponsible:active,
-      .selectResponsible:focus {
+      .selectResponsible:focus,
+      #ss-select {
         background-color: #F0F0F0;
       }
     }
@@ -585,4 +635,45 @@
     display: flex;
     margin: 0 22px;
   }
+
+
+  #ss-select {
+    padding: 0;
+    cursor: pointer;
+    
+  }
+  section {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    width: 258px;
+    position: relative;
+    background-color: white;
+    color: #828282;
+    height: 400px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    z-index: 1000000000000;
+  }
+
+  ::-webkit-scrollbar {
+    width: 20px;
+    
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #92D2C3;
+    border-radius: 29px;
+    height: 73px;
+    border-left: 5px solid white;
+    border-right: 5px solid white;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #F2F2F2;
+    border-left: 9px solid white;
+    border-right: 9px solid white;
+  }
+  :focus {
+    outline: none;
+  }
+
 </style>
