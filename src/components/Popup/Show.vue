@@ -463,6 +463,7 @@
     margin-left: 61px;
     color: #828282;
     background-color: #F9F9F9;
+    padding-left: 70px;
   }
 
   .icons {
@@ -488,7 +489,9 @@
     color: #828282;
     position: absolute;
     top: 0;
-    left: 75%;
+    // left: 75%;
+    left: -95%;
+    width: 100%;
   }
 
   .select {
