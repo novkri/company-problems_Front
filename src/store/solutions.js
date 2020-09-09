@@ -250,8 +250,7 @@ export default {
       // param.id = 10000000000
       console.log(param);
       axios.put(BASEURL + `/${param.id}/set-executor`, {
-        executor_id
-        : param.uid
+        executor_id: param.uid
       }).then(response => {
           commit('setError', '')
           commit('editExecutor', response.data)
