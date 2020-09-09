@@ -24,9 +24,7 @@ npm install
 npm run serve
 ```
 4. Перейти по сгененрированной ссылке (например, http://localhost:8080/)
-```
-npm run serve
-```
+
 
 
 ## Project setup
