@@ -100,6 +100,7 @@ export default {
     }, problemId) => {
       await axios.get(URLSOLUTION + `/${problemId}/solution`)
         .then(response => {
+          console.log(response);
           if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
