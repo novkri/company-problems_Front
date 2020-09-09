@@ -4,7 +4,7 @@
       <div class="modal-dialog modal-dialog-centered" style="max-width:1500px;">
         <div class="modal-content" style="padding: 36px 300px;">
           <div class="modal-header" style="width: 130%;">
-            <button type="button" id="close" class="close" @click="closeSolutions"  data-dismiss="modal" data-target="#popupSol">
+            <button type="button" id="close" class="close" @click="closeSolutions" data-dismiss="modal" data-target="#popupSol">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
