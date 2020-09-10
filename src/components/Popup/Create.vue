@@ -15,16 +15,10 @@
                 <input type="text" ref="input" v-model="name" class="form-control form-control--valid"
                   id="new-problem-title" placeholder="Название проблемы..." @blur="showClear = false" @focus="onFocus">
                 <div class="input-group-append" v-if="showClear" @click="onClear">
-                  <span class="input-group-text">&times;</span>
+                  <span class="input-group-text" style="background-color: #fff;">&times;</span>
                 </div>
                 <div class="error" v-if="error">{{error}}</div>
               </div>
-              <!-- <input ref="input" type="text" class="form-control form-control--valid "
-                id="new-problem-title" v-model="name" placeholder="Название проблемы..." > -->
-              <!-- <div class="error" v-if="!$v.name.maxLength">Название проблемы должно быть не более
-                {{$v.name.$params.maxLength.max}} символов</div> -->
-              <!-- <div class="error" v-if="!$v.name.minLength">{{error}}</div> -->
-              <!-- <div class="error" v-if="error">{{error}}</div> -->
             </form>
             <button type="submit" class="btn btnMain" @click="addProblem()">
               <img src="@/assets/Vector.png" alt="send">

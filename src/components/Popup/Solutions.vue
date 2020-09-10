@@ -2,7 +2,7 @@
   <div class="popup-show">
     <div id="popupSol" tabindex="-1" class="modal fade">
       <div class="modal-dialog modal-dialog-centered" style="max-width:1500px;">
-        <div class="modal-content" style="padding: 36px 300px;">
+        <div class="modal-content" style="padding: 36px 300px;min-height: 348px;">
           <div class="modal-header" style="width: 130%;">
             <button type="button" id="close" class="close" @click="closeSolutions" data-dismiss="modal" data-target="#popupSol">
               <span aria-hidden="true">&times;</span>
@@ -393,13 +393,13 @@
 
     &:hover {
       background-color: #f0f0f0;
-
-      input,
-      input:hover, input:active, input:focus {
-        background-color: #f0f0f0 !important;
-        cursor: pointer;
-      }
     }
+
+      // input,
+      // input:hover, input:active, input:focus {
+      //   background-color: #f0f0f0 !important;
+      //   cursor: pointer;
+      // }
   }
   .select {
     width: 158px;

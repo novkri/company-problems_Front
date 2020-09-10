@@ -50,6 +50,7 @@ import { LogInIcon } from 'vue-feather-icons'
     display: flex;
   }
 
+
   #app {
     font-family: 'GothamPro', sans-serif;
     font-size: 18px;
@@ -161,4 +162,5 @@ import { LogInIcon } from 'vue-feather-icons'
       border-bottom: 2px solid #FF8585;
     }
   }
+
 </style>

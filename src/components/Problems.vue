@@ -13,17 +13,15 @@
         </div>
 
         <div class="icons">
-          <edit-icon size="1.3x" class="custom-class" @click="edit(problem)" data-toggle="modal" data-target="#popupEdit"
-            style="margin-left: 0px;"></edit-icon>
-          <!-- <trash-icon size="1x" @click="deleteP(problem.id, problem.name)" class="custom-class" data-toggle="modal"
-            style="margin-left: 30px;" data-target="#popupDelete"></trash-icon> -->
-            <div style="width: 50px;">
-            <!-- <button type="button" class="close" id="remove" style="margin: auto;"
-              @click="deleteP(problem.id, problem.name)" data-toggle="modal" data-target="#popupDelete"> -->
-              <trash-icon size="1.3x" class="custom-class" id="remove" style="margin: auto;"
-              @click="deleteP(problem.id, problem.name)" data-toggle="modal" data-target="#popupDelete"></trash-icon>
-            <!-- </button> -->
+          <div class="borderline">
+            <edit-icon size="1.3x" class="custom-class" @click="edit(problem)" data-toggle="modal" data-target="#popupEdit"
+              style="margin-left: 0px;"></edit-icon>
           </div>
+          <div style="width: 50px;align-items: center;display: flex;margin: 4px 15px 4px 18px;">
+            <trash-icon size="1.3x" class="custom-class" id="remove" style="margin: auto;"
+            @click="deleteP(problem.id, problem.name)" data-toggle="modal" data-target="#popupDelete"></trash-icon>
+          </div>
+
         </div>
       </li>
     </ul>
@@ -225,11 +223,12 @@
     justify-content: space-between;
     display: flex;
     align-items: center;
-    padding: 0 23px 0 0;
+    padding: 0;
+  }
 
-    // &:last-child {
-    //   margin-bottom: 43px;
-    // }
+  #list:hover .borderline {
+    margin: initial;
+    padding: 10px 26px;
   }
 
   .toggle-area {
@@ -283,5 +282,12 @@
   .page-item a {
     padding: 0;
     margin: 15px;
+  }
+
+  .borderline {
+    margin: -2px 0;
+    padding: 10px 26px;
+    border-right: 1px solid #e0e0e0;
+    border-left: 1px solid #e0e0e0;
   }
 </style>

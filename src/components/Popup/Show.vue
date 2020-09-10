@@ -348,6 +348,9 @@
       color: #2D453F;
       margin-top: 11px;
     }
+    h5 {
+      line-break: anywhere;
+    }
   }
 
   .modal-content {
