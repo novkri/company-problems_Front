@@ -1,6 +1,6 @@
 <template>
   <div class="popup-show">
-    <div id="popupShow" tabindex="-1" class="modal fade">
+    <div id="popupShow" tabindex="-1" class="modal fade" style="padding: 0 !importnat;">
       <div class="modal-dialog modal-dialog-centered" style="width:1411px;">
         <div class="modal-content">
           <div class="modal-header">
@@ -25,7 +25,6 @@
                   выполнения</span>
                 <span style="color: #000;">Срок исполнения</span> <span style="color: #000;">Ответственный</span></div>
               <ol>
-                <!-- @mouseover="(event) => btnRemoveShow(event)" @mouseleave="(event) => btnRemoveHide(event)" -->
                 <li v-for="(solution, idx) in solutions" :key="idx" id="list">
                   <div class="list-item">
                     <div class="desc" ref="desc" @click="displayTasks($event)"><span>{{idx+1}}.{{solution.name}}</span>
@@ -151,7 +150,8 @@
                   <div style="width: 50px;">
                     <button type="button" class="close" id="remove" style="margin: auto;"
                       @click="removeFromWork(solution)" data-toggle="modal" data-target="#popupRemoveFromWOrk">
-                      <trash-icon size="1x" class="custom-class"></trash-icon>
+                      <!-- <trash-icon size="1x" class="custom-class"></trash-icon> -->
+                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
 
@@ -160,6 +160,14 @@
 
               <button type="button" class="btn btnMain" @click.prevent="showSolutions(val)" data-toggle="modal"
                 data-target="#popupSol"><span>Посмотреть/Добавить решение</span></button>
+              <!-- <button type="button" class="linkBtn" @click.prevent="showSolutions(val)" data-toggle="modal"
+                data-target="#popupSol"><span>Список решений</span></button> -->
+              <!-- <div class="btn-and-link">
+                <button type="button" class="btn" @click.prevent="showSolutions(val)" data-toggle="modal"
+                data-target="#popupSol">Добавить решение</button>
+                <button type="button" class="btn linkBtn" @click.prevent="showSolutions(val)" data-toggle="modal"
+                data-target="#popupSol">Список решений</button>
+              </div> -->
             </div>
           </div>
         </div>
@@ -278,6 +286,12 @@
 
   #remove {
     display: none;
+
+    span {
+      margin: 0;
+      color: #848484;
+      font-size: 26px;
+    }
   }
 
   #list:hover #remove {
@@ -348,10 +362,9 @@
 
   ol {
     margin-top: 30px;
-    margin-bottom: 20px;
     line-height: 24px;
     color: #2D453F;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
     padding: 0;
 
     li {
@@ -406,14 +419,15 @@
     margin-right: 57px;
   }
 
-  .desc::after {
+  .desc::before {
     content: url('~@/assets/Select.png');
     transition: all 1s ease 0s;
     cursor: pointer;
-    margin: auto;
+    // margin: auto;
+    margin-right: 23px;
   }
 
-  .clicked::after {
+  .clicked::before {
     transform: rotate(180deg);
     transition: all 1s ease 0s;
     cursor: pointer;
@@ -640,6 +654,27 @@
   #ss-select {
     padding: 0;
     cursor: pointer;
+
+    ::-webkit-scrollbar {
+      width: 20px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #92D2C3;
+      border-radius: 29px;
+      height: 73px;
+      border-left: 5px solid white;
+      border-right: 5px solid white;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #F2F2F2;
+      border-left: 9px solid white;
+      border-right: 9px solid white;
+    }
+    :focus {
+      outline: none;
+    }
     
   }
   section {
@@ -654,26 +689,27 @@
     z-index: 1000000000000;
   }
 
-  ::-webkit-scrollbar {
-    width: 20px;
-    
-  }
+  // .btn-and-link {
+  //   width: 430px;
+  //   margin: 0 auto;
 
-  ::-webkit-scrollbar-thumb {
-    background: #92D2C3;
-    border-radius: 29px;
-    height: 73px;
-    border-left: 5px solid white;
-    border-right: 5px solid white;
-  }
+  //   .btn {
+  //     width: fit-content;
+  //     padding: 18px 10px 22px;
+  //     height: auto;
+  //   }
+  // }
+  // .linkBtn {
+  //   background-color: white;
+  //   border: none;
+  //   outline: none;
+  //   width: fit-content;
 
-  ::-webkit-scrollbar-track {
-    background: #F2F2F2;
-    border-left: 9px solid white;
-    border-right: 9px solid white;
-  }
-  :focus {
-    outline: none;
-  }
+  //   font-family: 'GothamPro-Medium';
+  //   font-size: 18px;
+  //   line-height: 24px;
+  //   letter-spacing: 0.15px;
+  //   color: #92D2C3;
+  // }
 
 </style>

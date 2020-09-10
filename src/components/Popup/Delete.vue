@@ -35,7 +35,7 @@
     //   error404(newValue, oldValue) {
     //     console.log(`Updating from ${oldValue} to ${newValue}`)
     //     if (this.error404) {
-    //       this.$vToastify.error(this.error404)
+    //       this.$toast.error(this.error404);
     //     }
     //   },
     //   val(newValue, oldValue) {

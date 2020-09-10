@@ -28,7 +28,7 @@ export default {
   },
   getters: {
     problems: state => {
-      console.log(state.problems);
+      // console.log(state.problems);
       return state.problems = state.problems.sort(function (a, b) {
         return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1})
     },
@@ -89,7 +89,13 @@ export default {
           commit('addProblem', response.data)
         }
         })
-      .catch(error => commit('setError', error.response.data.errors.name[0]))
+        .catch(error => {
+          if (error.response.status !== 422) {
+            commit('setError404', error.response.data.message)
+          } else {
+            commit('setError', error.response.data.errors.name[0])
+          }
+        })
 
     }, 
     deleteProblem: async ({commit}, param) => {
@@ -100,7 +106,14 @@ export default {
           commit('deleteProblem', param.id)
         }
         })
-      .catch(error => commit('setError', error.response.data.errors.name[0]))
+      .catch(error => {
+        if (error.response.status !== 422) {
+          commit('setError404', error.response.data.message)
+        } else {
+          commit('setError', error.response.data.errors.name[0])
+        }
+      })
+        
     },
     checkIfExists: async ({commit}, param) => {
       axios.get(BASEURL + `/${param.id}`).catch((error) => {
@@ -115,7 +128,12 @@ export default {
           commit('editProblem', response.data)
         }
       }).catch((error) => {
-        commit('setError', error.response.data.errors.name[0])})
+        if (error.response.status !== 422) {
+          commit('setError404', error.response.data.message)
+        } else {
+          commit('setError', error.response.data.errors.name[0])
+        }
+      })
     }
   }
 }

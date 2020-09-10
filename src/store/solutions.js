@@ -66,10 +66,13 @@ export default {
       state.solutions.find(solution => solution.id == payload.id).name = payload.name
     },
     editinWork: (state, payload) => {
+      console.log(payload.in_work);
       if (payload.in_work) {
+        console.log('t');
         state.solutions.push(payload)
         state.solutionsOther = state.solutionsOther.filter(s=> s.id !== payload.id)
       } else {
+        console.log('f');
         state.solutionsOther.push(payload)
         state.solutions = state.solutions.filter(s=> s.id !== payload.id)
       }
@@ -81,12 +84,7 @@ export default {
       state.solutions.find(solution => solution.id == payload.id).deadline = payload.deadline
     },
     setAllUsers: (state, payload) => {
-      // console.log(...payload);
-      // let usersPayload = {...payload}
       let usersPayload = Object.values(payload)
-      console.log(usersPayload)
-      // state.allUsers.push(payload)
-
       state.allUsers = usersPayload
     },
     editExecutor: (state, payload) => {
@@ -100,7 +98,6 @@ export default {
     }, problemId) => {
       await axios.get(URLSOLUTION + `/${problemId}/solution`)
         .then(response => {
-          console.log(response);
           if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
@@ -132,8 +129,7 @@ export default {
             } else if (!error.response.data.errors.name) {
               commit('setError', error.response.data.errors)
             } 
-          } else if (error.response.status == 404) {
-            
+          } else {
             commit('setError404', error.response.data.message)
           }
           
@@ -167,18 +163,18 @@ export default {
         }
       }).catch((error) => {
         commit('setError404', '')
-        if (error.response.status == 404) {
-          commit('setError404', '')
-          commit('setError404', error.response.data.message)
-        }
-        else if (error.response.status == 422) {
+        if (error.response.status == 422) {
           commit('setError404', '')
           commit('setError404', error.response.data.errors.name[0])
+        } else {
+          commit('setError404', '')
+          commit('setError404', error.response.data.message)
         }
       })
     },
     changeinWork: async ({commit}, param) => {
       // param.id = 10000000000
+      console.log(param);
       axios.put(BASEURL + `/${param.id}/change-in-work`, {
         in_work: param.in_work
       }).then(response => {
@@ -197,15 +193,12 @@ export default {
 
     changeStatus: async ({commit}, param) => {
       // param.id = 10000000000
-      console.log(param);
       axios.put(BASEURL + `/${param.id}/change-status`, {
         status: param.status
       }).then(response => {
-        console.log(response);
           commit('setError', '')
           commit('editStatus', response.data)
       }).catch((error) => {
-        console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
         }
@@ -223,7 +216,6 @@ export default {
           commit('setError', '')
           commit('editDeadline', response.data)
       }).catch((error) => {
-        console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
         }
@@ -235,7 +227,6 @@ export default {
 
     getAllUsers: async({commit}) => {
       axios.get(ALLUSERS).then(response => {
-        console.log(response);
         if (response.status == 200) {
           commit('setError', '')
           commit('setError404', '')
@@ -244,19 +235,18 @@ export default {
         }
       })
         .catch(error => {
-          console.log(error.response);
+          commit('setError404', '')
+          commit('setError404', error.response.message)
         })
     },
     changeExecutor: async ({commit}, param) => {
       // param.id = 10000000000
-      console.log(param);
       axios.put(BASEURL + `/${param.id}/set-executor`, {
         executor_id: param.uid
       }).then(response => {
           commit('setError', '')
           commit('editExecutor', response.data)
       }).catch((error) => {
-        console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
         }

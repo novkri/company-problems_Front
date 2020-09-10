@@ -1,17 +1,17 @@
 <template>
   <div class="container">
-    <!-- <div class="header">Регистрация</div> -->
-    <form v-if="!success">
+    <div class="form" v-if="!success"> 
       <div class="header">Регистрация</div>
+          <form >
+     
       <div class="form-group">
-        <label for="username">Имя пользователя <span
-            v-if="username.length >= 15 && username.length <= 20">{{$v.username.$params.maxLength.max - username.length}}</span></label>
-        <input type="text" class="form-control" id="username" v-model="username"
-          :class="{ 'form-control--error': $v.username.$invalid, 'form-control--valid': username && !$v.username.$invalid}">
-        <div class="errorAuth" v-if="errorUReg.name">{{errorUReg.name[0]}} </div>
-      </div>
-      <div class="form-group">
-        <label for="password">Пароль <span
+        <label for="email">Электронная почта *<span
+            v-if="email.length >= 250 && email.length <= 255">{{$v.email.$params.maxLength.max - email.length}}</span></label>
+        <input type="email" class="form-control" id="email" v-model="email"
+          :class="{ 'form-control--error': $v.email.$invalid, 'form-control--valid': email && !$v.email.$invalid}">
+        <div class="errorAuth" v-if="errorUReg.email">{{errorUReg.email[0]}} </div>
+
+        <label for="password">Пароль *<span
             v-if="password.length >= 15 && password.length <= 20">{{$v.password.$params.maxLength.max - password.length}}</span></label>
         <div class="input-group" id="show_hide_password">
           <input type="password" class="form-control" id="password" v-model="password" ref="password"
@@ -21,11 +21,10 @@
             <eye-icon size="1.5x" class="custom-class" v-if="eye"></eye-icon>
             <eye-off-icon size="1.5x" class="custom-class" v-else></eye-off-icon>
           </span>
-        </div>
-        <div class="errorAuth" v-if="errorUReg.password">{{errorUReg.password[0]}} </div>
-      </div>
-      <div class="form-group">
-        <label for="password">Повторите пароль <span
+          </div>
+          <div class="errorAuth" v-if="errorUReg.password">{{errorUReg.password[0]}} </div>
+
+          <label for="password">Повторите пароль *<span
             v-if="confirm.length >= 15 && confirm.length <= 20">{{$v.confirm.$params.maxLength.max - confirm.length}}</span></label>
         <div class="input-group" id="show_hide_password">
           <input type="password" class="form-control" id="passwordConfirm" data-toggle="password" v-model="confirm"
@@ -38,16 +37,77 @@
           </span>
         </div>
         <div class="errorAuth" v-if="errorUReg.password">{{errorUReg.password[1]}} </div>
+
       </div>
+      <!-- <div class="form-group">
+        <label for="password">Пароль *<span
+            v-if="password.length >= 15 && password.length <= 20">{{$v.password.$params.maxLength.max - password.length}}</span></label>
+        <div class="input-group" id="show_hide_password">
+          <input type="password" class="form-control" id="password" v-model="password" ref="password"
+            :class="{ 'form-control--error': $v.password.$invalid, 'form-control--valid': password && !$v.password.$invalid}">
+          <span tabindex="100" class="add-on input-group-addon" style="cursor: pointer;" @click="togglePassword"
+            :class="{ 'form-control--error': $v.password.$invalid, 'form-control--valid': password && !$v.password.$invalid}">
+            <eye-icon size="1.5x" class="custom-class" v-if="eye"></eye-icon>
+            <eye-off-icon size="1.5x" class="custom-class" v-else></eye-off-icon>
+          </span>
+        </div> -->
+        <!-- <div class="errorAuth" v-if="errorUReg.password">{{errorUReg.password[0]}} </div> -->
+      <!-- </div> -->
+      <!-- <div class="form-group">
+        <label for="password">Повторите пароль *<span
+            v-if="confirm.length >= 15 && confirm.length <= 20">{{$v.confirm.$params.maxLength.max - confirm.length}}</span></label>
+        <div class="input-group" id="show_hide_password">
+          <input type="password" class="form-control" id="passwordConfirm" data-toggle="password" v-model="confirm"
+            ref="confirm"
+            :class="{ 'form-control--error': $v.confirm.$invalid, 'form-control--valid': confirm && !$v.confirm.$invalid}">
+          <span tabindex="100" class="add-on input-group-addon" @click="toggleConfirm" style="cursor: pointer;"
+            :class="{ 'form-control--error': $v.confirm.$invalid, 'form-control--valid': confirm && !$v.confirm.$invalid}">
+            <eye-icon size="1.5x" class="custom-class" v-if="eyeC"></eye-icon>
+            <eye-off-icon size="1.5x" class="custom-class" v-else></eye-off-icon>
+          </span>
+        </div>
+        <div class="errorAuth" v-if="errorUReg.password">{{errorUReg.password[1]}} </div>
+      </div> -->
+
       <div class="form-group">
-        <label for="email">Электронная почта <span
-            v-if="email.length >= 250 && email.length <= 255">{{$v.email.$params.maxLength.max - email.length}}</span></label>
-        <input type="email" class="form-control" id="email" v-model="email"
-          :class="{ 'form-control--error': $v.email.$invalid, 'form-control--valid': email && !$v.email.$invalid}">
-        <div class="errorAuth" v-if="errorUReg.email">{{errorUReg.email[0]}} </div>
+        <label for="text">Фамилия *<span
+            v-if="surname.length >= 250 && surname.length <= 255">{{$v.surname.$params.maxLength.max - surname.length}}</span></label>
+        <input type="text" class="form-control" id="surname" v-model="surname"
+          :class="{ 'form-control--error': $v.surname.$invalid, 'form-control--valid': surname && !$v.surname.$invalid}">
+        <div class="errorAuth" v-if="errorUReg.surname">{{errorUReg.surname[0]}} </div>
+
+        <label for="text">Имя *<span
+            v-if="name.length >= 250 && name.length <= 255">{{$v.name.$params.maxLength.max - name.length}}</span></label>
+        <input type="text" class="form-control" id="name" v-model="name"
+          :class="{ 'form-control--error': $v.name.$invalid, 'form-control--valid': name && !$v.name.$invalid}">
+        <div class="errorAuth" v-if="errorUReg.name">{{errorUReg.name[0]}} </div>
+
+
+        <label for="text">Отчество<span
+            v-if="father_name.length >= 250 && father_name.length <= 255">{{$v.father_name.$params.maxLength.max - father_name.length}}</span></label>
+        <input type="text" class="form-control" id="father_name" v-model="father_name"
+          :class="{ 'form-control--error': $v.father_name.$invalid, 'form-control--valid': father_name && !$v.father_name.$invalid}">
+        <div class="errorAuth" v-if="errorUReg.father_name">{{errorUReg.father_name[0]}} </div>
       </div>
-      <button type="submit" class="btn" @click.prevent="register">Зарегистрироваться</button>
+       <!-- <div class="form-group">
+        <label for="text">Имя *<span
+            v-if="name.length >= 250 && name.length <= 255">{{$v.name.$params.maxLength.max - name.length}}</span></label>
+        <input type="text" class="form-control" id="name" v-model="name"
+          :class="{ 'form-control--error': $v.name.$invalid, 'form-control--valid': name && !$v.name.$invalid}">
+        <div class="errorAuth" v-if="errorUReg.name">{{errorUReg.name[0]}} </div>
+      </div> -->
+       <!-- <div class="form-group">
+        <label for="text">Отчество<span
+            v-if="father_name.length >= 250 && father_name.length <= 255">{{$v.father_name.$params.maxLength.max - father_name.length}}</span></label>
+        <input type="text" class="form-control" id="father_name" v-model="father_name"
+          :class="{ 'form-control--error': $v.father_name.$invalid, 'form-control--valid': father_name && !$v.father_name.$invalid}">
+        <div class="errorAuth" v-if="errorUReg.father_name">{{errorUReg.father_name[0]}} </div>
+      </div> -->
     </form>
+ <button type="submit" class="btn" @click.prevent="register">Зарегистрироваться</button>
+    </div>
+
+
 
     <div v-else class="successfully">
       <span>Вы успешно зарегистрированы</span>
@@ -65,7 +125,6 @@
 </template>
 
 <script>
-  // import {mapGetters} from 'vuex'
   import {
     EyeIcon,
     EyeOffIcon,
@@ -88,7 +147,9 @@
       email: '',
       password: '',
       confirm: '',
-      username: '',
+      surname: '',
+      father_name: '',
+      name: '',
       eye: undefined,
       eyeC: undefined
     }),
@@ -98,7 +159,15 @@
       ThumbsUpIcon
     },
     validations: {
-      username: {
+      name: {
+        minLength: minLength(4),
+        maxLength: maxLength(20)
+      },
+      surname: {
+        minLength: minLength(4),
+        maxLength: maxLength(20)
+      },
+      father_name: {
         minLength: minLength(4),
         maxLength: maxLength(20)
       },
@@ -148,14 +217,16 @@
       },
       async register() {
         const formData = {
-          name: this.username,
+          name: this.name,
+          surname: this.surname,
+          father_name: this.father_name,
           password: this.password,
           password_confirmation: this.confirm,
           email: this.email
 
         }
         await this.$store.dispatch('register', formData).then(() => {
-          if (!this.errorUReg) {
+          if (!this.errorUReg && !this.errorU) {
             this.success = true
           }
         })
@@ -172,13 +243,15 @@
     font-size: 24px;
     line-height: 23px;
     color: #4F4F4F;
-    margin-bottom: 53px;
+    margin-bottom: 58px;
     text-align: center;
   }
 
   form {
     margin: 0;
     width: 100%;
+    display: flex;
+    justify-content: space-between;
   }
 
   .errorAuth {
@@ -201,12 +274,16 @@
   }
 
   .container {
-    width: 409px;
+    // width: 409px;
+    width: auto;
     display: flex;
     margin: auto;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    // height: 100vh;
+    height: auto;
+    padding-top: 83px;
+    padding-bottom: 130px;
     font-family: 'Roboto';
     font-style: normal;
     font-weight: normal;
@@ -242,7 +319,7 @@
     font-weight: normal;
     font-size: 18px;
     line-height: 17px;
-    margin-top: 135px;
+    margin-top: 95px;
   }
 
   input,
@@ -258,7 +335,7 @@
 
   .form-control:active,
   .form-control:focus {
-    background-color: #F7F7F7;
+    background-color: #FFF;
   }
 
   label {
@@ -281,7 +358,17 @@
 
   .form-group {
     margin: 0;
-    margin-bottom: 46px;
+    // margin-bottom: 46px;
+    width: 410px;
+
+    &:last-child {
+      width: 315px;
+      margin-left: 28px;
+    }
+    
+    label {
+      margin-top: 55px;
+    }
   }
 
   .successfully {

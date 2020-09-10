@@ -7,16 +7,23 @@
     <p></p> -->
     <ul class="list-group">
       <!-- @click.prevent="show(problem)" -->
-      <li class="list-group-item" v-for="(problem, idx) in paginatedData" :key="idx">
+      <li class="list-group-item" v-for="(problem, idx) in paginatedData" :key="idx" id="list">
         <div class="toggle-area" @click.prevent="show(problem)" data-toggle="modal" data-target="#popupShow">
           <p> {{ problem.name }} </p>
         </div>
 
         <div class="icons">
-          <edit-icon size="1x" class="custom-class" @click="edit(problem)" data-toggle="modal" data-target="#popupEdit"
+          <edit-icon size="1.3x" class="custom-class" @click="edit(problem)" data-toggle="modal" data-target="#popupEdit"
             style="margin-left: 0px;"></edit-icon>
-          <trash-icon size="1x" @click="deleteP(problem.id, problem.name)" class="custom-class" data-toggle="modal"
-            style="margin-left: 30px;" data-target="#popupDelete"></trash-icon>
+          <!-- <trash-icon size="1x" @click="deleteP(problem.id, problem.name)" class="custom-class" data-toggle="modal"
+            style="margin-left: 30px;" data-target="#popupDelete"></trash-icon> -->
+            <div style="width: 50px;">
+            <!-- <button type="button" class="close" id="remove" style="margin: auto;"
+              @click="deleteP(problem.id, problem.name)" data-toggle="modal" data-target="#popupDelete"> -->
+              <trash-icon size="1.3x" class="custom-class" id="remove" style="margin: auto;"
+              @click="deleteP(problem.id, problem.name)" data-toggle="modal" data-target="#popupDelete"></trash-icon>
+            <!-- </button> -->
+          </div>
         </div>
       </li>
     </ul>
@@ -104,7 +111,8 @@
       error404() {
         // console.log(`Updating from ${oldValue} to ${newValue}`)
         if (this.error404) {
-          this.$vToastify.error(this.error404)
+
+          this.$toast.error(this.error404);
         }
       },
       val(newValue) {
@@ -180,6 +188,8 @@
 </script>
 
 <style scoped lang="scss">
+
+
   .btn {
     padding: 0;
     border-radius: 12px;

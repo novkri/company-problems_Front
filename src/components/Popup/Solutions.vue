@@ -19,11 +19,27 @@
                   @blur="editSolClick(sol.name, sol.id)" v-model="sol.name"
                   :class="{ 'form-control--error': sol.name.length < 6 ||  sol.name.length > 100 || sol.name.length == 0 }">
                 <div class="icons" ref="iconInWork">
-                  <trash-icon size="1.5x" class="custom-class" id="remove" style="margin-left: 30px;" @click="showDelete(sol.id)"
-                    data-toggle="modal" data-target="#popupDeleteSolution"></trash-icon>
-                  <img src="~@/assets/checkd.png" @click="changeinWork(sol)" v-if="sol.in_work">
+                  <!-- <trash-icon size="1.5x" class="custom-class" id="remove" style="margin-left: 30px;" @click="showDelete(sol.id)"
+                    data-toggle="modal" data-target="#popupDeleteSolution"></trash-icon> -->
+                  <!-- <img src="~@/assets/checkd.png" @click="changeinWork(sol)" v-if="sol.in_work">
                   <check-icon size="1.5x" class="custom-class" style="color: #D0D0D0" v-else @click="changeinWork(sol)">
-                  </check-icon>
+                  </check-icon> -->
+                  <div class="select" style="position: relative;" ref="select"
+                    :class="[sol.in_work ? 'green' : 'gray']">
+                    <select v-model="sol.in_work" class="form-control"
+                      @change="changeinWork(sol)">
+                      <option value="true">
+                        В работе</option>
+                      <option value="false">
+                        Не в работе</option>
+                    </select>
+                  </div>
+                  <div style="width: 50px;">
+                    <button type="button" class="close" id="remove" style="margin: auto;"
+                      @click="showDelete(sol.id)" data-toggle="modal" data-target="#popupDeleteSolution">
+                      <trash-icon size="1x" class="custom-class"></trash-icon>
+                    </button>
+                  </div>
                 </div>
               </li>
             </ul>
@@ -35,12 +51,30 @@
                   @blur="editSolClick(notinworksol.name, notinworksol.id)" v-model="notinworksol.name"
                   :class="{ 'form-control--error': notinworksol.name.length < 6 ||  notinworksol.name.length > 100 || notinworksol.name.length == 0 }">
                 <div class="icons" ref="iconInWork">
-                  <trash-icon size="1.5x" class="custom-class" id="remove" style="margin-left: 30px;"
+                
+                  <!-- <trash-icon size="1.5x" class="custom-class" id="remove" style="margin-left: 30px;"
                     @click="showDelete(notinworksol.id)" data-toggle="modal" data-target="#popupDeleteSolution">
-                  </trash-icon>
-                  <img src="~@/assets/checkd.png" @click="changeinWork(notinworksol)" v-if="notinworksol.in_work">
-                  <check-icon size="1.5x" class="custom-class" style="color: #D0D0D0;" v-else
-                    @click="changeinWork(notinworksol)"></check-icon>
+                  </trash-icon> -->
+                  <!-- <img src="~@/assets/checkd.png" @click="changeinWork(notinworksol)"> -->
+                  <!-- <check-icon size="1.5x" class="custom-class" style="color: #D0D0D0;" v-else
+                    @click="changeinWork(notinworksol)"></check-icon> -->
+                  <div class="select" style="position: relative;" ref="select"
+                    :class="[notinworksol.in_work ? 'green' : 'gray']">
+                    <select v-model="notinworksol.in_work" class="form-control"
+                      @change="changeinWork(notinworksol)">
+                      <option value="true">
+                        В работе</option>
+                      <option value="false">
+                        Не в работе</option>
+                    </select>
+                  </div>
+
+                  <div style="width: 50px;">
+                    <button type="button" class="close" id="remove" style="margin: auto;"
+                      @click="showDelete(notinworksol.id)" data-toggle="modal" data-target="#popupDeleteSolution">
+                      <trash-icon size="1x" class="custom-class"></trash-icon>
+                    </button>
+                  </div>
                 </div>
               </li>
             </ul>
@@ -80,7 +114,7 @@
   import DeleteSolution from './DeleteSolution'
   import {
     TrashIcon,
-    CheckIcon
+    // CheckIcon
   } from 'vue-feather-icons'
   import {
     mapGetters
@@ -100,7 +134,7 @@
       showClear: false
     }),
     components: {
-      CheckIcon,
+      // CheckIcon,
       TrashIcon,
       DeleteSolution,
     },
@@ -129,8 +163,7 @@
       },
 
       async changeinWork(obj) {
-        obj.in_work = !obj.in_work
-        await this.$store.dispatch('changeinWork', obj)
+        await this.$store.dispatch('changeinWork', {id: obj.id, in_work: obj.in_work === "true" ? true : false})
       },
 
       async addSolution(obj) {
@@ -166,7 +199,10 @@
     display: none;
   }
   #list:hover #remove{ 
-    display:block;
+    display:flex;
+    width: 50px;
+    height: 36px;
+    align-items: center;
   }
 
   h6 {
@@ -242,6 +278,7 @@
   input:active,
   input:focus {
     border-bottom: 2px solid #92D2C3;
+    background-color: #FFF;
   }
 
   ol {
@@ -280,7 +317,7 @@
     height: 50px;
     background: #92D2C3;
     color: #fff;
-    margin: 0 auto;
+    // margin: 0 auto;
 
     font-size: 18px;
     line-height: 17px;
@@ -318,6 +355,10 @@
       margin: 0 10px;
     }
   }
+  
+  .form {
+    width: 100%;
+  }
 
   .form-control {
     border-radius: 10px;
@@ -328,16 +369,12 @@
     background-color: #F7F7F7;
   }
 
-  .form-control:active,
-  .form-control:focus {
-    background-color: #FFF;
-  }
 
   .list-group-item {
     border-radius: 7px;
     width: 100%;
     height: 60px;
-    background-color: #F7F7F7;
+    background-color: #F6F6F6;
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;
@@ -355,15 +392,73 @@
     }
 
     &:hover {
-      background-color: #F0F0F0;
+      background-color: #f0f0f0;
 
       input,
-      input:hover {
-        background-color: #F0F0F0 !important;
+      input:hover, input:active, input:focus {
+        background-color: #f0f0f0 !important;
         cursor: pointer;
       }
     }
   }
+  .select {
+    width: 158px;
+    border-radius: 10px;
+    height: 36px;
+
+    padding: 0;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    margin: 0 30px;
+    letter-spacing: 0.15px;
+    color: #828282;
+
+    select {
+      padding-bottom: 0;
+      width: 158px;
+      appearance: none;
+      outline: 0;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      cursor: pointer;
+      height: fit-content;
+    }
+
+    option {
+      background-color: #C4C4C4;
+      color: #2D453F;
+      font-size: 18px;
+      line-height: 24px;
+      letter-spacing: 0.15px;
+      border-radius: 10px;
+      outline: none;
+      font-size: 18px;
+      line-height: 24px;
+      letter-spacing: 0.15px;
+    }
+  }
+
+  .green {
+    background-color: #4EAD96 !important;
+
+    select {
+      background: url('~@/assets/SelectWhite.png') no-repeat;
+      background-position: right 0.6em top 111%, 0 0;
+      color: #fff;
+    }
+  }
+
+  .gray {
+    background-color: #ebebeb !important;
+
+    select {
+      background: url('~@/assets/Select.png') no-repeat;
+      background-position: right 0.4em top 111%, 0 0;
+      color: #2D453F;
+    }
+  }
+  
 
   .new-solution {
     display: flex;

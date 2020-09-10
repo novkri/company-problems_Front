@@ -90,27 +90,29 @@ export default {
         }
         })
       .catch((error) => {
-        console.log(error.response);
+
         commit('auth_error')
         localStorage.removeItem('token')
         commit('setErrorUReg', '')
-        commit('setErrorUReg', error.response.data.errors)})
+        commit('setErrorUReg', error.response.data.errors)
+      })
     },
     login: async ({commit}, user) => {
       commit('auth_request')
         await axios.post( BASEURL+'/login', user)
           .then(resp => {
             const token = resp.data.access_token
-            const user = resp.data.user.name
+            const user = resp.data.user
+
             localStorage.setItem('token', token)
-            localStorage.setItem('user', user)
+            localStorage.setItem('user', JSON.stringify(user))
             axios.defaults.headers.common['Authorization'] = token
             
             commit('auth_success', token)
             commit('setErrorU', '')
           })
         .catch(err => {
-          
+          console.log('error', err.response);
           if (err.response.status == 401) {
             commit('setError401', err.response.data.errors)
           }

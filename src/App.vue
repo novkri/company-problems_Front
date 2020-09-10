@@ -2,9 +2,8 @@
   <div id="app">
     <div id="nav">
       <nav class="navbar navbar-light bg-light" v-if="isLoggedIn" style="height: 78px;">
-        <!-- <a class="navbar-brand">Navbar (временно)</a> -->
-        <!-- <span>{{userLoggedIn}} (здесь временно)</span> -->
-        <span style="margin: 0 55px;">Вы вошли как: {{userLoggedIn}} (потом ФИО)</span> <log-in-icon @click="logout" size="1.5x" class="custom-class"></log-in-icon>
+  
+        <span style="margin: 0 55px;">Вы вошли как: {{userLoggedIn.surname}} {{userLoggedIn.name}} {{userLoggedIn.father_name}}</span> <log-in-icon @click="logout" size="1.5x" class="custom-class"></log-in-icon>
       </nav>
     </div>
 
@@ -23,8 +22,7 @@ import { LogInIcon } from 'vue-feather-icons'
       isLoggedIn : function(){ 
         return this.$store.getters.isLoggedIn},
       userLoggedIn : function(){ 
-        // console.log(localStorage.getItem('user'));
-      return localStorage.getItem('user')}
+      return JSON.parse(localStorage.getItem ('user'))}
     },
     methods: {
       logout: function () {
@@ -38,6 +36,20 @@ import { LogInIcon } from 'vue-feather-icons'
 </script>
 
 <style lang="scss">
+  #remove {
+    display: none;
+
+    span {
+      margin: 0;
+      color: #848484;
+      font-size: 26px;
+    }
+  }
+
+  #list:hover #remove {
+    display: flex;
+  }
+
   #app {
     font-family: 'GothamPro', sans-serif;
     font-size: 18px;
@@ -55,7 +67,21 @@ import { LogInIcon } from 'vue-feather-icons'
     padding: 0;
     margin: 50px auto 0;
   }
+
+  .btn-and-link {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 100px;
+  }
+
   a {
+    margin: 0;
+    font-size: 18px;
+    line-height: 17px;
+    font-family: 'GothamPro-Medium';
+    color: #92D2C3;
     cursor: pointer;
   }
 
@@ -63,25 +89,19 @@ import { LogInIcon } from 'vue-feather-icons'
     outline: none;
     box-shadow: none;
   }
-  .btnMain:hover {
+  .btnMain:hover, .btn-secondary:hover {
     background-color: #76DFC7 !important;
   }
-  .btn-secondary:hover {
-    background-color: #d5d5d5 !important;
-  }
   
-  
+
   p {
     word-break: break-all;
     margin: 0;
   }
 
-  .btnMain:active {
+  .btnMain:active, .btn-secondary:active  {
     background-color: #4EAD96 !important;
   }
-  .btn-secondary:active {
-      background-color: #545b62 !important;
-    }
 
   .btn-secondary:not(:disabled):not(.disabled):active:focus {
     box-shadow: none;
