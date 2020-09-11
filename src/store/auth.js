@@ -48,6 +48,8 @@ export default {
   },
   mutations: {
     addUser: (state, payload) => {
+      console.log(payload);
+      console.log(state.users);
       state.users.push(payload)
     },
     auth_request(state){
@@ -80,19 +82,25 @@ export default {
     register: async ({commit}, formData) => {
       commit('auth_request')
       await axios.post(BASEURL + '/register', formData).then(response => {
+        console.log(response);
         if (response.status == 201) { 
-          const token = response.data.access_token
-          localStorage.setItem('token', token)
-          axios.defaults.headers.common['Authorization'] = token
-          commit('auth_success', token, response.data.user)
+          console.log('ok');
+          // const token = response.data.access_token
+          // localStorage.setItem('token', token)
+          // axios.defaults.headers.common['Authorization'] = token
+          // commit('auth_success', token, response.data.user)
           commit('setErrorUReg', '')
-          commit('addUser', response.data)
+          commit('setErrorU', '')
+          // console.log(token, formData);
+          // commit('addUser', formData)
         }
         })
       .catch((error) => {
-
+        console.log(error);
+        console.log('er');
         commit('auth_error')
         localStorage.removeItem('token')
+        console.log(error.response);
         commit('setErrorUReg', '')
         commit('setErrorUReg', error.response.data.errors)
       })

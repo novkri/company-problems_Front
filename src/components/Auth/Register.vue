@@ -53,16 +53,14 @@
         <div class="errorAuth" v-if="errorUReg.name">{{errorUReg.name[0]}} </div>
 
 
-        <label for="text">Отчество<span
-            v-if="father_name.length >= 20 && father_name.length <= 25">{{$v.father_name.$params.maxLength.max - father_name.length}}</span></label>
+        <label for="text">Отчество</label>
         <input type="text" class="form-control" id="father_name" v-model="father_name"
-          :class="{ 'form-control--error': $v.father_name.$invalid, 'form-control--valid': father_name && !$v.father_name.$invalid}">
+          :class="{ 'form-control--error': errorUReg.father_name, 'form-control--valid': !errorUReg.father_name}">
         <div class="errorAuth" v-if="errorUReg.father_name">{{errorUReg.father_name[0]}} </div>
       </div>
     </form>
     <button type="submit" class="btn" @click.prevent="register">Зарегистрироваться</button>
     </div>
-
 
     <div v-else class="successfully">
       <span>Вы успешно зарегистрированы</span>
@@ -122,10 +120,6 @@
         minLength: minLength(4),
         maxLength: maxLength(20)
       },
-      father_name: {
-        minLength: minLength(4),
-        maxLength: maxLength(20)
-      },
       password: {
         minLength: minLength(8),
         maxLength: maxLength(20)
@@ -141,7 +135,7 @@
       }
     },
     computed: {
-      ...mapGetters(['errorUReg'])
+      ...mapGetters(['errorUReg', 'error401'])
     },
     watch: {
       errorUReg() {
@@ -180,9 +174,12 @@
           email: this.email
 
         }
-        await this.$store.dispatch('register', formData).then(() => {
-          if (!this.errorUReg && !this.errorU) {
+        await this.$store.dispatch('register', formData).then((r) => {
+          console.log('fff', r);
+          console.log(this.errorUReg, !this.errorUReg);
+          if (this.errorUReg == '') {
             this.success = true
+            console.log(this.success);
           }
         })
       }
@@ -191,6 +188,9 @@
 </script>
 
 <style lang="scss" scoped>
+.errorAuth {
+  margin-bottom: -33px;
+}
   .header {
     font-family: 'GothamPro-Medium';
     font-style: normal;
@@ -314,10 +314,11 @@
   .form-group {
     margin: 0;
     // margin-bottom: 46px;
-    width: 410px;
+    // width: 410px;
+    width: 445px;
 
     &:last-child {
-      width: 315px;
+      // width: 315px;
       margin-left: 28px;
     }
     
