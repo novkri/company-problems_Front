@@ -27,13 +27,14 @@
               <ol>
                 <li v-for="(solution, idx) in solutions" :key="idx" id="list">
                   <div class="list-item">
-                    <div class="desc" ref="desc" @click="displayTasks($event)"><span>{{idx+1}}.{{solution.name}}</span>
+                    <!-- @click="displayTasks($event)" -->
+                    <div class="desc" ref="desc"><span>{{idx+1}}.{{solution.name}}</span>
                     </div>
 
 
                     <!-- tasks -->
                     <!-- отдельным компонетом? -->
-                    <ul class="tasks" ref="hiddenList">
+                    <!-- <ul class="tasks" ref="hiddenList">
                       <li>
                         <span>Задача1</span>
                         <div class="select gray" style="position: relative;" ref="select">
@@ -72,7 +73,7 @@
                         </div>
 
                       </li>
-                    </ul>
+                    </ul> -->
                     <!-- tasks -->
                   </div>
 
@@ -146,7 +147,6 @@
 
 
 
-
                   <div style="width: 50px;">
                     <button type="button" class="close" id="remove" style="margin: auto;"
                       @click="removeFromWork(solution)" data-toggle="modal" data-target="#popupRemoveFromWOrk">
@@ -160,14 +160,6 @@
 
               <button type="button" class="btn btnMain" @click.prevent="showSolutions(val)" data-toggle="modal"
                 data-target="#popupSol"><span>Посмотреть/Добавить решение</span></button>
-              <!-- <button type="button" class="linkBtn" @click.prevent="showSolutions(val)" data-toggle="modal"
-                data-target="#popupSol"><span>Список решений</span></button> -->
-              <!-- <div class="btn-and-link">
-                <button type="button" class="btn" @click.prevent="showSolutions(val)" data-toggle="modal"
-                data-target="#popupSol">Добавить решение</button>
-                <button type="button" class="btn linkBtn" @click.prevent="showSolutions(val)" data-toggle="modal"
-                data-target="#popupSol">Список решений</button>
-              </div> -->
             </div>
           </div>
         </div>
@@ -181,7 +173,7 @@
 
 <script>
   import {
-    TrashIcon,
+    // TrashIcon,
     UserIcon
   } from 'vue-feather-icons'
   import {
@@ -205,7 +197,7 @@
     }),
     components: {
       UserIcon,
-      TrashIcon,
+      // TrashIcon,
       Solutions,
       RemoveFromWork,
       // SsSelect, SsSelectToggle, SsSelectOption, SsSelectSearchInput
@@ -236,26 +228,26 @@
           id
         })
       },
-      displayTasks(event) {
-        this.showTasks = !this.showTasks
-        if (event.target.tagName === 'DIV') {
-          if (this.showTasks) {
-            event.target.classList.add('clicked')
-            event.path[1].lastChild.classList.add('show')
-          } else {
-            event.target.classList.remove('clicked')
-            event.path[1].lastChild.classList.remove('show')
-          }
-        } else if (event.target.tagName === 'SPAN') {
-          if (this.showTasks) {
-            event.target.classList.add('clicked')
-            event.path[2].lastChild.classList.add('show')
-          } else {
-            event.target.classList.remove('clicked')
-            event.path[2].lastChild.classList.remove('show')
-          }
-        }
-      },
+      // displayTasks(event) {
+      //   this.showTasks = !this.showTasks
+      //   if (event.target.tagName === 'DIV') {
+      //     if (this.showTasks) {
+      //       event.target.classList.add('clicked')
+      //       event.path[1].lastChild.classList.add('show')
+      //     } else {
+      //       event.target.classList.remove('clicked')
+      //       event.path[1].lastChild.classList.remove('show')
+      //     }
+      //   } else if (event.target.tagName === 'SPAN') {
+      //     if (this.showTasks) {
+      //       event.target.classList.add('clicked')
+      //       event.path[2].lastChild.classList.add('show')
+      //     } else {
+      //       event.target.classList.remove('clicked')
+      //       event.path[2].lastChild.classList.remove('show')
+      //     }
+      //   }
+      // },
 
       showSolutions() {
         this.openSolutions = true
@@ -422,57 +414,57 @@
     margin-right: 57px;
   }
 
-  .desc::before {
-    content: url('~@/assets/Select.png');
-    transition: all 1s ease 0s;
-    cursor: pointer;
-    // margin: auto;
-    margin-right: 23px;
-  }
+  // .desc::before {
+  //   content: url('~@/assets/Select.png');
+  //   transition: all 1s ease 0s;
+  //   cursor: pointer;
+  //   // margin: auto;
+  //   margin-right: 23px;
+  // }
 
-  .clicked::before {
-    transform: rotate(180deg);
-    transition: all 1s ease 0s;
-    cursor: pointer;
-  }
+  // .clicked::before {
+  //   transform: rotate(180deg);
+  //   transition: all 1s ease 0s;
+  //   cursor: pointer;
+  // }
 
-  .tasks {
-    margin-top: 27px;
-    transition: all 1s ease 0s;
-    list-style: none;
-    display: none;
-    width: 504px;
+  // .tasks {
+  //   margin-top: 27px;
+  //   transition: all 1s ease 0s;
+  //   list-style: none;
+  //   display: none;
+  //   width: 504px;
 
-    li {
-      display: list-item;
-      width: 231%;
-      display: flex;
-      justify-content: space-between;
+  //   li {
+  //     display: list-item;
+  //     width: 231%;
+  //     display: flex;
+  //     justify-content: space-between;
 
-      span {
-        width: 54%;
-        margin: 0;
-      }
-    }
+  //     span {
+  //       width: 54%;
+  //       margin: 0;
+  //     }
+  //   }
 
-    li:last-child {
-      justify-content: center;
+  //   li:last-child {
+  //     justify-content: center;
 
-      input .form-control {
-        padding: 0;
-      }
+  //     input .form-control {
+  //       padding: 0;
+  //     }
 
-      input .date {
-        margin: 0;
-        color: #828282;
-        background-color: #F9F9F9;
+  //     input .date {
+  //       margin: 0;
+  //       color: #828282;
+  //       background-color: #F9F9F9;
 
-        &:hover {
-          background-color: #F0F0F0;
-        }
-      }
-    }
-  }
+  //       &:hover {
+  //         background-color: #F0F0F0;
+  //       }
+  //     }
+  //   }
+  // }
 
   .selectResponsible {
     display: flex;
