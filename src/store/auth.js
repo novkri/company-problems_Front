@@ -84,7 +84,6 @@ export default {
       await axios.post(BASEURL + '/register', formData).then(response => {
         console.log(response);
         if (response.status == 201) { 
-          console.log('ok');
           // const token = response.data.access_token
           // localStorage.setItem('token', token)
           // axios.defaults.headers.common['Authorization'] = token
@@ -96,8 +95,6 @@ export default {
         }
         })
       .catch((error) => {
-        console.log(error);
-        console.log('er');
         commit('auth_error')
         localStorage.removeItem('token')
         console.log(error.response);

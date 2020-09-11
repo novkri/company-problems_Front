@@ -60,6 +60,7 @@
       </div>
     </form>
     <button type="submit" class="btn" @click.prevent="register">Зарегистрироваться</button>
+    <div class="to-login">Уже зарегистрированы? <router-link to="/login">Вход</router-link> </div>
     </div>
 
     <div v-else class="successfully">
@@ -70,7 +71,7 @@
       </button>
     </div>
 
-    <div class="to-login">Уже зарегистрированы? <router-link to="/login">Вход</router-link> </div>
+    <!-- <div class="to-login">Уже зарегистрированы? <router-link to="/login">Вход</router-link> </div> -->
   </div>
 
 
@@ -174,12 +175,9 @@
           email: this.email
 
         }
-        await this.$store.dispatch('register', formData).then((r) => {
-          console.log('fff', r);
-          console.log(this.errorUReg, !this.errorUReg);
+        await this.$store.dispatch('register', formData).then(() => {
           if (this.errorUReg == '') {
             this.success = true
-            console.log(this.success);
           }
         })
       }
@@ -347,6 +345,7 @@
   }
 
   .to-login {
+    justify-content: center;
     display: flex;
     margin-top: 56px;
     font-size: 18px;
