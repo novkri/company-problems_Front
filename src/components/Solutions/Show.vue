@@ -21,63 +21,38 @@
             </div>
 
             <div>
-              <div class="subtitle"><span style="width: 35%;">Решения в работе:</span> <span style="color: #000;">Статус
+              <div class="subtitle row">
+                <!-- <span style="width: 35%;">Решения в работе:</span> <span style="color: #000;">Статус
                   выполнения</span>
-                <span style="color: #000;">Срок исполнения</span> <span style="color: #000;">Ответственный</span></div>
+                <span style="color: #000;">Срок исполнения</span> <span style="color: #000;">Ответственный</span>-->
+                <div class="col-sm-5" style="padding: 0;">
+                  Решения в работе:
+                </div>
+                <div class="col-sm-2"  style="padding: 0;">
+                  Статус выполнения
+                </div>
+                <div class="col-sm-2" style="padding: 0;">
+                  Срок исполнения
+                </div>
+                <div class="col-sm-2" style="padding: 0;">
+                  Ответственный
+                </div>
+
+              </div> 
+              <!-- список можно убрать на div -->
               <ol>
-                <li v-for="(solution, idx) in solutions" :key="idx" id="list">
-                  <div class="list-item">
+                <li v-for="(solution, idx) in solutions" :key="idx" id="list" class="row">
+                  <div class="list-item col-sm-5">
                     <!-- @click="displayTasks($event)" -->
                     <div class="desc" ref="desc"><span>{{idx+1}}.{{solution.name}}</span>
                     </div>
 
-
-                    <!-- tasks -->
-                    <!-- отдельным компонетом? -->
-                    <!-- <ul class="tasks" ref="hiddenList">
-                      <li>
-                        <span>Задача1</span>
-                        <div class="select gray" style="position: relative;" ref="select">
-                          <select v-model="solution.status" class="form-control" @change="changeStatus($event)">
-                            <option value="В процессе">
-                              В процессе</option>
-                            <option value="Выполнено">
-                              Выполнено</option>
-                            <option value="">
-                              Отсутсвует</option>
-                          </select>
-                        </div>
-                        <input type="date" id="start" name="trip-start" class="date">
-                        <div class="selectResponsible">
-                          <select class="form-control" style="height: fit-content; padding: 0;">
-                            <option default disabled>Выбрать</option>
-                            <option v-for="(u, i) in allUsers" :key="i">
-                              {{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}}
-                            </option>
-                          </select>
-                        </div>
-                        <trash-icon size="1.5x" class="custom-class" @click="deleteTask(task.id)"></trash-icon>
-                      </li>
-
-                      <li>
-                        <input type="text" class="form-control" placeholder="+ Добавить задачу...">
-                        <div class="addNewTask">
-                          <input type="date" id="start" name="trip-start" class="date">
-                          <div class="selectResponsible" style="margin: 0px 19px 0px 67px; width: 112px;">
-                            <select class="form-control" style="height: fit-content; padding: 0;">
-                              <option v-for="(u, i) in allUsers" :key="i">
-                                {{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}}
-                              </option>
-                            </select>
-                          </div>
-                        </div>
-
-                      </li>
-                    </ul> -->
-                    <!-- tasks -->
+                    <!-- <div class="tasks">
+                      <Tasks :val="solution" />
+                    </div> -->
                   </div>
 
-                  <div class="select" style="position: relative;" ref="select"
+                  <div class="select col-sm-2" style="position: relative;" ref="select"
                     :class="[solution.status == 'Выполнено' ? 'green' : 'gray']">
                     <select v-model="solution.status" class="form-control"
                       @change="changeStatus(solution.status, solution.id)">
@@ -89,17 +64,22 @@
                     </select>
                   </div>
 
-                  <input type="date" id="start" name="trip-start" class="date" v-model="solution.deadline"
-                    @change="changeDeadline(solution.deadline, solution.id)">
+                  <div class="dateDiv col-sm-2">
+                    <input type="date" id="start" name="trip-start" class="date" v-model="solution.deadline"
+                      @change="changeDeadline(solution.deadline, solution.id)">
+                  </div>
 
-                  <div class="selectResponsible">
+
+                  <div class="selectResponsible col-sm-2">
                     <user-icon size="1.5x" class="custom-class"></user-icon>
-                    <select class="form-control" style="height: fit-content; padding: 0;" v-model="solution.executor_id"
+                    <!-- :class="[solution.executor_id == null ? 'blankSelect' : '']" -->
+                    <select class="form-control" style="height: fit-content; padding: 0; width: 150px;" v-model="solution.executor_id"
                       @change="selectExecutor(solution.id)">
                       <option v-for="(u, i) in allUsers" :key="i" :value="u.id">
                         {{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}}
                       </option>
                     </select>
+
                   </div>
 
 
@@ -147,7 +127,7 @@
 
 
 
-                  <div style="width: 50px;">
+                  <div class="col-0.5" style="width: 5px">
                     <button type="button" class="close" id="remove" style="margin: auto;"
                       @click="removeFromWork(solution)" data-toggle="modal" data-target="#popupRemoveFromWOrk">
                       <!-- <trash-icon size="1x" class="custom-class"></trash-icon> -->
@@ -155,8 +135,14 @@
                     </button>
                   </div>
 
-                </li>
-              </ol>
+                </li>              
+              </ol>      
+              here could be tasks...
+                    <div class="tasks">
+                      {{solutions}}
+                      <br>
+                      Task Component: <Tasks :val="solutions" />
+                    </div>
 
               <button type="button" class="btn btnMain" @click.prevent="showSolutions(val)" data-toggle="modal"
                 data-target="#popupSol"><span>Посмотреть/Добавить решение</span></button>
@@ -181,6 +167,7 @@
   } from 'vuex'
   import Solutions from './Solutions'
   import RemoveFromWork from './RemoveFromWork'
+  import Tasks from './Tasks/Tasks'
   // import { SsSelect, SsSelectToggle, SsSelectOption, SsSelectSearchInput } from 'ss-select'
 
   export default {
@@ -200,6 +187,7 @@
       // TrashIcon,
       Solutions,
       RemoveFromWork,
+      Tasks
       // SsSelect, SsSelectToggle, SsSelectOption, SsSelectSearchInput
     },
 
@@ -270,6 +258,9 @@
 </script>
 
 <style scoped lang="scss">
+div {
+  padding: 0;
+}
   svg {
     color: #AFAFAF;
     cursor: pointer;
@@ -327,7 +318,8 @@
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #2D453F;
-    width: 90%;
+    width: 94%;
+
     margin-left: 20px;
 
     h6 {
@@ -403,7 +395,7 @@
   .list-item {
     display: flex;
     flex-direction: column;
-    width: 538px;
+    // width: 538px;
   }
 
   .desc {
@@ -468,13 +460,22 @@
 
   .selectResponsible {
     display: flex;
-    width: 185px;
-    margin: 0 0 0 65px;
+    // width: 155px;
+    // margin: 0 0 0 65px;
+    
+    // margin-right: 30px;
+    // margin-left: 20px;
+
     background-color: #F9F9F9;
 
     &:hover {
       background-color: #F0F0F0;
     }
+  }
+  .blankSelect {
+    border-bottom: 1px solid #828282;
+    border-radius: 0px !important;
+    margin-left: 10px;
   }
 
   .show {
@@ -517,9 +518,10 @@
   .date,
   .date:focus {
     outline: none;
+    width: 177px;
     border: none;
     position: relative;
-    margin-left: 61px;
+    // margin-left: 61px;
     color: #828282;
     background-color: #F9F9F9;
     padding-left: 70px;
@@ -554,7 +556,7 @@
   }
 
   .select {
-    width: 158px;
+    // width: 158px;
     border-radius: 10px;
     height: 36px;
 
@@ -562,12 +564,12 @@
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;
-    margin-right: 85px;
+    margin-right: 30px;
     letter-spacing: 0.15px;
     color: #828282;
 
     select {
-      width: 158px;
+      // width: 158px;
       appearance: none;
       outline: 0;
       -webkit-appearance: none;

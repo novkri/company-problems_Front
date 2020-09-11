@@ -1,16 +1,14 @@
 <template>
   <div class="container" style="width: 1350px;">
-    <!-- <button type="button" class="btn btnMain" @click="create" data-toggle="modal" data-target="#popupCreate">
-      <plus-icon size="1.5x" class="custom-class" style="color: white; margin-right: 5px;"></plus-icon><span>Предложить
-        проблему</span>
-    </button>
-    <p></p> -->
     <ul class="list-group">
       <!-- @click.prevent="show(problem)" -->
       <li class="list-group-item" v-for="(problem, idx) in paginatedData" :key="idx" id="list">
         <div class="toggle-area" @click.prevent="show(problem)" data-toggle="modal" data-target="#popupShow">
           <p> {{ problem.name }} </p>
         </div>
+
+        <!-- <div class="creator">{{problem}} d</div>
+        <div class="creator">{{allUsers.id == problem.creator_id}} f</div> -->
 
         <div class="icons">
           <div class="borderline">
@@ -66,7 +64,7 @@
   import PopupCreate from '@/components/Popup/Create'
   import PopupEdit from '@/components/Popup/Edit'
   import PopupDelete from '@/components/Popup/Delete'
-  import PopupShow from '@/components/Popup/Show'
+  import PopupShow from '@/components/Solutions/Show'
   import {
     mapGetters
   } from 'vuex'
@@ -119,7 +117,7 @@
       }
     },
     computed: {
-      ...mapGetters(['problems', 'error', 'error404']),
+      ...mapGetters(['problems', 'error', 'error404', 'allUsers']),
       pageCount() {
         let l = this.problems.length,
           s = this.size;
