@@ -62,8 +62,15 @@ export default {
       })
     },
 
-    editSolution: (state, payload) => {
-      state.solutions.find(solution => solution.id == payload.id).name = payload.name
+    editSolutionOther: (state, {id, name}) => {
+      console.log(id, name);
+      console.log(state.solutions);
+      if (state.solutionsOther.find(solution => solution.id == id)) {
+        state.solutionsOther.find(solution => solution.id == id).name = name
+      } else {
+        state.solutions.find(solution => solution.id == id).name = name
+      }
+      
     },
     editinWork: (state, payload) => {
       console.log(payload.in_work);
@@ -150,26 +157,46 @@ export default {
         })
     },
 
+    // checkIfExists: async ({commit}, param) => {
+    //   return new Promise((resolve, reject) => {
+    //   axios.get(BASEURL + `/${param.id}`)
+    //   .then(response => )
+    //   .catch((error) => {
+    //     commit('setError404', error.response.data.message)})
+    //   }
+    // },
+
     editSolution: async ({commit}, param) => {
       // param.id = 10000000000
-      axios.put(BASEURL + `/${param.id}`, {
-        name: param.name
-      }).then(response => {
-        commit('setError404', '')
-        if (response.status == 200) {
-          commit('setError', '')
-          commit('editSolution', response.data)
-          commit('sortSolutions')
-        }
-      }).catch((error) => {
-        commit('setError404', '')
-        if (error.response.status == 422) {
-          commit('setError404', '')
-          commit('setError404', error.response.data.errors.name[0])
-        } else {
-          commit('setError404', '')
-          commit('setError404', error.response.data.message)
-        }
+      return new Promise((resolve, reject) => {
+        axios.put(BASEURL + `/${param.id}`, {
+          name: param.name
+        }).then(response => {
+          console.log(response);
+          // if (response.status == 200) {
+            commit('setError', '')
+            commit('setError404', '')
+            commit('editSolutionOther', response.data)
+            commit('sortSolutions')
+            resolve(response)
+          // }
+        }).catch((error) => {
+          console.log('d');
+          console.log(error);
+          // commit('setError404', '')
+          if (error.response.status == 422) {
+            commit('setError404', '')
+            commit('setError404', error.response.data.errors.name[0])
+            // return param.id
+            reject(error.response.data.message)
+          } else {
+            commit('setError404', '')
+            commit('setError404', error.response.data.message)
+            // return param.id
+            reject(error.response.data.message)
+          }
+          // reject(error.response.data.message)
+        })
       })
     },
     changeinWork: async ({commit}, param) => {
@@ -216,6 +243,7 @@ export default {
           commit('setError', '')
           commit('editDeadline', response.data)
       }).catch((error) => {
+
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
         }

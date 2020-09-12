@@ -1,6 +1,6 @@
 <template>
   <div class="popup-show">
-    <div id="popupSol" tabindex="-1" class="modal fade">
+    <div id="popupSol" tabindex="-1" class="modal fade" style="padding: 0 !important;">
       <div class="modal-dialog modal-dialog-centered" style="max-width:1500px;">
         <div class="modal-content" style="padding: 36px 300px;min-height: 348px;">
           <div class="modal-header" style="width: 130%;">
@@ -16,8 +16,9 @@
             <ul class="list-group">
               <li class="list-group-item" id="list" v-for="(sol, idx) in solutions" :key="idx">
                 <input class="form-control" @keyup.enter="editSolClick(sol.name, sol.id)"
-                  @blur="editSolClick(sol.name, sol.id)" v-model="sol.name"
-                  :class="{ 'form-control--error': sol.name.length < 6 ||  sol.name.length > 100 || sol.name.length == 0 }">
+                  @blur="editSolClick(sol.name, sol.id)" v-model="sol.name" @focus="onFocusInput($event)"
+                  :class="{ 'form-control--error': sol.name.length < 6 ||  sol.name.length > 100 || sol.name.length == 0}">
+                  <!-- <div class="error" v-if="error">{{error}}</div> -->
                 <div class="icons" ref="iconInWork">
                   <!-- <trash-icon size="1.5x" class="custom-class" id="remove" style="margin-left: 30px;" @click="showDelete(sol.id)"
                     data-toggle="modal" data-target="#popupDeleteSolution"></trash-icon> -->
@@ -48,8 +49,11 @@
               <li class="list-group-item" id="list" v-for="(notinworksol, idx) in solutionsOther" :key="idx">
                 <input class="form-control"
                   @keyup.enter="editSolClick(notinworksol.name, notinworksol.id)"
-                  @blur="editSolClick(notinworksol.name, notinworksol.id)" v-model="notinworksol.name"
-                  :class="{ 'form-control--error': notinworksol.name.length < 6 ||  notinworksol.name.length > 100 || notinworksol.name.length == 0 }">
+                  @blur="editSolClick(notinworksol.name, notinworksol.id)" v-model="notinworksol.name" @focus="onFocusInput($event)"
+                  :class="{ 'form-control--error': notinworksol.name.length < 6 ||  notinworksol.name.length > 100 || notinworksol.name.length == 0}">
+                  <!-- <div class="error" v-if="error404">{{error404}}</div> -->
+                  <!-- {{notinworksol.name}}
+                  {{error404}} -->
                 <div class="icons" ref="iconInWork">
                 
                   <!-- <trash-icon size="1.5x" class="custom-class" id="remove" style="margin-left: 30px;"
@@ -131,7 +135,9 @@
       // progress: '',
       solutionIdDelete: '',
       showDeleteSol: false,
-      showClear: false
+      showClear: false,
+      currentSolutionInput: '',
+      currentSolutionName: ''
     }),
     components: {
       // CheckIcon,
@@ -148,14 +154,27 @@
       onClear() {
         this.solutionName = ''
       },
+      onFocusInput(event) {
+        this.currentSolutionName = event.target.value
+        this.currentSolutionInput = event.target
+      },
+
       async editSolClick(name, id) {
         await this.$store.commit('setError404', '')
+        console.log(name, id);
         await this.$store.dispatch('editSolution', {
           name,
           id
+        }).then(() => {
+          // this.currentSolutionInput.classList.remove('form-control--error')
+          })
+        .catch(e => {console.log(e)
+        // this.currentSolutionInput.classList.add('form-control--error')
+          this.$store.dispatch('editSolution', {
+            name: this.currentSolutionName,
+            id
+          })
         })
-        console.log(event.target);
-        event.target.blur();
       },
 
       closeSolutions() {
@@ -334,6 +353,9 @@
       margin: 1.75rem auto;
     }
   }
+  // .modal.show .modal-dialog {
+  //   box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  // }
 
   .close {
     margin: -1rem -1rem -1rem auto;

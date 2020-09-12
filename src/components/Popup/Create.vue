@@ -10,7 +10,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <form @keyup.enter="addProblem()" class="form-group">
+            <form @submit.prevent="addProblem()" class="form-group">
               <div class="input-group">
                 <input type="text" ref="input" v-model="name" class="form-control form-control--valid"
                   id="new-problem-title" placeholder="Название проблемы..." @blur="showClear = false" @focus="onFocus">
@@ -76,7 +76,7 @@
           if (!this.error) {
             this.name = ''
             document.getElementById('close').click()
-          }
+          } 
         })
       },
 

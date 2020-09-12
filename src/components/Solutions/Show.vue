@@ -1,6 +1,6 @@
 <template>
   <div class="popup-show">
-    <div id="popupShow" tabindex="-1" class="modal fade" style="padding: 0 !importnat;">
+    <div id="popupShow" tabindex="-1" class="modal fade" style="padding: 0 !important;">
       <div class="modal-dialog modal-dialog-centered" style="width:1411px;">
         <div class="modal-content">
           <div class="modal-header">
@@ -65,7 +65,7 @@
                   </div>
 
                   <div class="dateDiv col-sm-2">
-                    <input type="date" id="start" name="trip-start" class="date" v-model="solution.deadline"
+                    <input type="date" id="start" name="trip-start" class="date" v-model="solution.deadline" onkeypress="return false"
                       @change="changeDeadline(solution.deadline, solution.id)">
                   </div>
 
@@ -137,15 +137,17 @@
 
                 </li>              
               </ol>      
-              here could be tasks...
+              here is gonna be tasks later...
                     <div class="tasks">
-                      {{solutions}}
+                      <!-- {{solutions}} -->
                       <br>
-                      Task Component: <Tasks :val="solutions" />
+                      <!-- :val="solutions"  -->
+                      <!-- Task Component: -->
+                       <Tasks />
                     </div>
 
-              <button type="button" class="btn btnMain" @click.prevent="showSolutions(val)" data-toggle="modal"
-                data-target="#popupSol"><span>Посмотреть/Добавить решение</span></button>
+              <button type="button" class="btn btnMain" @click="showSolutions(val)" data-toggle="modal"
+                data-target="#popupSol" data-dismiss="modal"><span>Посмотреть/Добавить решение</span></button>
             </div>
           </div>
         </div>
@@ -211,6 +213,7 @@
         })
       },
       async changeDeadline(deadline, id) {
+        await this.$store.commit('setError404', '')
         await this.$store.dispatch('changeDeadline', {
           deadline,
           id
@@ -482,6 +485,7 @@ div {
     visibility: visible;
     display: flex;
     flex-direction: column;
+    // padding-right: 0 !important;
   }
 
   .btn {

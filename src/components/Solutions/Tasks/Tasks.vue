@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <div class="header row">
-      <div class="col-sm-6">
+    <!-- <div class="header row"> -->
+      <!-- <div class="col-sm-6">
         One of three columns
       </div>
       <div class="col-sm-1.5">
@@ -20,7 +20,7 @@
     here will be tasks for solution: 
     <div>
       {{val}}
-    </div>
+    </div> -->
   </div>
 </template>
 
