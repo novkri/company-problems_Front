@@ -162,5 +162,19 @@ import { LogInIcon } from 'vue-feather-icons'
       border-bottom: 2px solid #FF8585;
     }
   }
+  select:focus {
+    outline: none;
+    }
+
+  // html{
+  //   overflow-y: scroll;
+  //   overflow-x: auto;
+  // }
+  // @media (max-width: 1440px) {
+  //   html {
+  //     display: flex;
+  //     flex-wrap: inherit;
+  //   }
+  // }
 
 </style>

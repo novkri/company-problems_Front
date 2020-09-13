@@ -1,7 +1,7 @@
 import axios from "axios";
 const BASEURL = 'http://31.31.199.37/api/solution' //все решения
-const URLSOLUTION = 'http://31.31.199.37/api/problem' //одно решение
-const ALLUSERS = 'http://31.31.199.37/api/users'
+const URLTASK = 'http://31.31.199.37/api/problem' //одно решение
+
 
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 axios.defaults.headers.common['Accept'] = 'application/json'
@@ -22,106 +22,79 @@ axios.interceptors.request.use(
 
 export default {
   state: {
-    solutions: [],
-    solutionsOther: [],
-    allUsers: [],
+    tasks: [],
     token: localStorage.getItem('user-token') || '',
   },
   getters: {
-    solutions: state => {
-      return state.solutions 
+    tasks: state => {
+      return state.tasks 
     },
 
-    solutionsOther: state => {
-      return state.solutionsOther = state.solutionsOther.sort(function (a, b) {
-        return (new Date(a.created_at).toISOString() > new Date(b.created_at).toISOString()) ? 1 : -1
-      })
-    },
-    allUsers: state => {
-      return state.allUsers 
-    },
   },
   mutations: {
-    setSolution: (state, payload) => {
-      state.solutions = payload.filter(solution => solution.in_work)
+    setTask: (state, payload) => {
+    //   state.tasks = payload.filter(task => task.in_work)
+    state.tasks = payload
     },
-    addSolution: (state, payload) => {
-      payload.in_work = false
-      state.solutionsOther.push(payload)
-      console.log(payload);
+    addTask: (state, payload) => {
+      state.tasks.push(payload)
     },
-    setOtherSolution: (state, payload) => {
-      state.solutionsOther = payload.filter(sol => !sol.in_work)
+    deleteTask: (state, payload) => {
+      state.tasks = state.tasks.filter(t => t.id !== payload)
     },
-    deleteSolution: (state, payload) => {
-      state.solutions = state.solutions.filter(s=> s.id !== payload)
-      state.solutionsOther = state.solutionsOther.filter(s=> s.id !== payload)
-    },
-    sortSolutions: state => {
-      state.solutions = state.solutions.sort(function (a, b) {
-        return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1
-      })
-    },
+    // sortTasks: state => {
+    //   state.tasks = state.tasks.sort(function (a, b) {
+    //     return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1
+    //   })
+    // },
 
-    editSolutionOther: (state, {id, name}) => {
-      if (state.solutionsOther.find(solution => solution.id == id)) {
-        state.solutionsOther.find(solution => solution.id == id).name = name
-      } else {
-        state.solutions.find(solution => solution.id == id).name = name
-      }
-      
+    editTask: (state, {id, name}) => {
+      state.tasks.find(task => task.id == id).name = name 
     },
-    editinWork: (state, payload) => {
+    editinWorkTask: (state, payload) => {
       if (payload.in_work) {
-        state.solutions.push(payload)
-        state.solutionsOther = state.solutionsOther.filter(s=> s.id !== payload.id)
+        state.tasks.push(payload)
       } else {
-        state.solutionsOther.push(payload)
-        state.solutions = state.solutions.filter(s=> s.id !== payload.id)
+        state.tasks = state.tasks.filter(s=> s.id !== payload.id)
       }
     },
-    editStatus: (state, payload) => {
-      state.solutions.find(solution => solution.id == payload.id).status = payload.status
+    editStatusTask: (state, payload) => {
+      state.tasks.find(task => task.id == payload.id).status = payload.status
     },
-    editDeadline: (state, payload) => {
-      state.solutions.find(solution => solution.id == payload.id).deadline = payload.deadline
+    editDeadlineTask: (state, payload) => {
+      state.tasks.find(task => task.id == payload.id).deadline = payload.deadline
     },
-    setAllUsers: (state, payload) => {
-      let usersPayload = Object.values(payload)
-      state.allUsers = usersPayload
-    },
-    editExecutor: (state, payload) => {
-      state.solutions.find(solution => solution.id == payload.id).executor_id = payload.executor_id
+    editExecutorTask: (state, payload) => {
+      state.tasks.find(task => task.id == payload.id).executor_id = payload.executor_id
     },
 
   },
   actions: {
-    getSolutions: async ({
+    getTasks: async ({
       commit
     }, problemId) => {
-      await axios.get(URLSOLUTION + `/${problemId}/solution`)
+      await axios.get(URLTASK + `/${problemId}/solution`)
         .then(response => {
           if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
-            commit('setOtherSolution', response.data)
-            commit('setSolution', response.data)
+            commit('setTask', response.data)
           }
         })
         .catch(error =>
           commit('setError', error.response.data.errors)
         )
     },
-    postSolution: async ({commit}, param) => {
+    postTask: async ({commit}, param) => {
       // param.problemId = 100000000
-      await axios.post(URLSOLUTION + `/${param.problemId}/solution`, {
+      await axios.post(URLTASK + `/${param.problemId}/solution`, {
           name: param.name
         })
         .then(response => {
           if (response.status == 201) {
             commit('setError', '')
             commit('setError404', '')
-            commit('addSolution', response.data)
+            commit('addTask', response.data)
           }
         })
         .catch(error => {
@@ -139,13 +112,13 @@ export default {
         })
     },
 
-    deleteSolution: async ({commit}, id) => {
+    deleteTask: async ({commit}, id) => {
       // id = 10000000000
       await axios.delete(BASEURL + `/${id}`).then(response => {
           if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
-            commit('deleteSolution', id)
+            commit('deleteTask', id)
           }
         })
         .catch(error => {
@@ -153,16 +126,7 @@ export default {
         })
     },
 
-    // checkIfExists: async ({commit}, param) => {
-    //   return new Promise((resolve, reject) => {
-    //   axios.get(BASEURL + `/${param.id}`)
-    //   .then(response => )
-    //   .catch((error) => {
-    //     commit('setError404', error.response.data.message)})
-    //   }
-    // },
-
-    editSolution: async ({commit}, param) => {
+    editTask: async ({commit}, param) => {
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
         axios.put(BASEURL + `/${param.id}`, {
@@ -171,8 +135,8 @@ export default {
           // if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
-            commit('editSolutionOther', response.data)
-            commit('sortSolutions')
+            commit('editTask', response.data)
+            // commit('sortSolutions')
             resolve(response)
           // }
         }).catch((error) => {
@@ -192,17 +156,16 @@ export default {
         })
       })
     },
-    changeinWork: async ({commit}, param) => {
+    changeinWorkTask: async ({commit}, param) => {
       // param.id = 10000000000
       console.log(param);
       axios.put(BASEURL + `/${param.id}/change-in-work`, {
         in_work: param.in_work
       }).then(response => {
           commit('setError', '')
-          commit('editinWork', response.data)
-          commit('sortSolutions')
+          commit('editinWorkTask', response.data)
+          // commit('sortSolutions')
       }).catch((error) => {
-        console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
         }
@@ -212,13 +175,13 @@ export default {
       })
     },
 
-    changeStatus: async ({commit}, param) => {
+    changeStatusTask: async ({commit}, param) => {
       // param.id = 10000000000
       axios.put(BASEURL + `/${param.id}/change-status`, {
         status: param.status
       }).then(response => {
           commit('setError', '')
-          commit('editStatus', response.data)
+          commit('editStatusTask', response.data)
       }).catch((error) => {
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
@@ -229,13 +192,13 @@ export default {
       })
     },
 
-    changeDeadline: async ({commit}, param) => {
+    changeDeadlineTask: async ({commit}, param) => {
       // param.id = 10000000000
       axios.put(BASEURL + `/${param.id}/set-deadline`, {
         deadline: param.deadline
       }).then(response => {
           commit('setError', '')
-          commit('editDeadline', response.data)
+          commit('editDeadlineTask', response.data)
       }).catch((error) => {
 
         if (error.response.status == 404) {
@@ -247,27 +210,13 @@ export default {
       })
     },
 
-    getAllUsers: async({commit}) => {
-      axios.get(ALLUSERS).then(response => {
-        if (response.status == 200) {
-          commit('setError', '')
-          commit('setError404', '')
-          commit('setAllUsers', response.data)
-          commit('setSolution', response.data)
-        }
-      })
-        .catch(error => {
-          commit('setError404', '')
-          commit('setError404', error.response.message)
-        })
-    },
-    changeExecutor: async ({commit}, param) => {
+    changeExecutorTask: async ({commit}, param) => {
       // param.id = 10000000000
       axios.put(BASEURL + `/${param.id}/set-executor`, {
         executor_id: param.uid
       }).then(response => {
           commit('setError', '')
-          commit('editExecutor', response.data)
+          commit('editExecutorTask', response.data)
       }).catch((error) => {
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)

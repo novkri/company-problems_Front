@@ -57,7 +57,6 @@
     <PopupDelete v-if="openDelete" :val="paramsModal" @deleteProblem="deleteProblem(param = $event)" />
     <PopupShow v-if="openShow" :val="paramsModal" />
     <!-- @showProblem="showProblem(param = $event)" -->
-    
   </div>
 </template>
 

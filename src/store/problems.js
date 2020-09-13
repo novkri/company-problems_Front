@@ -1,5 +1,4 @@
 import axios from "axios";
-// const baseURL = "http://localhost:3000/problems" 
 const BASEURL = 'http://31.31.199.37/api/problem'
 
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
@@ -83,6 +82,7 @@ export default {
     postProblem: async ({commit}, param) => {
       await axios.post(BASEURL, param)
       .then(response => {
+        console.log(response);
         if (response.status == 201) {
           commit('setError', '')
           commit('setError404', '')

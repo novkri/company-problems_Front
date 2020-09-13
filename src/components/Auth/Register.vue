@@ -14,27 +14,27 @@
         <label for="password">Пароль *<span
             v-if="password.length >= 15 && password.length <= 20">{{$v.password.$params.maxLength.max - password.length}}</span></label>
         <div class="input-group" id="show_hide_password">
-          <input type="password" class="form-control" id="password" v-model="password" ref="password"
+          <input :type="passwordFieldType" class="form-control" id="password" v-model="password" ref="password"
             :class="{ 'form-control--error': $v.password.$invalid, 'form-control--valid': password && !$v.password.$invalid}">
-          <span tabindex="100" class="add-on input-group-addon" style="cursor: pointer;" @click="togglePassword"
+          <button tabindex="100" class="add-on input-group-addon" style="cursor: pointer;" @click.prevent="passwordVisibility"
             :class="{ 'form-control--error': $v.password.$invalid, 'form-control--valid': password && !$v.password.$invalid}">
-            <eye-icon size="1.5x" class="custom-class" v-if="eye"></eye-icon>
+            <eye-icon size="1.5x" class="custom-class" v-if="passwordFieldType == 'password'"></eye-icon>
             <eye-off-icon size="1.5x" class="custom-class" v-else></eye-off-icon>
-          </span>
+          </button>
           </div>
           <div class="errorAuth" v-if="errorUReg.password">{{errorUReg.password[0]}} </div>
 
           <label for="password">Повторите пароль *<span
             v-if="confirm.length >= 15 && confirm.length <= 20">{{$v.confirm.$params.maxLength.max - confirm.length}}</span></label>
         <div class="input-group" id="show_hide_password">
-          <input type="password" class="form-control" id="passwordConfirm" data-toggle="password" v-model="confirm"
+          <input :type="passwordFieldTypeC" class="form-control" id="passwordConfirm" data-toggle="password" v-model="confirm"
             ref="confirm"
             :class="{ 'form-control--error': $v.confirm.$invalid, 'form-control--valid': confirm && !$v.confirm.$invalid}">
-          <span tabindex="100" class="add-on input-group-addon" @click="toggleConfirm" style="cursor: pointer;"
+          <button tabindex="100" class="add-on input-group-addon" @click.prevent="passwordVisibilityC" style="cursor: pointer;"
             :class="{ 'form-control--error': $v.confirm.$invalid, 'form-control--valid': confirm && !$v.confirm.$invalid}">
-            <eye-icon size="1.5x" class="custom-class" v-if="eyeC"></eye-icon>
+            <eye-icon size="1.5x" class="custom-class" v-if="passwordFieldTypeC == 'password'"></eye-icon>
             <eye-off-icon size="1.5x" class="custom-class" v-else></eye-off-icon>
-          </span>
+          </button>
         </div>
         <div class="errorAuth" v-if="errorUReg.password">{{errorUReg.password[1]}} </div>
       </div>
@@ -104,8 +104,9 @@
       surname: '',
       father_name: '',
       name: '',
-      eye: undefined,
-      eyeC: undefined
+
+      passwordFieldType: 'password',
+      passwordFieldTypeC: 'password',
     }),
     components: {
       EyeIcon,
@@ -114,11 +115,11 @@
     },
     validations: {
       name: {
-        minLength: minLength(4),
+        minLength: minLength(1),
         maxLength: maxLength(20)
       },
       surname: {
-        minLength: minLength(4),
+        minLength: minLength(1),
         maxLength: maxLength(20)
       },
       password: {
@@ -147,15 +148,21 @@
       goToLogin() {
         this.$router.push('/login')
       },
-      togglePassword() {
-        if (this.$refs.password.type == 'text') {
-          this.$refs.password.type = 'password'
-          this.eye = false
-        } else {
-          this.$refs.password.type = 'text'
-          this.eye = true
-        }
+      passwordVisibility() {
+        this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password'
       },
+      passwordVisibilityC() {
+        this.passwordFieldTypeC = this.passwordFieldTypeC === 'password' ? 'text' : 'password'
+      },
+      // togglePassword() {
+      //   if (this.$refs.password.type == 'text') {
+      //     this.$refs.password.type = 'password'
+      //     this.eye = false
+      //   } else {
+      //     this.$refs.password.type = 'text'
+      //     this.eye = true
+      //   }
+      // },
       toggleConfirm() {
         if (this.$refs.confirm.type == 'text') {
           this.$refs.confirm.type = 'password'
@@ -298,6 +305,7 @@
   .add-on {
     background-color: #F7F7F7;
     border-radius: 0 12px 12px 0;
+    padding: 0;
 
     svg {
       margin: 7px 25px;
@@ -361,4 +369,15 @@
     color: #92D2C3;
     font-family: 'GothamPro-Medium';
   }
+
+
+
+
+
+  @media (max-width: 780px) {
+     form {
+       flex-direction: column;
+     }
+         
+   }
 </style>

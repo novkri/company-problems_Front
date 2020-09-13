@@ -1,7 +1,8 @@
 <template>
   <div class="popup-show">
-    <div id="popupSol" tabindex="-1" class="modal fade" style="padding: 0 !important;">
-      <div class="modal-dialog modal-dialog-centered" style="max-width:1500px;">
+    <div id="popupSol" tabindex="-1" class="modal fade" role="dialog"  aria-labelledby="exampleModalLongTitle" aria-hidden="true" >
+      <!-- style="max-width:1500px;"  -->
+      <div class="modal-dialog modal-dialog-scrollable" role="document" style="width: 90vw">
         <div class="modal-content" style="padding: 36px 300px;min-height: 348px;">
           <div class="modal-header" style="width: 130%;">
             <button type="button" id="close" class="close" @click="closeSolutions" data-dismiss="modal" data-target="#popupSol">
@@ -182,6 +183,7 @@
       },
 
       async changeinWork(obj) {
+        console.log(obj.in_work)
         await this.$store.dispatch('changeinWork', {id: obj.id, in_work: obj.in_work === "true" ? true : false})
       },
 
@@ -353,9 +355,6 @@
       margin: 1.75rem auto;
     }
   }
-  // .modal.show .modal-dialog {
-  //   box-shadow: 0 0 10px rgba(0,0,0,0.5);
-  // }
 
   .close {
     margin: -1rem -1rem -1rem auto;
@@ -493,4 +492,13 @@
     border-radius: 6px;
     border-bottom: 2px solid #92D2C3;
   }
+
+
+
+
+   @media (max-width: 780px) {
+     .modal-content {
+       padding: 20px;
+     }
+   }
 </style>

@@ -1,5 +1,4 @@
 import axios from "axios";
-// const BASEURL = "http://localhost:3000" 
 const BASEURL = 'http://31.31.199.37/api'
 
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
