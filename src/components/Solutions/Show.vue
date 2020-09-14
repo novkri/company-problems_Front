@@ -26,14 +26,16 @@
                   <div class="col-5">
                     Решения в работе:
                   </div>
-                  <div>
+                  <div class="col">
                     Статус выполнения
                   </div>
-                  <div>
+                  <div class="col">
                     Срок исполнения
                   </div>
-                  <div style="margin-right: 70px;">
+                  <div class="col">
                     Ответственный
+                  </div>
+                  <div style="width: 20px" class="col">
                   </div>
 
                 </div>
@@ -42,13 +44,13 @@
                     <li v-for="(solution, idx) in solutions" :key="idx" id="list" class="row">
                       <div class="list-item col-5">
                         <div class="desc" ref="desc"><span>{{idx+1}}.{{solution.name}}</span>
-                        {{solution.id}}
+                          {{solution.id}}
                         </div>
                       </div>
 
-                      <div class="select" style="position: relative;" ref="select"
-                        :class="[solution.status == 'Выполнено' ? 'green' : 'gray']">
+                      <div class="select col" style="position: relative;" ref="select">
                         <select v-model="solution.status" class="form-control"
+                          :class="[solution.status == 'Выполнено' ? 'green' : 'gray']"
                           @change="changeStatus(solution.status, solution.id)">
                           <option value="В процессе">
                             В процессе</option>
@@ -58,7 +60,7 @@
                         </select>
                       </div>
 
-                      <div class="dateDiv">
+                      <div class="dateDiv col">
                         <input type="date" id="start" name="trip-start" class="date" v-model="solution.deadline"
                           onkeypress="return false" @change="changeDeadline(solution.deadline, solution.id)">
                       </div>
@@ -78,49 +80,36 @@
                       </div> -->
 
 
-                      <div class="selectResponsible">
-                        <ss-select v-model="solution.executor_id"
-                          :options="allUsers"
-                          track-by="name"
-                          search-by="name"
-                          disable-by="disabled"
-                          id="ss-select"
+                      <div class="selectResponsible col">
+                        <ss-select v-model="solution.executor_id" :options="allUsers" track-by="name" search-by="name"
+                          disable-by="disabled" id="ss-select">
+                          <div
+                            slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }">
+                            <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
+                            <ss-select-toggle class="px-3 py-1 flex items-center justify-between">
+                              {{ $get(selectedOption, 'name') || `${allUsers.find(u => u.id == solution.executor_id).name}`}}
 
-                        >
-                        <div
-                          slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                        >
-                         <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
-                          <ss-select-toggle class="px-3 py-1 flex items-center justify-between">
-                            {{ $get(selectedOption, 'name') || `${allUsers.find(u => u.id == solution.executor_id).name}`}}
-                           
-                          </ss-select-toggle>
+                            </ss-select-toggle>
 
-                          <section v-show="isOpen" class="absolute border-l border-r min-w-full">
-                            <!-- <div class="px-px" >
+                            <section v-show="isOpen" class="absolute border-l border-r min-w-full">
+                              <!-- <div class="px-px" >
                               <ss-select-search-input class="w-full px-3 py-1" style="width: 238px; border: none; background-color: #F2F2F2;" placeholder="Впишите имя"></ss-select-search-input>
                             </div> -->
 
-                            <ss-select-option
-                              v-for="(option, index) in filteredOptions"
-                              :value="option.id"
-                              :index="index"
-                              :key="index"
-                              class="px-4 py-2 border-b cursor-pointer"
-                              :class="[
+                              <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id"
+                                :index="index" :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
                                 $selected(option) ? 'bg-light text-dark' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
-                              ]"
-                            >{{ option.name }}</ss-select-option>
-                          </section>
-                        </div>
-                      </ss-select>
-                    </div>
+                              ]">{{ option.name }}</ss-select-option>
+                            </section>
+                          </div>
+                        </ss-select>
+                      </div>
 
 
 
-                      <div style="width: 20px">
+                      <div style="width: 20px" class="col">
                         <button type="button" class="close" id="remove" style="margin: auto;"
                           @click="removeFromWork(solution)" data-toggle="modal" data-target="#popupRemoveFromWOrk">
                           <span aria-hidden="true">&times;</span>
@@ -154,13 +143,21 @@
 </template>
 
 <script>
-  import { UserIcon } from 'vue-feather-icons'
-  import { mapGetters } from 'vuex'
+  import {
+    UserIcon
+  } from 'vue-feather-icons'
+  import {
+    mapGetters
+  } from 'vuex'
   import Solutions from './Solutions'
   import RemoveFromWork from './RemoveFromWork'
   import Tasks from './Tasks/Tasks'
   import DeleteTask from './Tasks/DeleteTask'
-  import { SsSelect, SsSelectToggle, SsSelectOption,  } from 'ss-select'
+  import {
+    SsSelect,
+    SsSelectToggle,
+    SsSelectOption,
+  } from 'ss-select'
   // SsSelectSearchInput
 
   export default {
@@ -184,7 +181,9 @@
       RemoveFromWork,
       Tasks,
       DeleteTask,
-      SsSelect, SsSelectToggle, SsSelectOption, 
+      SsSelect,
+      SsSelectToggle,
+      SsSelectOption,
       // SsSelectSearchInput
     },
 
@@ -293,7 +292,7 @@
     font-style: normal;
     font-weight: normal;
     margin-bottom: 35px;
-    width: 89%;
+    width: 97%;
     margin-left: 20px;
 
     h6 {
@@ -340,6 +339,7 @@
       background-color: #F6F6F6;
       margin: 0 24px 16px 0;
       align-items: flex-start;
+      // padding-right: 117px;
     }
 
     // li:hover {
@@ -401,13 +401,19 @@
   .selectResponsible {
     display: flex;
     background-color: #F6F6F6;
-    margin: 0 10px;
-    margin-right: 84px;
+    // margin: 0 10px;
+    // margin-right: 84px;
 
     padding-left: 10px;
     // padding-bottom: 5px;
     // padding-top: 5px;
     border-radius: 10px;
+
+    #ss-select {
+      padding-left: 20px;
+      align-items: center;
+      display: flex;
+    }
 
     select {
       // background: url('~@/assets/Select.png') no-repeat;
@@ -437,6 +443,7 @@
     select {
       background-color: #4EAD96;
     }
+
     #iconUser {
       color: #fff;
     }
@@ -544,12 +551,12 @@
     -moz-appearance: none;
     cursor: pointer;
     height: fit-content;
-    margin-right: 30px;
-    width: 156px;
+    // margin-right: 30px;
+    // width: 156px;
   }
 
   .select {
-    width: 156px;
+    // width: 156px;
     border-radius: 10px;
     height: 36px;
 
@@ -557,7 +564,7 @@
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;
-    margin-right: 30px;
+    // margin-right: 30px;
     letter-spacing: 0.15px;
     color: #828282;
 
@@ -580,22 +587,22 @@
     background-color: #4EAD96 !important;
     width: 156px;
 
-    select {
-      background: url('~@/assets/SelectWhite.png') no-repeat;
-      background-position: right 0.6em top 46%, 0 0;
-      color: #fff;
-    }
+    // select {
+    background: url('~@/assets/SelectWhite.png') no-repeat;
+    background-position: right 0.6em top 46%, 0 0;
+    color: #fff;
+    // }
   }
 
   .gray {
     background-color: #E0E0E0 !important;
     width: 156px;
 
-    select {
-      background: url('~@/assets/Select.png') no-repeat;
-      background-position: right 0.6em top 46%, 0 0;
-      color: #2D453F;
-    }
+    // select {
+    background: url('~@/assets/Select.png') no-repeat;
+    background-position: right 0.6em top 46%, 0 0;
+    color: #2D453F;
+    // }
   }
 
   .form-control {
@@ -658,12 +665,12 @@
     padding: 22px;
     width: 250px;
     // position: relative;
-        position: absolute;
+    position: absolute;
     max-height: 257px;
-        // right: 4%;
-        // ?????????
-            right: 9%;
-    top: 81%;
+    // right: 4%;
+    // ?????????
+    right: 9%;
+    top: 102%;
 
     border-radius: 10px;
     box-shadow: 0px 4px 16px rgba(54, 44, 117, 0.08);
@@ -675,11 +682,7 @@
     z-index: 1000000000000;
   }
 
-  #ss-select {
-    align-items: center;
-    display: flex;
-  }
- 
+
 
 
 
@@ -692,12 +695,14 @@
       display: flex;
       flex-direction: initial;
 
+
       div {
         margin-bottom: 20px;
       }
 
       .close {
         order: 2;
+        width: 100%;
       }
 
       .select {
@@ -726,5 +731,12 @@
     .desc {
       width: 100%;
     }
+  }
+
+  @media (max-width: 500px) {
+    .tasks {
+      width: 85% !important;
+    }
+
   }
 </style>

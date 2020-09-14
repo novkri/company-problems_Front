@@ -5,7 +5,7 @@
           <form >
      
       <div class="form-group">
-        <label for="email">Электронная почта *<span
+        <label for="email">Адрес электронной почты *<span
             v-if="email.length >= 250 && email.length <= 255">{{$v.email.$params.maxLength.max - email.length}}</span></label>
         <input type="email" class="form-control" id="email" v-model="email"
           :class="{ 'form-control--error': $v.email.$invalid, 'form-control--valid': email && !$v.email.$invalid}">
@@ -53,9 +53,10 @@
         <div class="errorAuth" v-if="errorUReg.name">{{errorUReg.name[0]}} </div>
 
 
-        <label for="text">Отчество</label>
+        <label for="text">Отчество<span
+            v-if="father_name.length >= 20 && father_name.length <= 25">{{$v.father_name.$params.maxLength.max - father_name.length}}</span></label>
         <input type="text" class="form-control" id="father_name" v-model="father_name"
-          :class="{ 'form-control--error': errorUReg.father_name, 'form-control--valid': !errorUReg.father_name}">
+          :class="{ 'form-control--error': errorUReg.father_name, 'form-control--valid': father_name && !errorUReg.father_name}">
         <div class="errorAuth" v-if="errorUReg.father_name">{{errorUReg.father_name[0]}} </div>
       </div>
     </form>
@@ -116,11 +117,15 @@
     validations: {
       name: {
         minLength: minLength(1),
-        maxLength: maxLength(20)
+        maxLength: maxLength(25)
       },
       surname: {
         minLength: minLength(1),
-        maxLength: maxLength(20)
+        maxLength: maxLength(25)
+      },
+      father_name: {
+        minLength: minLength(1),
+        maxLength: maxLength(25)
       },
       password: {
         minLength: minLength(8),
@@ -133,7 +138,7 @@
       },
       email: {
         minLength: minLength(3),
-        maxLength: maxLength(256)
+        maxLength: maxLength(255)
       }
     },
     computed: {

@@ -101,8 +101,12 @@
 
 <script>
   import DeleteSolution from './DeleteSolution'
-  import { TrashIcon } from 'vue-feather-icons'
-  import { mapGetters } from 'vuex'
+  import {
+    TrashIcon
+  } from 'vue-feather-icons'
+  import {
+    mapGetters
+  } from 'vuex'
 
   export default {
     name: 'popup',
@@ -468,6 +472,14 @@
   @media (max-width: 780px) {
     .modal-content {
       padding: 20px;
+    }
+
+  }
+
+  @media (max-width: 500px) {
+
+    .subt1 {
+      flex: 1;
     }
   }
 </style>

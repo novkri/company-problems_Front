@@ -5,9 +5,11 @@
         <img src="@/assets/tasks.png">
         Задачи:
       </div>
-      <div class="subt" style="margin-right: 57px;">Статус выполнения</div>
-      <div class="subt" style="margin-right: 57px;">Срок исполнения</div>
-      <div class="subt">Исполнитель</div>
+      <div class="subt col">Статус выполнения</div>
+      <div class="subt col">Срок исполнения</div>
+      <div class="subt col">Исполнитель</div>
+      <div style="width: 54px" class="col">
+      </div>
     </div>
     <div class="container row">
       <ol>
@@ -17,9 +19,9 @@
             Задача 1
           </div>
           <!-- :class="[solution.status == 'Выполнено' ? 'green' : 'gray']" -->
-          <div class="select gray" style="position: relative;" ref="select">
+          <div class="select col" style="position: relative;" ref="select">
             <!-- v-model="solution.status"  @change="changeStatusTask(solution.status, solution.id)" -->
-            <select class="form-control">
+            <select class="form-control green">
               <option value="К исполнению" default>
                 К исполнению</option>
               <option value="В процессе">
@@ -29,26 +31,65 @@
               <option value="">Отсутсвует</option>
             </select>
           </div>
-          <div class="dateDiv">
+          <div class="dateDiv col">
             <!-- v-model="solution.deadline" @change="changeDeadlineTask(solution.deadline, solution.id)" -->
             <input type="date" id="start" name="trip-start" class="date" onkeypress="return false">
           </div>
-          <div class="selectResponsible">
-            <user-icon size="1.5x" class="custom-class" style="margin: 0 10px 0 0"></user-icon>
-            <!--  v-model="solution.executor_id" @change="selectExecutorTask(solution.id)" -->
-            <!-- width: 177px; -->
-            <select class="form-control" style="height: fit-content; padding: 0;">
-              <!--  v-for="(u, i) in allUsers" :key="i" :value="u.id" -->
-              <!--  {{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}} -->
-              <option default>
+
+
+
+          <!-- <div class="selectResponsible col"> -->
+            <!-- <user-icon size="1.5x" class="custom-class" style="margin: 0 10px 0 0"></user-icon> -->
+           <!-- v-model="solution.executor_id" @change="selectExecutorTask(solution.id)" -->
+          <!-- width: 177px; -->
+          <!-- <select class="form-control" style="height: fit-content; padding: 0;"> -->
+          <!--  v-for="(u, i) in allUsers" :key="i" :value="u.id" -->
+          <!--  {{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}} -->
+          <!-- <option default>
                 Выбрать
               </option>
               <option>
                 Пупкин В.И.
               </option>
             </select>
+          </div> -->
+
+
+
+          <div class="selectResponsible col">
+            <!-- v-model="solution.executor_id"
+                          :options="allUsers"
+                          track-by="name"
+                          search-by="name"
+                          disable-by="disabled" -->
+            <ss-select id="ss-select" :options="allUsers">
+              <!-- selectedOption, $get, -->
+              <div slot-scope="{ filteredOptions, isOpen, pointerIndex, $selected, $disabled }">
+                <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
+                <!--  {{ $get(selectedOption, 'name') || `${allUsers.find(u => u.id == solution.executor_id).name}`}} -->
+                <ss-select-toggle class="px-3 py-1 flex items-center justify-between">
+
+                </ss-select-toggle>
+
+                <section v-show="isOpen" class="absolute border-l border-r min-w-full">
+                  <!-- <div class="px-px" >
+                              <ss-select-search-input class="w-full px-3 py-1" style="width: 238px; border: none; background-color: #F2F2F2;" placeholder="Впишите имя"></ss-select-search-input>
+                            </div> -->
+
+                  <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
+                    :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
+                                pointerIndex == index ? 'bg-light text-dark' : '',
+                                $selected(option) ? 'bg-light text-dark' : '',
+                                $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
+                              ]">{{ option.name }}</ss-select-option>
+                </section>
+              </div>
+            </ss-select>
           </div>
-          <div style="width: 54px" id="close">
+
+
+
+          <div style="width: 54px" id="close" class="col">
             <!-- @click="deleteTask(solution)" data-toggle="modal" data-target="#popupRemoveFromWOrk" -->
             <button type="button" class="close" id="remove" style="margin: auto;" @click="showDelete"
               data-toggle="modal" data-target="#popupDeleteSolution">
@@ -65,8 +106,8 @@
           </div>
           <div v-else class="inputAdd">
             <!-- в addtask передать решение -->
-            <input type="text" placeholder="Добавить задачу" class="addTask" @input="enableB" @keyup.enter="addTask" v-model="taskName"
-              :class="{ 'form-control--error': taskName.length >= 150 || taskName.length == 0}">
+            <input type="text" placeholder="Добавить задачу" class="addTask" @input="enableB" @keyup.enter="addTask"
+              v-model="taskName" :class="{ 'form-control--error': taskName.length >= 150 || taskName.length == 0}">
             <div class="error" v-if="error">{{error}}</div>
             <div class="selectsInputAdd">
               <div class="dateDiv">
@@ -110,7 +151,15 @@
     TrashIcon
   } from 'vue-feather-icons'
   import DeleteTask from './DeleteTask'
-  import { mapGetters } from 'vuex'
+  import {
+    mapGetters
+  } from 'vuex'
+  import {
+    SsSelect,
+    SsSelectToggle,
+    SsSelectOption,
+  } from 'ss-select'
+  // SsSelectSearchInput
 
   export default {
     name: 'tasks',
@@ -126,7 +175,11 @@
       UserIcon,
       PlusIcon,
       TrashIcon,
-      DeleteTask
+      DeleteTask,
+      SsSelect,
+      SsSelectToggle,
+      SsSelectOption,
+      // SsSelectSearchInput
     },
     mounted() {
       // this.$store.dispatch('getTasks', )
@@ -196,6 +249,11 @@
 </script>
 
 <style scoped lang="scss">
+  .subt1 {
+    flex: 0 0 42.666667%;
+    max-width: 42.666667%;
+  }
+
   #remove {
     display: none;
 
@@ -208,6 +266,10 @@
 
   #list:hover #remove {
     display: flex;
+  }
+
+  .form-control {
+    padding: 7px 13px;
   }
 
   .header {
@@ -301,7 +363,7 @@
   .selectResponsible {
     display: flex;
     background-color: #F6F6F6;
-    margin: 0 10px;
+    // margin: 0 10px;
 
     padding-left: 10px;
     padding-bottom: 5px;
@@ -309,6 +371,12 @@
     border-radius: 10px;
     width: 174px;
     background-color: #f6f6f6;
+
+    #ss-select {
+      padding-left: 20px;
+      align-items: center;
+      display: flex;
+    }
 
     select {
       // background: url('~@/assets/Select.png') no-repeat;
@@ -338,6 +406,28 @@
     }
   }
 
+  section {
+    // box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    padding: 22px;
+    width: 250px;
+    // position: relative;
+    position: absolute;
+    max-height: 257px;
+    // right: 4%;
+    // ?????????
+    right: 9%;
+    top: 102%;
+
+    border-radius: 10px;
+    box-shadow: 0px 4px 16px rgba(54, 44, 117, 0.08);
+    background-color: white;
+    color: #828282;
+    height: 400px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    z-index: 1000000000000;
+  }
+
 
   .date {
     outline: none;
@@ -352,7 +442,7 @@
     border-radius: 10px;
     width: 168px;
     background-color: #f6f6f6;
-    margin: 0 20px;
+    // margin: 0 20px;
   }
 
   .date:hover {
@@ -408,15 +498,18 @@
     -moz-appearance: none;
     cursor: pointer;
     height: fit-content;
-    margin-right: 30px;
-    width: 163px;
+    // margin-right: 30px;
+    // width: 163px;
+    // width: 166px !important;
+    border-radius: 10px;
   }
 
   .select {
-    margin-right: 30px;
+    // margin-right: 30px;
     border-radius: 10px;
     height: 36px;
-    width: 156px;
+    // width: 156px;
+    width: 166px;
     padding: 0;
     font-size: 18px;
     line-height: 24px;
@@ -442,28 +535,28 @@
     background-color: #4EAD96 !important;
     width: 156px;
 
-    select {
-      background: url('~@/assets/SelectWhite.png') no-repeat;
-      background-position: right 0.6em top 46%, 0 0;
-      color: #fff;
-    }
+    // select {
+    background: url('~@/assets/SelectWhite.png') no-repeat;
+    background-position: right 0.6em top 50%, 0 0;
+    color: #fff;
+    // }
   }
 
   .gray {
     background-color: #E0E0E0 !important;
     width: 156px;
 
-    select {
-      background: url('~@/assets/Select.png') no-repeat;
-      background-position: right 0.6em top 46%, 0 0;
-      color: #2D453F;
-    }
+    // select {
+    background: url('~@/assets/Select.png') no-repeat;
+    background-position: right 0.6em top 50%, 0 0;
+    color: #2D453F;
+    // }
 
   }
 
-  .task-title {
-    margin-right: 15px;
-  }
+  // .task-title {
+  //   margin-right: 15px;
+  // }
 
   .task-title::before {
     content: '';
@@ -560,13 +653,23 @@
     background: #92D2C3;
   }
 
+  // @media (min-width: 700px) {
+  //    .subt1 {
+  //       flex: 0 0 33.333333%;
+  //     max-width: 33.333333%;
+  //     }
+  // }
 
 
-
-
-
+  // @media (min-width: 1200px) {
+  //    .subt1 {
+  //       flex: 0 0 40.666667%;
+  //     max-width: 40.666667%;
+  //     }
+  // }
 
   @media (max-width: 1200px) {
+
     .subt {
       display: none;
     }
@@ -582,11 +685,14 @@
       }
 
       #close {
-        order: 3;
+        order: 2;
+
+        margin-left: -48px;
+
       }
 
       .select {
-        order: 2;
+        order: 3;
       }
 
       .dateDiv {
@@ -597,8 +703,9 @@
         order: 5;
       }
 
-      .list-item {
+      .task-title {
         order: 1;
+        margin-right: 109px;
       }
     }
 
@@ -614,6 +721,45 @@
     .addTask {
       border-radius: 9px;
       width: 100%;
+    }
+  }
+
+  //   @media (min-width: 1500px) {
+  //    .subt1 {
+  //       flex: 0 0 42.666667%;
+  //     max-width: 42.666667%;
+  //     }
+  // }
+
+  //   @media (min-width: 1800px) {
+  //   .subt1 {
+  //     flex: 0 0 48%;
+  //     max-width: 48%;
+  //   }
+  // }
+
+  @media (max-width: 500px) {
+    .header {
+      display: none;
+    }
+
+    // .subt1 {
+    //   flex: 1;
+    // }
+    .task-title,
+    .select,
+    .selectResponsible,
+    .date {
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+    }
+
+    button {
+      width: 85%;
+    }
+
+    .subtitle {
+      width: 85%;
     }
   }
 </style>

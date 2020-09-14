@@ -12,12 +12,12 @@
 
         <div class="icons">
           <div class="borderline">
-            <edit-icon size="1.3x" class="custom-class" @click="edit(problem)" data-toggle="modal" data-target="#popupEdit"
-              style="margin-left: 0px;"></edit-icon>
+            <edit-icon size="1.3x" class="custom-class" @click="edit(problem)" data-toggle="modal"
+              data-target="#popupEdit" style="margin-left: 0px;"></edit-icon>
           </div>
           <div style="width: 50px;align-items: center;display: flex;margin: 4px 15px 4px 18px;">
             <trash-icon size="1.3x" class="custom-class" id="remove" style="margin: auto;"
-            @click="deleteP(problem.id, problem.name)" data-toggle="modal" data-target="#popupDelete"></trash-icon>
+              @click="deleteP(problem.id, problem.name)" data-toggle="modal" data-target="#popupDelete"></trash-icon>
           </div>
 
         </div>
@@ -183,8 +183,6 @@
 </script>
 
 <style scoped lang="scss">
-
-
   .btn {
     padding: 0;
     border-radius: 12px;
@@ -286,5 +284,12 @@
     padding: 10px 26px;
     border-right: 1px solid #e0e0e0;
     border-left: 1px solid #e0e0e0;
+  }
+
+
+  @media (max-width: 500px) {
+    .container {
+      width: 85% !important;
+    }
   }
 </style>

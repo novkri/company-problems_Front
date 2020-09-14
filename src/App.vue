@@ -176,5 +176,15 @@ import { LogInIcon } from 'vue-feather-icons'
   //     flex-wrap: inherit;
   //   }
   // }
+   @media (max-width: 1600px) {
+    * {
+      font-size: 15px;
+    }
+  }
+  @media (max-width: 1500px) {
+    * {
+      font-size: 14px;
+    }
+  }
 
 </style>
