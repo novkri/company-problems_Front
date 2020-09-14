@@ -24,7 +24,6 @@
       </li>
     </ul>
 
-
     <div class="pagination">
       <nav>
         <ul class="pagination">

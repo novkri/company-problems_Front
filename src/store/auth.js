@@ -20,7 +20,6 @@ axios.interceptors.request.use(
 
 export default {
   state: {
-    // currentUser: [],
     errorU: [],
     error401: '',
     errorUReg: [],
@@ -29,9 +28,6 @@ export default {
  
   },
   getters: {
-    // currentUser: state => {
-    //   return state.currentUser
-    // },
     errorU: state => {
       return state.errorU
     },
@@ -47,8 +43,6 @@ export default {
   },
   mutations: {
     addUser: (state, payload) => {
-      console.log(payload);
-      console.log(state.users);
       state.users.push(payload)
     },
     auth_request(state){
@@ -57,7 +51,6 @@ export default {
     auth_success(state, token){
       state.status = 'success'
       state.token = token
-      // state.users = user
     },
     auth_error(state){
       state.status = 'error'
@@ -81,22 +74,14 @@ export default {
     register: async ({commit}, formData) => {
       commit('auth_request')
       await axios.post(BASEURL + '/register', formData).then(response => {
-        console.log(response);
         if (response.status == 201) { 
-          // const token = response.data.access_token
-          // localStorage.setItem('token', token)
-          // axios.defaults.headers.common['Authorization'] = token
-          // commit('auth_success', token, response.data.user)
           commit('setErrorUReg', '')
           commit('setErrorU', '')
-          // console.log(token, formData);
-          // commit('addUser', formData)
         }
         })
       .catch((error) => {
         commit('auth_error')
         localStorage.removeItem('token')
-        console.log(error.response);
         commit('setErrorUReg', '')
         commit('setErrorUReg', error.response.data.errors)
       })
@@ -116,7 +101,6 @@ export default {
             commit('setErrorU', '')
           })
         .catch(err => {
-          console.log('error', err.response);
           if (err.response.status == 401) {
             commit('setError401', err.response.data.errors)
           }

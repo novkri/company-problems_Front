@@ -1,24 +1,27 @@
 <template>
-    <div class="modal fade" id="popupRemoveFromWOrk" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Вы точно хотите исключить решение из решений в работе?</h5>
-            <button type="button" class="close" @click="closeDeleteSolutions" data-dismiss="modal" data-target="#popupRemoveFromWOrk">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <button type="submit" class="btn btn-secondary" @click="removeSolution(val)" data-dismiss="modal" data-target="#popupRemoveFromWOrk">Да</button>
-            <button type="reset" class="btn btn-secondary" data-dismiss="modal" data-target="#popupRemoveFromWOrk" @click="closeDeleteSolutions">Отменить</button>
-          </div>
+  <div class="modal fade" id="popupRemoveFromWOrk" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Вы точно хотите исключить решение из решений в работе?</h5>
+          <button type="button" class="close" @click="closeDeleteSolutions" data-dismiss="modal"
+            data-target="#popupRemoveFromWOrk">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <button type="submit" class="btn btn-secondary" @click="removeSolution(val)" data-dismiss="modal"
+            data-target="#popupRemoveFromWOrk">Да</button>
+          <button type="reset" class="btn btn-secondary" data-dismiss="modal" data-target="#popupRemoveFromWOrk"
+            @click="closeDeleteSolutions">Отменить</button>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
 
   export default {
     name: 'popup',
@@ -35,10 +38,11 @@
       },
 
       async removeSolution(id) {
-        console.log('удаление решения: ', id);
         this.$emit('closeDeleteSolutions')
-        // await this.$store.dispatch('deleteSolution', id)
-         await this.$store.dispatch('changeinWork', {in_work: false, id})
+        await this.$store.dispatch('changeinWork', {
+          in_work: false,
+          id
+        })
       }
     }
   }
@@ -50,7 +54,7 @@
     border: none;
     padding: 30px 87px 31px;
     line-height: 24px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   }
 
   .modal-title {

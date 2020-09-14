@@ -27,7 +27,6 @@ export default {
   },
   getters: {
     problems: state => {
-      // console.log(state.problems);
       return state.problems = state.problems.sort(function (a, b) {
         return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1})
     },
@@ -46,10 +45,10 @@ export default {
       state.problems.push(payload)
     },
     deleteProblem: (state, payload) => {
-        state.problems = state.problems.filter(problem => problem.id !== payload)
+      state.problems = state.problems.filter(problem => problem.id !== payload)
     },
     editProblem: (state, payload) => {
-        state.problems.find(problem => problem.id == payload.id).name = payload.name
+      state.problems.find(problem => problem.id == payload.id).name = payload.name
     },
     setError: (state, payload) => {
       state.error = payload
@@ -82,7 +81,6 @@ export default {
     postProblem: async ({commit}, param) => {
       await axios.post(BASEURL, param)
       .then(response => {
-        console.log(response);
         if (response.status == 201) {
           commit('setError', '')
           commit('setError404', '')

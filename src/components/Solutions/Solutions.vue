@@ -1,17 +1,17 @@
 <template>
   <div class="popup-show">
-    <div id="popupSol" tabindex="-1" class="modal fade" role="dialog"  aria-labelledby="exampleModalLongTitle" aria-hidden="true" >
-      <!-- style="max-width:1500px;"  -->
+    <div id="popupSol" tabindex="-1" class="modal fade" role="dialog">
       <div class="modal-dialog modal-dialog-scrollable" role="document" style="width: 90vw">
         <div class="modal-content" style="padding: 36px 300px;min-height: 348px;">
           <div class="modal-header" style="width: 130%;">
-            <button type="button" id="close" class="close" @click="closeSolutions" data-dismiss="modal" data-target="#popupSol">
+            <button type="button" id="close" class="close" @click="closeSolutions" data-dismiss="modal"
+              data-target="#popupSol">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
 
-          <div class="modal-body">
 
+          <div class="modal-body">
             <h5 class="modal-title">Список решений</h5>
             <h6>Решения в работе</h6>
             <ul class="list-group">
@@ -19,17 +19,11 @@
                 <input class="form-control" @keyup.enter="editSolClick(sol.name, sol.id)"
                   @blur="editSolClick(sol.name, sol.id)" v-model="sol.name" @focus="onFocusInput($event)"
                   :class="{ 'form-control--error': sol.name.length < 6 ||  sol.name.length > 100 || sol.name.length == 0}">
-                  <!-- <div class="error" v-if="error">{{error}}</div> -->
+
                 <div class="icons" ref="iconInWork">
-                  <!-- <trash-icon size="1.5x" class="custom-class" id="remove" style="margin-left: 30px;" @click="showDelete(sol.id)"
-                    data-toggle="modal" data-target="#popupDeleteSolution"></trash-icon> -->
-                  <!-- <img src="~@/assets/checkd.png" @click="changeinWork(sol)" v-if="sol.in_work">
-                  <check-icon size="1.5x" class="custom-class" style="color: #D0D0D0" v-else @click="changeinWork(sol)">
-                  </check-icon> -->
                   <div class="select" style="position: relative;" ref="select"
                     :class="[sol.in_work ? 'green' : 'gray']">
-                    <select v-model="sol.in_work" class="form-control"
-                      @change="changeinWork(sol)">
+                    <select v-model="sol.in_work" class="form-control" @change="changeinWork(sol)">
                       <option value="true">
                         В работе</option>
                       <option value="false">
@@ -37,8 +31,8 @@
                     </select>
                   </div>
                   <div style="width: 50px;">
-                    <button type="button" class="close" id="remove" style="margin: auto;"
-                      @click="showDelete(sol.id)" data-toggle="modal" data-target="#popupDeleteSolution">
+                    <button type="button" class="close" id="remove" style="margin: auto;" @click="showDelete(sol.id)"
+                      data-toggle="modal" data-target="#popupDeleteSolution">
                       <trash-icon size="1x" class="custom-class"></trash-icon>
                     </button>
                   </div>
@@ -48,25 +42,15 @@
             <h6>Остальные решения</h6>
             <ul class="list-group">
               <li class="list-group-item" id="list" v-for="(notinworksol, idx) in solutionsOther" :key="idx">
-                <input class="form-control"
-                  @keyup.enter="editSolClick(notinworksol.name, notinworksol.id)"
-                  @blur="editSolClick(notinworksol.name, notinworksol.id)" v-model="notinworksol.name" @focus="onFocusInput($event)"
+                <input class="form-control" @keyup.enter="editSolClick(notinworksol.name, notinworksol.id)"
+                  @blur="editSolClick(notinworksol.name, notinworksol.id)" v-model="notinworksol.name"
+                  @focus="onFocusInput($event)"
                   :class="{ 'form-control--error': notinworksol.name.length < 6 ||  notinworksol.name.length > 100 || notinworksol.name.length == 0}">
-                  <!-- <div class="error" v-if="error404">{{error404}}</div> -->
-                  <!-- {{notinworksol.name}}
-                  {{error404}} -->
                 <div class="icons" ref="iconInWork">
-                
-                  <!-- <trash-icon size="1.5x" class="custom-class" id="remove" style="margin-left: 30px;"
-                    @click="showDelete(notinworksol.id)" data-toggle="modal" data-target="#popupDeleteSolution">
-                  </trash-icon> -->
-                  <!-- <img src="~@/assets/checkd.png" @click="changeinWork(notinworksol)"> -->
-                  <!-- <check-icon size="1.5x" class="custom-class" style="color: #D0D0D0;" v-else
-                    @click="changeinWork(notinworksol)"></check-icon> -->
+
                   <div class="select" style="position: relative;" ref="select"
                     :class="[notinworksol.in_work ? 'green' : 'gray']">
-                    <select v-model="notinworksol.in_work" class="form-control"
-                      @change="changeinWork(notinworksol)">
+                    <select v-model="notinworksol.in_work" class="form-control" @change="changeinWork(notinworksol)">
                       <option value="true">
                         В работе</option>
                       <option value="false">
@@ -94,7 +78,6 @@
                   <div class="input-group-append" v-if="showClear" @click="onClear">
                     <span class="input-group-text">&times;</span>
                   </div>
-                  
                 </div>
                 <div class="error" v-if="error">{{error}}</div>
               </form>
@@ -106,24 +89,20 @@
           </div>
           <DeleteSolution v-if="showDeleteSol" :openDeleteS="showDeleteSol"
             @closeDeleteSolutions="closeDeleteSolutions($event)" :val="solutionIdDelete" />
+          <DeleteTask v-if="openDeleteTask" :openDeleteT="openDeleteTask" @closeDeleteTask="closeDeleteTask($event)"
+            :val="taskIdDelete" />
         </div>
       </div>
     </div>
   </div>
-
 </template>
 
 
 
 <script>
   import DeleteSolution from './DeleteSolution'
-  import {
-    TrashIcon,
-    // CheckIcon
-  } from 'vue-feather-icons'
-  import {
-    mapGetters
-  } from 'vuex'
+  import { TrashIcon } from 'vue-feather-icons'
+  import { mapGetters } from 'vuex'
 
   export default {
     name: 'popup',
@@ -132,8 +111,6 @@
       openS: true,
       showTasks: false,
       solutionName: '',
-      formData: '',
-      // progress: '',
       solutionIdDelete: '',
       showDeleteSol: false,
       showClear: false,
@@ -141,7 +118,6 @@
       currentSolutionName: ''
     }),
     components: {
-      // CheckIcon,
       TrashIcon,
       DeleteSolution,
     },
@@ -162,20 +138,17 @@
 
       async editSolClick(name, id) {
         await this.$store.commit('setError404', '')
-        console.log(name, id);
         await this.$store.dispatch('editSolution', {
-          name,
-          id
-        }).then(() => {
-          // this.currentSolutionInput.classList.remove('form-control--error')
-          })
-        .catch(e => {console.log(e)
-        // this.currentSolutionInput.classList.add('form-control--error')
-          this.$store.dispatch('editSolution', {
-            name: this.currentSolutionName,
+            name,
             id
           })
-        })
+          .then(() => {})
+          .catch(() => {
+            this.$store.dispatch('editSolution', {
+              name: this.currentSolutionName,
+              id
+            })
+          })
       },
 
       closeSolutions() {
@@ -183,8 +156,10 @@
       },
 
       async changeinWork(obj) {
-        console.log(obj.in_work)
-        await this.$store.dispatch('changeinWork', {id: obj.id, in_work: obj.in_work === "true" ? true : false})
+        await this.$store.dispatch('changeinWork', {
+          id: obj.id,
+          in_work: obj.in_work === "true" ? true : false
+        })
       },
 
       async addSolution(obj) {
@@ -197,15 +172,14 @@
           }
         })
       },
+
       showDelete(id) {
         this.showDeleteSol = true
         this.solutionIdDelete = id
-        console.log(id);
       },
       closeDeleteSolutions() {
         this.showDeleteSol = false
-      },
-
+      }
     }
   }
 </script>
@@ -216,11 +190,13 @@
     cursor: pointer;
     margin: 0 10px;
   }
+
   #remove {
     display: none;
   }
-  #list:hover #remove{ 
-    display:flex;
+
+  #list:hover #remove {
+    display: flex;
     width: 50px;
     height: 36px;
     align-items: center;
@@ -338,8 +314,6 @@
     height: 50px;
     background: #92D2C3;
     color: #fff;
-    // margin: 0 auto;
-
     font-size: 18px;
     line-height: 17px;
 
@@ -376,7 +350,7 @@
       margin: 0 10px;
     }
   }
-  
+
   .form {
     width: 100%;
   }
@@ -415,13 +389,8 @@
     &:hover {
       background-color: #f0f0f0;
     }
-
-      // input,
-      // input:hover, input:active, input:focus {
-      //   background-color: #f0f0f0 !important;
-      //   cursor: pointer;
-      // }
   }
+
   .select {
     width: 158px;
     border-radius: 10px;
@@ -479,7 +448,7 @@
       color: #2D453F;
     }
   }
-  
+
 
   .new-solution {
     display: flex;
@@ -496,9 +465,9 @@
 
 
 
-   @media (max-width: 780px) {
-     .modal-content {
-       padding: 20px;
-     }
-   }
+  @media (max-width: 780px) {
+    .modal-content {
+      padding: 20px;
+    }
+  }
 </style>

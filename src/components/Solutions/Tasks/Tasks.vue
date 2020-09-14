@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header row">
-      <div  class="col-5">
+      <div class="col-5">
         <img src="@/assets/tasks.png">
         Задачи:
       </div>
@@ -40,7 +40,7 @@
             <select class="form-control" style="height: fit-content; padding: 0;">
               <!--  v-for="(u, i) in allUsers" :key="i" :value="u.id" -->
               <!--  {{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}} -->
-              <option default >
+              <option default>
                 Выбрать
               </option>
               <option>
@@ -50,7 +50,8 @@
           </div>
           <div style="width: 54px" id="close">
             <!-- @click="deleteTask(solution)" data-toggle="modal" data-target="#popupRemoveFromWOrk" -->
-            <button type="button" class="close" id="remove" style="margin: auto;">
+            <button type="button" class="close" id="remove" style="margin: auto;" @click="showDelete"
+              data-toggle="modal" data-target="#popupDeleteSolution">
               <!-- <span aria-hidden="true">&times;</span> -->
               <trash-icon size="1x" class="custom-class"></trash-icon>
             </button>
@@ -60,13 +61,14 @@
           <div v-if="addNotClicked">
             <plus-icon size="1.5x" class="custom-class" id="plus" @click.prevent="displayInput" style="color: #92D2C3;">
             </plus-icon>
-            <!-- <input type="text" placeholder="Добавить задачу" class="addTask"> -->
             <span @click.prevent="displayInput" style="margin-left: 16px">Добавить задачу</span>
           </div>
           <div v-else class="inputAdd">
-            <input type="text" placeholder="Добавить задачу" class="addTask" @input="enableB">
+            <!-- в addtask передать решение -->
+            <input type="text" placeholder="Добавить задачу" class="addTask" @input="enableB" @keyup.enter="addTask" v-model="taskName"
+              :class="{ 'form-control--error': taskName.length >= 150 || taskName.length == 0}">
+            <div class="error" v-if="error">{{error}}</div>
             <div class="selectsInputAdd">
-              <!-- <span @click.prevent="displayInput">Добавить задачу</span> -->
               <div class="dateDiv">
                 <!-- v-model="solution.deadline" @change="changeDeadlineTask(solution.deadline, solution.id)" -->
                 <input type="date" id="start" name="trip-start" class="date" onkeypress="return false">
@@ -74,7 +76,6 @@
               <div class="selectResponsible">
                 <user-icon size="1.5x" class="custom-class" style="margin: 0 10px 0 0"></user-icon>
                 <!--  v-model="solution.executor_id" @change="selectExecutorTask(solution.id)" -->
-                <!-- width: 177px; -->
                 <select class="form-control" style="height: fit-content; padding: 0;">
                   <!--  v-for="(u, i) in allUsers" :key="i" :value="u.id" -->
                   <!--  {{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}} -->
@@ -83,22 +84,21 @@
                   </option>
                 </select>
               </div>
-              <div style="width: 20px">
-                <!-- @click="deleteTask(solution)" data-toggle="modal" data-target="#popupRemoveFromWOrk" -->
-                <button type="button" class="close" id="remove" style="margin: auto;">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
+
             </div>
           </div>
 
         </li>
       </ol>
+      <!-- в addtask передать решение -->
       <div type="button" class="btnsAddTask" v-if="!addNotClicked">
         <button id="addBtn" class="btn btnPink" @click.prevent="addTask" :disabled="!enableBtn">Добавить задачу</button>
         <span @click.prevent="addNotClicked = true">Отмена</span>
       </div>
     </div>
+
+    <DeleteTask v-if="openDeleteTask" :openDeleteTask="openDeleteTask" @closeDeleteTask="closeDeleteTask($event)"
+      :val="taskIdDelete" />
   </div>
 
 </template>
@@ -109,20 +109,30 @@
     PlusIcon,
     TrashIcon
   } from 'vue-feather-icons'
+  import DeleteTask from './DeleteTask'
+  import { mapGetters } from 'vuex'
+
   export default {
     name: 'tasks',
     props: ['val'],
     data: () => ({
       addNotClicked: true,
-      enableBtn: false
+      enableBtn: false,
+      taskName: '',
+      openDeleteTask: false,
+      taskIdDelete: '',
     }),
     components: {
       UserIcon,
       PlusIcon,
-      TrashIcon
+      TrashIcon,
+      DeleteTask
+    },
+    mounted() {
+      // this.$store.dispatch('getTasks', )
     },
     computed: {
-      // ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404', 'allUsers']),
+      ...mapGetters(['tasks', 'error', 'error404', 'allUsers']),
     },
     methods: {
       enableB() {
@@ -130,11 +140,21 @@
         document.getElementById('addBtn').classList.remove('btnPink')
         document.getElementById('addBtn').classList.add('btnGren')
 
-        
+
       },
-      addTask() {
+      // obj
+      async addTask() {
         console.log('добавить задачу запрос');
-        this.addNotClicked = true
+        // this.addNotClicked = true
+        await this.$store.dispatch('postTask', {
+          solutionId: 144,
+          description: this.taskName
+        }).then(() => {
+          if (!this.error) {
+            this.taskName = ''
+            this.addNotClicked = true
+          }
+        })
       },
       displayInput() {
         this.addNotClicked = false
@@ -159,11 +179,17 @@
           uid
         })
       },
-      async deleteTask(obj) {
-        console.log(obj);
-        // this.solutionIdRemove = obj.id
-        // this.openRemoveFromWork = true
-        // await this.$store.dispatch('changeinWork', {in_work: false, id: obj.id})
+
+
+      // id
+      showDelete() {
+        this.openDeleteTask = true
+        // this.taskIdDelete = id
+        this.taskIdDelete = 100
+        console.log(this.openDeleteTask, this.taskIdDelete);
+      },
+      closeDeleteTask() {
+        this.openDeleteTask = false
       },
     }
   }
@@ -259,18 +285,18 @@
 
 
 
-    option {
-      background-color: #F6F6F6;
-      color: #2D453F;
-      font-size: 18px;
-      line-height: 24px;
-      letter-spacing: 0.15px;
-      border-radius: 10px;
-      outline: none;
-      font-size: 18px;
-      line-height: 24px;
-      letter-spacing: 0.15px;
-    }
+  option {
+    background-color: #F6F6F6;
+    color: #2D453F;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    border-radius: 10px;
+    outline: none;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+  }
 
   .selectResponsible {
     display: flex;
@@ -282,19 +308,12 @@
     padding-top: 5px;
     border-radius: 10px;
     width: 174px;
-    // margin-left: 13px;
-    // margin-right: -31px;
-    // padding-left: 10px;
     background-color: #f6f6f6;
-    // padding-bottom: 5px;
-    // padding-top: 5px;
-    // border-radius: 10px;
 
     select {
       // background: url('~@/assets/Select.png') no-repeat;
       // background-position: right 0.5em top 46%, 0 0;
       margin: 0;
-      // width: 100%;
       width: 142px;
       background-color: #f6f6f6;
     }
@@ -302,6 +321,7 @@
 
   .selectResponsible:hover {
     background-color: #E0E0E0;
+
     select {
       background-color: #E0E0E0;
     }
@@ -312,15 +332,12 @@
     background-color: #4EAD96;
     color: #fff;
     outline: none;
-        select {
+
+    select {
       background-color: #4EAD96;
     }
   }
 
-
-  // .dateDiv {
-  //   margin-left: 35px;
-  // }
 
   .date {
     outline: none;
@@ -396,7 +413,7 @@
   }
 
   .select {
-        margin-right: 30px;
+    margin-right: 30px;
     border-radius: 10px;
     height: 36px;
     width: 156px;
@@ -406,7 +423,6 @@
     letter-spacing: 0.15px;
     letter-spacing: 0.15px;
     color: #828282;
-    // margin-left: -11px;
 
     option {
       background-color: #E0E0E0;
@@ -446,17 +462,14 @@
   }
 
   .task-title {
-    // width: 477px;
-    // width: 84%;
     margin-right: 15px;
   }
 
   .task-title::before {
-    // content: '*';
+    content: '';
     position: relative;
     top: -1px;
     right: 2%;
-    content: '';
     display: inline-block;
     width: 8px;
     height: 8px;
@@ -501,9 +514,11 @@
     border-radius: 0 9px 9px 0;
     padding: 10px 0 10px 153px;
     width: 57%;
+    display: flex;
+    align-items: flex-start;
   }
 
-  
+
   .btnsAddTask {
     padding-left: 50px;
     background-color: #fff;
@@ -518,10 +533,12 @@
       color: #4F4F4F;
       padding-bottom: 3px;
     }
+
     span:hover {
       border-bottom: 1px solid #000;
     }
   }
+
   .btn {
     margin-right: 17px;
     border-radius: 9px;
@@ -534,9 +551,11 @@
     letter-spacing: 0.15px;
     color: #FFFFFF;
   }
+
   .btnPink {
     background: #FFD3D3;
   }
+
   .btnGren {
     background: #92D2C3;
   }
@@ -547,46 +566,54 @@
 
 
 
- @media (max-width: 1200px) {
-  .subt {
-    display: none;
-  }
-  #list {
-    display: flex;
-    flex-direction: initial;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    div {
-      margin-bottom: 30px;
+  @media (max-width: 1200px) {
+    .subt {
+      display: none;
     }
-    #close {
-      order: 3;
-    }
-    .select {
-      order: 2;
-    }
-    .dateDiv {
-      order: 4;
-    }
-    .selectResponsible {
-      order: 5;
-    }
-    .list-item {
-      order: 1;
-    }
-  }
 
-  .task-title {
-    flex: 0 1; 
-    //  max-width: initial;
-    min-width: fit-content;
+    #list {
+      display: flex;
+      flex-direction: initial;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      div {
+        margin-bottom: 30px;
+      }
+
+      #close {
+        order: 3;
+      }
+
+      .select {
+        order: 2;
+      }
+
+      .dateDiv {
+        order: 4;
+      }
+
+      .selectResponsible {
+        order: 5;
+      }
+
+      .list-item {
+        order: 1;
+      }
+    }
+
+    .task-title {
+      flex: 0 1;
+      min-width: fit-content;
+    }
+
+    .selectsInputAdd {
+      display: none;
+    }
+
+    .addTask {
+      border-radius: 9px;
+      width: 100%;
+    }
   }
-  .selectsInputAdd {
-    display: none;
-  }
-  .addTask {
-    border-radius: 9px;
-    width: 100%;
-  }
-}
 </style>

@@ -48,7 +48,6 @@ export default {
     addSolution: (state, payload) => {
       payload.in_work = false
       state.solutionsOther.push(payload)
-      console.log(payload);
     },
     setOtherSolution: (state, payload) => {
       state.solutionsOther = payload.filter(sol => !sol.in_work)
@@ -153,48 +152,32 @@ export default {
         })
     },
 
-    // checkIfExists: async ({commit}, param) => {
-    //   return new Promise((resolve, reject) => {
-    //   axios.get(BASEURL + `/${param.id}`)
-    //   .then(response => )
-    //   .catch((error) => {
-    //     commit('setError404', error.response.data.message)})
-    //   }
-    // },
-
     editSolution: async ({commit}, param) => {
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
         axios.put(BASEURL + `/${param.id}`, {
           name: param.name
         }).then(response => {
-          // if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
             commit('editSolutionOther', response.data)
             commit('sortSolutions')
             resolve(response)
-          // }
         }).catch((error) => {
-          // commit('setError404', '')
           if (error.response.status == 422) {
             commit('setError404', '')
             commit('setError404', error.response.data.errors.name[0])
-            // return param.id
             reject(error.response.data.message)
           } else {
             commit('setError404', '')
             commit('setError404', error.response.data.message)
-            // return param.id
             reject(error.response.data.message)
           }
-          // reject(error.response.data.message)
         })
       })
     },
     changeinWork: async ({commit}, param) => {
       // param.id = 10000000000
-      console.log(param);
       axios.put(BASEURL + `/${param.id}/change-in-work`, {
         in_work: param.in_work
       }).then(response => {
@@ -202,7 +185,6 @@ export default {
           commit('editinWork', response.data)
           commit('sortSolutions')
       }).catch((error) => {
-        console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
         }

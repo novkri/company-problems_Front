@@ -1,21 +1,16 @@
 <template>
-  <div class="modal fade" id="popupDeleteSolution" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Вы точно хотите удалить решение?</h5>
-          <button type="button" class="close" @click="closeDeleteSolutions" data-dismiss="modal"
-            data-target="#popupDeleteSolution">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <button type="submit" class="btn btn-secondary" @click="deleteSolution(val)" data-dismiss="modal"
-            data-target="#popupDeleteSolution">Да</button>
-          <button type="reset" class="btn btn-secondary" data-dismiss="modal" data-target="#popupDeleteSolution"
-            @click="closeDeleteSolutions">Отменить</button>
-        </div>
-      </div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Вы точно хотите удалить задачу?</h5>
+      <button type="button" class="close" @click="closeDeleteTask" data-dismiss="modal" data-target="#popupDeleteTask">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <button type="submit" class="btn btn-secondary" @click="deleteTask(val)" data-dismiss="modal"
+        data-target="#popupDeleteTask">Да</button>
+      <button type="reset" class="btn btn-secondary" data-dismiss="modal" data-target="#popupDeleteTask"
+        @click="closeDeleteTask">Отменить</button>
     </div>
   </div>
 </template>
@@ -25,21 +20,23 @@
 
   export default {
     name: 'popup',
-    props: ['openDeleteS', 'val'],
+    props: ['openDeleteT', 'val'],
     data: () => ({
       name: '',
     }),
     computed: {
       ...mapGetters(['error', 'error404']),
     },
+
     methods: {
-      closeDeleteSolutions() {
-        this.$emit('closeDeleteSolutions')
+      closeDeleteTask() {
+        this.$emit('closeDeleteTask')
       },
 
-      async deleteSolution(id) {
-        this.$emit('closeDeleteSolutions')
-        await this.$store.dispatch('deleteSolution', id)
+      async deleteTask(id) {
+        console.log('удаление решения: ', id);
+        this.$emit('closeDeleteTask')
+        await this.$store.dispatch('deleteTask', id)
       }
     }
   }
@@ -53,6 +50,10 @@
     padding: 30px 87px 25px;
     line-height: 24px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    margin: auto;
+    position: absolute;
+    top: 50%;
+    left: 31%;
   }
 
   .modal-title {
@@ -62,6 +63,7 @@
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #2D453F;
+    margin: auto;
   }
 
   #new-problem-title {

@@ -1,6 +1,6 @@
 import axios from "axios";
 const BASEURL = 'http://31.31.199.37/api/solution' //все решения
-const URLTASK = 'http://31.31.199.37/api/problem' //одно решение
+const URLTASK = 'http://31.31.199.37/api/task' //одно решение
 
 
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
@@ -70,25 +70,26 @@ export default {
 
   },
   actions: {
-    getTasks: async ({
-      commit
-    }, problemId) => {
-      await axios.get(URLTASK + `/${problemId}/solution`)
-        .then(response => {
-          if (response.status == 200) {
-            commit('setError', '')
-            commit('setError404', '')
-            commit('setTask', response.data)
-          }
-        })
-        .catch(error =>
-          commit('setError', error.response.data.errors)
-        )
-    },
+    // getTasks: async ({
+    //   commit
+    // }, solutionId) => {
+    //   await axios.get(BASEURL + `/${solutionId}/task`)
+    //     .then(response => {
+    //       console.log(response);
+    //       if (response.status == 200) {
+    //         commit('setError', '')
+    //         commit('setError404', '')
+    //         commit('setTask', response.data)
+    //       }
+    //     })
+    //     .catch(error =>
+    //       commit('setError', error.response.data.errors)
+    //     )
+    // },
     postTask: async ({commit}, param) => {
       // param.problemId = 100000000
-      await axios.post(URLTASK + `/${param.problemId}/solution`, {
-          name: param.name
+      await axios.post(BASEURL + `/${param.solutionId}/task`, {
+        description: param.description
         })
         .then(response => {
           if (response.status == 201) {
@@ -98,6 +99,7 @@ export default {
           }
         })
         .catch(error => {
+          console.log(error.response);
           commit('setError404', '')
           if (error.response.status == 422) {
             if (error.response.data.errors.name) {
@@ -114,7 +116,7 @@ export default {
 
     deleteTask: async ({commit}, id) => {
       // id = 10000000000
-      await axios.delete(BASEURL + `/${id}`).then(response => {
+      await axios.delete(URLTASK + `/${id}`).then(response => {
           if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
