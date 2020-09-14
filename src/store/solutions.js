@@ -23,6 +23,7 @@ axios.interceptors.request.use(
 export default {
   state: {
     solutions: [],
+    solutionInWorkId: '',
     solutionsOther: [],
     allUsers: [],
     token: localStorage.getItem('user-token') || '',
@@ -98,18 +99,23 @@ export default {
     getSolutions: async ({
       commit
     }, problemId) => {
-      await axios.get(URLSOLUTION + `/${problemId}/solution`)
+      return await new Promise((resolve, reject) => {
+      axios.get(URLSOLUTION + `/${problemId}/solution`)
         .then(response => {
           if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
             commit('setOtherSolution', response.data)
             commit('setSolution', response.data)
+            resolve(response.data[0])
           }
         })
-        .catch(error =>
+        .catch(error =>{
           commit('setError', error.response.data.errors)
+          reject(error.response.data.message)
+        }
         )
+      })
     },
     postSolution: async ({commit}, param) => {
       // param.problemId = 100000000

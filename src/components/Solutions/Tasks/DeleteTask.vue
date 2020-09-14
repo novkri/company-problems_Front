@@ -2,6 +2,7 @@
   <div class="modal-content">
     <div class="modal-header">
       <h5 class="modal-title">Вы точно хотите удалить задачу?</h5>
+      {{val}}
       <button type="button" class="close" @click="closeDeleteTask" data-dismiss="modal" data-target="#popupDeleteTask">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -34,8 +35,8 @@
       },
 
       async deleteTask(id) {
-        console.log('удаление решения: ', id);
         this.$emit('closeDeleteTask')
+        await this.$store.commit('setError404', '')
         await this.$store.dispatch('deleteTask', id)
       }
     }

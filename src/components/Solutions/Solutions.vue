@@ -119,7 +119,8 @@
       showDeleteSol: false,
       showClear: false,
       currentSolutionInput: '',
-      currentSolutionName: ''
+      currentSolutionName: '',
+      openDeleteTask: false
     }),
     components: {
       TrashIcon,

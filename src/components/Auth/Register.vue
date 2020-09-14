@@ -375,7 +375,9 @@
     font-family: 'GothamPro-Medium';
   }
 
-
+  button:focus, button:active, button {
+    outline: none;
+  }
 
 
 

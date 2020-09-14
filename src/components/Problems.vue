@@ -50,6 +50,8 @@
         проблему</span>
     </button>
 
+    
+
     <!-- :open="openCreate"  -->
     <PopupCreate v-if="openCreate" @createProblem="createProblem(param = $event)" />
     <PopupEdit v-if="openEdit" :val="paramsModal" @editProblem="editProblem(param = $event)" />
@@ -172,11 +174,20 @@
           this.openDelete = false,
           this.openShow = true
         this.paramsModal = obj
-        // console.log(obj);
         this.$store.commit('setError', '')
-
-        // console.log(obj.id);
-        await this.$store.dispatch('getSolutions', obj.id)
+        console.log(obj.id);
+         await this.$store.dispatch('getSolutions', obj.id).then(r => {
+           console.log(r);
+           if (r !== undefined) {
+            //  this.$store.dispatch('clearTasks')
+             this.$store.dispatch('getTasks', r.id)
+              this.$store.dispatch('getCurrentSolution', '')
+              this.$store.dispatch('getCurrentSolution', r.id)
+           } else {
+              this.$store.dispatch('clearTasks')
+           }
+                    
+                  })    
       }
     }
   };

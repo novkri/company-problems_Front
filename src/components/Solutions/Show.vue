@@ -5,13 +5,13 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="width: 90vw" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" id="close" class="close" data-dismiss="modal" aria-label="Close">
+              <div style="width: 100%;">
+                <button type="button" id="close" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
-            </div>
-
-            <div class="modal-body">
-              <div class="subtitle" style="border-bottom: 2px solid #E2E2E2;">
+              </div>
+              
+              <div class="subtitle subtitle1" >
                 <h5 class="modal-title">{{val.name}}</h5>
                 <!-- <h6 v-if="progress !== ''">Прогресс решения {{progress}}%</h6>
                 <h6 v-else>Прогресс решения 0%</h6>
@@ -20,6 +20,18 @@
                   <span>95</span>
                 </div> -->
               </div>
+            </div>
+
+            <div class="modal-body">
+              <!-- <div class="subtitle subtitle1" >
+                <h5 class="modal-title">{{val.name}}</h5> -->
+                <!-- <h6 v-if="progress !== ''">Прогресс решения {{progress}}%</h6>
+                <h6 v-else>Прогресс решения 0%</h6>
+                <div class="icons">
+                  <img src="~@/assets/star.png">
+                  <span>95</span>
+                </div> -->
+              <!-- </div> -->
 
               <div>
                 <div class="subtitle row subt">
@@ -50,13 +62,13 @@
 
                       <div class="select col" style="position: relative;" ref="select">
                         <select v-model="solution.status" class="form-control"
-                          :class="[solution.status == 'Выполнено' ? 'green' : 'gray']"
+                          :class="[solution.status == 'Выполнено' ? 'green' : solution.status == 'К исполнению' ? 'blue' : 'gray']"
                           @change="changeStatus(solution.status, solution.id)">
                           <option value="В процессе">
                             В процессе</option>
                           <option value="Выполнено">
                             Выполнено</option>
-                          <option value="">Отсутсвует</option>
+                          <option value="К исполнению">К исполнению</option>
                         </select>
                       </div>
 
@@ -80,32 +92,6 @@
                       </div> -->
 
 
-                      <div class="selectResponsible col">
-                        <ss-select v-model="solution.executor_id" :options="allUsers" track-by="name" search-by="name"
-                          disable-by="disabled" id="ss-select">
-                          <div
-                            slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }">
-                            <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
-                            <ss-select-toggle class="px-3 py-1 flex items-center justify-between">
-                              {{ $get(selectedOption, 'name') || `${allUsers.find(u => u.id == solution.executor_id).name}`}}
-
-                            </ss-select-toggle>
-
-                            <section v-show="isOpen" class="absolute border-l border-r min-w-full">
-                              <!-- <div class="px-px" >
-                              <ss-select-search-input class="w-full px-3 py-1" style="width: 238px; border: none; background-color: #F2F2F2;" placeholder="Впишите имя"></ss-select-search-input>
-                            </div> -->
-
-                              <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id"
-                                :index="index" :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
-                                pointerIndex == index ? 'bg-light text-dark' : '',
-                                $selected(option) ? 'bg-light text-dark' : '',
-                                $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
-                              ]">{{ option.name }}</ss-select-option>
-                            </section>
-                          </div>
-                        </ss-select>
-                      </div>
 
 
 
@@ -120,9 +106,8 @@
                   </ol>
                 </div>
 
-                <div class="tasks">
-                  <!-- :val="solutions"  -->
-                  <Tasks />
+                <div class="tasks" v-if="currentSolution">
+                  <Tasks :val="solutions"/>
                 </div>
 
                 <button type="button" class="btn btnMain" @click="showSolutions(val)" data-toggle="modal"
@@ -143,9 +128,9 @@
 </template>
 
 <script>
-  import {
-    UserIcon
-  } from 'vue-feather-icons'
+  // import {
+  //   UserIcon
+  // } from 'vue-feather-icons'
   import {
     mapGetters
   } from 'vuex'
@@ -153,11 +138,11 @@
   import RemoveFromWork from './RemoveFromWork'
   import Tasks from './Tasks/Tasks'
   import DeleteTask from './Tasks/DeleteTask'
-  import {
-    SsSelect,
-    SsSelectToggle,
-    SsSelectOption,
-  } from 'ss-select'
+  // import {
+  //   SsSelect,
+  //   SsSelectToggle,
+  //   SsSelectOption,
+  // } from 'ss-select'
   // SsSelectSearchInput
 
   export default {
@@ -176,19 +161,24 @@
       selected: false
     }),
     components: {
-      UserIcon,
+      // UserIcon,
       Solutions,
       RemoveFromWork,
       Tasks,
       DeleteTask,
-      SsSelect,
-      SsSelectToggle,
-      SsSelectOption,
+      // SsSelect,
+      // SsSelectToggle,
+      // SsSelectOption,
       // SsSelectSearchInput
     },
-
+    // async mounted() {
+    //   await this.$store.dispatch('getTasks', this.solutions[0].id)
+    //   console.log(this.solutions[0].id);
+      
+    //   //передавать айди решения
+    // },
     computed: {
-      ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404', 'allUsers']),
+      ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404', 'allUsers', 'currentSolution']),
     },
     methods: {
       async selectExecutor(id) {
@@ -256,6 +246,8 @@
   .modal-header {
     border: none;
     justify-content: space-between;
+        display: flex;
+    flex-direction: column;
   }
 
   .modal-title {
@@ -291,7 +283,7 @@
     color: #333333;
     font-style: normal;
     font-weight: normal;
-    margin-bottom: 35px;
+    // margin-bottom: 35px;
     width: 97%;
     margin-left: 20px;
 
@@ -309,6 +301,14 @@
     h5 {
       line-break: anywhere;
     }
+  }
+  .subtitle1 {
+    border-bottom: 2px solid #E2E2E2;
+    background-color: #fff;
+  }
+  .subt {
+    margin-bottom: 35px;
+    margin-top: 35px;
   }
 
   .modal-content {
@@ -427,10 +427,10 @@
   }
 
   .selectResponsible:hover {
-    background-color: #E0E0E0;
+    background-color: #E5E9F1;
 
     select {
-      background-color: #E0E0E0;
+      background-color: #E5E9F1;
     }
   }
 
@@ -499,11 +499,11 @@
   }
 
   .date:hover {
-    background-color: #E0E0E0;
+    background-color: #E5E9F1;
   }
 
   .date:focus {
-    background-color: #4EAD96;
+    background-color: #E5E9F1;
     color: white;
   }
 
@@ -586,23 +586,25 @@
   .green {
     background-color: #4EAD96 !important;
     width: 156px;
-
-    // select {
     background: url('~@/assets/SelectWhite.png') no-repeat;
     background-position: right 0.6em top 46%, 0 0;
     color: #fff;
-    // }
   }
 
   .gray {
     background-color: #E0E0E0 !important;
     width: 156px;
-
-    // select {
     background: url('~@/assets/Select.png') no-repeat;
     background-position: right 0.6em top 46%, 0 0;
     color: #2D453F;
-    // }
+  }
+
+  .blue {
+    background-color:#AEDAF2 !important;
+    width: 156px;
+    background: url('~@/assets/SelectWhite.png') no-repeat;
+    background-position: right 0.6em top 50%, 0 0;
+    color: #fff;
   }
 
   .form-control {
