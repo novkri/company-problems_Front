@@ -149,10 +149,6 @@
                           </div>
                         </ss-select>
                       </div>
-
-
-
-
                       <div style="width: 20px" class="col">
                         <button type="button" class="close" id="remove" style="margin: auto;"
                           @click="removeFromWork(solution)" data-toggle="modal" data-target="#popupRemoveFromWOrk">
@@ -163,8 +159,8 @@
                     </li>
                   </ol>
                 </div>
-
-                <div class="tasks" v-if="currentSolution">
+                
+                <div class="tasks" v-if="solutions[0]">
                   <Tasks :val="solutions" />
                 </div>
 
