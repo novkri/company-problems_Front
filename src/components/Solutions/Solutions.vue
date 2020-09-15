@@ -1,14 +1,19 @@
 <template>
-  <div class="popup-show">
+  <!-- <div class="popup-show">
     <div id="popupSol" tabindex="-1" class="modal fade" role="dialog">
-      <div class="modal-dialog modal-dialog-scrollable" role="document" style="width: 90vw">
-        <div class="modal-content" style="padding: 36px 300px;min-height: 348px;">
-          <div class="modal-header" style="width: 130%;">
+      <div class="modal-dialog modal-dialog-scrollable" role="document" style="width: 90vw"> -->
+        <!-- <div class="modal-content" style="padding: 36px 300px;min-height: 348px;"> -->
+          <!-- <div> -->
+          <!-- <div class="modal-header tab">
+              <button class="btn btnTab" @click="openShow = false">Просмотр проблемы</button>
+              <button class="btn btnTab" @click="openShow = true">Добавить решение</button>
+            </div> -->
+          <!-- <div class="modal-header" style="width: 130%;">
             <button type="button" id="close" class="close" @click="closeSolutions" data-dismiss="modal"
               data-target="#popupSol">
               <span aria-hidden="true">&times;</span>
             </button>
-          </div>
+          </div> -->
 
 
           <div class="modal-body">
@@ -86,15 +91,19 @@
                 <img src="@/assets/Vector.png" alt="send">
               </button>
             </div>
+            <DeleteSolution v-if="showDeleteSol" :openDeleteS="showDeleteSol"
+            @closeDeleteSolutions="closeDeleteSolutions($event)" :val="solutionIdDelete" />
+          <!-- <DeleteTask v-if="openDeleteTask" :openDeleteT="openDeleteTask" @closeDeleteTask="closeDeleteTask($event)"
+            :val="taskIdDelete" /> -->
           </div>
-          <DeleteSolution v-if="showDeleteSol" :openDeleteS="showDeleteSol"
+          <!-- <DeleteSolution v-if="showDeleteSol" :openDeleteS="showDeleteSol"
             @closeDeleteSolutions="closeDeleteSolutions($event)" :val="solutionIdDelete" />
           <DeleteTask v-if="openDeleteTask" :openDeleteT="openDeleteTask" @closeDeleteTask="closeDeleteTask($event)"
-            :val="taskIdDelete" />
-        </div>
-      </div>
+            :val="taskIdDelete" /> -->
+        <!-- </div> -->
+      <!-- </div>
     </div>
-  </div>
+  </div> -->
 </template>
 
 
@@ -120,7 +129,7 @@
       showClear: false,
       currentSolutionInput: '',
       currentSolutionName: '',
-      openDeleteTask: false
+      // openDeleteTask: false
     }),
     components: {
       TrashIcon,

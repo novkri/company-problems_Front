@@ -107,14 +107,11 @@
     },
     watch: {
       error404() {
-        // console.log(`Updating from ${oldValue} to ${newValue}`)
         if (this.error404) {
-
           this.$toast.error(this.error404);
         }
       },
       val(newValue) {
-        // console.log(`Updating from ${oldValue.name} to ${newValue.name}`)
         this.name = newValue.name
       }
     },
@@ -172,8 +169,8 @@
       },
       async show(obj) {
         this.openEdit = false,
-          this.openDelete = false,
-          this.openShow = true
+        this.openDelete = false,
+        this.openShow = true
         this.paramsModal = obj
         this.$store.commit('setError', '')
         console.log(obj.id);

@@ -42,6 +42,8 @@
 </script>
 
 <style lang="scss">
+
+
   #remove {
     display: none;
 

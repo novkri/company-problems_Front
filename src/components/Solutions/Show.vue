@@ -1,10 +1,24 @@
 <template>
   <div>
+
     <div class="popup-show">
       <div id="popupShow" class="modal fade" role="dialog" style="padding: 0 !important; overflow: hidden;">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="width: 90vw" role="document">
           <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header tab">
+              <div class="tabDiv" :class="[openShow ? 'active' : '']" @click="toggleTab">
+                <eye-icon size="1.5x" class="custom-class"></eye-icon>
+                <button class="btn btnTab">Просмотр проблемы</button>
+              </div>
+              <div class="tabDiv" :class="[openShow ? '' : 'active']" @click="toggleTab">
+                <img src="@/assets/tasks.png">
+                <button class="btn btnTab">Добавить решение</button>
+              </div>
+
+            </div>
+
+            <!-- <div v-if="openShow"> -->
+            <div class="modal-header" v-if="openShow">
               <div style="width: 100%;">
                 <button type="button" id="close" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
@@ -21,8 +35,14 @@
                 </div> -->
               </div>
             </div>
+            <div class="modal-header" style="width: 130%;" v-else>
+              <button type="button" id="close" class="close" @click="closeSolutions" data-dismiss="modal"
+                data-target="#popupSol">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
 
-            <div class="modal-body">
+            <div class="modal-body" v-if="openShow">
               <!-- <div class="subtitle subtitle1" >
                 <h5 class="modal-title">{{val.name}}</h5> -->
               <!-- <h6 v-if="progress !== ''">Прогресс решения {{progress}}%</h6>
@@ -69,17 +89,19 @@
                             Выполнено</option>
            
                         </select> -->
-                        <ss-select v-model="solution.status" :options="statuses" track-by="name" search-by="name" class="form-control"
-                          @change="changeStatus(solution.id, solution.status)" disable-by="disabled" :class="[solution.status == 'Выполнено' ? 'green' : 'gray']"
+                        <ss-select v-model="solution.status" :options="statuses" track-by="name" search-by="name"
+                          class="form-control" @change="changeStatus(solution.id, solution.status)"
+                          disable-by="disabled" :class="[solution.status == 'Выполнено' ? 'green' : 'gray']"
                           id="ss-select">
                           <div
                             slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }">
-                            <ss-select-toggle >
+                            <ss-select-toggle>
                               {{ $get(selectedOption, 'name') || `${solution.status ? solution.status : 'Выбрать'}`}}
 
                             </ss-select-toggle>
 
-                            <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;">
+                            <section v-show="isOpen" class="absolute border-l border-r min-w-full"
+                              style="height: auto;">
                               <ss-select-option v-for="(option, index) in filteredOptions" :value="option"
                                 :index="index" :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
@@ -150,7 +172,12 @@
                   data-target="#popupSol" data-dismiss="modal"><span>Посмотреть/Добавить решение</span></button>
               </div>
             </div>
+            <Solutions v-if="!openShow" :openS="openSolutions" @closeSolutions="closeSolutions($event)" :val="val" />
+            <!-- </div> -->
+
+            <!-- <Solutions v-if="!openShow" :openS="openSolutions" @closeSolutions="closeSolutions($event)" :val="val" /> -->
           </div>
+
         </div>
       </div>
     </div>
@@ -165,7 +192,8 @@
 
 <script>
   import {
-    UserIcon
+    UserIcon,
+    EyeIcon
   } from 'vue-feather-icons'
 
   import {
@@ -186,6 +214,7 @@
     name: 'popup',
     props: ['open', 'val'],
     data: () => ({
+      openShow: true,
       openSolutions: false,
       showTasks: false,
       solutionName: '',
@@ -199,13 +228,19 @@
 
       obj: '',
 
-      statuses: [
-        { name: "В процессе" },
-        { name: "Выполнено" }
+      statuses: [{
+          name: "В процессе"
+        },
+        {
+          name: "Выполнено"
+        }
       ]
     }),
     components: {
       UserIcon,
+      EyeIcon,
+
+
       Solutions,
       RemoveFromWork,
       Tasks,
@@ -227,6 +262,12 @@
       ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404', 'allUsers', 'currentSolution']),
     },
     methods: {
+      toggleTab() {
+        this.openShow = !this.openShow
+        // event.target.classList.add('active')
+        // event.target.previousSibling.classList.remove('active')
+        console.log(event);
+      },
       async selectExecutor(id, uid) {
         await this.$store.dispatch('changeExecutor', {
           id,
@@ -265,6 +306,65 @@
 </script>
 
 <style scoped lang="scss">
+  .tab {
+    height: 51px !important;
+    padding: 0 !important;
+    display: flex;
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    background-color: #F2F2F2;
+    // width: fit-content;
+    border-radius: 12px;
+    margin-left: -42px;
+    width: 42%;
+
+    .btnTab {
+      width: fit-content;
+      border-radius: 12px;
+      background-color: #F2F2F2;
+      margin: 0;
+      color: #828282;
+      font-family: 'GothamPro';
+      font-size: 18px;
+      line-height: 24px;
+      letter-spacing: 0.15px;
+      height: 100%;
+      margin-left: 17px;
+
+    }
+
+  }
+
+  .tabDiv {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    // width: 339px;
+        width: 50%;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      height: fit-content;
+      cursor: pointer;
+    }
+    // svg {}
+  }
+
+  .active {
+    background-color: #fff;
+border-radius: 12px 12px 0 0px;
+    // border-radius: 12px 12px 0 12px;
+    .btnTab {
+      background-color: #fff;
+      color: #4EAD96;
+      font-family: 'GothamPro-Medium';
+    }
+    svg {
+      color: #4EAD96;
+    }
+  }
+
   div {
     padding: 0;
   }
@@ -363,23 +463,24 @@
   .modal-content {
     border-radius: 12px;
     border: none;
-    padding: 36px 30px 37px 42px;
+    padding: 0px 30px 37px 42px;
   }
 
   .modal-body {
     padding: 0;
   }
 
-#ss-select {
-      // padding-left: 8px;
-      // width: 128px;
-      align-items: center;
-      display: flex;
-      height: 36px;
-      // background-color: #F6F6F6;
-      border-radius: 10px;
-      display: flex;
-    }
+  #ss-select {
+    // padding-left: 8px;
+    // width: 128px;
+    align-items: center;
+    display: flex;
+    height: 36px;
+    // background-color: #F6F6F6;
+    border-radius: 10px;
+    display: flex;
+  }
+
   ol {
     margin-top: 30px;
     line-height: 24px;
