@@ -1,17 +1,17 @@
 <template>
   <div>
     <div class="popup-show">
-      <div id="popupShow" tabindex="-1" class="modal fade" role="dialog" style="padding: 0 !important;">
+      <div id="popupShow" class="modal fade" role="dialog" style="padding: 0 !important; overflow: hidden;">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="width: 90vw" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <div style="width: 100%;">
                 <button type="button" id="close" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+                  <span aria-hidden="true">&times;</span>
+                </button>
               </div>
-              
-              <div class="subtitle subtitle1" >
+
+              <div class="subtitle subtitle1">
                 <h5 class="modal-title">{{val.name}}</h5>
                 <!-- <h6 v-if="progress !== ''">Прогресс решения {{progress}}%</h6>
                 <h6 v-else>Прогресс решения 0%</h6>
@@ -25,7 +25,7 @@
             <div class="modal-body">
               <!-- <div class="subtitle subtitle1" >
                 <h5 class="modal-title">{{val.name}}</h5> -->
-                <!-- <h6 v-if="progress !== ''">Прогресс решения {{progress}}%</h6>
+              <!-- <h6 v-if="progress !== ''">Прогресс решения {{progress}}%</h6>
                 <h6 v-else>Прогресс решения 0%</h6>
                 <div class="icons">
                   <img src="~@/assets/star.png">
@@ -38,13 +38,13 @@
                   <div class="col-5">
                     Решения в работе:
                   </div>
-                  <div class="col">
+                  <div class="col-2">
                     Статус выполнения
                   </div>
-                  <div class="col">
+                  <div class="col-2">
                     Срок исполнения
                   </div>
-                  <div class="col">
+                  <div class="col-2">
                     Ответственный
                   </div>
                   <div style="width: 20px" class="col">
@@ -56,11 +56,10 @@
                     <li v-for="(solution, idx) in solutions" :key="idx" id="list" class="row">
                       <div class="list-item col-5">
                         <div class="desc" ref="desc"><span>{{idx+1}}.{{solution.name}}</span>
-                          {{solution.id}}
                         </div>
                       </div>
 
-                      <div class="select col" style="position: relative;" ref="select">
+                      <div class="select col-2" style="position: relative;" ref="select">
                         <select v-model="solution.status" class="form-control"
                           :class="[solution.status == 'Выполнено' ? 'green' : solution.status == 'К исполнению' ? 'blue' : 'gray']"
                           @change="changeStatus(solution.status, solution.id)">
@@ -72,25 +71,42 @@
                         </select>
                       </div>
 
-                      <div class="dateDiv col">
+                      <div class="dateDiv col-2">
                         <input type="date" id="start" name="trip-start" class="date" v-model="solution.deadline"
                           onkeypress="return false" @change="changeDeadline(solution.deadline, solution.id)">
                       </div>
 
 
-                      <!-- <div class="selectResponsible">
-                        <user-icon size="1.5x" class="custom-class" style="margin-right: 10px"></user-icon>
-                        <select class="form-control" style="height: fit-content; padding: 0;"
-                          v-model="solution.executor_id" @change="selectExecutor(solution.id)">
-                          <option default>
-                            Выбрать
-                          </option>
-                          <option v-for="(u, i) in allUsers" :key="i" :value="u.id">
-                            {{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}}
-                          </option>
-                        </select>
-                      </div> -->
 
+
+
+                      <div class="selectResponsible col-2">
+                        <ss-select v-model="solution.executor_id" :options="allUsers" track-by="name" search-by="name"
+                          @change="selectExecutor(solution.id, solution.executor_id)" disable-by="disabled"
+                          id="ss-select">
+                          <div
+                            slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }">
+                            <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
+                            <ss-select-toggle class="px-3 py-1 flex items-center justify-between">
+                              {{ $get(selectedOption, 'name') || `${allUsers.find(u => u.id == solution.executor_id) ? allUsers.find(u => u.id == solution.executor_id).name : 'Выбрать'}`}}
+
+                            </ss-select-toggle>
+
+                            <section v-show="isOpen" class="absolute border-l border-r min-w-full">
+                              <!-- <div class="px-px" >
+                              <ss-select-search-input class="w-full px-3 py-1" style="width: 238px; border: none; background-color: #F2F2F2;" placeholder="Впишите имя"></ss-select-search-input>
+                            </div> -->
+
+                              <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id"
+                                :index="index" :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
+                                pointerIndex == index ? 'bg-light text-dark' : '',
+                                $selected(option) ? 'bg-light text-dark' : '',
+                                $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
+                              ]">{{ option.name }}</ss-select-option>
+                            </section>
+                          </div>
+                        </ss-select>
+                      </div>
 
 
 
@@ -107,7 +123,7 @@
                 </div>
 
                 <div class="tasks" v-if="currentSolution">
-                  <Tasks :val="solutions"/>
+                  <Tasks :val="solutions" />
                 </div>
 
                 <button type="button" class="btn btnMain" @click="showSolutions(val)" data-toggle="modal"
@@ -128,9 +144,10 @@
 </template>
 
 <script>
-  // import {
-  //   UserIcon
-  // } from 'vue-feather-icons'
+  import {
+    UserIcon
+  } from 'vue-feather-icons'
+
   import {
     mapGetters
   } from 'vuex'
@@ -138,11 +155,11 @@
   import RemoveFromWork from './RemoveFromWork'
   import Tasks from './Tasks/Tasks'
   import DeleteTask from './Tasks/DeleteTask'
-  // import {
-  //   SsSelect,
-  //   SsSelectToggle,
-  //   SsSelectOption,
-  // } from 'ss-select'
+  import {
+    SsSelect,
+    SsSelectToggle,
+    SsSelectOption,
+  } from 'ss-select'
   // SsSelectSearchInput
 
   export default {
@@ -158,31 +175,34 @@
       btnRemove: false,
       openDeleteTask: false,
       taskIdDelete: '',
-      selected: false
+      selected: false,
+
+      obj: ''
     }),
     components: {
-      // UserIcon,
+      UserIcon,
       Solutions,
       RemoveFromWork,
       Tasks,
       DeleteTask,
-      // SsSelect,
-      // SsSelectToggle,
-      // SsSelectOption,
+
+      SsSelect,
+      SsSelectToggle,
+      SsSelectOption,
       // SsSelectSearchInput
     },
     // async mounted() {
     //   await this.$store.dispatch('getTasks', this.solutions[0].id)
     //   console.log(this.solutions[0].id);
-      
+
     //   //передавать айди решения
     // },
+
     computed: {
       ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404', 'allUsers', 'currentSolution']),
     },
     methods: {
-      async selectExecutor(id) {
-        let uid = event.target.value
+      async selectExecutor(id, uid) {
         await this.$store.dispatch('changeExecutor', {
           id,
           uid
@@ -246,7 +266,7 @@
   .modal-header {
     border: none;
     justify-content: space-between;
-        display: flex;
+    display: flex;
     flex-direction: column;
   }
 
@@ -302,19 +322,22 @@
       line-break: anywhere;
     }
   }
+
   .subtitle1 {
     border-bottom: 2px solid #E2E2E2;
     background-color: #fff;
   }
+
   .subt {
     margin-bottom: 35px;
     margin-top: 35px;
+    margin-left: 29px !important;
   }
 
   .modal-content {
     border-radius: 12px;
     border: none;
-    padding: 36px 30px 37px 62px;
+    padding: 36px 30px 37px 42px;
   }
 
   .modal-body {
@@ -333,10 +356,13 @@
     letter-spacing: 0.15px;
     color: #828282;
 
+    margin-left: 10px;
+    // margin-right: -10px;
+
     li {
       padding: 15px 49px 12px;
       border-radius: 9px;
-      background-color: #F6F6F6;
+      background-color: #FFF;
       margin: 0 24px 16px 0;
       align-items: flex-start;
       // padding-right: 117px;
@@ -393,26 +419,31 @@
   }
 
   .tasks {
-    margin: -20px 0px 40px 13px;
+    margin: -20px 0px 40px 20px;
+    // margin: -20px 0px 40px 13px;
     width: 97%;
     border-radius: 9px;
   }
 
   .selectResponsible {
     display: flex;
-    background-color: #F6F6F6;
+
     // margin: 0 10px;
     // margin-right: 84px;
 
     padding-left: 10px;
     // padding-bottom: 5px;
     // padding-top: 5px;
-    border-radius: 10px;
+
 
     #ss-select {
-      padding-left: 20px;
+      padding-left: 8px;
+      // width: 128px;
       align-items: center;
       display: flex;
+      height: 36px;
+      // background-color: #F6F6F6;
+      border-radius: 10px;
     }
 
     select {
@@ -427,21 +458,26 @@
   }
 
   .selectResponsible:hover {
-    background-color: #E5E9F1;
+    // background-color: #E5E9F1;
 
-    select {
-      background-color: #E5E9F1;
+    #ss-select {
+      // background-color: #E5E9F1;
+      background-color: #F6F6F6;
     }
   }
 
   .selectResponsible:focus,
   .selectResponsible:active {
-    background-color: #4EAD96;
+    // background-color: #4EAD96;
     color: #fff;
     outline: none;
 
-    select {
+    #ss-select {
       background-color: #4EAD96;
+    }
+
+    svg {
+      color: #fff !important;
     }
 
     #iconUser {
@@ -489,21 +525,21 @@
     border: none;
     position: relative;
     color: #828282;
-    background-color: #F6F6F6;
+    // background-color: #F6F6F6;
     padding-left: 48px;
     padding-bottom: 5px;
     padding-top: 5px;
     border-radius: 10px;
     width: 168px;
-    background-color: #f6f6f6;
+    // background-color: #f6f6f6;
   }
 
   .date:hover {
-    background-color: #E5E9F1;
+    background-color: #f6f6f6;
   }
 
   .date:focus {
-    background-color: #E5E9F1;
+    background-color: #4EAD96;
     color: white;
   }
 
@@ -585,7 +621,7 @@
 
   .green {
     background-color: #4EAD96 !important;
-    width: 156px;
+    width: 180px;
     background: url('~@/assets/SelectWhite.png') no-repeat;
     background-position: right 0.6em top 46%, 0 0;
     color: #fff;
@@ -593,15 +629,15 @@
 
   .gray {
     background-color: #E0E0E0 !important;
-    width: 156px;
+    width: 180px;
     background: url('~@/assets/Select.png') no-repeat;
     background-position: right 0.6em top 46%, 0 0;
     color: #2D453F;
   }
 
   .blue {
-    background-color:#AEDAF2 !important;
-    width: 156px;
+    background-color: #AEDAF2 !important;
+    width: 180px;
     background: url('~@/assets/SelectWhite.png') no-repeat;
     background-position: right 0.6em top 50%, 0 0;
     color: #fff;
@@ -642,6 +678,7 @@
     margin: 0 22px;
   }
 
+
   ::-webkit-scrollbar {
     width: 10px;
   }
@@ -671,7 +708,7 @@
     max-height: 257px;
     // right: 4%;
     // ?????????
-    right: 9%;
+    right: -19%;
     top: 102%;
 
     border-radius: 10px;
@@ -681,8 +718,14 @@
     height: 400px;
     overflow-y: scroll;
     overflow-x: hidden;
-    z-index: 1000000000000;
+    z-index: 100;
   }
+
+  .stf-select_opened .stf-select__options {
+    z-index: 100000000000000 !important;
+  }
+
+
 
 
 

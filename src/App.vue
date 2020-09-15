@@ -2,34 +2,40 @@
   <div id="app">
     <div id="nav">
       <nav class="navbar navbar-light bg-light" v-if="isLoggedIn" style="height: 78px;">
-  
-        <span style="margin: 0 55px;">Вы вошли как: {{userLoggedIn.surname}} {{userLoggedIn.name}} {{userLoggedIn.father_name}}</span> <log-in-icon @click="logout" size="1.5x" class="custom-class"></log-in-icon>
+
+        <span style="margin: 0 55px;">Вы вошли как: {{userLoggedIn.surname}} {{userLoggedIn.name}}
+          {{userLoggedIn.father_name}}</span>
+        <log-in-icon @click="logout" size="1.5x" class="custom-class"></log-in-icon>
       </nav>
     </div>
 
     <router-view />
-    
+
   </div>
 </template>
 
 <script>
-import { LogInIcon } from 'vue-feather-icons'
+  import {
+    LogInIcon
+  } from 'vue-feather-icons'
   export default {
     components: {
       LogInIcon
     },
-    computed : {
-      isLoggedIn : function(){ 
-        return this.$store.getters.isLoggedIn},
-      userLoggedIn : function(){ 
-      return JSON.parse(localStorage.getItem ('user'))}
+    computed: {
+      isLoggedIn: function () {
+        return this.$store.getters.isLoggedIn
+      },
+      userLoggedIn: function () {
+        return JSON.parse(localStorage.getItem('user'))
+      }
     },
     methods: {
       logout: function () {
         this.$store.dispatch('logout')
-        .then(() => {
-          this.$router.push('/login')
-        })
+          .then(() => {
+            this.$router.push('/login')
+          })
       }
     },
   }
@@ -58,10 +64,12 @@ import { LogInIcon } from 'vue-feather-icons'
     font-weight: 500;
     letter-spacing: 0.15px;
   }
+
   .navbar {
     justify-content: flex-end;
     padding: .5rem 3rem;
   }
+
   .container {
     width: 436px;
     margin: 50px;
@@ -86,21 +94,29 @@ import { LogInIcon } from 'vue-feather-icons'
     cursor: pointer;
   }
 
-  button:focus, .btn:focus {
+  a:hover {
+    color: #92D2C3;
+  }
+
+  button:focus,
+  .btn:focus {
     outline: none;
     box-shadow: none;
   }
-  .btnMain:hover, .btn-secondary:hover {
+
+  .btnMain:hover,
+  .btn-secondary:hover {
     background-color: #76DFC7 !important;
   }
-  
+
 
   p {
     word-break: break-all;
     margin: 0;
   }
 
-  .btnMain:active, .btn-secondary:active  {
+  .btnMain:active,
+  .btn-secondary:active {
     background-color: #4EAD96 !important;
   }
 
@@ -116,11 +132,13 @@ import { LogInIcon } from 'vue-feather-icons'
     color: #2D453F;
     margin-bottom: 3px;
     caret-color: #92D2C3;
+
     &:focus {
       box-shadow: none;
       border-bottom: none;
     }
   }
+
   .form-control--valid {
     border: transparent;
     border-radius: 6px;
@@ -128,6 +146,7 @@ import { LogInIcon } from 'vue-feather-icons'
     color: #2D453F;
     caret-color: #92D2C3;
     border-bottom: 2px solid #92D2C3;
+
     &:focus {
       box-shadow: none;
       border-bottom: 2px solid #92D2C3;
@@ -148,7 +167,7 @@ import { LogInIcon } from 'vue-feather-icons'
     margin-right: 30px;
     width: 85%;
   }
-  
+
 
   .form-control--error {
     border: transparent;
@@ -157,34 +176,38 @@ import { LogInIcon } from 'vue-feather-icons'
     color: #2D453F;
     caret-color: #FF8585;
     border-bottom: 2px solid #FF8585;
+
     &:focus {
       box-shadow: none;
       border-bottom: 2px solid #FF8585;
     }
   }
+
   select:focus {
     outline: none;
-    }
+  }
 
-  // html{
-  //   overflow-y: scroll;
-  //   overflow-x: auto;
-  // }
+  body {
+
+    overflow-x: hidden !important;
+    /* Hide horizontal scrollbar */
+  }
+
   // @media (max-width: 1440px) {
   //   html {
   //     display: flex;
   //     flex-wrap: inherit;
   //   }
   // }
-   @media (max-width: 1600px) {
+  @media (max-width: 1600px) {
     * {
       font-size: 15px;
     }
   }
+
   @media (max-width: 1500px) {
     * {
       font-size: 14px;
     }
   }
-
 </style>

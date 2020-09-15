@@ -108,8 +108,7 @@ export default {
     postTask: async ({commit}, param) => {
       // param.solutionId = 100000000
       console.log(param);
-      await axios.post(BASEURL + `/${param.solutionId}/task`, {
-        description: param.description
+      await axios.post(BASEURL + `/${param.solutionId}/task`, {...param
         })
         .then(response => {
           if (response.status == 201) {
@@ -135,7 +134,7 @@ export default {
     },
 
     deleteTask: async ({commit}, id) => {
-      id = 10000000000
+      // id = 10000000000
       await axios.delete(URLTASK + `/${id}`).then(response => {
           if (response.status == 200) {
             commit('setError', '')
@@ -164,41 +163,20 @@ export default {
             resolve(response)
           // }
         }).catch((error) => {
-          // commit('setError404', '')
           console.log(error.response);
           if (error.response.status == 422) {
             commit('setError404', '')
             commit('setError404', error.response.data.errors.name[0])
-            // return param.id
             reject(error.response.data.message)
           } else {
             commit('setError404', '')
             commit('setError404', error.response.data.message)
-            // return param.id
             reject(error.response.data.message)
           }
-          // reject(error.response.data.message)
         })
       })
     },
-    // changeinWorkTask: async ({commit}, param) => {
-    //   // param.id = 10000000000
-    //   console.log(param);
-    //   axios.put(BASEURL + `/${param.id}/change-in-work`, {
-    //     in_work: param.in_work
-    //   }).then(response => {
-    //       commit('setError', '')
-    //       commit('editinWorkTask', response.data)
-    //       // commit('sortSolutions')
-    //   }).catch((error) => {
-    //     if (error.response.status == 404) {
-    //       commit('setError404', error.response.data.message)
-    //     }
-    //     else if (error.response.status == 422) {
-    //       commit('setError404', error.response.data.errors)
-    //     }
-    //   })
-    // },
+
 
     changeStatusTask: async ({commit}, param) => {
       // param.id = 10000000000

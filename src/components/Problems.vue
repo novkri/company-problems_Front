@@ -50,7 +50,8 @@
         проблему</span>
     </button>
 
-    
+
+
 
     <!-- :open="openCreate"  -->
     <PopupCreate v-if="openCreate" @createProblem="createProblem(param = $event)" />

@@ -5,9 +5,9 @@
         <img src="@/assets/tasks.png">
         Задачи:
       </div>
-      <div class="subt col">Статус выполнения</div>
-      <div class="subt col">Срок исполнения</div>
-      <div class="subt col">Исполнитель</div>
+      <div class="subt col-2">Статус выполнения</div>
+      <div class="subt col-2">Срок исполнения</div>
+      <div class="subt col-2">Исполнитель</div>
       <div style="width: 54px" class="col">
       </div>
     </div>
@@ -16,13 +16,11 @@
         <li id="list" v-for="(task, idx) in tasks" :key="idx">
           <div class="task-title col-5"
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'К исполнению' ? 'blueTitle' : '']">
-            <!-- <span>{{task.description}} {{task.id}} </span> -->
             <input class="form-control" @keyup.enter="editTask(task.description, task.id)"
-                  @blur="editTask(task.description, task.id)" v-model="task.description"
-                  >
+              @blur="editTask(task.description, task.id)" v-model="task.description">
 
           </div>
-          <div class="select col" style="position: relative;" ref="select">
+          <div class="select col-2" style="position: relative;" ref="select">
             <select class="form-control" v-model="task.status" @change="changeStatusTask(task.status, task.id)"
               :class="[task.status == 'Выполнено' ? 'green' :  task.status == 'К исполнению' ? 'blue' : 'gray']">
               <option value="К исполнению" default>
@@ -33,55 +31,34 @@
                 Выполнено</option>
             </select>
           </div>
-          <div class="dateDiv col">
-            <input type="date" id="start" name="trip-start" class="date" onkeypress="return false" @change="changeDeadlineTask(task.deadline, task.id)"
-              v-model="task.deadline">
+          <div class="dateDiv col-2">
+            <input type="date" id="start" name="trip-start" class="date" onkeypress="return false"
+              @change="changeDeadlineTask(task.deadline, task.id)" v-model="task.deadline">
           </div>
 
-<div class="selectResponsible">
-                        <user-icon size="1.5x" class="custom-class" style="margin-right: 10px"></user-icon>
-                        <select class="form-control" style="height: fit-content; padding: 0;"
-                          v-model="task.executor_id" @change="selectExecutorTask(task.executor_id, task.id)">
-                          <option default>
-                            Выбрать
-                          </option>
-                          <option v-for="(u, i) in allUsers" :key="i" :value="u.id">
-                            {{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}}
-                          </option>
-                        </select>
-                      </div> 
-          <div class="selectResponsible col">
-            <ss-select v-model="task.executor_id" :options="allUsers" track-by="id" search-by="id" class="relative" @change="event => selectExecutorTask(event, task.id)">
-    <!-- Then create a div so you can resolve data and methods you need from slot scope -->
-    
-    <div slot-scope="{ selectedOption, isOpen, $get, filteredOptions, pointerIndex }">
-      <input type="hidden" name="song" :value="$get(selectedOption, 'name')">
-        <!-- toggle component opens and closes the dropdown -->
-        <ss-select-toggle>
-            {{ $get(selectedOption, 'id') || `dfgdfgdfgdfg` }}
-        </ss-select-toggle>
 
-        <!-- Create a div to display options -->
-        <div v-show="isOpen" class="absolute min-w-full z-10">
-            <!-- search input component is used to filter options -->
-            <!-- Be sure to provide search-by prop that will be the key to filter options by -->
+          <div class="selectResponsible col-2">
+            <ss-select v-model="task.executor_id" :options="allUsers" track-by="name" search-by="name"
+              @change="selectExecutorTask(task.id, task.executor_id)" disable-by="disabled" id="ss-select">
+              <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }">
+                <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
+                <ss-select-toggle class="px-3 py-1 flex items-center justify-between">
+                  {{ $get(selectedOption, 'name') ||  `${allUsers.find(u => u.id == task.executor_id) ? allUsers.find(u => u.id == task.executor_id).name : 'Выбрать'}`}}
 
+                </ss-select-toggle>
 
-            <!-- Here go options -->
-            <ss-select-option v-for="(option, index) in filteredOptions" :key="option.id" 
-                              :value="option.id"
-                                :index="index" class="px-4 py-2 border-b cursor-pointer" :class="[
+                <section v-show="isOpen" class="absolute border-l border-r min-w-full">
+
+                  <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
+                    :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
-                              
-                      
+                                $selected(option) ? 'bg-light text-dark' : '',
+                                $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
                               ]">{{ option.name }}</ss-select-option>
-        </div>
-    </div>
-</ss-select>
-            
+                </section>
+              </div>
+            </ss-select>
           </div>
-          {{task.executor_id}}
-          {{task}}
 
 
 
@@ -100,13 +77,14 @@
             <span @click.prevent="displayInput" style="margin-left: 16px">Добавить задачу</span>
           </div>
 
-          <div v-else class="inputAdd" >
-              <!-- <div style="display: flex;">
-                <input type="text" placeholder="Добавить задачу" class="addTask" @input="enableB" @keyup.enter="addTask"
+          <div v-else class="inputAdd">
+            <div style="display: flex;">
+              <input type="text" placeholder="Добавить задачу" class="addTask" @input="enableB" @keyup.enter="addTask"
                 v-model="taskName" :class="{ 'form-control--error': taskName.length >= 150 || taskName.length == 0}">
               <div class="selectsInputAdd">
                 <div class="dateDiv">
-                  <input type="date" id="start" name="trip-start" class="date" onkeypress="return false" v-model="deadline">
+                  <input type="date" id="start" name="trip-start" class="date" onkeypress="return false"
+                    v-model="deadline">
                 </div>
                 <div class="selectResponsible">
                   <user-icon size="1.5x" class="custom-class" style="margin: 0 10px 0 0"></user-icon>
@@ -114,21 +92,19 @@
                     <option default>
                       Выбрать
                     </option>
-                    <option v-for="(u, i) in allUsers" :key="i" :value="u.id">{{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}}</option>
+                    <option v-for="(u, i) in allUsers" :key="i" :value="u.id">
+                      {{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}}
+                    </option>
                   </select>
                 </div>
 
               </div>
-              </div> -->
-              <form>
-                <input type="text" v-model="taskName"  @input="enableB">
-                <input type="date" v-model="deadline">
-              </form>
-              <div class="error" v-if="error">{{error.description}}</div>
-              <div class="error" v-if="error">{{error}}</div>
-            
+            </div>
+            <div class="error" v-if="error">{{error.description}}</div>
+            <div class="error" v-if="error">{{error}}</div>
+
           </div>
-          
+
 
 
         </li>
@@ -142,15 +118,7 @@
 
     <DeleteTask v-if="openDeleteTask" :openDeleteTask="openDeleteTask" @closeDeleteTask="closeDeleteTask($event)"
       :val="taskIdDelete" />
-
-    {{val}}
-
-    {{taskName}}
-    {{tasks}}
-    currentSolution
-    {{currentSolution}}
   </div>
-
 </template>
 
 <script>
@@ -182,6 +150,7 @@
       deadline: '',
       openDeleteTask: false,
       taskIdDelete: '',
+      inputActive: false
     }),
     components: {
       UserIcon,
@@ -193,25 +162,23 @@
       SsSelectOption,
       // SsSelectSearchInput
     },
-    mounted() {
-      // this.$store.dispatch('getTasks', )
-    },
+
     computed: {
       ...mapGetters(['tasks', 'error', 'error404', 'allUsers', 'currentSolution']),
     },
     methods: {
+
       enableB() {
         this.enableBtn = true
         document.getElementById('addBtn').classList.remove('btnPink')
         document.getElementById('addBtn').classList.add('btnGren')
       },
       async addTask() {
-        console.log(this.deadline);
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('postTask', {
           solutionId: this.currentSolution,
           description: this.taskName,
-          executor_id: this.executor,
+          // executor_id: this.executor,
           status: this.status,
           deadline: this.deadline
         }).then(() => {
@@ -250,7 +217,10 @@
       },
       async editTask(description, id) {
         console.log(description, id);
-        await this.$store.dispatch('editTask', {description, id})
+        await this.$store.dispatch('editTask', {
+          description,
+          id
+        })
       },
 
 
@@ -295,7 +265,8 @@
     padding-top: 30px;
     max-width: inherit;
     width: -webkit-fill-available;
-    padding-left: 42px;
+    // padding-left: 42px;
+    padding-left: 26px;
     font-family: 'GothamPro';
     font-size: 16px;
     line-height: 24px;
@@ -318,7 +289,7 @@
     color: #4F4F4F;
     font-style: normal;
     font-weight: normal;
-    background-color: #F6F6F6;
+    background-color: #F6F7F9;
   }
 
   ol {
@@ -331,7 +302,7 @@
 
   li {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     padding-bottom: 18px;
     padding-top: 18px;
     border-bottom: 1px solid #DEDEDE;
@@ -381,19 +352,16 @@
   .selectResponsible {
     display: flex;
     background-color: #F6F6F6;
-    // margin: 0 10px;
-
     padding-left: 10px;
-    padding-bottom: 5px;
-    padding-top: 5px;
-    border-radius: 10px;
-    width: 174px;
-    background-color: #f6f6f6;
 
     #ss-select {
-      padding-left: 20px;
+      padding-left: 8px;
+      // width: 128px;
       align-items: center;
       display: flex;
+      height: 36px;
+      background-color: #F6F7F9;
+      border-radius: 10px;
     }
 
     select {
@@ -406,21 +374,30 @@
   }
 
   .selectResponsible:hover {
-    background-color: #E5E9F1;
+    // background-color: #E5E9F1;
 
-    select {
-      background-color: #E5E9F1;
+    #ss-select {
+      // background-color: #E5E9F1;
+      background-color: #e5e9f1;
     }
   }
 
   .selectResponsible:focus,
   .selectResponsible:active {
-    background-color: #4EAD96;
+    // background-color: #4EAD96;
     color: #fff;
     // outline: none;
 
-    select {
+    #ss-select {
       background-color: #4EAD96;
+    }
+
+    svg {
+      color: #fff !important;
+    }
+
+    #iconUser {
+      color: #fff;
     }
   }
 
@@ -433,7 +410,7 @@
     max-height: 257px;
     // right: 4%;
     // ?????????
-    right: 9%;
+    right: -19%;
     top: 102%;
 
     border-radius: 10px;
@@ -445,6 +422,23 @@
     overflow-x: hidden;
     z-index: 1000000000000;
   }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #92D2C3;
+    border-radius: 3px;
+    height: 73px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #F2F2F2;
+    border-left: 4px solid white;
+    border-right: 4px solid white;
+  }
+
 
 
   .date {
@@ -459,17 +453,18 @@
     padding-top: 5px;
     border-radius: 10px;
     width: 168px;
-    background-color: #f6f6f6;
+    background-color: #F6F7F9;
     // margin: 0 20px;
   }
 
   .date:hover {
-    background-color: #E5E9F1;
+    background-color: #e5e9f1;
   }
 
   .date:focus {
     background-color: #4EAD96;
     color: white;
+    outline: none;
   }
 
 
@@ -526,7 +521,7 @@
     // margin-right: 30px;
     border-radius: 10px;
     height: 36px;
-    // width: 156px;
+    // width: 180px;
     width: 166px;
     padding: 0;
     font-size: 18px;
@@ -551,7 +546,7 @@
 
   .green {
     background-color: #4EAD96 !important;
-    width: 156px;
+    width: 180px;
     background: url('~@/assets/SelectWhite.png') no-repeat;
     background-position: right 0.6em top 50%, 0 0;
     color: #fff;
@@ -559,7 +554,7 @@
 
   .gray {
     background-color: #E0E0E0 !important;
-    width: 156px;
+    width: 180px;
     background: url('~@/assets/Select.png') no-repeat;
     background-position: right 0.6em top 50%, 0 0;
     color: #2D453F;
@@ -567,27 +562,37 @@
 
   .blue {
     background-color: #AEDAF2 !important;
-    width: 156px;
+    width: 180px;
     background: url('~@/assets/SelectWhite.png') no-repeat;
     background-position: right 0.6em top 50%, 0 0;
     color: #fff;
   }
 
   .task-title {
-    span {
+    display: flex;
+
+    input {
       padding: 6px;
       border-radius: 10px;
+      width: fit-content;
+      background-color: #F6F6F6;
     }
 
-    span:hover {
-      background-color: #E5E9F1;
+    input:hover {
+      // background-color: #fff;
+      cursor: pointer;
+    }
+
+    input:focus,
+    input:active {
+      background-color: #fff;
     }
   }
 
   .task-title::before {
     content: '';
     position: relative;
-    top: -1px;
+    top: 14px;
     right: 2%;
     display: inline-block;
     width: 8px;

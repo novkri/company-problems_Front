@@ -243,6 +243,22 @@
     }
   }
 
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #92D2C3;
+    border-radius: 3px;
+    height: 73px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #F2F2F2;
+    border-left: 4px solid white;
+    border-right: 4px solid white;
+  }
+
   .subtitle {
     display: flex;
     align-items: center;

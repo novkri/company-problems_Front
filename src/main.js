@@ -10,12 +10,15 @@ import Vuelidate from 'vuelidate'
 
 import Toast, { POSITION } from "vue-toastification";
 import "vue-toastification/dist/index.css";
+// import {StfSelect, StfSelectOption} from "stf-vue-select";
 
+// import "stf-vue-select/dist/lib/stf-vue-select.min.css";
 
 Vue.use(Toast, {
   position: POSITION.TOP_CENTER
 });
-
+// Vue.component('stf-select-option', StfSelectOption);
+// Vue.component('stf-select', StfSelect);
 
 // import axios from "axios";
 
