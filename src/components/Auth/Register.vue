@@ -18,7 +18,7 @@
             :class="{ 'form-control--error': $v.password.$invalid, 'form-control--valid': password && !$v.password.$invalid}">
           <button tabindex="100" class="add-on input-group-addon" style="cursor: pointer;" @click.prevent="passwordVisibility"
             :class="{ 'form-control--error': $v.password.$invalid, 'form-control--valid': password && !$v.password.$invalid}">
-            <eye-icon size="1.5x" class="custom-class" v-if="passwordFieldType == 'password'"></eye-icon>
+            <eye-icon size="1.5x" class="custom-class" v-if="passwordFieldType == 'text'"></eye-icon>
             <eye-off-icon size="1.5x" class="custom-class" v-else></eye-off-icon>
           </button>
           </div>
@@ -32,7 +32,7 @@
             :class="{ 'form-control--error': $v.confirm.$invalid, 'form-control--valid': confirm && !$v.confirm.$invalid}">
           <button tabindex="100" class="add-on input-group-addon" @click.prevent="passwordVisibilityC" style="cursor: pointer;"
             :class="{ 'form-control--error': $v.confirm.$invalid, 'form-control--valid': confirm && !$v.confirm.$invalid}">
-            <eye-icon size="1.5x" class="custom-class" v-if="passwordFieldTypeC == 'password'"></eye-icon>
+            <eye-icon size="1.5x" class="custom-class" v-if="passwordFieldTypeC == 'text'"></eye-icon>
             <eye-off-icon size="1.5x" class="custom-class" v-else></eye-off-icon>
           </button>
         </div>
@@ -159,24 +159,16 @@
       passwordVisibilityC() {
         this.passwordFieldTypeC = this.passwordFieldTypeC === 'password' ? 'text' : 'password'
       },
-      // togglePassword() {
-      //   if (this.$refs.password.type == 'text') {
-      //     this.$refs.password.type = 'password'
-      //     this.eye = false
+
+      // toggleConfirm() {
+      //   if (this.$refs.confirm.type == 'text') {
+      //     this.$refs.confirm.type = 'password'
+      //     this.eyeC = false
       //   } else {
-      //     this.$refs.password.type = 'text'
-      //     this.eye = true
+      //     this.$refs.confirm.type = 'text'
+      //     this.eyeC = true
       //   }
       // },
-      toggleConfirm() {
-        if (this.$refs.confirm.type == 'text') {
-          this.$refs.confirm.type = 'password'
-          this.eyeC = false
-        } else {
-          this.$refs.confirm.type = 'text'
-          this.eyeC = true
-        }
-      },
       async register() {
         const formData = {
           name: this.name,
@@ -295,7 +287,7 @@
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;
-    color: #4F4F4F
+    color: #4F4F4F;
   }
 
   .form-control:active,
@@ -311,11 +303,13 @@
     background-color: #F7F7F7;
     border-radius: 0 12px 12px 0;
     padding: 0;
+    border: none;
 
     svg {
       margin: 7px 25px;
       color: #AFAFAF;
     }
+
   }
 
   .add-on:focus {
@@ -377,6 +371,7 @@
 
   button:focus, button:active, button {
     outline: none;
+    // border: transparent;
   }
 
 

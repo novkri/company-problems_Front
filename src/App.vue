@@ -133,9 +133,10 @@
     margin-bottom: 3px;
     caret-color: #92D2C3;
 
-    &:focus {
+    &:focus, &:active {
       box-shadow: none;
       border-bottom: none;
+
     }
   }
 
@@ -145,12 +146,14 @@
     background-color: #FAFAFA;
     color: #2D453F;
     caret-color: #92D2C3;
-    border-bottom: 2px solid #92D2C3;
+    border-bottom: 2px solid #92D2C3 !important;
+
 
     &:focus {
       box-shadow: none;
       border-bottom: 2px solid #92D2C3;
     }
+   
   }
 
   .error {
@@ -175,7 +178,7 @@
     background-color: #FAFAFA;
     color: #2D453F;
     caret-color: #FF8585;
-    border-bottom: 2px solid #FF8585;
+    border-bottom: 2px solid #FF8585 !important;
 
     &:focus {
       box-shadow: none;

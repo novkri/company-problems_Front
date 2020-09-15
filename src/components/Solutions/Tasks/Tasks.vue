@@ -142,11 +142,7 @@
             </div>
             <div class="error" v-if="error">{{error.description}}</div>
             <div class="error" v-if="error">{{error}}</div>
-
           </div>
-
-
-
         </li>
       </ol>
       <div type="submit" class="btnsAddTask" v-if="!addNotClicked">

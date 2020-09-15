@@ -51,9 +51,10 @@
     line-height: 24px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     margin: auto;
-    position: absolute;
+    position: fixed;
     top: 50%;
-    left: 31%;
+    /* left: 40%; */
+        right: 35%;
   }
 
   .modal-title {

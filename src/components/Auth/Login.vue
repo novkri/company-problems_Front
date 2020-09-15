@@ -50,7 +50,7 @@
     validations: {
       email: {
         minLength: minLength(3),
-        maxLength: maxLength(256)
+        maxLength: maxLength(255)
       },
       password: {
         minLength: minLength(8),
