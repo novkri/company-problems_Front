@@ -1,7 +1,8 @@
 <template>
   <div>
     <div class="header row">
-      <div class="col-5">
+      <div class="col-5" style="    margin-right: -15px;
+    margin-left: 20px">
         <img src="@/assets/tasks.png">
         Задачи:
       </div>
@@ -14,14 +15,13 @@
     <div class="container row">
       <ol>
         <li id="list" v-for="(task, idx) in tasks" :key="idx">
-          <div class="task-title col-5"
+          <div class="task-title col-5" @keyup.enter="editTask(task.description, task.id)"
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'К исполнению' ? 'blueTitle' : '']">
-            <input class="form-control" @keyup.enter="editTask(task.description, task.id)"
+            <input class="form-control" id="input-title"  @focus="onFocusInput($event)"
               @blur="editTask(task.description, task.id)" v-model="task.description">
-
           </div>
           <div class="select col-2" style="position: relative;" ref="select">
-            <select class="form-control" v-model="task.status" @change="changeStatusTask(task.status, task.id)"
+            <!-- <select class="form-control" v-model="task.status" @change="changeStatusTask(task.status, task.id)"
               :class="[task.status == 'Выполнено' ? 'green' :  task.status == 'К исполнению' ? 'blue' : 'gray']">
               <option value="К исполнению" default>
                 К исполнению</option>
@@ -29,7 +29,27 @@
                 В процессе</option>
               <option value="Выполнено">
                 Выполнено</option>
-            </select>
+            </select> -->
+            <ss-select v-model="task.status" :options="statusesT" track-by="name" search-by="name" class="form-control"
+              @change="changeStatusTask(task.id, task.status)" disable-by="disabled" :class="[task.status == 'Выполнено' ? 'green' : task.status == 'К исполнению' ? 'blue' : 'gray']"
+              id="ss-select">
+              <div
+                slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }">
+                <ss-select-toggle >
+                  {{ $get(selectedOption, 'name') || `${task.status}`}}
+
+                </ss-select-toggle>
+
+                <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;">
+                  <ss-select-option v-for="(option, index) in filteredOptions" :value="option"
+                    :index="index" :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
+                    pointerIndex == index ? 'bg-light text-dark' : '',
+                    $selected(option) ? 'bg-light text-dark' : '',
+                    $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
+                  ]">{{ option.name }}</ss-select-option>
+                </section>
+              </div>
+            </ss-select>
           </div>
           <div class="dateDiv col-2">
             <input type="date" id="start" name="trip-start" class="date" onkeypress="return false"
@@ -80,22 +100,42 @@
           <div v-else class="inputAdd">
             <div style="display: flex;">
               <input type="text" placeholder="Добавить задачу" class="addTask" @input="enableB" @keyup.enter="addTask"
-                v-model="taskName" :class="{ 'form-control--error': taskName.length >= 150 || taskName.length == 0}">
+                v-model="formInput.taskName">
               <div class="selectsInputAdd">
                 <div class="dateDiv">
                   <input type="date" id="start" name="trip-start" class="date" onkeypress="return false"
-                    v-model="deadline">
+                    v-model="formInput.deadline">
                 </div>
-                <div class="selectResponsible">
-                  <user-icon size="1.5x" class="custom-class" style="margin: 0 10px 0 0"></user-icon>
-                  <select class="form-control" style="height: fit-content; padding: 0;" v-model="executor">
+                <div class="selectResponsible" style="background-color: #fff;">
+                  <!-- <user-icon size="1.5x" class="custom-class" style="margin: 0 10px 0 0"></user-icon>
+                  <select class="form-control" style="height: fit-content; padding: 0;" v-model="formInput.executor">
                     <option default>
                       Выбрать
                     </option>
                     <option v-for="(u, i) in allUsers" :key="i" :value="u.id">
                       {{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}}
                     </option>
-                  </select>
+                  </select> -->
+                  <ss-select v-model="formInput.executor" :options="allUsers" track-by="name" search-by="name" 
+                    disable-by="disabled" id="ss-select">
+                    <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }">
+                      <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
+                      <ss-select-toggle class="px-3 py-1 flex items-center justify-between">
+                        {{ $get(selectedOption, 'name') ||  `${allUsers.find(u => u.id == formInput.executor) ? allUsers.find(u => u.id == formInput.executor).name : 'Выбрать'}`}}
+
+                  </ss-select-toggle>
+
+                <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="position: relative;">
+
+                  <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
+                    :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
+                                pointerIndex == index ? 'bg-light text-dark' : '',
+                                $selected(option) ? 'bg-light text-dark' : '',
+                                $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
+                              ]">{{ option.name }}</ss-select-option>
+                </section>
+              </div>
+            </ss-select>
                 </div>
 
               </div>
@@ -109,7 +149,6 @@
 
         </li>
       </ol>
-      <!-- в addtask передать решение -->
       <div type="submit" class="btnsAddTask" v-if="!addNotClicked">
         <button id="addBtn" class="btn btnPink" @click.prevent="addTask" :disabled="!enableBtn">Добавить задачу</button>
         <span @click.prevent="addNotClicked = true">Отмена</span>
@@ -145,12 +184,18 @@
       addNotClicked: true,
       enableBtn: false,
       taskName: '',
-      executor: null,
-      status: 'К исполнению',
-      deadline: '',
       openDeleteTask: false,
       taskIdDelete: '',
-      inputActive: false
+      inputActive: false,
+
+      statusesT: [
+        { name: "К исполнению" },
+        { name: "В процессе" },
+        { name: "Выполнено" }
+      ],
+      currentTaskName: '',
+      currentTaskInput: '',
+      formInput: []
     }),
     components: {
       UserIcon,
@@ -177,25 +222,23 @@
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('postTask', {
           solutionId: this.currentSolution,
-          description: this.taskName,
-          // executor_id: this.executor,
-          status: this.status,
-          deadline: this.deadline
+          params: this.formInput
         }).then(() => {
           if (!this.error) {
             this.$store.commit('setError', '')
-            this.taskName = ''
+            this.formInput = []
             this.addNotClicked = true
           }
         })
       },
       displayInput() {
         this.addNotClicked = false
+        this.formInput = []
         this.$store.commit('setError', '')
       },
-      async changeStatusTask(status, id) {
+      async changeStatusTask(id, status) {
         await this.$store.dispatch('changeStatusTask', {
-          status,
+          status: status.name,
           id
         })
       },
@@ -215,12 +258,24 @@
           uid
         })
       },
+      onFocusInput(event) {
+        this.currentTaskName = event.target.value
+        this.currentTaskInput = event.target
+        console.log(this.currentTaskName , this.currentTaskInput);
+      },
       async editTask(description, id) {
-        console.log(description, id);
+        await this.$store.commit('setError404', '')
         await this.$store.dispatch('editTask', {
           description,
           id
-        })
+        }).then(() => {
+          document.getElementById('input-title').blur()
+        }).catch(() => {
+            this.$store.dispatch('editTask', {
+              description: this.currentTaskName,
+              id
+            })
+          })
       },
 
 
@@ -543,6 +598,9 @@
       letter-spacing: 0.15px;
     }
   }
+  #ss-select {
+    border-radius: 10px;
+  }
 
   .green {
     background-color: #4EAD96 !important;
@@ -588,6 +646,7 @@
       background-color: #fff;
     }
   }
+
 
   .task-title::before {
     content: '';

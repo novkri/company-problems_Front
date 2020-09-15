@@ -60,15 +60,35 @@
                       </div>
 
                       <div class="select col-2" style="position: relative;" ref="select">
-                        <select v-model="solution.status" class="form-control"
+                        <!-- <select v-model="solution.status" class="form-control"
                           :class="[solution.status == 'Выполнено' ? 'green' : solution.status == 'К исполнению' ? 'blue' : 'gray']"
-                          @change="changeStatus(solution.status, solution.id)">
+                          @change="changeStatus(solution.id, solution.status)">
                           <option value="В процессе">
                             В процессе</option>
                           <option value="Выполнено">
                             Выполнено</option>
-                          <option value="К исполнению">К исполнению</option>
-                        </select>
+           
+                        </select> -->
+                        <ss-select v-model="solution.status" :options="statuses" track-by="name" search-by="name" class="form-control"
+                          @change="changeStatus(solution.id, solution.status)" disable-by="disabled" :class="[solution.status == 'Выполнено' ? 'green' : 'gray']"
+                          id="ss-select">
+                          <div
+                            slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }">
+                            <ss-select-toggle >
+                              {{ $get(selectedOption, 'name') || `${solution.status ? solution.status : 'Выбрать'}`}}
+
+                            </ss-select-toggle>
+
+                            <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;">
+                              <ss-select-option v-for="(option, index) in filteredOptions" :value="option"
+                                :index="index" :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
+                                pointerIndex == index ? 'bg-light text-dark' : '',
+                                $selected(option) ? 'bg-light text-dark' : '',
+                                $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
+                              ]">{{ option.name }}</ss-select-option>
+                            </section>
+                          </div>
+                        </ss-select>
                       </div>
 
                       <div class="dateDiv col-2">
@@ -177,7 +197,12 @@
       taskIdDelete: '',
       selected: false,
 
-      obj: ''
+      obj: '',
+
+      statuses: [
+        { name: "В процессе" },
+        { name: "Выполнено" }
+      ]
     }),
     components: {
       UserIcon,
@@ -208,9 +233,10 @@
           uid
         })
       },
-      async changeStatus(status, id) {
+      async changeStatus(id, status) {
+        console.log(id, status);
         await this.$store.dispatch('changeStatus', {
-          status,
+          status: status.name,
           id
         })
       },
@@ -344,7 +370,16 @@
     padding: 0;
   }
 
-
+#ss-select {
+      // padding-left: 8px;
+      // width: 128px;
+      align-items: center;
+      display: flex;
+      height: 36px;
+      // background-color: #F6F6F6;
+      border-radius: 10px;
+      display: flex;
+    }
   ol {
     margin-top: 30px;
     line-height: 24px;
@@ -365,25 +400,7 @@
       background-color: #FFF;
       margin: 0 24px 16px 0;
       align-items: flex-start;
-      // padding-right: 117px;
     }
-
-    // li:hover {
-    //   background-color: #F0F0F0;
-
-    // .date,
-    // .date:focus,
-    // input,
-    // input:focus,
-    // input:active,
-    // .selectResponsible,
-    // .selectResponsible select,
-    // .selectResponsible:active,
-    // .selectResponsible:focus,
-    // #ss-select {
-    //   background-color: #F0F0F0;
-    // }
-    // }
   }
 
   li {
