@@ -136,6 +136,21 @@ export default {
           commit('setError404', error.response.data.message)
         })
     },
+    // checkDate: ( param) => {
+    //   // param.id = 10000000000
+    //   console.log(new Date());
+    //     console.log(param.deadline);
+    //   return new Promise((resolve, reject) => {
+        
+    //     let today = new Date()
+    //   //     console.log(state.tasks.filter(t => t.description == param.description).length);
+    //       if (new Date(param.deadline) < today) {
+    //         reject('false')
+    //       } else {
+    //         resolve('true')
+    //       }
+    //   })
+    // },
     checkIfOk: async ({state}, param) => {
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
@@ -198,24 +213,29 @@ export default {
 
     changeDeadlineTask: async ({commit}, param) => {
       // param.id = 10000000000
+      return new Promise((resolve, reject) => {
       axios.put(URLTASK + `/${param.id}/set-deadline`, {
         deadline: param.deadline
       }).then(response => {
           commit('setError', '')
           commit('editDeadlineTask', response.data)
+          resolve(response)
       }).catch((error) => {
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
+          reject(error.response.data.errors)
         }
         else if (error.response.status == 422) {
           commit('setError404', error.response.data.errors.deadline[0])
+          reject(error.response.data.errors)
         }
       })
+
+    })
     },
 
     changeExecutorTask: async ({commit}, param) => {
       // param.id = 10000000000
-      console.log(param);
       axios.put(URLTASK + `/${param.id}/set-executor`, {
         executor_id: param.uid
       }).then(response => {

@@ -19,7 +19,7 @@
           <!-- @blur="editTask(task.description, task.id)" -->
           <div class="task-title col-5"
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">
-            <input class="form-control" @focus="onFocusInput($event)"   @keyup.enter="event => editTask(task.description, task.id, event)"
+            <input class="form-control" @focus="onFocusInput($event)" @keyup.enter="event => editTask(task.description, task.id, event)"
               v-model="task.description">
           </div>
           <div class="select col-2" style="position: relative;" ref="select">
@@ -46,8 +46,8 @@
             </ss-select>
           </div>
           <div class="dateDiv col-2">
-            <input type="date" id="start" name="trip-start" class="date" onkeypress="return false"
-              @change="changeDeadlineTask(task.deadline, task.id)" v-model="task.deadline">
+            <input type="date" id="start" name="trip-start" class="date" onkeypress="return false" @click="onClickDate($event)"
+              @change="event => {changeDeadlineTask(task.deadline, task.id), event}" v-model="task.deadline">
           </div>
 
 
@@ -196,6 +196,9 @@
       ],
       currentTaskName: '',
       currentTaskInput: '',
+      currentDate: '',
+      currentDateInput: '',
+
       formInput: []
     }),
     components: {
@@ -235,6 +238,7 @@
         })
       },
       displayInput() {
+        
         this.addNotClicked = false
         this.formInput = []
         this.$store.commit('setError', '')
@@ -245,16 +249,46 @@
           id
         })
       },
-      async changeDeadlineTask(deadline, id) {
+      onClickDate(event) {
+        console.log(event.target.value);
+        this.currentDate = event.target.value
+        this.currentDateInput = event.target
+        console.log(this.currentDate, this.currentDateInput);
+      },
+      async changeDeadlineTask(deadline, id, event) {
+        console.log(event);
+        console.log('dddd', deadline);
+
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('changeDeadlineTask', {
           deadline,
           id
+        }).catch((e) => {
+          console.log(e);
+              this.$store.dispatch('changeDeadlineTask', {
+                description: this.currentDate,
+                id
+              })
         })
+
+          // await this.$store.dispatch('checkDate', {
+          //   deadline,
+          //   id
+          // }).then(() => {
+          //   this.$store.dispatch('changeDeadlineTask', {
+          //   deadline,
+          //   id
+          // }) 
+          //   }).catch(() => {
+          //     event.target.value = this.currentTaskName
+          //     this.$store.dispatch('changeDeadlineTask', {
+          //       description: this.currentDate,
+          //       id
+          //     })
+          //   })
       },
 
       async selectExecutorTask(id, uid) {
-        console.log(id, uid);
         await this.$store.dispatch('changeExecutorTask', {
           id,
           uid
@@ -275,11 +309,9 @@
             this.$store.dispatch('editTask', {
             description,
             id
-          })
-             
+          }) 
             }).catch(() => {
               event.target.value = this.currentTaskName
-           
               this.$store.dispatch('editTask', {
                 description: this.currentTaskName,
                 id
