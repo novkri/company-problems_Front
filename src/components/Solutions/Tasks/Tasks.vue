@@ -16,22 +16,13 @@
       <ol>
         <li id="list" v-for="(task, idx) in tasks" :key="idx">
           <div class="task-title col-5" @keyup.enter="editTask(task.description, task.id)"
-            :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'К исполнению' ? 'blueTitle' : '']">
+            :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">
             <input class="form-control" id="input-title"  @focus="onFocusInput($event)"
               @blur="editTask(task.description, task.id)" v-model="task.description">
           </div>
           <div class="select col-2" style="position: relative;" ref="select">
-            <!-- <select class="form-control" v-model="task.status" @change="changeStatusTask(task.status, task.id)"
-              :class="[task.status == 'Выполнено' ? 'green' :  task.status == 'К исполнению' ? 'blue' : 'gray']">
-              <option value="К исполнению" default>
-                К исполнению</option>
-              <option value="В процессе">
-                В процессе</option>
-              <option value="Выполнено">
-                Выполнено</option>
-            </select> -->
             <ss-select v-model="task.status" :options="statusesT" track-by="name" search-by="name" class="form-control"
-              @change="changeStatusTask(task.id, task.status)" disable-by="disabled" :class="[task.status == 'Выполнено' ? 'green' : task.status == 'К исполнению' ? 'blue' : 'gray']"
+              @change="changeStatusTask(task.id, task.status)" disable-by="disabled" :class="[task.status == 'Выполнено' ? 'green' : task.status == 'В процессе' ? 'blue' : 'gray']"
               id="ss-select">
               <div
                 slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }">
@@ -61,8 +52,9 @@
             <ss-select v-model="task.executor_id" :options="allUsers" track-by="name" search-by="name"
               @change="selectExecutorTask(task.id, task.executor_id)" disable-by="disabled" id="ss-select">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }">
-                <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
-                <ss-select-toggle class="px-3 py-1 flex items-center justify-between">
+                
+                <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between">
+                  <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                   {{ $get(selectedOption, 'name') ||  `${allUsers.find(u => u.id == task.executor_id) ? allUsers.find(u => u.id == task.executor_id).name : 'Выбрать'}`}}
 
                 </ss-select-toggle>
@@ -94,7 +86,7 @@
           <div v-if="addNotClicked">
             <plus-icon size="1.5x" class="custom-class" id="plus" @click.prevent="displayInput" style="color: #92D2C3;">
             </plus-icon>
-            <span @click.prevent="displayInput" style="margin-left: 16px">Добавить задачу</span>
+            <span @click.prevent="displayInput" style="margin-left: 16px; cursor: pointer;">Добавить задачу</span>
           </div>
 
           <div v-else class="inputAdd">
@@ -119,10 +111,10 @@
                   <ss-select v-model="formInput.executor" :options="allUsers" track-by="name" search-by="name" 
                     disable-by="disabled" id="ss-select">
                     <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }">
-                      <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
-                      <ss-select-toggle class="px-3 py-1 flex items-center justify-between">
+                      
+                      <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between">
+                        <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                         {{ $get(selectedOption, 'name') ||  `${allUsers.find(u => u.id == formInput.executor) ? allUsers.find(u => u.id == formInput.executor).name : 'Выбрать'}`}}
-
                   </ss-select-toggle>
 
                 <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="position: relative;">
@@ -233,6 +225,7 @@
         this.$store.commit('setError', '')
       },
       async changeStatusTask(id, status) {
+        console.log(status);
         await this.$store.dispatch('changeStatusTask', {
           status: status.name,
           id
@@ -325,7 +318,7 @@
     color: #333333;
     font-style: normal;
     font-weight: normal;
-    background-color: #F6F6F6;
+    background-color: #F6F7F9;
   }
 
   .container {
@@ -461,7 +454,7 @@
     max-height: 257px;
     // right: 4%;
     // ?????????
-    right: -19%;
+    // right: -19%;
     top: 102%;
 
     border-radius: 10px;
@@ -693,7 +686,7 @@
     background-color: #fff;
     outline: none;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-evenly;
     box-shadow: 9px 4px 16px rgba(0, 0, 0, 0.1);
     border-radius: 0 9px 9px 0;
     padding: 10px 0 10px 153px;

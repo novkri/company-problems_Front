@@ -152,7 +152,6 @@ export default {
 
     editTask: async ({commit}, param) => {
       // param.id = 10000000000
-      console.log(param);
       return new Promise((resolve, reject) => {
         axios.put(URLTASK + `/${param.id}`, {
           description: param.description
@@ -191,6 +190,7 @@ export default {
           commit('setError', '')
           commit('editStatusTask', response.data)
       }).catch((error) => {
+        console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
         }

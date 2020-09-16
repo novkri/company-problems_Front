@@ -1,21 +1,4 @@
 <template>
-  <!-- <div class="popup-show">
-    <div id="popupSol" tabindex="-1" class="modal fade" role="dialog">
-      <div class="modal-dialog modal-dialog-scrollable" role="document" style="width: 90vw"> -->
-        <!-- <div class="modal-content" style="padding: 36px 300px;min-height: 348px;"> -->
-          <!-- <div> -->
-          <!-- <div class="modal-header tab">
-              <button class="btn btnTab" @click="openShow = false">Просмотр проблемы</button>
-              <button class="btn btnTab" @click="openShow = true">Добавить решение</button>
-            </div> -->
-          <!-- <div class="modal-header" style="width: 130%;">
-            <button type="button" id="close" class="close" @click="closeSolutions" data-dismiss="modal"
-              data-target="#popupSol">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div> -->
-
-
           <div class="modal-body">
             <h5 class="modal-title">Список решений</h5>
             <h6>Решения в работе</h6>
@@ -93,17 +76,7 @@
             </div>
             <DeleteSolution v-if="showDeleteSol" :openDeleteS="showDeleteSol"
             @closeDeleteSolutions="closeDeleteSolutions($event)" :val="solutionIdDelete" />
-          <!-- <DeleteTask v-if="openDeleteTask" :openDeleteT="openDeleteTask" @closeDeleteTask="closeDeleteTask($event)"
-            :val="taskIdDelete" /> -->
           </div>
-          <!-- <DeleteSolution v-if="showDeleteSol" :openDeleteS="showDeleteSol"
-            @closeDeleteSolutions="closeDeleteSolutions($event)" :val="solutionIdDelete" />
-          <DeleteTask v-if="openDeleteTask" :openDeleteT="openDeleteTask" @closeDeleteTask="closeDeleteTask($event)"
-            :val="taskIdDelete" /> -->
-        <!-- </div> -->
-      <!-- </div>
-    </div>
-  </div> -->
 </template>
 
 
@@ -170,6 +143,7 @@
       },
 
       async changeinWork(obj) {
+        await this.$store.commit('setError404', '')
         await this.$store.dispatch('changeinWork', {
           id: obj.id,
           in_work: obj.in_work === "true" ? true : false
@@ -391,15 +365,19 @@
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;
-    background-color: #F7F7F7;
+      cursor: pointer;
+      background-color: #F6F7F9;
   }
+    .form-control:active, .form-control:focus {
+      background-color: #fff !important;
+    }
 
 
   .list-group-item {
     border-radius: 7px;
     width: 100%;
     height: 60px;
-    background-color: #F6F6F6;
+    background-color: #F6F7F9;
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;
@@ -418,6 +396,10 @@
 
     &:hover {
       background-color: #f0f0f0;
+
+      input {
+        background-color: #f0f0f0;
+      }
     }
   }
 

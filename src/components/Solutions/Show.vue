@@ -80,15 +80,6 @@
                       </div>
 
                       <div class="select col-2" style="position: relative;" ref="select">
-                        <!-- <select v-model="solution.status" class="form-control"
-                          :class="[solution.status == 'Выполнено' ? 'green' : solution.status == 'К исполнению' ? 'blue' : 'gray']"
-                          @change="changeStatus(solution.id, solution.status)">
-                          <option value="В процессе">
-                            В процессе</option>
-                          <option value="Выполнено">
-                            Выполнено</option>
-           
-                        </select> -->
                         <ss-select v-model="solution.status" :options="statuses" track-by="name" search-by="name"
                           class="form-control" @change="changeStatus(solution.id, solution.status)"
                           disable-by="disabled" :class="[solution.status == 'Выполнено' ? 'green' : 'gray']"
@@ -128,8 +119,9 @@
                           id="ss-select">
                           <div
                             slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }">
-                            <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
-                            <ss-select-toggle class="px-3 py-1 flex items-center justify-between">
+                            
+                            <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between">
+                              <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                               {{ $get(selectedOption, 'name') || `${allUsers.find(u => u.id == solution.executor_id) ? allUsers.find(u => u.id == solution.executor_id).name : 'Выбрать'}`}}
 
                             </ss-select-toggle>
@@ -164,8 +156,8 @@
                   <Tasks :val="solutions" />
                 </div>
 
-                <button type="button" class="btn btnMain" @click="showSolutions(val)" data-toggle="modal"
-                  data-target="#popupSol" data-dismiss="modal"><span>Посмотреть/Добавить решение</span></button>
+                <!-- <button type="button" class="btn btnMain" @click="showSolutions(val)" data-toggle="modal"
+                  data-target="#popupSol" data-dismiss="modal"><span>Посмотреть/Добавить решение</span></button> -->
               </div>
             </div>
             <Solutions v-if="!openShow" :openS="openSolutions" @closeSolutions="closeSolutions($event)" :val="val" />

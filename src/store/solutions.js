@@ -184,20 +184,25 @@ export default {
     },
     changeinWork: async ({commit}, param) => {
       // param.id = 10000000000
+      return new Promise((resolve, reject) => {
       axios.put(BASEURL + `/${param.id}/change-in-work`, {
         in_work: param.in_work
       }).then(response => {
           commit('setError', '')
           commit('editinWork', response.data)
           commit('sortSolutions')
+          resolve(response)
       }).catch((error) => {
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
+          reject(error.response.data.message)
         }
         else if (error.response.status == 422) {
           commit('setError404', error.response.data.errors)
+          reject(error.response.data.errors)
         }
       })
+    })
     },
 
     changeStatus: async ({commit}, param) => {
