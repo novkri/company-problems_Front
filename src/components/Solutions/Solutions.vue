@@ -552,4 +552,15 @@
       flex: 1;
     }
   }
+  @media (max-width: 1200px) {
+     .modal-title, h6 {
+      //  div {
+         font-size: 16px;
+      //  }
+      .form-control {
+        font-size: 14px !important;
+      }
+      
+    }
+  }
 </style>

@@ -204,15 +204,24 @@
   //     flex-wrap: inherit;
   //   }
   // }
-  @media (max-width: 1600px) {
+  // @media (max-width: 1600px) {
+  //   * {
+  //     font-size: 15px;
+  //   }
+  // }
+
+  @media (max-width: 1300px) {
     * {
-      font-size: 15px;
+      font-size: 13px;
     }
+
+    .form-control {
+        font-size: 14px !important;
+      }
+      .footer {
+        margin-top: 60px !important;
+      }
+
   }
 
-  @media (max-width: 1500px) {
-    * {
-      font-size: 14px;
-    }
-  }
 </style>

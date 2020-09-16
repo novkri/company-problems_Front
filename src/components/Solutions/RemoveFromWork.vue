@@ -4,7 +4,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Вы точно хотите исключить решение из решений в работе?</h5>
-          <button type="button" class="close" @click="closeDeleteSolutions" data-dismiss="modal"
+          <button type="button" class="close" @click="closeDeleteSolutions" data-dismiss="modal" style="font-size: 24px;"
             data-target="#popupRemoveFromWOrk">
             <span aria-hidden="true">&times;</span>
           </button>

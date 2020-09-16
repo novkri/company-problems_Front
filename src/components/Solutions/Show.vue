@@ -6,11 +6,11 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="width: 90vw" role="document">
           <div class="modal-content">
             <div class="modal-header tab row">
-              <div class="tabDiv col-3" :class="[openShow ? 'active' : '']" @click="toggleTab1()">
+              <div class="tabDiv col-xl-3 col-lg-4" :class="[openShow ? 'active' : '']" @click="toggleTab1()">
                 <eye-icon size="1.5x" class="custom-class"></eye-icon>
                 <button class="btn btnTab">Просмотр проблемы</button>
               </div>
-              <div class="tabDiv col-3" :class="[openShow ? '' : 'active']" @click="toggleTab2()">
+              <div class="tabDiv col-xl-3 col-lg-4" :class="[openShow ? '' : 'active']" @click="toggleTab2()">
                 <img src="@/assets/tasks.png">
                 <button class="btn btnTab">Добавить решение</button>
               </div>
@@ -18,7 +18,7 @@
 
             <div class="modal-header" v-if="openShow">
               <div style="width: 100%;">
-                <button type="button" id="close" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" id="close" class="close" data-dismiss="modal" style="font-size: 24px;">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
@@ -34,7 +34,7 @@
               </div>
             </div>
             <div class="modal-header" style="width: 130%;" v-else>
-              <button type="button" id="close" class="close" @click="closeSolutions" data-dismiss="modal"
+              <button type="button" id="close" class="close" @click="closeSolutions" data-dismiss="modal" style="font-size: 24px;"
                 data-target="#popupSol">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -86,7 +86,7 @@
                           <div
                             slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                             style="cursor: pointer; width: 100%;">
-                            <ss-select-toggle style="width: 100%; padding: 13px;">
+                            <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
                               {{ $get(selectedOption, 'name') || `${solution.status ? solution.status : 'Выбрать'}`}}
                               <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                             </ss-select-toggle>
@@ -107,7 +107,12 @@
                       <div class="dateDiv col-2">
                         <input type="date" id="start" name="trip-start" class="date" v-model="solution.deadline"
                           onkeypress="return false" @change="changeDeadline(solution.deadline, solution.id)">
+                          <!-- <flat-pickr v-model="solution.deadline" :config="config" placeholder="Выбрать" class="date" @on-change="changeDeadline(solution.deadline, solution.id)">
+                            
+                          </flat-pickr> -->
+                          
                       </div>
+                      
 
 
                       <div class="selectResponsible col-2">
@@ -118,7 +123,7 @@
                             slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                             style="cursor: pointer;">
 
-                            <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between">
+                            <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between" id="select-toggle">
                               <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                               {{ $get(selectedOption, 'name') || `${allUsers.find(u => u.id == solution.executor_id) ? allUsers.find(u => u.id == solution.executor_id).name : 'Выбрать'}`}}
 
@@ -140,7 +145,7 @@
                         </ss-select>
                       </div>
                       <div style="width: 20px" class="col">
-                        <button type="button" class="close" id="remove" style="margin: auto;"
+                        <button type="button" class="close" id="remove" style="margin: auto;font-size: 20px;"
                           @click="removeFromWork(solution)" data-toggle="modal" data-target="#popupRemoveFromWOrk">
                           <span aria-hidden="true">&times;</span>
                         </button>
@@ -178,6 +183,11 @@
 </template>
 
 <script>
+//  import flatPickr from 'vue-flatpickr-component';
+//   import 'flatpickr/dist/flatpickr.css';
+//   import { Russian } from "flatpickr/dist/l10n/ru.js"
+
+
   import {
     UserIcon,
     EyeIcon,
@@ -197,6 +207,7 @@
     SsSelectOption,
   } from 'ss-select'
   // SsSelectSearchInput
+
 
   export default {
     name: 'popup',
@@ -222,7 +233,15 @@
         {
           name: "Выполнено"
         }
-      ]
+      ],
+      // config: {
+         
+      //     altInput: true,
+      //     altFormat: 'd.m.Y',
+  
+      //     dateFormat: 'Y-m-d',
+      //     locale: Russian // locale for this instance only          
+      //   }, 
     }),
     components: {
       UserIcon,
@@ -239,6 +258,8 @@
       SsSelectToggle,
       SsSelectOption,
       // SsSelectSearchInput
+
+      // flatPickr
     },
 
     computed: {
@@ -264,6 +285,7 @@
         })
       },
       async changeDeadline(deadline, id) {
+        console.log('changeDeadline');
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('changeDeadline', {
           deadline,
@@ -324,6 +346,7 @@
     align-items: center;
     justify-content: center;
     background-color: #F2F2F2;
+    cursor: pointer;
 
     img {
       height: fit-content;
@@ -341,6 +364,9 @@
     }
 
     svg {
+      color: #4EAD96;
+    }
+    img {
       color: #4EAD96;
     }
   }
@@ -436,7 +462,8 @@
   .subt {
     margin-bottom: 35px;
     margin-top: 35px;
-    margin-left: 29px !important;
+    // margin-left: 29px !important;
+    margin-left: 29px;
   }
 
   .modal-content {
@@ -781,10 +808,11 @@
 
   section {
     padding: 22px;
-    width: 250px;
+    // width: 250px;
+        width: 205px;
     position: absolute;
     max-height: 257px;
-    right: -19%;
+    // right: -19%;
     top: 102%;
 
     border-radius: 10px;
@@ -808,50 +836,86 @@
 
 
   @media (max-width: 1200px) {
+
+      input[type="date"]::-webkit-calendar-picker-indicator {
+    background: url('~@/assets/calendar.png') 100%;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    color: #828282;
+    position: absolute;
+    top: -5%;
+    left: -95%;
+    width: 100%;
+    height: 100%;
+  }
+
+  input[class="date"]:focus::-webkit-calendar-picker-indicator {
+    background: url('~@/assets/calendarW.png') 100%;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    position: absolute;
+    left: -95%;
+    width: 100%;
+    height: 100%;
+    top: -5%;
+  }
+
+  
+    .tab .btnTab, .modal-title {
+      font-size: 16px;
+    }
+    
     .subt {
-      display: none;
+        margin-left: 10px;
+    div {
+      font-size: 13px;
+    }
+    
+    }
+
+    #list {
+      padding: 15px;
+    }
+    #select-toggle {
+      padding: 0;
+          font-size: 13px;
     }
 
     li {
       display: flex;
       flex-direction: initial;
 
+      // .close {
+      //   order: 2;
+      //   width: 100%;
+      // }
 
-      div {
-        margin-bottom: 20px;
-      }
+      // .select {
+      //   order: 3;
+      // }
 
-      .close {
-        order: 2;
-        width: 100%;
-      }
+      // .dateDiv {
+      //   order: 4;
+      // }
 
-      .select {
-        order: 3;
-      }
+      // .selectResponsible {
+      //   order: 5;
+      // }
 
-      .dateDiv {
-        order: 4;
-      }
-
-      .selectResponsible {
-        order: 5;
-      }
-
-      .list-item {
-        order: 1;
-      }
+      // .list-item {
+      //   order: 1;
+      // }
     }
 
-    .list-item {
-      flex: 0 1;
-      max-width: initial;
-      min-width: fit-content;
-    }
+    // .list-item {
+    //   flex: 0 1;
+    //   max-width: initial;
+    //   min-width: fit-content;
+    // }
 
-    .desc {
-      width: 100%;
-    }
+    // .desc {
+    //   width: 100%;
+    // }
   }
 
   @media (max-width: 500px) {

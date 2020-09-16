@@ -29,7 +29,7 @@
               id="ss-select" style="width: fit-content;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                  style="cursor: pointer; width: 100%;">
-                <ss-select-toggle style="width: 100%; padding: 13px;">
+                <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
                   {{ $get(selectedOption, 'name') || `${task.status}`}}
                   <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                 </ss-select-toggle>
@@ -481,7 +481,8 @@
 
   section {
     padding: 22px;
-    width: 250px;
+    // width: 250px;
+        width: 205px;
     position: absolute;
     max-height: 257px;
     top: 102%;
@@ -791,56 +792,88 @@
 
   @media (max-width: 1200px) {
 
-    .subt {
-      display: none;
-    }
+
 
     #list {
       display: flex;
       flex-direction: initial;
-      flex-wrap: wrap;
-      justify-content: space-between;
+      // flex-wrap: wrap;
+      // justify-content: space-between;
 
-      div {
-        margin-bottom: 30px;
-      }
+      // div {
+      //   margin-bottom: 30px;
+      // }
 
-      #close {
-        order: 2;
+      // #close {
+      //   order: 2;
 
-        margin-left: -48px;
+      //   margin-left: -48px;
 
-      }
+      // }
 
-      .select {
-        order: 3;
-      }
+      // .select {
+      //   order: 3;
+      // }
 
-      .dateDiv {
-        order: 4;
-      }
+      // .dateDiv {
+      //   order: 4;
+      // }
 
-      .selectResponsible {
-        order: 5;
-      }
+      // .selectResponsible {
+      //   order: 5;
+      // }
 
-      .task-title {
-        order: 1;
-        margin-right: 109px;
-      }
+      // .task-title {
+      //   order: 1;
+      //   margin-right: 109px;
+      // }
     }
 
-    .task-title {
-      flex: 0 1;
-      min-width: fit-content;
-    }
+    // .task-title {
+    //   flex: 0 1;
+    //   min-width: fit-content;
+    // }
 
-    .selectsInputAdd {
-      display: none;
+    // .selectsInputAdd {
+    //   display: none;
+    // }
+    #select-toggle {
+      // padding: 0;
+          padding: 3px !important;
+          font-size: 13px;
     }
+      input[type="date"]::-webkit-calendar-picker-indicator {
+    background: url('~@/assets/calendar.png') 100%;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    color: #828282;
+    position: absolute;
+    top: -5%;
+    left: -95%;
+    width: 100%;
+    height: 100%;
+  }
 
+  input[class="date"]:focus::-webkit-calendar-picker-indicator {
+    background: url('~@/assets/calendarW.png') 100%;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    position: absolute;
+    left: -95%;
+    width: 100%;
+    height: 100%;
+    top: -5%;
+  }
+ol {
+      padding-left: 31px;
+    padding-right: 6px;
+}
+
+.header {
+  padding-left: 0;
+}
     .addTask {
-      border-radius: 9px;
+      // border-radius: 9px;
       width: 100%;
     }
   }
