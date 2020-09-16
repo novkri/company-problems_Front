@@ -265,6 +265,7 @@
       async editTask(description, id) {
         await this.$store.commit('setError404', '')
         console.log(description, this.currentTaskName);
+        if (description !== this.currentTaskName)
           await this.$store.dispatch('editTask', {
           description,
           id
