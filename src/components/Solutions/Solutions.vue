@@ -4,9 +4,10 @@
       <h5 class="modal-title">Список решений</h5>
       <h6>Решения в работе</h6>
       <ul class="list-group">
+        <!-- @blur="editSolClick(sol.name, sol.id)" -->
         <li class="list-group-item" id="list" v-for="(sol, idx) in solutions" :key="idx">
-          <input class="form-control" @keyup.enter="editSolClick(sol.name, sol.id)"
-            @blur="editSolClick(sol.name, sol.id)" v-model="sol.name" @focus="onFocusInput($event)"
+          <input class="form-control" v-model="sol.name" @keyup.enter="event => {onKey(event)}"
+             @focus="onFocusInput($event)" @blur="editSolClick(sol.name, sol.id)"
             :class="{ 'form-control--error': sol.name.length < 6 ||  sol.name.length > 100 || sol.name.length == 0}">
 
 
@@ -31,8 +32,9 @@
       <h6>Прочие решения</h6>
       <ul class="list-group">
         <li class="list-group-item" id="list" v-for="(notinworksol, idx) in solutionsOther" :key="idx">
-          <input class="form-control" @keyup.enter="editSolClick(notinworksol.name, notinworksol.id)"
-            @blur="editSolClick(notinworksol.name, notinworksol.id)" v-model="notinworksol.name"
+          <!--  @blur="editSolClick(notinworksol.name, notinworksol.id)"  -->
+          <input class="form-control" @keyup.enter="event => {onKey(event)}"
+           v-model="notinworksol.name" @blur="editSolClick(notinworksol.name, notinworksol.id)"
             @focus="onFocusInput($event)"
             :class="{ 'form-control--error': notinworksol.name.length < 6 ||  notinworksol.name.length > 100 || notinworksol.name.length == 0}">
           <div class="icons" ref="iconInWork">
@@ -131,8 +133,10 @@
         this.currentSolutionName = event.target.value
         this.currentSolutionInput = event.target
       },
+      onKey(event) {event.target.blur()},
 
       async editSolClick(name, id) {
+ 
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('editSolution', {
             name,

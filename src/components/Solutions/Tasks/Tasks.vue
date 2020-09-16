@@ -19,8 +19,8 @@
           <!-- @blur="editTask(task.description, task.id)" -->
           <div class="task-title col-5"
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">
-            <input class="form-control" @focus="onFocusInput($event)" @keyup.enter="event => editTask(task.description, task.id, event)"
-              v-model="task.description">
+            <input class="form-control" @focus="onFocusInput($event)" @keyup.enter="event => onKey(event)" @blur="editTask(task.description, task.id)" 
+              v-model="task.description" >
           </div>
           <div class="select col-2" style="position: relative;" ref="select">
             <ss-select v-model="task.status" :options="statusesT" track-by="name" search-by="name" class="form-control"
@@ -271,21 +271,6 @@
               })
         })
 
-          // await this.$store.dispatch('checkDate', {
-          //   deadline,
-          //   id
-          // }).then(() => {
-          //   this.$store.dispatch('changeDeadlineTask', {
-          //   deadline,
-          //   id
-          // }) 
-          //   }).catch(() => {
-          //     event.target.value = this.currentTaskName
-          //     this.$store.dispatch('changeDeadlineTask', {
-          //       description: this.currentDate,
-          //       id
-          //     })
-          //   })
       },
 
       async selectExecutorTask(id, uid) {
@@ -298,8 +283,9 @@
         this.currentTaskName = event.target.value
         this.currentTaskInput = event.target
       },
+      onKey(event) {event.target.blur()},
+
       async editTask(description, id, event) {
-        this.currentTaskInput.blur()
 
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('checkIfOk', {
