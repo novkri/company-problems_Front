@@ -84,7 +84,7 @@
                           disable-by="disabled" :class="[solution.status == 'Выполнено' ? 'green' : 'gray']"
                           id="ss-select">
                           <div
-                            slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }">
+                            slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }" style="cursor: pointer;">
                             <ss-select-toggle>
                               {{ $get(selectedOption, 'name') || `${solution.status ? solution.status : 'Выбрать'}`}}
                               <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
@@ -117,7 +117,7 @@
                           @change="selectExecutor(solution.id, solution.executor_id)" disable-by="disabled"
                           id="ss-select">
                           <div
-                            slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }">
+                            slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }" style="cursor: pointer;">
                             
                             <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between">
                               <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
@@ -729,8 +729,6 @@ border-radius: 12px 12px 0 0px;
   .green {
     background-color: #4EAD96 !important;
     width: 180px;
-    // background: url('~@/assets/SelectWhite.png') no-repeat;
-    // background-position: right 0.6em top 46%, 0 0;
     color: #fff;
     svg {
       color: #fff;
@@ -740,8 +738,6 @@ border-radius: 12px 12px 0 0px;
   .gray {
     background-color: #E0E0E0 !important;
     width: 180px;
-    // background: url('~@/assets/Select.png') no-repeat;
-    // background-position: right 0.6em top 46%, 0 0;
     color: #2D453F;
         svg {
       color: #2D453F;
@@ -751,8 +747,6 @@ border-radius: 12px 12px 0 0px;
   .blue {
     background-color: #AEDAF2 !important;
     width: 180px;
-    // background: url('~@/assets/SelectWhite.png') no-repeat;
-    // background-position: right 0.6em top 50%, 0 0;
     color: #fff;
             svg {
       color: #fff;

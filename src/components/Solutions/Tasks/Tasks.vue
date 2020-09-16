@@ -17,23 +17,23 @@
         <li id="list" v-for="(task, idx) in tasks" :key="idx">
           <div class="task-title col-5" @keyup.enter="editTask(task.description, task.id)"
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">
-            <input class="form-control" id="input-title"  @focus="onFocusInput($event)"
+            <input class="form-control" id="input-title" @focus="onFocusInput($event)"
               @blur="editTask(task.description, task.id)" v-model="task.description">
           </div>
           <div class="select col-2" style="position: relative;" ref="select">
             <ss-select v-model="task.status" :options="statusesT" track-by="name" search-by="name" class="form-control"
-              @change="changeStatusTask(task.id, task.status)" disable-by="disabled" :class="[task.status == 'Выполнено' ? 'green' : task.status == 'В процессе' ? 'blue' : 'gray']"
+              @change="changeStatusTask(task.id, task.status)" disable-by="disabled"
+              :class="[task.status == 'Выполнено' ? 'green' : task.status == 'В процессе' ? 'blue' : 'gray']"
               id="ss-select">
-              <div
-                slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }">
-                <ss-select-toggle >
+              <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }" style="cursor: pointer;">
+                <ss-select-toggle>
                   {{ $get(selectedOption, 'name') || `${task.status}`}}
-<chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
+                  <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                 </ss-select-toggle>
 
                 <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;">
-                  <ss-select-option v-for="(option, index) in filteredOptions" :value="option"
-                    :index="index" :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
+                  <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index"
+                    :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                     pointerIndex == index ? 'bg-light text-dark' : '',
                     $selected(option) ? 'bg-light text-dark' : '',
                     $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
@@ -51,8 +51,8 @@
           <div class="selectResponsible col-2">
             <ss-select v-model="task.executor_id" :options="allUsers" track-by="name" search-by="name"
               @change="selectExecutorTask(task.id, task.executor_id)" disable-by="disabled" id="ss-select">
-              <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }">
-                
+              <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }" style="cursor: pointer;">
+
                 <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between">
                   <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                   {{ $get(selectedOption, 'name') ||  `${allUsers.find(u => u.id == task.executor_id) ? allUsers.find(u => u.id == task.executor_id).name : 'Выбрать'}`}}
@@ -108,26 +108,28 @@
                       {{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}}
                     </option>
                   </select> -->
-                  <ss-select v-model="formInput.executor" :options="allUsers" track-by="name" search-by="name" 
+                  <ss-select v-model="formInput.executor" :options="allUsers" track-by="name" search-by="name"
                     disable-by="disabled" id="ss-select">
-                    <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }">
-                      
+                    <div
+                      slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }" style="cursor: pointer;">
+
                       <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between">
                         <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                         {{ $get(selectedOption, 'name') ||  `${allUsers.find(u => u.id == formInput.executor) ? allUsers.find(u => u.id == formInput.executor).name : 'Выбрать'}`}}
-                  </ss-select-toggle>
+                      </ss-select-toggle>
 
-                <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="position: relative;">
+                      <section v-show="isOpen" class="absolute border-l border-r min-w-full"
+                        style="position: relative;">
 
-                  <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
-                    :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
+                        <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
+                          :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
                                 $selected(option) ? 'bg-light text-dark' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
                               ]">{{ option.name }}</ss-select-option>
-                </section>
-              </div>
-            </ss-select>
+                      </section>
+                    </div>
+                  </ss-select>
                 </div>
 
               </div>
@@ -177,10 +179,15 @@
       taskIdDelete: '',
       inputActive: false,
 
-      statusesT: [
-        { name: "К исполнению" },
-        { name: "В процессе" },
-        { name: "Выполнено" }
+      statusesT: [{
+          name: "К исполнению"
+        },
+        {
+          name: "В процессе"
+        },
+        {
+          name: "Выполнено"
+        }
       ],
       currentTaskName: '',
       currentTaskInput: '',
@@ -253,21 +260,27 @@
       onFocusInput(event) {
         this.currentTaskName = event.target.value
         this.currentTaskInput = event.target
-        console.log(this.currentTaskName , this.currentTaskInput);
+        console.log(this.currentTaskName, this.currentTaskInput);
       },
       async editTask(description, id) {
         await this.$store.commit('setError404', '')
-        await this.$store.dispatch('editTask', {
+        console.log(description, this.currentTaskName);
+          await this.$store.dispatch('editTask', {
           description,
           id
-        }).then(() => {
-          document.getElementById('input-title').blur()
-        }).catch(() => {
-            this.$store.dispatch('editTask', {
-              description: this.currentTaskName,
-              id
-            })
-          })
+        })
+        
+        // .then(() => {
+        //   document.getElementById('input-title').blur()
+        // }).catch(() => {
+        //   console.log('e', this.currentTaskName);
+        //   this.$store.dispatch('editTask', {
+        //     description: this.currentTaskName,
+        //     id
+        //   })
+        // })
+        // }
+        
       },
 
 
@@ -400,6 +413,7 @@
     display: flex;
     background-color: #F6F6F6;
     padding-left: 10px;
+    
 
     #ss-select {
       padding-left: 8px;
@@ -409,6 +423,13 @@
       height: 36px;
       background-color: #F6F7F9;
       border-radius: 10px;
+      text-align: center;
+
+          font-size: 16px;
+line-height: 24px;
+font-family: 'GothamPro-Medium';
+letter-spacing: 0.15px;
+
     }
 
     select {
@@ -590,6 +611,7 @@
       letter-spacing: 0.15px;
     }
   }
+
   #ss-select {
     border-radius: 10px;
   }
@@ -597,9 +619,8 @@
   .green {
     background-color: #4EAD96 !important;
     width: 180px;
-    // background: url('~@/assets/SelectWhite.png') no-repeat;
-    // background-position: right 0.6em top 50%, 0 0;
     color: #fff;
+
     svg {
       color: #fff;
     }
@@ -608,9 +629,8 @@
   .gray {
     background-color: #E0E0E0 !important;
     width: 180px;
-    // background: url('~@/assets/Select.png') no-repeat;
-    // background-position: right 0.6em top 50%, 0 0;
     color: #2D453F;
+
     svg {
       color: #2D453F;
     }
@@ -619,9 +639,8 @@
   .blue {
     background-color: #AEDAF2 !important;
     width: 180px;
-    // background: url('~@/assets/SelectWhite.png') no-repeat;
-    // background-position: right 0.6em top 50%, 0 0;
     color: #fff;
+
     svg {
       color: #fff;
     }
@@ -629,6 +648,11 @@
 
   .task-title {
     display: flex;
+        font-size: 16px;
+line-height: 24px;
+font-family: 'GothamPro-Medium';
+letter-spacing: 0.15px;
+
 
     input {
       padding: 6px;

@@ -168,8 +168,14 @@ export default {
           console.log(error.response);
           if (error.response.status == 422) {
             commit('setError404', '')
-            commit('setError404', error.response.data.errors.description[0])
-            reject(error.response.data.message)
+            if (error.response.data.errors.description) {
+              commit('setError404', error.response.data.errors.description[0])
+              reject(error.response.data.errors)
+            } else {
+              commit('setError404', error.response.data.errors)
+              reject(error.response.data.errors)
+            }
+            
           } else {
             commit('setError404', '')
             commit('setError404', error.response.data.message)

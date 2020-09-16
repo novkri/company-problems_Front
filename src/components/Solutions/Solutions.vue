@@ -385,7 +385,7 @@
       cursor: pointer;
       background-color: #F6F7F9;
   }
-    .form-control:active, .form-control:focus {
+    input:active, input:focus {
       background-color: #fff !important;
     }
 
@@ -419,6 +419,7 @@
       }
     }
   }
+
 
   .select {
     width: 158px;
