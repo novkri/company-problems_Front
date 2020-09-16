@@ -5,12 +5,12 @@
       <div id="popupShow" class="modal fade" role="dialog" style="padding: 0 !important; overflow: hidden;">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="width: 90vw" role="document">
           <div class="modal-content">
-            <div class="modal-header tab">
-              <div class="tabDiv" :class="[openShow ? 'active' : '']" @click="toggleTab1()">
+            <div class="modal-header tab row">
+              <div class="tabDiv col-3" :class="[openShow ? 'active' : '']" @click="toggleTab1()">
                 <eye-icon size="1.5x" class="custom-class"></eye-icon>
                 <button class="btn btnTab">Просмотр проблемы</button>
               </div>
-              <div class="tabDiv" :class="[openShow ? '' : 'active']" @click="toggleTab2()">
+              <div class="tabDiv col-3" :class="[openShow ? '' : 'active']" @click="toggleTab2()">
                 <img src="@/assets/tasks.png">
                 <button class="btn btnTab">Добавить решение</button>
               </div>
@@ -82,11 +82,11 @@
                         <ss-select v-model="solution.status" :options="statuses" track-by="name" search-by="name"
                           class="form-control" @change="changeStatus(solution.id, solution.status)"
                           disable-by="disabled" :class="[solution.status == 'Выполнено' ? 'green' : 'gray']"
-                          id="ss-select">
+                          id="ss-select" style="width: fit-content;">
                           <div
                             slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                            style="cursor: pointer;">
-                            <ss-select-toggle>
+                            style="cursor: pointer; width: 100%;">
+                            <ss-select-toggle style="width: 100%; padding: 13px;">
                               {{ $get(selectedOption, 'name') || `${solution.status ? solution.status : 'Выбрать'}`}}
                               <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                             </ss-select-toggle>
@@ -294,10 +294,10 @@
     display: flex;
     flex-direction: row !important;
     justify-content: flex-start !important;
-    background-color: #F2F2F2;
+    // background-color: #F2F2F2;
     border-radius: 12px;
     margin-left: -42px;
-    width: 42%;
+    // width: 42%;
 
     .btnTab {
       width: fit-content;
@@ -323,6 +323,7 @@
     width: 50%;
     align-items: center;
     justify-content: center;
+    background-color: #F2F2F2;
 
     img {
       height: fit-content;
@@ -331,7 +332,7 @@
   }
 
   .active {
-    background-color: #fff;
+    background-color: #fff !important;
     border-radius: 12px 12px 0 0px;
     .btnTab {
       background-color: #fff;
@@ -442,6 +443,7 @@
     border-radius: 12px;
     border: none;
     padding: 0px 30px 37px 42px;
+    min-height: calc(100vh - 25rem);
   }
 
   .modal-body {
@@ -454,6 +456,8 @@
     height: 36px;
     border-radius: 10px;
     display: flex;
+    padding: 0;
+        width: fit-content;
   }
 
   ol {
@@ -525,6 +529,8 @@
       display: flex;
       height: 36px;
       border-radius: 10px;
+      padding-right: 0;
+        width: fit-content;
     }
 
     select {

@@ -1,5 +1,6 @@
 <template>
   <div class="container" style="width: 1350px;">
+    <h2>Список всех проблем</h2>
     <ul class="list-group">
       <!-- @click.prevent="show(problem)" -->
       <li class="list-group-item" v-for="(problem, idx) in paginatedData" :key="idx" id="list">
@@ -169,29 +170,40 @@
       },
       async show(obj) {
         this.openEdit = false,
-        this.openDelete = false,
-        this.openShow = true
+          this.openDelete = false,
+          this.openShow = true
         this.paramsModal = obj
         this.$store.commit('setError', '')
         console.log(obj.id);
-         await this.$store.dispatch('getSolutions', obj.id).then(r => {
-           console.log(r);
-           if (r !== undefined) {
+        await this.$store.dispatch('getSolutions', obj.id).then(r => {
+          console.log(r);
+          if (r !== undefined) {
             //  this.$store.dispatch('clearTasks')
-             this.$store.dispatch('getTasks', r.id)
-              this.$store.dispatch('getCurrentSolution', '')
-              this.$store.dispatch('getCurrentSolution', r.id)
-           } else {
-              this.$store.dispatch('clearTasks')
-           }
-                    
-                  })    
+            this.$store.dispatch('getTasks', r.id)
+            this.$store.dispatch('getCurrentSolution', '')
+            this.$store.dispatch('getCurrentSolution', r.id)
+          } else {
+            this.$store.dispatch('clearTasks')
+          }
+
+        })
       }
     }
   };
 </script>
 
 <style scoped lang="scss">
+  h2 {
+    font-family: 'GothamPro-Medium';
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    margin-bottom: 59px;
+    color: #4F4F4F;
+  }
+
   .btn {
     padding: 0;
     border-radius: 12px;

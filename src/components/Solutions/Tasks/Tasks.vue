@@ -26,10 +26,10 @@
             <ss-select v-model="task.status" :options="statusesT" track-by="name" search-by="name" class="form-control"
               @change="changeStatusTask(task.id, task.status)" disable-by="disabled"
               :class="[task.status == 'Выполнено' ? 'green' : task.status == 'В процессе' ? 'blue' : 'gray']"
-              id="ss-select">
+              id="ss-select" style="width: fit-content;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                style="cursor: pointer;">
-                <ss-select-toggle>
+                 style="cursor: pointer; width: 100%;">
+                <ss-select-toggle style="width: 100%; padding: 13px;">
                   {{ $get(selectedOption, 'name') || `${task.status}`}}
                   <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                 </ss-select-toggle>
@@ -53,11 +53,11 @@
 
           <div class="selectResponsible col-2">
             <ss-select v-model="task.executor_id" :options="allUsers" track-by="name" search-by="name"
-              @change="selectExecutorTask(task.id, task.executor_id)" disable-by="disabled" id="ss-select">
+              @change="selectExecutorTask(task.id, task.executor_id)" disable-by="disabled" id="ss-select" style="width: fit-content;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                style="cursor: pointer;">
+                 style="cursor: pointer; width: 100%;">
 
-                <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between">
+                <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between" style="width: 100%; padding: 13px;">
                   <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                   {{ $get(selectedOption, 'name') ||  `${allUsers.find(u => u.id == task.executor_id) ? allUsers.find(u => u.id == task.executor_id).name : 'Выбрать'}`}}
 
@@ -113,12 +113,12 @@
                     </option>
                   </select> -->
                   <ss-select v-model="formInput.executor" :options="allUsers" track-by="name" search-by="name"
-                    disable-by="disabled" id="ss-select">
+                    disable-by="disabled" id="ss-select" style="width: fit-content;">
                     <div
                       slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                      style="cursor: pointer;">
+                       style="cursor: pointer; width: 100%;">
 
-                      <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between">
+                      <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between" style="width: 100%; padding: 13px;">
                         <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                         {{ $get(selectedOption, 'name') ||  `${allUsers.find(u => u.id == formInput.executor) ? allUsers.find(u => u.id == formInput.executor).name : 'Выбрать'}`}}
                       </ss-select-toggle>
@@ -266,15 +266,12 @@
       },
       async editTask(description, id, event) {
         this.currentTaskInput.blur()
-        console.log(this.currentTaskName, description);
-        console.log(this.tasks.filter(t => t.description == description));
+
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('checkIfOk', {
             description,
             id
-          }).then(r => {
-            console.log(r)
-            console.log('ddddd');
+          }).then(() => {
             this.$store.dispatch('editTask', {
             description,
             id
@@ -282,11 +279,10 @@
              
             }).catch(() => {
               event.target.value = this.currentTaskName
-              console.log(event.target.value, this.currentTaskName);
            
               this.$store.dispatch('editTask', {
-            description: this.currentTaskName,
-            id
+                description: this.currentTaskName,
+                id
               })
             })
           
@@ -430,6 +426,9 @@
       background-color: #F6F7F9;
       border-radius: 10px;
       text-align: center;
+      padding-right: 0;
+        width: fit-content;
+
     }
 
     select {
@@ -593,6 +592,10 @@
 
   #ss-select {
     border-radius: 10px;
+    padding: 0;
+        width: fit-content;
+        align-items: center;
+        display: flex;
 
   }
 

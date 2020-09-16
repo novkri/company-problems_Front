@@ -182,6 +182,20 @@ export default {
         })
       })
     },
+    // checkAmountSolInWork:
+    checkAmountSolInWork: async ({state}, param) => {
+      // param.id = 10000000000
+      return new Promise((resolve, reject) => {
+        console.log(param);
+          console.log(state.solutions.length);
+          if (state.solutions.length == 1) {
+            reject('false')
+          } else {
+            resolve('true')
+          }
+      })
+    },
+
     changeinWork: async ({commit}, param) => {
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
