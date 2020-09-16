@@ -11,7 +11,10 @@
                 <button class="btn btnTab">Просмотр проблемы</button>
               </div>
               <div class="tabDiv col-xl-3 col-lg-4" :class="[openShow ? '' : 'active']" @click="toggleTab2()">
-                <img src="@/assets/tasks.png">
+                <img src="@/assets/tasks.png" v-if="openShow">
+                <img src="@/assets/listGreen.png" v-else>
+                <!-- <img src="@/assets/list.svg" alt="" style="color: red;"> -->
+
                 <button class="btn btnTab">Добавить решение</button>
               </div>
             </div>
@@ -352,6 +355,7 @@
       height: fit-content;
       cursor: pointer;
     }
+
   }
 
   .active {
@@ -366,9 +370,7 @@
     svg {
       color: #4EAD96;
     }
-    img {
-      color: #4EAD96;
-    }
+  
   }
 
   div {
