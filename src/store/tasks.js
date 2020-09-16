@@ -46,21 +46,14 @@ export default {
       state.tasks = null
     },
     addTask: (state, payload) => {
-      console.log(payload);
       state.tasks.push(payload)
     },
     deleteTask: (state, payload) => {
       state.tasks = state.tasks.filter(t => t.id !== payload)
     },
-    // sortTasks: state => {
-    //   state.tasks = state.tasks.sort(function (a, b) {
-    //     return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1
-    //   })
-    // },
 
     editTask: (state, {id, description}) => {
       state.tasks.find(task => task.id == id).description = description
-      console.log(state.tasks);
     },
     editinWorkTask: (state, payload) => {
       if (payload.in_work) {
@@ -74,11 +67,9 @@ export default {
     },
     editDeadlineTask: (state, payload) => {
       state.tasks.find(task => task.id == payload.id).deadline = payload.deadline
-      console.log(state.tasks);
     },
     editExecutorTask: (state, payload) => {
       state.tasks.find(task => task.id == payload.id).executor_id = payload.executor_id
-      console.log(state.tasks);
     },
 
   },
@@ -94,7 +85,6 @@ export default {
     }, param) => {
       await axios.get(BASEURL + `/${param}/task`)
         .then(response => {
-          console.log(response);
           if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
@@ -107,11 +97,9 @@ export default {
     },
     postTask: async ({commit}, param) => {
       // param.solutionId = 100000000
-      console.log(param.params);
       await axios.post(BASEURL + `/${param.solutionId}/task`, {description: param.params.taskName, deadline: param.params.deadline, executor_id: param.params.executor
         })
         .then(response => {
-          console.log(response);
           if (response.status == 201) {
             commit('setError', '')
             commit('setError404', '')
@@ -119,7 +107,6 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error.response);
           commit('setError404', '')
           if (error.response.status == 422) {
             if (error.response.data.errors.description) {
@@ -149,23 +136,29 @@ export default {
           commit('setError404', error.response.data.message)
         })
     },
-
+    checkIfOk: async ({state}, param) => {
+      // param.id = 10000000000
+      return new Promise((resolve, reject) => {
+        console.log(param);
+          console.log(state.tasks.filter(t => t.description == param.description).length);
+          if (state.tasks.filter(t => t.description == param.description).length > 1) {
+            reject('false')
+          } else {
+            resolve('true')
+          }
+      })
+    },
     editTask: async ({commit}, param) => {
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
         axios.put(URLTASK + `/${param.id}`, {
           description: param.description
         }).then(response => {
-          console.log(response);
-          // if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
             commit('editTask', response.data)
-            // commit('sortSolutions')
             resolve(response)
-          // }
         }).catch((error) => {
-          console.log(error.response);
           if (error.response.status == 422) {
             commit('setError404', '')
             if (error.response.data.errors.description) {
@@ -188,15 +181,12 @@ export default {
 
     changeStatusTask: async ({commit}, param) => {
       // param.id = 10000000000
-      console.log(param);
       axios.put(URLTASK + `/${param.id}/change-status`, {
         status: param.status
       }).then(response => {
-        console.log(response);
           commit('setError', '')
           commit('editStatusTask', response.data)
       }).catch((error) => {
-        console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
         }
@@ -208,15 +198,12 @@ export default {
 
     changeDeadlineTask: async ({commit}, param) => {
       // param.id = 10000000000
-      console.log(param);
       axios.put(URLTASK + `/${param.id}/set-deadline`, {
         deadline: param.deadline
       }).then(response => {
-        console.log(response);
           commit('setError', '')
           commit('editDeadlineTask', response.data)
       }).catch((error) => {
-        console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
         }
@@ -241,7 +228,7 @@ export default {
           commit('setError404', error.response.data.message)
         }
         else if (error.response.status == 422) {
-          commit('setError404', error.response.data.errors.executor)
+          commit('setError404', error.response.data.errors.executor_id[0])
         }
       })
     },

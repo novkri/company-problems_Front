@@ -6,11 +6,11 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="width: 90vw" role="document">
           <div class="modal-content">
             <div class="modal-header tab">
-              <div class="tabDiv" :class="[openShow ? 'active' : '']" @click="toggleTab">
+              <div class="tabDiv" :class="[openShow ? 'active' : '']" @click="toggleTab1()">
                 <eye-icon size="1.5x" class="custom-class"></eye-icon>
                 <button class="btn btnTab">Просмотр проблемы</button>
               </div>
-              <div class="tabDiv" :class="[openShow ? '' : 'active']" @click="toggleTab">
+              <div class="tabDiv" :class="[openShow ? '' : 'active']" @click="toggleTab2()">
                 <img src="@/assets/tasks.png">
                 <button class="btn btnTab">Добавить решение</button>
               </div>
@@ -70,7 +70,7 @@
 
                 </div>
                 <div>
-                 
+
                   <ol>
                     <li v-for="(solution, idx) in solutions" :key="idx" id="list" class="row">
                       <div class="list-item col-5">
@@ -84,7 +84,8 @@
                           disable-by="disabled" :class="[solution.status == 'Выполнено' ? 'green' : 'gray']"
                           id="ss-select">
                           <div
-                            slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }" style="cursor: pointer;">
+                            slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+                            style="cursor: pointer;">
                             <ss-select-toggle>
                               {{ $get(selectedOption, 'name') || `${solution.status ? solution.status : 'Выбрать'}`}}
                               <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
@@ -109,16 +110,14 @@
                       </div>
 
 
-
-
-
                       <div class="selectResponsible col-2">
                         <ss-select v-model="solution.executor_id" :options="allUsers" track-by="name" search-by="name"
                           @change="selectExecutor(solution.id, solution.executor_id)" disable-by="disabled"
                           id="ss-select">
                           <div
-                            slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }" style="cursor: pointer;">
-                            
+                            slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+                            style="cursor: pointer;">
+
                             <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between">
                               <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                               {{ $get(selectedOption, 'name') || `${allUsers.find(u => u.id == solution.executor_id) ? allUsers.find(u => u.id == solution.executor_id).name : 'Выбрать'}`}}
@@ -150,7 +149,7 @@
                     </li>
                   </ol>
                 </div>
-                
+
                 <div class="tasks" v-if="solutions[0]">
                   <Tasks :val="solutions" />
                 </div>
@@ -164,6 +163,7 @@
 
             <!-- <Solutions v-if="!openShow" :openS="openSolutions" @closeSolutions="closeSolutions($event)" :val="val" /> -->
           </div>
+
 
         </div>
       </div>
@@ -181,7 +181,7 @@
   import {
     UserIcon,
     EyeIcon,
-    ChevronDownIcon 
+    ChevronDownIcon
   } from 'vue-feather-icons'
 
   import {
@@ -240,22 +240,16 @@
       SsSelectOption,
       // SsSelectSearchInput
     },
-    // async mounted() {
-    //   await this.$store.dispatch('getTasks', this.solutions[0].id)
-    //   console.log(this.solutions[0].id);
-
-    //   //передавать айди решения
-    // },
 
     computed: {
       ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404', 'allUsers', 'currentSolution']),
     },
     methods: {
-      toggleTab() {
-        this.openShow = !this.openShow
-        // event.target.classList.add('active')
-        // event.target.previousSibling.classList.remove('active')
-        console.log(event);
+      toggleTab1() {
+        this.openShow = true
+      },
+      toggleTab2() {
+        this.openShow = false
       },
       async selectExecutor(id, uid) {
         await this.$store.dispatch('changeExecutor', {
@@ -264,7 +258,6 @@
         })
       },
       async changeStatus(id, status) {
-        console.log(id, status);
         await this.$store.dispatch('changeStatus', {
           status: status.name,
           id
@@ -302,7 +295,6 @@
     flex-direction: row !important;
     justify-content: flex-start !important;
     background-color: #F2F2F2;
-    // width: fit-content;
     border-radius: 12px;
     margin-left: -42px;
     width: 42%;
@@ -328,8 +320,7 @@
     display: flex;
     flex-direction: row;
     height: 100%;
-    // width: 339px;
-        width: 50%;
+    width: 50%;
     align-items: center;
     justify-content: center;
 
@@ -337,18 +328,17 @@
       height: fit-content;
       cursor: pointer;
     }
-    // svg {}
   }
 
   .active {
     background-color: #fff;
-border-radius: 12px 12px 0 0px;
-    // border-radius: 12px 12px 0 12px;
+    border-radius: 12px 12px 0 0px;
     .btnTab {
       background-color: #fff;
       color: #4EAD96;
       font-family: 'GothamPro-Medium';
     }
+
     svg {
       color: #4EAD96;
     }
@@ -418,7 +408,6 @@ border-radius: 12px 12px 0 0px;
     color: #333333;
     font-style: normal;
     font-weight: normal;
-    // margin-bottom: 35px;
     width: 97%;
     margin-left: 20px;
 
@@ -460,12 +449,9 @@ border-radius: 12px 12px 0 0px;
   }
 
   #ss-select {
-    // padding-left: 8px;
-    // width: 128px;
     align-items: center;
     display: flex;
     height: 36px;
-    // background-color: #F6F6F6;
     border-radius: 10px;
     display: flex;
   }
@@ -480,9 +466,7 @@ border-radius: 12px 12px 0 0px;
     font-family: 'GothamPro';
     letter-spacing: 0.15px;
     color: #828282;
-
     margin-left: 10px;
-    // margin-right: -10px;
 
     li {
       padding: 15px 49px 12px;
@@ -527,35 +511,23 @@ border-radius: 12px 12px 0 0px;
 
   .tasks {
     margin: -20px 0px 40px 20px;
-    // margin: -20px 0px 40px 13px;
     width: 97%;
     border-radius: 9px;
   }
 
   .selectResponsible {
     display: flex;
-
-    // margin: 0 10px;
-    // margin-right: 84px;
-
     padding-left: 10px;
-    // padding-bottom: 5px;
-    // padding-top: 5px;
-
 
     #ss-select {
       padding-left: 8px;
-      // width: 128px;
       align-items: center;
       display: flex;
       height: 36px;
-      // background-color: #F6F6F6;
       border-radius: 10px;
     }
 
     select {
-      // background: url('~@/assets/Select.png') no-repeat;
-      // background-position: right 0.5em top 46%, 0 0;
       margin: 0;
       width: 100%;
       background-color: #f6f6f6;
@@ -565,17 +537,13 @@ border-radius: 12px 12px 0 0px;
   }
 
   .selectResponsible:hover {
-    // background-color: #E5E9F1;
-
     #ss-select {
-      // background-color: #E5E9F1;
       background-color: #F6F6F6;
     }
   }
 
   .selectResponsible:focus,
   .selectResponsible:active {
-    // background-color: #4EAD96;
     color: #fff;
     outline: none;
 
@@ -591,8 +559,6 @@ border-radius: 12px 12px 0 0px;
       color: #fff;
     }
   }
-
-
 
 
   .btn {
@@ -632,13 +598,11 @@ border-radius: 12px 12px 0 0px;
     border: none;
     position: relative;
     color: #828282;
-    // background-color: #F6F6F6;
     padding-left: 48px;
     padding-bottom: 5px;
     padding-top: 5px;
     border-radius: 10px;
     width: 168px;
-    // background-color: #f6f6f6;
   }
 
   .date:hover {
@@ -694,12 +658,9 @@ border-radius: 12px 12px 0 0px;
     -moz-appearance: none;
     cursor: pointer;
     height: fit-content;
-    // margin-right: 30px;
-    // width: 156px;
   }
 
   .select {
-    // width: 156px;
     border-radius: 10px;
     height: 36px;
 
@@ -707,7 +668,6 @@ border-radius: 12px 12px 0 0px;
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;
-    // margin-right: 30px;
     letter-spacing: 0.15px;
     color: #828282;
 
@@ -730,6 +690,7 @@ border-radius: 12px 12px 0 0px;
     background-color: #4EAD96 !important;
     width: 180px;
     color: #fff;
+
     svg {
       color: #fff;
     }
@@ -739,7 +700,8 @@ border-radius: 12px 12px 0 0px;
     background-color: #E0E0E0 !important;
     width: 180px;
     color: #2D453F;
-        svg {
+
+    svg {
       color: #2D453F;
     }
   }
@@ -748,7 +710,8 @@ border-radius: 12px 12px 0 0px;
     background-color: #AEDAF2 !important;
     width: 180px;
     color: #fff;
-            svg {
+
+    svg {
       color: #fff;
     }
   }
@@ -763,6 +726,7 @@ border-radius: 12px 12px 0 0px;
   }
 
   .list-group-item {
+    margin-right: 15px;
     border-radius: 7px;
     width: 100%;
     height: 60px;
@@ -810,14 +774,10 @@ border-radius: 12px 12px 0 0px;
   }
 
   section {
-    // box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     padding: 22px;
     width: 250px;
-    // position: relative;
     position: absolute;
     max-height: 257px;
-    // right: 4%;
-    // ?????????
     right: -19%;
     top: 102%;
 

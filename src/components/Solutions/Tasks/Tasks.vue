@@ -12,20 +12,23 @@
       <div style="width: 54px" class="col">
       </div>
     </div>
+
     <div class="container row">
       <ol>
         <li id="list" v-for="(task, idx) in tasks" :key="idx">
-          <div class="task-title col-5" @keyup.enter="editTask(task.description, task.id)"
+          <!-- @blur="editTask(task.description, task.id)" -->
+          <div class="task-title col-5"
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">
-            <input class="form-control" id="input-title" @focus="onFocusInput($event)"
-              @blur="editTask(task.description, task.id)" v-model="task.description">
+            <input class="form-control" @focus="onFocusInput($event)"   @keyup.enter="event => editTask(task.description, task.id, event)"
+              v-model="task.description">
           </div>
           <div class="select col-2" style="position: relative;" ref="select">
             <ss-select v-model="task.status" :options="statusesT" track-by="name" search-by="name" class="form-control"
               @change="changeStatusTask(task.id, task.status)" disable-by="disabled"
               :class="[task.status == 'Выполнено' ? 'green' : task.status == 'В процессе' ? 'blue' : 'gray']"
               id="ss-select">
-              <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }" style="cursor: pointer;">
+              <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+                style="cursor: pointer;">
                 <ss-select-toggle>
                   {{ $get(selectedOption, 'name') || `${task.status}`}}
                   <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
@@ -51,7 +54,8 @@
           <div class="selectResponsible col-2">
             <ss-select v-model="task.executor_id" :options="allUsers" track-by="name" search-by="name"
               @change="selectExecutorTask(task.id, task.executor_id)" disable-by="disabled" id="ss-select">
-              <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }" style="cursor: pointer;">
+              <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+                style="cursor: pointer;">
 
                 <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between">
                   <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
@@ -111,7 +115,8 @@
                   <ss-select v-model="formInput.executor" :options="allUsers" track-by="name" search-by="name"
                     disable-by="disabled" id="ss-select">
                     <div
-                      slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }" style="cursor: pointer;">
+                      slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+                      style="cursor: pointer;">
 
                       <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between">
                         <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
@@ -235,14 +240,12 @@
         this.$store.commit('setError', '')
       },
       async changeStatusTask(id, status) {
-        console.log(status);
         await this.$store.dispatch('changeStatusTask', {
           status: status.name,
           id
         })
       },
       async changeDeadlineTask(deadline, id) {
-        console.log(deadline, id);
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('changeDeadlineTask', {
           deadline,
@@ -250,8 +253,8 @@
         })
       },
 
-      async selectExecutorTask(uid, id) {
-        // let uid = event.target.value
+      async selectExecutorTask(id, uid) {
+        console.log(id, uid);
         await this.$store.dispatch('changeExecutorTask', {
           id,
           uid
@@ -260,28 +263,33 @@
       onFocusInput(event) {
         this.currentTaskName = event.target.value
         this.currentTaskInput = event.target
-        console.log(this.currentTaskName, this.currentTaskInput);
       },
-      async editTask(description, id) {
+      async editTask(description, id, event) {
+        this.currentTaskInput.blur()
+        console.log(this.currentTaskName, description);
+        console.log(this.tasks.filter(t => t.description == description));
         await this.$store.commit('setError404', '')
-        console.log(description, this.currentTaskName);
-        if (description !== this.currentTaskName)
-          await this.$store.dispatch('editTask', {
-          description,
-          id
-        })
-        
-        // .then(() => {
-        //   document.getElementById('input-title').blur()
-        // }).catch(() => {
-        //   console.log('e', this.currentTaskName);
-        //   this.$store.dispatch('editTask', {
-        //     description: this.currentTaskName,
-        //     id
-        //   })
-        // })
-        // }
-        
+        await this.$store.dispatch('checkIfOk', {
+            description,
+            id
+          }).then(r => {
+            console.log(r)
+            console.log('ddddd');
+            this.$store.dispatch('editTask', {
+            description,
+            id
+          })
+             
+            }).catch(() => {
+              event.target.value = this.currentTaskName
+              console.log(event.target.value, this.currentTaskName);
+           
+              this.$store.dispatch('editTask', {
+            description: this.currentTaskName,
+            id
+              })
+            })
+          
       },
 
 
@@ -326,7 +334,6 @@
     padding-top: 30px;
     max-width: inherit;
     width: -webkit-fill-available;
-    // padding-left: 42px;
     padding-left: 26px;
     font-family: 'GothamPro';
     font-size: 16px;
@@ -404,7 +411,6 @@
     line-height: 24px;
     letter-spacing: 0.15px;
     border-radius: 10px;
-    // outline: none;
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;
@@ -414,28 +420,19 @@
     display: flex;
     background-color: #F6F6F6;
     padding-left: 10px;
-    
+
 
     #ss-select {
       padding-left: 8px;
-      // width: 128px;
       align-items: center;
       display: flex;
       height: 36px;
       background-color: #F6F7F9;
       border-radius: 10px;
       text-align: center;
-
-          font-size: 16px;
-line-height: 24px;
-font-family: 'GothamPro-Medium';
-letter-spacing: 0.15px;
-
     }
 
     select {
-      // background: url('~@/assets/Select.png') no-repeat;
-      // background-position: right 0.5em top 46%, 0 0;
       margin: 0;
       width: 142px;
       background-color: #f6f6f6;
@@ -443,19 +440,14 @@ letter-spacing: 0.15px;
   }
 
   .selectResponsible:hover {
-    // background-color: #E5E9F1;
-
     #ss-select {
-      // background-color: #E5E9F1;
       background-color: #e5e9f1;
     }
   }
 
   .selectResponsible:focus,
   .selectResponsible:active {
-    // background-color: #4EAD96;
     color: #fff;
-    // outline: none;
 
     #ss-select {
       background-color: #4EAD96;
@@ -471,15 +463,10 @@ letter-spacing: 0.15px;
   }
 
   section {
-    // box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     padding: 22px;
     width: 250px;
-    // position: relative;
     position: absolute;
     max-height: 257px;
-    // right: 4%;
-    // ?????????
-    // right: -19%;
     top: 102%;
 
     border-radius: 10px;
@@ -511,7 +498,6 @@ letter-spacing: 0.15px;
 
 
   .date {
-    // outline: none;
     width: 200px;
     border: none;
     position: relative;
@@ -523,7 +509,6 @@ letter-spacing: 0.15px;
     border-radius: 10px;
     width: 168px;
     background-color: #F6F7F9;
-    // margin: 0 20px;
   }
 
   .date:hover {
@@ -575,22 +560,16 @@ letter-spacing: 0.15px;
 
   select {
     appearance: none;
-    // outline: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     cursor: pointer;
     height: fit-content;
-    // margin-right: 30px;
-    // width: 163px;
-    // width: 166px !important;
     border-radius: 10px;
   }
 
   .select {
-    // margin-right: 30px;
     border-radius: 10px;
     height: 36px;
-    // width: 180px;
     width: 166px;
     padding: 0;
     font-size: 18px;
@@ -606,7 +585,6 @@ letter-spacing: 0.15px;
       line-height: 24px;
       letter-spacing: 0.15px;
       border-radius: 10px;
-      // outline: none;
       font-size: 18px;
       line-height: 24px;
       letter-spacing: 0.15px;
@@ -615,16 +593,22 @@ letter-spacing: 0.15px;
 
   #ss-select {
     border-radius: 10px;
+
   }
 
   .green {
     background-color: #4EAD96 !important;
     width: 180px;
     color: #fff;
+    font-size: 16px;
+    line-height: 24px;
+    font-family: 'GothamPro-Medium' !important;
+    letter-spacing: 0.15px;
 
     svg {
       color: #fff;
     }
+
   }
 
   .gray {
@@ -641,18 +625,23 @@ letter-spacing: 0.15px;
     background-color: #AEDAF2 !important;
     width: 180px;
     color: #fff;
+    font-size: 16px;
+    line-height: 24px;
+    font-family: 'GothamPro-Medium' !important;
+    letter-spacing: 0.15px;
 
     svg {
       color: #fff;
     }
+
   }
 
   .task-title {
     display: flex;
-        font-size: 16px;
-line-height: 24px;
-font-family: 'GothamPro-Medium';
-letter-spacing: 0.15px;
+    font-size: 16px;
+    line-height: 24px;
+    font-family: 'GothamPro-Medium';
+    letter-spacing: 0.15px;
 
 
     input {
@@ -663,7 +652,6 @@ letter-spacing: 0.15px;
     }
 
     input:hover {
-      // background-color: #fff;
       cursor: pointer;
     }
 
@@ -773,20 +761,12 @@ letter-spacing: 0.15px;
     background: #92D2C3;
   }
 
-  // @media (min-width: 700px) {
-  //    .subt1 {
-  //       flex: 0 0 33.333333%;
-  //     max-width: 33.333333%;
-  //     }
-  // }
 
 
-  // @media (min-width: 1200px) {
-  //    .subt1 {
-  //       flex: 0 0 40.666667%;
-  //     max-width: 40.666667%;
-  //     }
-  // }
+
+
+
+
 
   @media (max-width: 1200px) {
 
@@ -844,28 +824,13 @@ letter-spacing: 0.15px;
     }
   }
 
-  //   @media (min-width: 1500px) {
-  //    .subt1 {
-  //       flex: 0 0 42.666667%;
-  //     max-width: 42.666667%;
-  //     }
-  // }
 
-  //   @media (min-width: 1800px) {
-  //   .subt1 {
-  //     flex: 0 0 48%;
-  //     max-width: 48%;
-  //   }
-  // }
 
   @media (max-width: 500px) {
     .header {
       display: none;
     }
 
-    // .subt1 {
-    //   flex: 1;
-    // }
     .task-title,
     .select,
     .selectResponsible,

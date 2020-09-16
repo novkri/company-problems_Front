@@ -207,14 +207,12 @@ export default {
 
     changeStatus: async ({commit}, param) => {
       // param.id = 10000000000
-      console.log(param);
       axios.put(BASEURL + `/${param.id}/change-status`, {
         status: param.status
       }).then(response => {
           commit('setError', '')
           commit('editStatus', response.data)
       }).catch((error) => {
-        console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
         }
@@ -262,13 +260,14 @@ export default {
         executor_id: param.uid
       }).then(response => {
           commit('setError', '')
+          commit('setError404', '')
           commit('editExecutor', response.data)
       }).catch((error) => {
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
         }
         else if (error.response.status == 422) {
-          commit('setError404', error.response.data.errors.executor)
+          commit('setError404', error.response.data.errors.executor_id[0])
         }
       })
     },

@@ -1,84 +1,86 @@
 <template>
-          <div class="modal-body">
-            <h5 class="modal-title">Список решений</h5>
-            <h6>Решения в работе</h6>
-            <ul class="list-group">
-              <li class="list-group-item" id="list" v-for="(sol, idx) in solutions" :key="idx">
-                <input class="form-control" @keyup.enter="editSolClick(sol.name, sol.id)"
-                  @blur="editSolClick(sol.name, sol.id)" v-model="sol.name" @focus="onFocusInput($event)"
-                  :class="{ 'form-control--error': sol.name.length < 6 ||  sol.name.length > 100 || sol.name.length == 0}">
+  <div class="modal-body">
+    <div style="margin-right: 31px;">
+      <h5 class="modal-title">Список решений</h5>
+      <h6>Решения в работе</h6>
+      <ul class="list-group">
+        <li class="list-group-item" id="list" v-for="(sol, idx) in solutions" :key="idx">
+          <input class="form-control" @keyup.enter="editSolClick(sol.name, sol.id)"
+            @blur="editSolClick(sol.name, sol.id)" v-model="sol.name" @focus="onFocusInput($event)"
+            :class="{ 'form-control--error': sol.name.length < 6 ||  sol.name.length > 100 || sol.name.length == 0}">
 
-                <div class="icons" ref="iconInWork">
-                  <div class="select" style="position: relative;" ref="select"
-                    :class="[sol.in_work ? 'green' : 'gray']">
-                    <select v-model="sol.in_work" class="form-control" @change="changeinWork(sol)">
-                      <option value="true">
-                        В работе</option>
-                      <option value="false">
-                        Не в работе</option>
-                    </select>
-                  </div>
-                  <div style="width: 50px;">
-                    <button type="button" class="close" id="remove" style="margin: auto;" @click="showDelete(sol.id)"
-                      data-toggle="modal" data-target="#popupDeleteSolution">
-                      <trash-icon size="1x" class="custom-class"></trash-icon>
-                    </button>
-                  </div>
-                </div>
-              </li>
-            </ul>
-            <h6>Прочие решения</h6>
-            <ul class="list-group">
-              <li class="list-group-item" id="list" v-for="(notinworksol, idx) in solutionsOther" :key="idx">
-                <input class="form-control" @keyup.enter="editSolClick(notinworksol.name, notinworksol.id)"
-                  @blur="editSolClick(notinworksol.name, notinworksol.id)" v-model="notinworksol.name"
-                  @focus="onFocusInput($event)"
-                  :class="{ 'form-control--error': notinworksol.name.length < 6 ||  notinworksol.name.length > 100 || notinworksol.name.length == 0}">
-                <div class="icons" ref="iconInWork">
-
-                  <div class="select" style="position: relative;" ref="select"
-                    :class="[notinworksol.in_work ? 'green' : 'gray']">
-                    <select v-model="notinworksol.in_work" class="form-control" @change="changeinWork(notinworksol)">
-                      <option value="true">
-                        В работе</option>
-                      <option value="false">
-                        Не в работе</option>
-                    </select>
-                  </div>
-
-                  <div style="width: 50px;">
-                    <button type="button" class="close" id="remove" style="margin: auto;"
-                      @click="showDelete(notinworksol.id)" data-toggle="modal" data-target="#popupDeleteSolution">
-                      <trash-icon size="1x" class="custom-class"></trash-icon>
-                    </button>
-                  </div>
-                </div>
-              </li>
-            </ul>
-
-<div class="footer">
-              <h6>Добавить решение</h6>
-            <div class="new-solution">
-              <form class="form-group" @submit.prevent="addSolution(val)">
-                <div class="input-group">
-                  <input type="text" v-model="solutionName" class="form-control form-control--valid"
-                    placeholder="Предложите ваше решение..." @focus="onFocus" @blur="showClear = false">
-                  <div class="input-group-append" v-if="showClear" @click="onClear">
-                    <span class="input-group-text">&times;</span>
-                  </div>
-                </div>
-                <div class="error" v-if="error">{{error}}</div>
-              </form>
-              <button type="submit" class="btn btnMain" style="height: 35px; width: 35px; border-radius: 50px;"
-                @click="addSolution(val)">
-                <img src="@/assets/Vector.png" alt="send">
+          <div class="icons" ref="iconInWork">
+            <div class="select" style="position: relative;" ref="select" :class="[sol.in_work ? 'green' : 'gray']">
+              <select v-model="sol.in_work" class="form-control" @change="changeinWork(sol)">
+                <option value="true">
+                  В работе</option>
+                <option value="false">
+                  Не в работе</option>
+              </select>
+            </div>
+            <div style="width: 50px;">
+              <button type="button" class="close" id="remove" style="margin: auto;" @click="showDelete(sol.id)"
+                data-toggle="modal" data-target="#popupDeleteSolution">
+                <trash-icon size="1x" class="custom-class"></trash-icon>
               </button>
             </div>
-</div>
-
-            <DeleteSolution v-if="showDeleteSol" :openDeleteS="showDeleteSol"
-            @closeDeleteSolutions="closeDeleteSolutions($event)" :val="solutionIdDelete" />
           </div>
+        </li>
+      </ul>
+      <h6>Прочие решения</h6>
+      <ul class="list-group">
+        <li class="list-group-item" id="list" v-for="(notinworksol, idx) in solutionsOther" :key="idx">
+          <input class="form-control" @keyup.enter="editSolClick(notinworksol.name, notinworksol.id)"
+            @blur="editSolClick(notinworksol.name, notinworksol.id)" v-model="notinworksol.name"
+            @focus="onFocusInput($event)"
+            :class="{ 'form-control--error': notinworksol.name.length < 6 ||  notinworksol.name.length > 100 || notinworksol.name.length == 0}">
+          <div class="icons" ref="iconInWork">
+
+            <div class="select" style="position: relative;" ref="select"
+              :class="[notinworksol.in_work ? 'green' : 'gray']">
+              <select v-model="notinworksol.in_work" class="form-control" @change="changeinWork(notinworksol)">
+                <option value="true">
+                  В работе</option>
+                <option value="false">
+                  Не в работе</option>
+              </select>
+            </div>
+
+            <div style="width: 50px;">
+              <button type="button" class="close" id="remove" style="margin: auto;" @click="showDelete(notinworksol.id)"
+                data-toggle="modal" data-target="#popupDeleteSolution">
+                <trash-icon size="1x" class="custom-class"></trash-icon>
+              </button>
+            </div>
+          </div>
+        </li>
+      </ul>
+
+      <div class="footer">
+        <h6>Добавить решение</h6>
+        <div class="new-solution">
+          <form class="form-group" @submit.prevent="addSolution(val)">
+            <div class="input-group">
+              <input type="text" v-model="solutionName" class="form-control form-control--valid"
+                placeholder="Предложите ваше решение..." @focus="onFocus" @blur="showClear = false">
+              <div class="input-group-append" v-if="showClear" @click="onClear">
+                <span class="input-group-text">&times;</span>
+              </div>
+            </div>
+            <div class="error" v-if="error">{{error}}</div>
+          </form>
+          <button type="submit" class="btn btnMain" style="height: 35px; width: 35px; border-radius: 50px;"
+            @click="addSolution(val)">
+            <img src="@/assets/Vector.png" alt="send">
+          </button>
+        </div>
+      </div>
+
+      <DeleteSolution v-if="showDeleteSol" :openDeleteS="showDeleteSol"
+        @closeDeleteSolutions="closeDeleteSolutions($event)" :val="solutionIdDelete" />
+    </div>
+
+  </div>
 </template>
 
 
@@ -277,17 +279,21 @@
   .modal-body {
     padding: 0;
   }
+
   .footer {
     margin-top: 153px;
     background-color: #F6F7F9;
+    border-radius: 20px;
 
     h6 {
       padding: 31px 90px;
     }
+
     .new-solution {
       justify-content: space-between;
-      padding: 18px 56px 115px 56px;
+      padding: 18px 56px 70px 56px;
     }
+
     form {
       width: 100% !important;
     }
@@ -382,12 +388,14 @@
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;
-      cursor: pointer;
-      background-color: #F6F7F9;
+    cursor: pointer;
+    background-color: #F6F7F9;
   }
-    input:active, input:focus {
-      background-color: #fff !important;
-    }
+
+  input:active,
+  input:focus {
+    background-color: #fff !important;
+  }
 
 
   .list-group-item {
