@@ -14,10 +14,8 @@
                 <img src="@/assets/tasks.png">
                 <button class="btn btnTab">Добавить решение</button>
               </div>
-
             </div>
 
-            <!-- <div v-if="openShow"> -->
             <div class="modal-header" v-if="openShow">
               <div style="width: 100%;">
                 <button type="button" id="close" class="close" data-dismiss="modal" aria-label="Close">
@@ -72,6 +70,7 @@
 
                 </div>
                 <div>
+                 
                   <ol>
                     <li v-for="(solution, idx) in solutions" :key="idx" id="list" class="row">
                       <div class="list-item col-5">
@@ -88,7 +87,7 @@
                             slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }">
                             <ss-select-toggle>
                               {{ $get(selectedOption, 'name') || `${solution.status ? solution.status : 'Выбрать'}`}}
-
+                              <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                             </ss-select-toggle>
 
                             <section v-show="isOpen" class="absolute border-l border-r min-w-full"
@@ -181,7 +180,8 @@
 <script>
   import {
     UserIcon,
-    EyeIcon
+    EyeIcon,
+    ChevronDownIcon 
   } from 'vue-feather-icons'
 
   import {
@@ -227,6 +227,7 @@
     components: {
       UserIcon,
       EyeIcon,
+      ChevronDownIcon,
 
 
       Solutions,
@@ -728,25 +729,34 @@ border-radius: 12px 12px 0 0px;
   .green {
     background-color: #4EAD96 !important;
     width: 180px;
-    background: url('~@/assets/SelectWhite.png') no-repeat;
-    background-position: right 0.6em top 46%, 0 0;
+    // background: url('~@/assets/SelectWhite.png') no-repeat;
+    // background-position: right 0.6em top 46%, 0 0;
     color: #fff;
+    svg {
+      color: #fff;
+    }
   }
 
   .gray {
     background-color: #E0E0E0 !important;
     width: 180px;
-    background: url('~@/assets/Select.png') no-repeat;
-    background-position: right 0.6em top 46%, 0 0;
+    // background: url('~@/assets/Select.png') no-repeat;
+    // background-position: right 0.6em top 46%, 0 0;
     color: #2D453F;
+        svg {
+      color: #2D453F;
+    }
   }
 
   .blue {
     background-color: #AEDAF2 !important;
     width: 180px;
-    background: url('~@/assets/SelectWhite.png') no-repeat;
-    background-position: right 0.6em top 50%, 0 0;
+    // background: url('~@/assets/SelectWhite.png') no-repeat;
+    // background-position: right 0.6em top 50%, 0 0;
     color: #fff;
+            svg {
+      color: #fff;
+    }
   }
 
   .form-control {

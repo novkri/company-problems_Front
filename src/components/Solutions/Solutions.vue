@@ -27,7 +27,7 @@
                 </div>
               </li>
             </ul>
-            <h6>Остальные решения</h6>
+            <h6>Прочие решения</h6>
             <ul class="list-group">
               <li class="list-group-item" id="list" v-for="(notinworksol, idx) in solutionsOther" :key="idx">
                 <input class="form-control" @keyup.enter="editSolClick(notinworksol.name, notinworksol.id)"
@@ -55,9 +55,9 @@
                 </div>
               </li>
             </ul>
-            <br>
 
-            <h6>Добавить решение</h6>
+<div class="footer">
+              <h6>Добавить решение</h6>
             <div class="new-solution">
               <form class="form-group" @submit.prevent="addSolution(val)">
                 <div class="input-group">
@@ -74,6 +74,8 @@
                 <img src="@/assets/Vector.png" alt="send">
               </button>
             </div>
+</div>
+
             <DeleteSolution v-if="showDeleteSol" :openDeleteS="showDeleteSol"
             @closeDeleteSolutions="closeDeleteSolutions($event)" :val="solutionIdDelete" />
           </div>
@@ -274,6 +276,21 @@
 
   .modal-body {
     padding: 0;
+  }
+  .footer {
+    margin-top: 153px;
+    background-color: #F6F7F9;
+
+    h6 {
+      padding: 31px 90px;
+    }
+    .new-solution {
+      justify-content: space-between;
+      padding: 18px 56px 115px 56px;
+    }
+    form {
+      width: 100% !important;
+    }
   }
 
   input:active,

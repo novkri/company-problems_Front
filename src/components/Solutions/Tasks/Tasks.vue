@@ -28,7 +28,7 @@
                 slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }">
                 <ss-select-toggle >
                   {{ $get(selectedOption, 'name') || `${task.status}`}}
-
+<chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                 </ss-select-toggle>
 
                 <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;">
@@ -152,7 +152,8 @@
   import {
     UserIcon,
     PlusIcon,
-    TrashIcon
+    TrashIcon,
+    ChevronDownIcon
   } from 'vue-feather-icons'
   import DeleteTask from './DeleteTask'
   import {
@@ -189,6 +190,8 @@
       UserIcon,
       PlusIcon,
       TrashIcon,
+      ChevronDownIcon,
+
       DeleteTask,
       SsSelect,
       SsSelectToggle,
@@ -594,25 +597,34 @@
   .green {
     background-color: #4EAD96 !important;
     width: 180px;
-    background: url('~@/assets/SelectWhite.png') no-repeat;
-    background-position: right 0.6em top 50%, 0 0;
+    // background: url('~@/assets/SelectWhite.png') no-repeat;
+    // background-position: right 0.6em top 50%, 0 0;
     color: #fff;
+    svg {
+      color: #fff;
+    }
   }
 
   .gray {
     background-color: #E0E0E0 !important;
     width: 180px;
-    background: url('~@/assets/Select.png') no-repeat;
-    background-position: right 0.6em top 50%, 0 0;
+    // background: url('~@/assets/Select.png') no-repeat;
+    // background-position: right 0.6em top 50%, 0 0;
     color: #2D453F;
+    svg {
+      color: #2D453F;
+    }
   }
 
   .blue {
     background-color: #AEDAF2 !important;
     width: 180px;
-    background: url('~@/assets/SelectWhite.png') no-repeat;
-    background-position: right 0.6em top 50%, 0 0;
+    // background: url('~@/assets/SelectWhite.png') no-repeat;
+    // background-position: right 0.6em top 50%, 0 0;
     color: #fff;
+    svg {
+      color: #fff;
+    }
   }
 
   .task-title {
