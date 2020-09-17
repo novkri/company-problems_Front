@@ -180,7 +180,6 @@
           this.tab = true
         this.paramsModal = obj
         this.$store.commit('setError', '')
-        console.log(obj.id);
         await this.$store.dispatch('getSolutions', obj.id).then(r => {
           console.log(r);
           if (r !== undefined) {

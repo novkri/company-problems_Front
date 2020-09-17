@@ -46,16 +46,12 @@ export default {
       state.tasks = null
     },
     addTask: (state, payload) => {
-      console.log(state.tasks);
-      console.log(payload);
-      
       if (!state.tasks) {
         state.tasks = []
         state.tasks.push(payload)
       } else {
         state.tasks.push(payload)
       }
-      console.log(state.tasks);
     },
     deleteTask: (state, payload) => {
       state.tasks = state.tasks.filter(t => t.id !== payload)
@@ -78,11 +74,10 @@ export default {
       state.tasks.find(task => task.id == payload.id).deadline = payload.deadline
     },
     editExecutorTask: (state, payload) => {
+
       state.tasks.find(task => task.id == payload.id).executor_id = payload.executor_id
     },
     editExecutorT: (state, payload) => {
-      console.log(payload);
-      console.log(state.tasks);
       state.tasks.find(task => task.id == payload.id).executor_id = payload.executor_id
     },
 
@@ -111,12 +106,10 @@ export default {
     },
     postTask: async ({commit}, param) => {
       // param.solutionId = 100000000
-      console.log(param);
       return new Promise((resolve, reject) => {
       axios.post(BASEURL + `/${param.solutionId}/task`, {description: param.params.taskName, deadline: param.params.deadline, executor_id: param.params.executor
         })
         .then(response => {
-          console.log(response);
           if (response.status == 201) {
             commit('setError', '')
             commit('setError404', '')
@@ -125,7 +118,6 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error.response);
           commit('setError404', '')
           if (error.response.status == 422) {
             if (error.response.data.errors.description) {
@@ -160,8 +152,6 @@ export default {
     checkIfOk: async ({state, commit}, param) => {
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
-        console.log(param);
-          console.log(state.tasks.filter(t => t.description == param.description).length > 1 && state.tasks.filter(t => t.executor_id == param.executor_id).length > 1);
           if (state.tasks.filter(t => t.description == param.description).length > 1 && state.tasks.filter(t => t.executor_id == param.executor_id).length > 1) {
             commit('setError404', 'Такая задача уже существует с таким ответсвенным')
             reject('false')
@@ -173,13 +163,11 @@ export default {
     },
     editTask: async ({commit}, param) => {
       // param.id = 10000000000
-      console.log('editTask', param);
       return new Promise((resolve, reject) => {
         axios.put(URLTASK + `/${param.id}`, {
 
           description: param.description
         }).then(response => {
-          console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('editTask', response.data)
@@ -250,11 +238,9 @@ export default {
       axios.put(URLTASK + `/${param.id}/set-executor`, {
         executor_id: param.uid
       }).then(response => {
-        console.log(response);
           commit('setError', '')
           commit('editExecutorTask', response.data)
       }).catch((error) => {
-        console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
         }

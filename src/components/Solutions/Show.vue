@@ -107,7 +107,7 @@
 
 
                       <div class="selectResponsible col-2">
-                        <ss-select v-model="solution.executor_id" :options="allUsers" track-by="name" search-by="name"
+                        <ss-select v-model="solution.executor_id" :options="allUsers" track-by="id" search-by="id"
                           @change="selectExecutor(solution.id, solution.executor_id)" disable-by="disabled"
                           id="ss-select">
                           <div
@@ -116,7 +116,7 @@
 
                             <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between" id="select-toggle">
                               <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
-                              {{ $get(selectedOption, 'name') || `${allUsers.find(u => u.id == solution.executor_id) ? allUsers.find(u => u.id == solution.executor_id).name : 'Выбрать'}`}}
+                              {{ $get(selectedOption, 'id') || `${allUsers.find(u => u.id == solution.executor_id) ? allUsers.find(u => u.id == solution.executor_id).name : 'Выбрать'}`}}
 
                             </ss-select-toggle>
 
@@ -218,6 +218,7 @@
       taskIdDelete: '',
       selected: false,
       problemName: '',
+      
 
       obj: '',
 
@@ -255,9 +256,6 @@
 
       // flatPickr
     },
-    mounted() {
-      console.log('b');
-    },
     computed: {
       ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404', 'allUsers', 'currentSolution', 'tasks']),
 
@@ -288,6 +286,10 @@
         // this.openShow = false
         this.$emit('changeTab', false)
       },
+      // onClickExecutor(sol) {
+      //   this.currentExecutor = sol
+      //   console.log(sol)
+      // },
       async selectExecutor(id, uid) {
         await this.$store.dispatch('changeExecutor', {
           id,
@@ -301,7 +303,6 @@
         })
       },
       async changeDeadline(deadline, id) {
-        console.log('changeDeadline');
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('changeDeadline', {
           deadline,

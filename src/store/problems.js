@@ -128,7 +128,6 @@ export default {
           resolve(response)
         }
       }).catch((error) => {
-        console.log(error.response);
         if (error.response.status !== 422) {
           commit('setError404', error.response.data.message)
           reject(error.response.data.message)

@@ -220,24 +220,17 @@
 
       async changeinWork(obj, event) {
         console.log(event);
-        console.log(obj.in_work);
         await this.$store.commit('setError404', '')
-        await this.$store.dispatch('checkAmountSolInWork').then(r => {
-          console.log(r)
+        await this.$store.dispatch('checkAmountSolInWork').then(() => {
           this.$store.dispatch('changeinWork', {
           id: obj.id,
           in_work: obj.in_work === "В работе" ? false : true
         }).then(r => {
-          console.log(r);
           this.$store.dispatch('getTasks', r.data.id)
         })
         })
-        .catch(e => {
+        .catch(() => {
           event = false
-          // event.target.value = false
-          // event.path[1].classList.remove('green')
-          // event.path[1].classList.add('gray')
-          console.log(e)
           this.$store.dispatch('changeinWork', {
           id: obj.id,
           in_work: obj.in_work === "true" ? true : false

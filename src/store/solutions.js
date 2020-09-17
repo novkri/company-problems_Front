@@ -183,11 +183,9 @@ export default {
       })
     },
     // checkAmountSolInWork:
-    checkAmountSolInWork: async ({state}, param) => {
+    checkAmountSolInWork: async ({state}) => {
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
-        console.log(param);
-          console.log(state.solutions.length);
           if (state.solutions.length == 1) {
             reject('false')
           } else {
@@ -207,7 +205,6 @@ export default {
           commit('sortSolutions')
           resolve(response)
       }).catch((error) => {
-        console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
           reject(error.response.data.message)

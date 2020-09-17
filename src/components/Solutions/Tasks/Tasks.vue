@@ -55,7 +55,7 @@
           <div class="selectResponsible col-2">
             <ss-select v-model="task.executor_id" :options="allUsers" track-by="name" search-by="name"
               @change="event => {selectExecutorTask(task, event)}" disable-by="disabled" id="ss-select" style="width: fit-content;">
-              <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+              <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }" @click="onClickExecutor(selectedOption)"
                  style="cursor: pointer; width: 100%;">
 
                 <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between" style="width: 100%; padding: 13px;">
@@ -184,6 +184,7 @@
       openDeleteTask: false,
       taskIdDelete: '',
       inputActive: false,
+      currentExecutor: '',
 
       statusesT: [{
           name: "К исполнению"
@@ -221,6 +222,7 @@
     watch: {
       val: function (data) {
         console.log(data);
+        /////
       }
     },
     methods: {
@@ -231,7 +233,6 @@
         document.getElementById('addBtn').classList.add('btnGren')
       },
       async addTask() {
-        console.log(this.solutions[0].id);
         let solutionId = this.solutions[0].id
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('postTask', {
@@ -259,10 +260,8 @@
         })
       },
       onClickDate(event) {
-        console.log(event.target.value);
         this.currentDate = event.target.value
         this.currentDateInput = event.target
-        console.log(this.currentDate, this.currentDateInput);
       },
       async changeDeadlineTask(deadline, id, event) {
         await this.$store.commit('setError404', '')
@@ -270,14 +269,17 @@
         await this.$store.dispatch('changeDeadlineTask', {
           deadline,
           id
-        }).catch((e) => {
-          console.log(e);
+        }).catch(() => {
               this.$store.dispatch('changeDeadlineTask', {
                 description: this.currentDate,
                 id
               })
         })
 
+      },
+
+      onClickExecutor(sol) {
+        this.currentExecutor = sol
       },
 
       async selectExecutorTask(task, event) {
@@ -292,23 +294,18 @@
             description: task.description,
             executor_id: task.executor_id,
             id: task.id
-          }).then((r) => {
-            console.log(r);
+          }).then(() => {
             this.$store.dispatch('changeExecutorTask', {
               id: task.id,
               uid: task.executor_id
             })
      
-            }).catch((e) => {
-              console.log(e);
-
-              // event.target.value = this.currentTaskName
-              
+            }).catch(() => {
+              this.$store.commit('editExecutorTask', {id: task.id, executor_id: this.currentExecutor})
             })
 
       },
       onFocusInput(event) {
-        console.log(event.target.value);
         this.currentTaskName = event.target.value
         this.currentTaskInput = event.target
       },
@@ -324,21 +321,14 @@ if (task.description !== this.currentTaskName) {
             description: task.description,
             executor_id: task.executor_id,
             id: task.id
-          }).then((r) => {
-            console.log(r);
-            // event.target.classList.remove('form-control--error')
+          }).then(() => {
             this.$store.dispatch('editTask', {
             description: task.description,
             id: task.id
           }) 
-            }).catch((e) => {
-              console.log(e);
-              // event.target.classList.add('form-control--error')
-              event.target.value = this.currentTaskName
-              // this.$store.dispatch('editTask', {
-              //   description: this.currentTaskName,
-              //   id
-              // })
+            }).catch(() => {
+              this.$store.commit('editTask', {id: task.id, description: this.currentTaskName})
+
             })
 }
 
