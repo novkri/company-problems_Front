@@ -162,6 +162,9 @@
           this.$store.dispatch('changeinWork', {
           id: obj.id,
           in_work: obj.in_work === "true" ? true : false
+        }).then(r => {
+          console.log(r);
+          this.$store.dispatch('getTasks', r.data.id)
         })
         })
         .catch(e => {

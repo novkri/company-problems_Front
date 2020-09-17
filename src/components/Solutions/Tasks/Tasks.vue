@@ -151,7 +151,9 @@
         <span @click.prevent="addNotClicked = true">Отмена</span>
       </div>
     </div>
-
+{{tasks}}
+/////////
+{{val}}
     <DeleteTask v-if="openDeleteTask" :openDeleteTask="openDeleteTask" @closeDeleteTask="closeDeleteTask($event)"
       :val="taskIdDelete" />
   </div>
@@ -218,6 +220,11 @@
 
     computed: {
       ...mapGetters(['tasks', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions']),
+    },
+    watch: {
+      val: function (data) {
+        console.log(data);
+      }
     },
     methods: {
 
