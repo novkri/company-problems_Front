@@ -300,14 +300,14 @@ if (description !== this.currentTaskName) {
             description,
             id
           }).then(() => {
-            event.target.classList.remove('form-control--error')
+            // event.target.classList.remove('form-control--error')
             this.$store.dispatch('editTask', {
             description,
             id
           }) 
             }).catch((e) => {
               console.log(e);
-              event.target.classList.add('form-control--error')
+              // event.target.classList.add('form-control--error')
               event.target.value = this.currentTaskName
               // this.$store.dispatch('editTask', {
               //   description: this.currentTaskName,
