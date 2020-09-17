@@ -21,7 +21,7 @@
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">
             <input class="form-control" @focus="onFocusInput($event)" @keyup.enter="event => onKey(event)" @blur="event => editTask(task.description, task.id, event)" 
               v-model="task.description" >
-           {{task}}
+  
           </div>
           <div class="select col-2" style="position: relative;" ref="select">
             <ss-select v-model="task.status" :options="statusesT" track-by="name" search-by="name" class="form-control"
