@@ -207,6 +207,7 @@ export default {
           commit('sortSolutions')
           resolve(response)
       }).catch((error) => {
+        console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
           reject(error.response.data.message)

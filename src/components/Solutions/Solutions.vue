@@ -59,7 +59,7 @@
             @focus="onFocusInput($event)"
             :class="{ 'form-control--error': notinworksol.name.length < 6 ||  notinworksol.name.length > 100 || notinworksol.name.length == 0}">
           <div class="icons col-3" ref="iconInWork">
-            <!-- <div class="select" style="position: relative;" ref="select"
+            <!-- <div class="select col-8" style="position: relative;" ref="select"
               :class="[notinworksol.in_work ? 'green' : 'gray']">
               <select v-model="notinworksol.in_work" class="form-control" @change="event => {changeinWork(notinworksol, event)}">
                 <option value="true">
@@ -200,7 +200,6 @@
       onKey(event) {event.target.blur()},
 
       async editSolClick(name, id) {
- 
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('editSolution', {
             name,
@@ -220,25 +219,24 @@
       },
 
       async changeinWork(obj, event) {
-
-        this.currentSolStatus = event.target.value
-        this.currentSolInput = event.target
-
+        console.log(event);
+        console.log(obj.in_work);
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('checkAmountSolInWork').then(r => {
           console.log(r)
           this.$store.dispatch('changeinWork', {
           id: obj.id,
-          in_work: obj.in_work === "true" ? true : false
+          in_work: obj.in_work === "В работе" ? false : true
         }).then(r => {
           console.log(r);
           this.$store.dispatch('getTasks', r.data.id)
         })
         })
         .catch(e => {
-          event.target.value = false
-          event.path[1].classList.remove('green')
-          event.path[1].classList.add('gray')
+          event = false
+          // event.target.value = false
+          // event.path[1].classList.remove('green')
+          // event.path[1].classList.add('gray')
           console.log(e)
           this.$store.dispatch('changeinWork', {
           id: obj.id,
