@@ -46,7 +46,16 @@ export default {
       state.tasks = null
     },
     addTask: (state, payload) => {
-      state.tasks.push(payload)
+      console.log(state.tasks);
+      console.log(payload);
+      
+      if (!state.tasks) {
+        state.tasks = []
+        state.tasks.push(payload)
+      } else {
+        state.tasks.push(payload)
+      }
+      console.log(state.tasks);
     },
     deleteTask: (state, payload) => {
       state.tasks = state.tasks.filter(t => t.id !== payload)
@@ -97,16 +106,21 @@ export default {
     },
     postTask: async ({commit}, param) => {
       // param.solutionId = 100000000
-      await axios.post(BASEURL + `/${param.solutionId}/task`, {description: param.params.taskName, deadline: param.params.deadline, executor_id: param.params.executor
+      console.log(param);
+      return new Promise((resolve, reject) => {
+      axios.post(BASEURL + `/${param.solutionId}/task`, {description: param.params.taskName, deadline: param.params.deadline, executor_id: param.params.executor
         })
         .then(response => {
+          console.log(response);
           if (response.status == 201) {
             commit('setError', '')
             commit('setError404', '')
             commit('addTask', {...response.data, status: "К исполнению"})
+            resolve(response)
           }
         })
         .catch(error => {
+          console.log(error.response);
           commit('setError404', '')
           if (error.response.status == 422) {
             if (error.response.data.errors.description) {
@@ -119,8 +133,9 @@ export default {
           } else {
             commit('setError404', error.response.data.message)
           }
-          
+          reject(error.response)
         })
+      })
     },
 
     deleteTask: async ({commit}, id) => {
@@ -136,28 +151,16 @@ export default {
           commit('setError404', error.response.data.message)
         })
     },
-    // checkDate: ( param) => {
-    //   // param.id = 10000000000
-    //   console.log(new Date());
-    //     console.log(param.deadline);
-    //   return new Promise((resolve, reject) => {
-        
-    //     let today = new Date()
-    //   //     console.log(state.tasks.filter(t => t.description == param.description).length);
-    //       if (new Date(param.deadline) < today) {
-    //         reject('false')
-    //       } else {
-    //         resolve('true')
-    //       }
-    //   })
-    // },
-    checkIfOk: async ({state}, param) => {
+
+    checkIfOk: async ({state, commit}, param) => {
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
         console.log(param);
           console.log(state.tasks.filter(t => t.description == param.description).length);
           if (state.tasks.filter(t => t.description == param.description).length > 1) {
+            commit('setError404', 'Такая задача уже существует с таким ответсвенным')
             reject('false')
+
           } else {
             resolve('true')
           }
@@ -165,10 +168,13 @@ export default {
     },
     editTask: async ({commit}, param) => {
       // param.id = 10000000000
+      console.log('editTask', param);
       return new Promise((resolve, reject) => {
         axios.put(URLTASK + `/${param.id}`, {
+
           description: param.description
         }).then(response => {
+          console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('editTask', response.data)
@@ -248,7 +254,12 @@ export default {
           commit('setError404', error.response.data.message)
         }
         else if (error.response.status == 422) {
-          commit('setError404', error.response.data.errors.executor_id[0])
+          if (error.response.data.errors.executor_id) {
+            commit('setError404', error.response.data.errors.executor_id[0])
+          } else {
+            commit('setError404', error.response.data.errors)
+          }
+          
         }
       })
     },

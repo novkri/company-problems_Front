@@ -13,18 +13,22 @@
               <div class="tabDiv col-xl-3 col-lg-4" :class="[openShow ? '' : 'active']" @click="toggleTab2()">
                 <img src="@/assets/tasks.png" v-if="openShow">
                 <img src="@/assets/listGreen.png" v-else>
-                <!-- <img src="@/assets/list.svg" alt="" style="color: red;"> -->
 
                 <button class="btn btnTab">Добавить решение</button>
               </div>
-            </div>
-
-            <div class="modal-header" v-if="openShow">
-              <div style="width: 100%;">
+              <div class="col" style="width: 100%;">
                 <button type="button" id="close" class="close" data-dismiss="modal" style="font-size: 24px;">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
+            </div>
+
+            <div class="modal-header" v-if="openShow">
+              <!-- <div style="width: 100%;">
+                <button type="button" id="close" class="close" data-dismiss="modal" style="font-size: 24px;">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div> -->
 
               <div class="subtitle subtitle1">
                 <h5 class="modal-title">{{val.name}}</h5>
@@ -266,7 +270,7 @@
     },
 
     computed: {
-      ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404', 'allUsers', 'currentSolution']),
+      ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404', 'allUsers', 'currentSolution', 'tasks']),
     },
     methods: {
       toggleTab1() {
@@ -622,7 +626,7 @@
   }
 
   .close {
-    margin: -1rem 0rem 1rem auto;
+    margin: 1rem 1rem 1rem auto;
     padding: 0;
   }
 
@@ -672,8 +676,9 @@
     color: #828282;
     position: absolute;
     top: 20%;
-    left: -95%;
-    width: 100%;
+    left: -5%;
+    // width: 100%;
+  
   }
 
   input[class="date"]:focus::-webkit-calendar-picker-indicator {
@@ -681,9 +686,10 @@
     background-repeat: no-repeat;
     cursor: pointer;
     position: absolute;
-    left: -95%;
-    width: 100%;
+    left: -5%;
+    // width: 100%;
     top: 20%;
+    // width: auto;
   }
 
   select {

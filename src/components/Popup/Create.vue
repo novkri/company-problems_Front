@@ -10,19 +10,21 @@
             </button>
           </div>
           <div class="modal-body">
-            <form @submit.prevent="addProblem()" class="form-group">
+            <div style="width: 100%; display: flex;">
+              <form @submit.prevent="addProblem()" class="form-group">
               <div class="input-group">
                 <input type="text" ref="input" v-model="name" class="form-control form-control--valid"
                   id="new-problem-title" placeholder="Название проблемы..." @blur="showClear = false" @focus="onFocus">
                 <div class="input-group-append" v-if="showClear" @click="onClear">
                   <span class="input-group-text" style="background-color: #fff;">&times;</span>
                 </div>
-                <div class="error" v-if="error">{{error}}</div>
-              </div>
+              </div>  
             </form>
             <button type="submit" class="btn btnMain" @click="addProblem()">
               <img src="@/assets/Vector.png" alt="send">
             </button>
+            </div>
+            <div class="error" v-if="error">{{error}}</div>
           </div>
         </div>
       </div>
@@ -109,6 +111,7 @@
 
   .modal-body {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     padding: 0;
   }

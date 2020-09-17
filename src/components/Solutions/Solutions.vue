@@ -9,8 +9,6 @@
           <input class="form-control" v-model="sol.name" @keyup.enter="event => {onKey(event)}"
              @focus="onFocusInput($event)" @blur="editSolClick(sol.name, sol.id)"
             :class="{ 'form-control--error': sol.name.length < 6 ||  sol.name.length > 100 || sol.name.length == 0}">
-
-
           <div class="icons" ref="iconInWork">
             <div class="select" style="position: relative;" ref="select" :class="[sol.in_work ? 'green' : 'gray']">
               <select v-model="sol.in_work" class="form-control" @change="event => {changeinWork(sol, event)}">
@@ -38,8 +36,6 @@
             @focus="onFocusInput($event)"
             :class="{ 'form-control--error': notinworksol.name.length < 6 ||  notinworksol.name.length > 100 || notinworksol.name.length == 0}">
           <div class="icons" ref="iconInWork">
-
-
             <div class="select" style="position: relative;" ref="select"
               :class="[notinworksol.in_work ? 'green' : 'gray']">
               <select v-model="notinworksol.in_work" class="form-control" @change="event => {changeinWork(notinworksol, event)}">
@@ -177,16 +173,9 @@
           id: obj.id,
           in_work: obj.in_work === "true" ? true : false
         })
+        obj.in_work = false
         })
 
-        // if (this.solutions.length < 1) {
-        //   await this.$store.dispatch('changeinWork', {
-        //   id: obj.id,
-        //   in_work: obj.in_work === "true" ? true : false
-        // })
-        // } else {
-        //   obj.in_work = false
-        // }
         
       },
 

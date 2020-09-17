@@ -19,8 +19,9 @@
           <!-- @blur="editTask(task.description, task.id)" -->
           <div class="task-title col-5"
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">
-            <input class="form-control" @focus="onFocusInput($event)" @keyup.enter="event => onKey(event)" @blur="editTask(task.description, task.id)" 
+            <input class="form-control" @focus="onFocusInput($event)" @keyup.enter="event => onKey(event)" @blur="event => editTask(task.description, task.id, event)" 
               v-model="task.description" >
+           {{task}}
           </div>
           <div class="select col-2" style="position: relative;" ref="select">
             <ss-select v-model="task.status" :options="statusesT" track-by="name" search-by="name" class="form-control"
@@ -48,12 +49,13 @@
           <div class="dateDiv col-2">
             <input type="date" id="start" name="trip-start" class="date" onkeypress="return false" @click="onClickDate($event)"
               @change="event => {changeDeadlineTask(task.deadline, task.id), event}" v-model="task.deadline">
+
           </div>
 
 
           <div class="selectResponsible col-2">
             <ss-select v-model="task.executor_id" :options="allUsers" track-by="name" search-by="name"
-              @change="selectExecutorTask(task.id, task.executor_id)" disable-by="disabled" id="ss-select" style="width: fit-content;">
+              @change="selectExecutorTask(task)" disable-by="disabled" id="ss-select" style="width: fit-content;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                  style="cursor: pointer; width: 100%;">
 
@@ -215,7 +217,7 @@
     },
 
     computed: {
-      ...mapGetters(['tasks', 'error', 'error404', 'allUsers', 'currentSolution']),
+      ...mapGetters(['tasks', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions']),
     },
     methods: {
 
@@ -225,13 +227,16 @@
         document.getElementById('addBtn').classList.add('btnGren')
       },
       async addTask() {
+        console.log(this.solutions[0].id);
+        let solutionId = this.solutions[0].id
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('postTask', {
-          solutionId: this.currentSolution,
+          // solutionId: this.currentSolution,
+          solutionId: solutionId,
           params: this.formInput
         }).then(() => {
+          
           if (!this.error) {
-            this.$store.commit('setError', '')
             this.formInput = []
             this.addNotClicked = true
           }
@@ -256,10 +261,8 @@
         console.log(this.currentDate, this.currentDateInput);
       },
       async changeDeadlineTask(deadline, id, event) {
-        console.log(event);
-        console.log('dddd', deadline);
-
         await this.$store.commit('setError404', '')
+        console.log(event);
         await this.$store.dispatch('changeDeadlineTask', {
           deadline,
           id
@@ -273,36 +276,46 @@
 
       },
 
-      async selectExecutorTask(id, uid) {
+      async selectExecutorTask(task) {
         await this.$store.dispatch('changeExecutorTask', {
-          id,
-          uid
+          id: task.id,
+          uid: task.executor_id
         })
+
       },
       onFocusInput(event) {
+        console.log(event.target.value);
         this.currentTaskName = event.target.value
         this.currentTaskInput = event.target
       },
-      onKey(event) {event.target.blur()},
+      onKey(event) {
+          event.target.blur()
+        },
 
       async editTask(description, id, event) {
-
-        await this.$store.commit('setError404', '')
+console.log(this.currentTaskName, event);
+if (description !== this.currentTaskName) {
+          await this.$store.commit('setError404', '')
         await this.$store.dispatch('checkIfOk', {
             description,
             id
           }).then(() => {
+            event.target.classList.remove('form-control--error')
             this.$store.dispatch('editTask', {
             description,
             id
           }) 
-            }).catch(() => {
+            }).catch((e) => {
+              console.log(e);
+              event.target.classList.add('form-control--error')
               event.target.value = this.currentTaskName
-              this.$store.dispatch('editTask', {
-                description: this.currentTaskName,
-                id
-              })
+              // this.$store.dispatch('editTask', {
+              //   description: this.currentTaskName,
+              //   id
+              // })
             })
+}
+
           
       },
 

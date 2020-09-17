@@ -2,7 +2,7 @@
   <div class="modal-content">
     <div class="modal-header">
       <h5 class="modal-title">Вы точно хотите удалить задачу?</h5>
-      <button type="button" class="close" @click="closeDeleteTask" data-dismiss="modal" data-target="#popupDeleteTask"> style="font-size: 24px;"
+      <button type="button" class="close" @click="closeDeleteTask" data-dismiss="modal" data-target="#popupDeleteTask" > 
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
@@ -101,7 +101,7 @@
   }
 
   .close {
-    margin-right: -83px;
+    /* margin-right: -83px; */
     margin-top: -34px;
     font-weight: normal;
     color: #2D453F;
