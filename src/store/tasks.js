@@ -80,6 +80,11 @@ export default {
     editExecutorTask: (state, payload) => {
       state.tasks.find(task => task.id == payload.id).executor_id = payload.executor_id
     },
+    editExecutorT: (state, payload) => {
+      console.log(payload);
+      console.log(state.tasks);
+      state.tasks.find(task => task.id == payload.id).executor_id = payload.executor_id
+    },
 
   },
   actions: {
@@ -156,8 +161,8 @@ export default {
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
         console.log(param);
-          console.log(state.tasks.filter(t => t.description == param.description).length);
-          if (state.tasks.filter(t => t.description == param.description).length > 1) {
+          console.log(state.tasks.filter(t => t.description == param.description).length > 1 && state.tasks.filter(t => t.executor_id == param.executor_id).length > 1);
+          if (state.tasks.filter(t => t.description == param.description).length > 1 && state.tasks.filter(t => t.executor_id == param.executor_id).length > 1) {
             commit('setError404', 'Такая задача уже существует с таким ответсвенным')
             reject('false')
 

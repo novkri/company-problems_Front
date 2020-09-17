@@ -19,9 +19,9 @@
           <!-- @blur="editTask(task.description, task.id)" -->
           <div class="task-title col-5"
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">
-            <input class="form-control" @focus="onFocusInput($event)" @keyup.enter="event => onKey(event)" @blur="event => editTask(task.description, task.id, event)" 
+            <input class="form-control" @focus="onFocusInput($event)" @keyup.enter="event => onKey(event)" @blur="event => editTask(task, event)" 
               v-model="task.description" >
-  
+  {{task}}
           </div>
           <div class="select col-2" style="position: relative;" ref="select">
             <ss-select v-model="task.status" :options="statusesT" track-by="name" search-by="name" class="form-control"
@@ -51,11 +51,11 @@
               @change="event => {changeDeadlineTask(task.deadline, task.id), event}" v-model="task.deadline">
 
           </div>
-
+{{task}}
 
           <div class="selectResponsible col-2">
             <ss-select v-model="task.executor_id" :options="allUsers" track-by="name" search-by="name"
-              @change="selectExecutorTask(task)" disable-by="disabled" id="ss-select" style="width: fit-content;">
+              @change="event => {selectExecutorTask(task, event)}" disable-by="disabled" id="ss-select" style="width: fit-content;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                  style="cursor: pointer; width: 100%;">
 
@@ -283,11 +283,31 @@
 
       },
 
-      async selectExecutorTask(task) {
-        await this.$store.dispatch('changeExecutorTask', {
-          id: task.id,
-          uid: task.executor_id
-        })
+      async selectExecutorTask(task, event) {
+        // await this.$store.dispatch('changeExecutorTask', {
+        //   id: task.id,
+        //   uid: task.executor_id
+        // })
+        console.log(event);
+
+        await this.$store.commit('setError404', '')
+        await this.$store.dispatch('checkIfOk', {
+            description: task.description,
+            executor_id: task.executor_id,
+            id: task.id
+          }).then((r) => {
+            console.log(r);
+            this.$store.dispatch('changeExecutorTask', {
+              id: task.id,
+              uid: task.executor_id
+            })
+     
+            }).catch((e) => {
+              console.log(e);
+
+              // event.target.value = this.currentTaskName
+              
+            })
 
       },
       onFocusInput(event) {
@@ -299,18 +319,20 @@
           event.target.blur()
         },
 
-      async editTask(description, id, event) {
-console.log(this.currentTaskName, event);
-if (description !== this.currentTaskName) {
+      async editTask(task, event) {
+console.log(event);
+if (task.description !== this.currentTaskName) {
           await this.$store.commit('setError404', '')
         await this.$store.dispatch('checkIfOk', {
-            description,
-            id
-          }).then(() => {
+            description: task.description,
+            executor_id: task.executor_id,
+            id: task.id
+          }).then((r) => {
+            console.log(r);
             // event.target.classList.remove('form-control--error')
             this.$store.dispatch('editTask', {
-            description,
-            id
+            description: task.description,
+            id: task.id
           }) 
             }).catch((e) => {
               console.log(e);
