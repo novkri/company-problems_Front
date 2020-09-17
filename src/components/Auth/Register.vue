@@ -144,6 +144,10 @@
     computed: {
       ...mapGetters(['errorUReg', 'error401'])
     },
+    mounted() {
+      this.$store.commit('setError401', '')
+      this.$store.commit('errorUReg', '')
+    },
     watch: {
       errorUReg() {
         // console.log(this.errorUReg)

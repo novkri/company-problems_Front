@@ -99,6 +99,7 @@ export default {
             
             commit('auth_success', token)
             commit('setErrorU', '')
+            commit('setError401', '')
           })
         .catch(err => {
           if (err.response.status == 401) {

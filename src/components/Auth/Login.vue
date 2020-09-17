@@ -60,6 +60,10 @@
     computed: {
       ...mapGetters(['errorU', 'error401'])
     },
+    mounted() {
+      this.$store.commit('setError401', '')
+      this.$store.commit('errorU', '')
+    },
     watch: {
       errorU() {},
       error401() {},
