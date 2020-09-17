@@ -165,7 +165,7 @@
                 <div class="tasks" v-if="solutions[0]">
                   <Tasks :val="solutions" />
                 </div>
-                {{solutions}}
+           
 
                 <!-- <button type="button" class="btn btnMain" @click="showSolutions(val)" data-toggle="modal"
                   data-target="#popupSol" data-dismiss="modal"><span>Посмотреть/Добавить решение</span></button> -->

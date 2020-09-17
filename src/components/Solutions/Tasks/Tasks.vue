@@ -21,7 +21,7 @@
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">
             <input class="form-control" @focus="onFocusInput($event)" @keyup.enter="event => onKey(event)" @blur="event => editTask(task, event)" 
               v-model="task.description" >
-  {{task}}
+
           </div>
           <div class="select col-2" style="position: relative;" ref="select">
             <ss-select v-model="task.status" :options="statusesT" track-by="name" search-by="name" class="form-control"
@@ -51,7 +51,6 @@
               @change="event => {changeDeadlineTask(task.deadline, task.id), event}" v-model="task.deadline">
 
           </div>
-{{task}}
 
           <div class="selectResponsible col-2">
             <ss-select v-model="task.executor_id" :options="allUsers" track-by="name" search-by="name"
@@ -151,9 +150,7 @@
         <span @click.prevent="addNotClicked = true">Отмена</span>
       </div>
     </div>
-{{tasks}}
-/////////
-{{val}}
+
     <DeleteTask v-if="openDeleteTask" :openDeleteTask="openDeleteTask" @closeDeleteTask="closeDeleteTask($event)"
       :val="taskIdDelete" />
   </div>
