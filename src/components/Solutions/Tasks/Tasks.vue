@@ -119,13 +119,13 @@
                       slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                        style="cursor: pointer; width: 100%;">
 
-                      <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between" style="width: 100%; padding: 13px;">
+                      <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between" style="width: 100%; padding: 13px;" id="select-toggle">
                         <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                         {{ $get(selectedOption, 'name') ||  `${allUsers.find(u => u.id == formInput.executor) ? allUsers.find(u => u.id == formInput.executor).name : 'Выбрать'}`}}
                       </ss-select-toggle>
 
                       <section v-show="isOpen" class="absolute border-l border-r min-w-full"
-                        style="position: relative;">
+                        style="position: relative; width: 368px;">
 
                         <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
                           :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
@@ -388,14 +388,18 @@ if (task.description !== this.currentTaskName) {
     max-width: inherit;
     width: -webkit-fill-available;
     padding-left: 26px;
-    font-family: 'GothamPro';
-    font-size: 16px;
-    line-height: 24px;
-    letter-spacing: 0.15px;
-    color: #333333;
     font-style: normal;
     font-weight: normal;
     background-color: #F6F7F9;
+
+    div {
+      font-family: 'GothamPro';
+      font-style: normal;
+      font-size: 16px;
+      line-height: 24px;
+      letter-spacing: 0.15px;
+      color: #828282;
+    }
   }
 
   .container {
@@ -518,23 +522,7 @@ if (task.description !== this.currentTaskName) {
     }
   }
 
-  section {
-    padding: 22px;
-    // width: 250px;
-        width: 205px;
-    position: absolute;
-    max-height: 257px;
-    top: 102%;
 
-    border-radius: 10px;
-    box-shadow: 0px 4px 16px rgba(54, 44, 117, 0.08);
-    background-color: white;
-    color: #828282;
-    height: 400px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    z-index: 1000000000000;
-  }
 
   ::-webkit-scrollbar {
     width: 10px;

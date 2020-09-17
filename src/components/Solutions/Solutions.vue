@@ -1,25 +1,48 @@
 <template>
   <div class="modal-body">
-    <div style="margin-right: 31px;">
+    <div style="margin: 60px 41px 0 41px;">
       <h5 class="modal-title">Список решений</h5>
       <h6>Решения в работе</h6>
       <ul class="list-group">
-        <!-- @blur="editSolClick(sol.name, sol.id)" -->
         <li class="list-group-item" id="list" v-for="(sol, idx) in solutions" :key="idx">
-          <input class="form-control" v-model="sol.name" @keyup.enter="event => {onKey(event)}"
+          <input class="form-control col-9" v-model="sol.name" @keyup.enter="event => {onKey(event)}"
              @focus="onFocusInput($event)" @blur="editSolClick(sol.name, sol.id)"
             :class="{ 'form-control--error': sol.name.length < 6 ||  sol.name.length > 100 || sol.name.length == 0}">
-          <div class="icons" ref="iconInWork">
-            <div class="select" style="position: relative;" ref="select" :class="[sol.in_work ? 'green' : 'gray']">
-              <select v-model="sol.in_work" class="form-control" @change="event => {changeinWork(sol, event)}">
+          <div class="icons col-3" ref="iconInWork">
+            <!-- <div class="select" style="position: relative;" ref="select" :class="[sol.in_work ? 'green' : 'gray']"> -->
+              <!-- <select v-model="sol.in_work" class="form-control" @change="event => {changeinWork(sol, event)}">
                 <option value="true">
                   В работе</option>
                 <option value="false">
                   Не в работе</option>
-              </select>
-            </div>
-            <div style="width: 50px;">
-              <button type="button" class="close" id="remove" style="margin: auto;" @click="showDelete(sol.id)"
+              </select> -->
+                      <div class="select col-8" style="position: relative;" ref="select">
+                        <ss-select v-model="sol.in_work" :options="statuses" track-by="name" search-by="name"
+                          class="form-control" @change="event => {changeinWork(sol, event)}"
+                          disable-by="disabled" :class="[sol.in_work  ? 'green' : 'gray']"
+                          id="ss-select" style="width: 198px; ">
+                          <div
+                            slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+                            style="cursor: pointer; width: 100%;">
+                            <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
+                              {{ $get(selectedOption, 'name') || `${sol.in_work ? 'В работе' : 'Не в работе'}`}}
+                              <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
+                            </ss-select-toggle>
+
+                            <section v-show="isOpen" class="absolute border-l border-r min-w-full"
+                              style="height: auto;">
+                              <ss-select-option v-for="(option, index) in filteredOptions" :value="option"
+                                :index="index" :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
+                                pointerIndex == index ? 'bg-light text-dark' : '',
+                                $selected(option) ? 'bg-light text-dark' : '',
+                                $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
+                              ]">{{ option.name }}</ss-select-option>
+                            </section>
+                          </div>
+                        </ss-select>
+                      </div>
+            <div style="width: 50px;" class="col-4">
+              <button type="button" class="close" id="remove" style="margin:  0 30px 0 0;" @click="showDelete(sol.id)"
                 data-toggle="modal" data-target="#popupDeleteSolution">
                 <trash-icon size="1x" class="custom-class"></trash-icon>
               </button>
@@ -31,12 +54,12 @@
       <ul class="list-group">
         <li class="list-group-item" id="list" v-for="(notinworksol, idx) in solutionsOther" :key="idx">
           <!--  @blur="editSolClick(notinworksol.name, notinworksol.id)"  -->
-          <input class="form-control" @keyup.enter="event => {onKey(event)}"
+          <input class="form-control col-9" @keyup.enter="event => {onKey(event)}"
            v-model="notinworksol.name" @blur="editSolClick(notinworksol.name, notinworksol.id)"
             @focus="onFocusInput($event)"
             :class="{ 'form-control--error': notinworksol.name.length < 6 ||  notinworksol.name.length > 100 || notinworksol.name.length == 0}">
-          <div class="icons" ref="iconInWork">
-            <div class="select" style="position: relative;" ref="select"
+          <div class="icons col-3" ref="iconInWork">
+            <!-- <div class="select" style="position: relative;" ref="select"
               :class="[notinworksol.in_work ? 'green' : 'gray']">
               <select v-model="notinworksol.in_work" class="form-control" @change="event => {changeinWork(notinworksol, event)}">
                 <option value="true">
@@ -44,10 +67,36 @@
                 <option value="false">
                   Не в работе</option>
               </select>
-            </div>
+            </div> -->
+            <div class="select col-8" style="position: relative;" ref="select">
+                        <ss-select v-model="notinworksol.in_work" :options="statuses" track-by="name" search-by="name"
+                          class="form-control" @change="event => {changeinWork(notinworksol, event)}"
+                          disable-by="disabled" :class="[notinworksol.in_work  ? 'green' : 'gray']"
+                          id="ss-select" style="width: 198px; ">
+                          <div
+                            slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+                            style="cursor: pointer; width: 100%;">
+                            <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
+                              {{ $get(selectedOption, 'name') || `${notinworksol.in_work ? 'В работе' : 'Не в работе'}`}}
+                              <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
+                            </ss-select-toggle>
 
-            <div style="width: 50px;">
-              <button type="button" class="close" id="remove" style="margin: auto;" @click="showDelete(notinworksol.id)"
+                            <section v-show="isOpen" class="absolute border-l border-r min-w-full"
+                              style="height: auto;">
+                              <ss-select-option v-for="(option, index) in filteredOptions" :value="option"
+                                :index="index" :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
+                                pointerIndex == index ? 'bg-light text-dark' : '',
+                                $selected(option) ? 'bg-light text-dark' : '',
+                                $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
+                              ]">{{ option.name }}</ss-select-option>
+                            </section>
+                          </div>
+                        </ss-select>
+                      </div>
+
+
+            <div style="width: 50px;" class="col-4">
+              <button type="button" class="close" id="remove" style="margin: 0 30px 0 0;" @click="showDelete(notinworksol.id)"
                 data-toggle="modal" data-target="#popupDeleteSolution">
                 <trash-icon size="1x" class="custom-class"></trash-icon>
               </button>
@@ -88,11 +137,17 @@
 <script>
   import DeleteSolution from './DeleteSolution'
   import {
-    TrashIcon
+    TrashIcon,
+    ChevronDownIcon
   } from 'vue-feather-icons'
   import {
     mapGetters
   } from 'vuex'
+    import {
+    SsSelect,
+    SsSelectToggle,
+    SsSelectOption,
+  } from 'ss-select'
 
   export default {
     name: 'popup',
@@ -109,11 +164,24 @@
       // openDeleteTask: false
 
       currentSolStatus: '',
-      currentSolInput: ''
+      currentSolInput: '',
+
+      statuses: [{
+          name: "В работе"
+        },
+        {
+          name: "Не в работе"
+        }
+      ],
     }),
     components: {
       TrashIcon,
       DeleteSolution,
+      ChevronDownIcon,
+
+            SsSelect,
+      SsSelectToggle,
+      SsSelectOption,
     },
     computed: {
       ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404', 'allUsers']),
@@ -222,15 +290,14 @@
     align-items: center;
   }
 
-  h6 {
-    font-style: normal;
-    font-weight: normal;
-    font-size: 18px;
-    line-height: 24px;
-    letter-spacing: 0.15px;
-    color: #000000;
-    font-family: 'Roboto';
-  }
+    h6 {
+      font-family: 'GothamPro';
+      font-style: normal;
+      font-size: 16px;
+      line-height: 24px;
+      letter-spacing: 0.15px;
+      color: #828282;
+    }
 
   .modal-header {
     border: none;
@@ -247,15 +314,9 @@
     color: #2D453F;
     justify-content: center;
     text-align: center;
+    margin-bottom: 20px;
 
-    h6 {
-      font-family: 'GothamPro-Medium';
-      font-style: normal;
-      font-size: 18px;
-      line-height: 24px;
-      letter-spacing: 0.15px;
-      color: #2D453F;
-    }
+
   }
 
   ::-webkit-scrollbar {
@@ -302,6 +363,7 @@
     border-radius: 12px;
     border: none;
     padding: 36px 30px 37px 62px;
+    height: 100%;
   }
 
   .modal-body {
@@ -309,7 +371,7 @@
   }
 
   .footer {
-    margin-top: 153px;
+    margin-top: 53px;
     background-color: #F6F7F9;
     border-radius: 20px;
 
@@ -511,6 +573,31 @@
     select {
       background: url('~@/assets/Select.png') no-repeat;
       background-position: right 0.4em top 111%, 0 0;
+      color: #2D453F;
+    }
+  }
+
+  .green {
+    background-color: #4EAD96 !important;
+    width: 180px;
+    color: #fff;
+    font-size: 16px;
+    line-height: 24px;
+    font-family: 'GothamPro-Medium' !important;
+    letter-spacing: 0.15px;
+
+    svg {
+      color: #fff;
+    }
+
+  }
+
+  .gray {
+    background-color: #E0E0E0 !important;
+    width: 180px;
+    color: #2D453F;
+
+    svg {
       color: #2D453F;
     }
   }

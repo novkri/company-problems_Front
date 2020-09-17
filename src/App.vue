@@ -209,6 +209,39 @@
   //     font-size: 15px;
   //   }
   // }
+    #ss-select {
+    align-items: center;
+    display: flex;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    padding: 0;
+        width: fit-content;
+  }
+    section {
+          width: fit-content;
+    padding: 22px;
+    // width: 250px;
+        width: 215px;
+    position: absolute;
+    max-height: 257px;
+    // right: -19%;
+    top: 102%;
+
+    border-radius: 10px;
+    box-shadow: 0px 4px 16px rgba(54, 44, 117, 0.08);
+    background-color: white;
+    color: #828282;
+    height: 400px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    z-index: 10000;
+  }
+
+
+
+
+
 
   @media (max-width: 1300px) {
     * {

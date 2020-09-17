@@ -119,18 +119,25 @@ export default {
     },
 
     editProblem: async ({commit}, param) => {
+      return new Promise((resolve, reject) => {
         axios.put(BASEURL + `/${param.id}`, {name: param.name}).then(response => {
         if (response.status == 200) { 
           commit('setError', '')
           commit('setError404', '')
           commit('editProblem', response.data)
+          resolve(response)
         }
       }).catch((error) => {
+        console.log(error.response);
         if (error.response.status !== 422) {
           commit('setError404', error.response.data.message)
+          reject(error.response.data.message)
         } else {
           commit('setError', error.response.data.errors.name[0])
+          reject(error.response.data.errors.name[0])
         }
+      
+      })
       })
     }
   }

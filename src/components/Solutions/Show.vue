@@ -3,15 +3,16 @@
 
     <div class="popup-show">
       <div id="popupShow" class="modal fade" role="dialog" style="padding: 0 !important; overflow: hidden;">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="width: 90vw" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="width: 90vw; height: 750px;" role="document">
           <div class="modal-content">
             <div class="modal-header tab row">
-              <div class="tabDiv col-xl-3 col-lg-4" :class="[openShow ? 'active' : '']" @click="toggleTab1()">
+              
+              <div class="tabDiv col-xl-3 col-lg-4" :class="[tab ? 'active' : '']" @click="toggleTab1()">
                 <eye-icon size="1.5x" class="custom-class"></eye-icon>
                 <button class="btn btnTab">Просмотр проблемы</button>
               </div>
-              <div class="tabDiv col-xl-3 col-lg-4" :class="[openShow ? '' : 'active']" @click="toggleTab2()">
-                <img src="@/assets/tasks.png" v-if="openShow">
+              <div class="tabDiv col-xl-3 col-lg-4" :class="[tab ? '' : 'active']" @click="toggleTab2()">
+                <img src="@/assets/tasks.png" v-if="tab">
                 <img src="@/assets/listGreen.png" v-else>
 
                 <button class="btn btnTab">Добавить решение</button>
@@ -23,15 +24,15 @@
               </div>
             </div>
 
-            <div class="modal-header" v-if="openShow">
-              <!-- <div style="width: 100%;">
-                <button type="button" id="close" class="close" data-dismiss="modal" style="font-size: 24px;">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div> -->
-
+            <div class="modal-header" v-if="tab">
               <div class="subtitle subtitle1">
-                <h5 class="modal-title">{{val.name}}</h5>
+                <h5 class="modal-title" @click="showEdit = !showEdit" v-if="!showEdit">{{val.name}}</h5>
+                                      
+                <div class="form-group" v-else>
+                  <input autofocus @blur="editProblem()" @keyup.enter="onKey($event)" @focus="onFocusInput($event)" ref="input" class="form-control"
+                     id="new-problem-title" v-model="val.name">
+                    <div class="error" v-if="error">{{error}}</div>
+                </div>
                 <!-- <h6 v-if="progress !== ''">Прогресс решения {{progress}}%</h6>
                 <h6 v-else>Прогресс решения 0%</h6>
                 <div class="icons">
@@ -40,28 +41,11 @@
                 </div> -->
               </div>
             </div>
-            <div class="modal-header" style="width: 130%;" v-else>
-              <button type="button" id="close" class="close" @click="closeSolutions" data-dismiss="modal" style="font-size: 24px;"
-                data-target="#popupSol">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-
-            <div class="modal-body" v-if="openShow">
-              <!-- <div class="subtitle subtitle1" >
-                <h5 class="modal-title">{{val.name}}</h5> -->
-              <!-- <h6 v-if="progress !== ''">Прогресс решения {{progress}}%</h6>
-                <h6 v-else>Прогресс решения 0%</h6>
-                <div class="icons">
-                  <img src="~@/assets/star.png">
-                  <span>95</span>
-                </div> -->
-              <!-- </div> -->
-
+            <div class="modal-body" v-if="tab">
               <div>
                 <div class="subtitle row subt">
                   <div class="col-5">
-                    Решения в работе:
+                    Решение в работе:
                   </div>
                   <div class="col-2">
                     Статус выполнения
@@ -81,7 +65,7 @@
                   <ol>
                     <li v-for="(solution, idx) in solutions" :key="idx" id="list" class="row">
                       <div class="list-item col-5">
-                        <div class="desc" ref="desc"><span>{{idx+1}}.{{solution.name}}</span>
+                        <div class="desc" ref="desc" ><span>{{idx+1}}.{{solution.name}}</span>
                         </div>
                       </div>
 
@@ -171,7 +155,7 @@
                   data-target="#popupSol" data-dismiss="modal"><span>Посмотреть/Добавить решение</span></button> -->
               </div>
             </div>
-            <Solutions v-if="!openShow" :openS="openSolutions" @closeSolutions="closeSolutions($event)" :val="val" />
+            <Solutions v-if="!tab" :openS="openSolutions" @closeSolutions="closeSolutions($event)" :val="val" />
             <!-- </div> -->
 
             <!-- <Solutions v-if="!openShow" :openS="openSolutions" @closeSolutions="closeSolutions($event)" :val="val" /> -->
@@ -219,11 +203,12 @@
 
   export default {
     name: 'popup',
-    props: ['open', 'val'],
+    props: ['open', 'val', 'tab'],
     data: () => ({
-      openShow: true,
+      // openShow: true,
       openSolutions: false,
       showTasks: false,
+      showEdit: false,
       solutionName: '',
       progress: '',
       openRemoveFromWork: false,
@@ -232,6 +217,7 @@
       openDeleteTask: false,
       taskIdDelete: '',
       selected: false,
+      problemName: '',
 
       obj: '',
 
@@ -269,16 +255,38 @@
 
       // flatPickr
     },
-
+    mounted() {
+      console.log('b');
+    },
     computed: {
       ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404', 'allUsers', 'currentSolution', 'tasks']),
+
+
+    
     },
     methods: {
+      onFocusInput(event) {
+        this.problemName = event.target.value
+      },
+      onKey(event) {event.target.blur()},
+
+      async editProblem() {
+          await this.$store.dispatch('checkIfExists', {id: this.val.id})
+          .then(async () => {
+            if (this.val.name !== this.problemName) {
+              await this.$store.dispatch('editProblem', {id: this.val.id, name: this.val.name}).then(() => this.showEdit = false).catch((e) => console.log(e))
+            } else {
+              this.showEdit = false
+            }
+          })
+      },
       toggleTab1() {
-        this.openShow = true
+        // this.openShow = true
+        this.$emit('changeTab', true)
       },
       toggleTab2() {
-        this.openShow = false
+        // this.openShow = false
+        this.$emit('changeTab', false)
       },
       async selectExecutor(id, uid) {
         await this.$store.dispatch('changeExecutor', {
@@ -420,6 +428,8 @@
     justify-content: center;
     text-align: center;
     margin-bottom: 26px;
+    padding: 15px;
+    cursor: pointer;
 
     h6 {
       font-family: 'GothamPro-Medium';
@@ -464,6 +474,7 @@
   .subtitle1 {
     border-bottom: 2px solid #E2E2E2;
     background-color: #fff;
+    margin-top: 59px;
   }
 
   .subt {
@@ -471,28 +482,36 @@
     margin-top: 35px;
     // margin-left: 29px !important;
     margin-left: 29px;
+    div {
+      font-family: 'GothamPro';
+      font-style: normal;
+      font-size: 16px;
+      line-height: 24px;
+      letter-spacing: 0.15px;
+      color: #828282;
+    }
   }
 
   .modal-content {
     border-radius: 12px;
     border: none;
     padding: 0px 30px 37px 42px;
-    min-height: calc(100vh - 25rem);
+    height: 100%;
   }
 
   .modal-body {
     padding: 0;
   }
 
-  #ss-select {
-    align-items: center;
-    display: flex;
-    height: 36px;
-    border-radius: 10px;
-    display: flex;
-    padding: 0;
-        width: fit-content;
-  }
+  // #ss-select {
+  //   align-items: center;
+  //   display: flex;
+  //   height: 36px;
+  //   border-radius: 10px;
+  //   display: flex;
+  //   padding: 0;
+  //       width: fit-content;
+  // }
 
   ol {
     margin-top: 30px;
@@ -598,6 +617,17 @@
     #iconUser {
       color: #fff;
     }
+  }
+
+    #new-problem-title {
+    border: none;
+    // border-bottom: 2px solid #92D2C3;
+    border-radius: 6px;
+    background-color: #F0F0F0;
+    color: #2D453F;
+    margin: 0 10px;
+    font-size: 22px;
+    font-family: "GothamPro-Medium";
   }
 
 
@@ -815,24 +845,7 @@
     outline: none;
   }
 
-  section {
-    padding: 22px;
-    // width: 250px;
-        width: 205px;
-    position: absolute;
-    max-height: 257px;
-    // right: -19%;
-    top: 102%;
 
-    border-radius: 10px;
-    box-shadow: 0px 4px 16px rgba(54, 44, 117, 0.08);
-    background-color: white;
-    color: #828282;
-    height: 400px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    z-index: 100;
-  }
 
   .stf-select_opened .stf-select__options {
     z-index: 100000000000000 !important;
