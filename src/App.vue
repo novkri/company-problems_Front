@@ -30,6 +30,7 @@
         return JSON.parse(localStorage.getItem('user'))
       }
     },
+
     methods: {
       logout: function () {
         this.$store.dispatch('logout')

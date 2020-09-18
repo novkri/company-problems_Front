@@ -9,7 +9,7 @@
              @focus="onFocusInput($event)" @blur="editSolClick(sol.name, sol.id)"
             :class="{ 'form-control--error': sol.name.length < 6 ||  sol.name.length > 100 || sol.name.length == 0}">
           <div class="icons col-3" ref="iconInWork">
-            <div class="select col-6" style="position: relative;" ref="select" :class="[sol.in_work ? 'green' : 'gray']">
+            <div class="select col-8" style="position: relative;" ref="select" :class="[sol.in_work ? 'green' : 'gray']">
               <select v-model="sol.in_work" class="form-control" @change="event => {changeinWork(sol, event)}">
                 <option value="true">
                   В работе</option>
@@ -60,7 +60,7 @@
             @focus="onFocusInput($event)"
             :class="{ 'form-control--error': notinworksol.name.length < 6 ||  notinworksol.name.length > 100 || notinworksol.name.length == 0}">
           <div class="icons col-3" ref="iconInWork">
-            <div class="select col-6" style="position: relative;" ref="select"
+            <div class="select col-8" style="position: relative;" ref="select"
               :class="[notinworksol.in_work ? 'green' : 'gray']">
               <select v-model="notinworksol.in_work" class="form-control" @change="event => {changeinWork(notinworksol, event)}">
                 <option value="true">
