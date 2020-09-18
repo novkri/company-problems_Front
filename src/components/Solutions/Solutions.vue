@@ -9,14 +9,15 @@
              @focus="onFocusInput($event)" @blur="editSolClick(sol.name, sol.id)"
             :class="{ 'form-control--error': sol.name.length < 6 ||  sol.name.length > 100 || sol.name.length == 0}">
           <div class="icons col-3" ref="iconInWork">
-            <!-- <div class="select" style="position: relative;" ref="select" :class="[sol.in_work ? 'green' : 'gray']"> -->
-              <!-- <select v-model="sol.in_work" class="form-control" @change="event => {changeinWork(sol, event)}">
+            <div class="select col-6" style="position: relative;" ref="select" :class="[sol.in_work ? 'green' : 'gray']">
+              <select v-model="sol.in_work" class="form-control" @change="event => {changeinWork(sol, event)}">
                 <option value="true">
                   В работе</option>
                 <option value="false">
                   Не в работе</option>
-              </select> -->
-                      <div class="select col-8" style="position: relative;" ref="select">
+              </select>
+            </div>
+                      <!-- <div class="select col-8" style="position: relative;" ref="select">
                         <ss-select v-model="sol.in_work" :options="statuses" track-by="name" search-by="name"
                           class="form-control" @change="event => {changeinWork(sol, event)}"
                           disable-by="disabled" :class="[sol.in_work  ? 'green' : 'gray']"
@@ -40,7 +41,7 @@
                             </section>
                           </div>
                         </ss-select>
-                      </div>
+                      </div> -->
             <div style="width: 50px;" class="col-4">
               <button type="button" class="close" id="remove" style="margin:  0 30px 0 0;" @click="showDelete(sol.id)"
                 data-toggle="modal" data-target="#popupDeleteSolution">
@@ -59,7 +60,7 @@
             @focus="onFocusInput($event)"
             :class="{ 'form-control--error': notinworksol.name.length < 6 ||  notinworksol.name.length > 100 || notinworksol.name.length == 0}">
           <div class="icons col-3" ref="iconInWork">
-            <!-- <div class="select col-8" style="position: relative;" ref="select"
+            <div class="select col-6" style="position: relative;" ref="select"
               :class="[notinworksol.in_work ? 'green' : 'gray']">
               <select v-model="notinworksol.in_work" class="form-control" @change="event => {changeinWork(notinworksol, event)}">
                 <option value="true">
@@ -67,8 +68,8 @@
                 <option value="false">
                   Не в работе</option>
               </select>
-            </div> -->
-            <div class="select col-8" style="position: relative;" ref="select">
+            </div>
+            <!-- <div class="select col-8" style="position: relative;" ref="select">
                         <ss-select v-model="notinworksol.in_work" :options="statuses" track-by="name" search-by="name"
                           class="form-control" @change="event => {changeinWork(notinworksol, event)}"
                           disable-by="disabled" :class="[notinworksol.in_work  ? 'green' : 'gray']"
@@ -92,7 +93,7 @@
                             </section>
                           </div>
                         </ss-select>
-                      </div>
+                      </div> -->
 
 
             <div style="width: 50px;" class="col-4">
@@ -138,16 +139,16 @@
   import DeleteSolution from './DeleteSolution'
   import {
     TrashIcon,
-    ChevronDownIcon
+    // ChevronDownIcon
   } from 'vue-feather-icons'
   import {
     mapGetters
   } from 'vuex'
-    import {
-    SsSelect,
-    SsSelectToggle,
-    SsSelectOption,
-  } from 'ss-select'
+  //   import {
+  //   SsSelect,
+  //   SsSelectToggle,
+  //   SsSelectOption,
+  // } from 'ss-select'
 
   export default {
     name: 'popup',
@@ -177,11 +178,11 @@
     components: {
       TrashIcon,
       DeleteSolution,
-      ChevronDownIcon,
+      // ChevronDownIcon,
 
-            SsSelect,
-      SsSelectToggle,
-      SsSelectOption,
+      //       SsSelect,
+      // SsSelectToggle,
+      // SsSelectOption,
     },
     computed: {
       ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404', 'allUsers']),
@@ -224,13 +225,16 @@
         await this.$store.dispatch('checkAmountSolInWork').then(() => {
           this.$store.dispatch('changeinWork', {
           id: obj.id,
-          in_work: obj.in_work === "В работе" ? false : true
+          in_work: obj.in_work === "true" ? true : false
         }).then(r => {
           this.$store.dispatch('getTasks', r.data.id)
         })
         })
         .catch(() => {
-          event = false
+          event.target.value = false
+          event.path[1].classList.remove('green')
+          event.path[1].classList.add('gray')
+
           this.$store.dispatch('changeinWork', {
           id: obj.id,
           in_work: obj.in_work === "true" ? true : false
