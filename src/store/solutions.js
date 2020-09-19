@@ -183,10 +183,16 @@ export default {
       })
     },
     // checkAmountSolInWork:
-    checkAmountSolInWork: async ({state}) => {
+    checkAmountSolInWork: async ({state}, obj) => {
       // param.id = 10000000000
+      console.log('d');
       return new Promise((resolve, reject) => {
-          if (state.solutions.length == 1) {
+          // if (state.solutions.length == 1) {
+            console.log(state.solutions.find(s => s.id == obj.id));
+            if (state.solutions.find(s => s.id == obj.id) && obj.in_work.name == "В работе") {
+              
+              reject('false')
+          } else if (state.solutionsOther.find(s => s.id == obj.id) && obj.in_work.name == "Не в работе") {
             reject('false')
           } else {
             resolve('true')
@@ -196,15 +202,18 @@ export default {
 
     changeinWork: async ({commit}, param) => {
       // param.id = 10000000000
+      console.log(param);
       return new Promise((resolve, reject) => {
       axios.put(BASEURL + `/${param.id}/change-in-work`, {
         in_work: param.in_work
       }).then(response => {
+        console.log(response);
           commit('setError', '')
           commit('editinWork', response.data)
           commit('sortSolutions')
           resolve(response)
       }).catch((error) => {
+        console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
           reject(error.response.data.message)

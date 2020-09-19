@@ -9,19 +9,21 @@
              @focus="onFocusInput($event)" @blur="editSolClick(sol.name, sol.id)"
             :class="{ 'form-control--error': sol.name.length < 6 ||  sol.name.length > 100 || sol.name.length == 0}">
           <div class="icons col-3" ref="iconInWork">
-            <div class="select col-8" style="position: relative;" ref="select" :class="[sol.in_work ? 'green' : 'gray']">
-              <select v-model="sol.in_work" class="form-control" @change="event => {changeinWork(sol, event)}">
+            <!-- <div class="select col-8" style="position: relative;" ref="select" :class="[sol.in_work ? 'green' : 'gray']"> -->
+              <!-- <select v-model="sol.in_work" class="form-control" @change="event => {changeinWork(sol, event)}">
                 <option value="true">
                   В работе</option>
                 <option value="false">
                   Не в работе</option>
               </select>
-            </div>
-                      <!-- <div class="select col-8" style="position: relative;" ref="select">
+            </div> -->
+
+            <!-- :class="[sol.in_work  ? 'green' : 'gray']" -->
+                      <div class="select col" style="position: relative;" ref="select">
                         <ss-select v-model="sol.in_work" :options="statuses" track-by="name" search-by="name"
-                          class="form-control" @change="event => {changeinWork(sol, event)}"
-                          disable-by="disabled" :class="[sol.in_work  ? 'green' : 'gray']"
-                          id="ss-select" style="width: 198px; ">
+                          class="form-control green" @change="event => {changeinWork(sol, event)}"
+                          disable-by="disabled" 
+                          id="ss-select" style="width: auto; ">
                           <div
                             slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                             style="cursor: pointer; width: 100%;">
@@ -41,9 +43,9 @@
                             </section>
                           </div>
                         </ss-select>
-                      </div> -->
-            <div style="width: 50px;" class="col-4">
-              <button type="button" class="close" id="remove" style="margin:  0 30px 0 0;" @click="showDelete(sol.id)"
+                      </div>
+            <div style="width: 50px;" class="col-2">
+              <button type="button" class="close" id="remove" @click="showDelete(sol.id)"
                 data-toggle="modal" data-target="#popupDeleteSolution">
                 <trash-icon size="1x" class="custom-class"></trash-icon>
               </button>
@@ -60,7 +62,7 @@
             @focus="onFocusInput($event)"
             :class="{ 'form-control--error': notinworksol.name.length < 6 ||  notinworksol.name.length > 100 || notinworksol.name.length == 0}">
           <div class="icons col-3" ref="iconInWork">
-            <div class="select col-8" style="position: relative;" ref="select"
+            <!-- <div class="select col-8" style="position: relative;" ref="select"
               :class="[notinworksol.in_work ? 'green' : 'gray']">
               <select v-model="notinworksol.in_work" class="form-control" @change="event => {changeinWork(notinworksol, event)}">
                 <option value="true">
@@ -68,12 +70,14 @@
                 <option value="false">
                   Не в работе</option>
               </select>
-            </div>
-            <!-- <div class="select col-8" style="position: relative;" ref="select">
+            </div> -->
+
+            <!-- :class="[notinworksol.in_work  ? 'green' : 'gray']" -->
+            <div class="select col" style="position: relative;" ref="select">
                         <ss-select v-model="notinworksol.in_work" :options="statuses" track-by="name" search-by="name"
-                          class="form-control" @change="event => {changeinWork(notinworksol, event)}"
-                          disable-by="disabled" :class="[notinworksol.in_work  ? 'green' : 'gray']"
-                          id="ss-select" style="width: 198px; ">
+                          class="form-control gray" @change="event => {changeinWork(notinworksol, event)}"
+                          disable-by="disabled" 
+                          id="ss-select" style="width: auto; ">
                           <div
                             slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                             style="cursor: pointer; width: 100%;">
@@ -93,16 +97,17 @@
                             </section>
                           </div>
                         </ss-select>
-                      </div> -->
+                      </div>
 
 
-            <div style="width: 50px;" class="col-4">
-              <button type="button" class="close" id="remove" style="margin: 0 30px 0 0;" @click="showDelete(notinworksol.id)"
+            <div style="width: 50px;" class="col-2">
+              <button type="button" class="close" id="remove" @click="showDelete(notinworksol.id)"
                 data-toggle="modal" data-target="#popupDeleteSolution">
                 <trash-icon size="1x" class="custom-class"></trash-icon>
               </button>
             </div>
           </div>
+          
         </li>
       </ul>
 
@@ -139,16 +144,16 @@
   import DeleteSolution from './DeleteSolution'
   import {
     TrashIcon,
-    // ChevronDownIcon
+    ChevronDownIcon
   } from 'vue-feather-icons'
   import {
     mapGetters
   } from 'vuex'
-  //   import {
-  //   SsSelect,
-  //   SsSelectToggle,
-  //   SsSelectOption,
-  // } from 'ss-select'
+    import {
+    SsSelect,
+    SsSelectToggle,
+    SsSelectOption,
+  } from 'ss-select'
 
   export default {
     name: 'popup',
@@ -178,11 +183,11 @@
     components: {
       TrashIcon,
       DeleteSolution,
-      // ChevronDownIcon,
+      ChevronDownIcon,
 
-      //       SsSelect,
-      // SsSelectToggle,
-      // SsSelectOption,
+            SsSelect,
+      SsSelectToggle,
+      SsSelectOption,
     },
     computed: {
       ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404', 'allUsers']),
@@ -221,25 +226,29 @@
 
       async changeinWork(obj, event) {
         console.log(event);
+        console.log(obj);
         await this.$store.commit('setError404', '')
-        await this.$store.dispatch('checkAmountSolInWork').then(() => {
+        await this.$store.dispatch('checkAmountSolInWork', obj).then((r) => {
+          console.log(r);
           this.$store.dispatch('changeinWork', {
           id: obj.id,
-          in_work: obj.in_work === "true" ? true : false
+          // in_work: obj.in_work === "true" ? true : false
+          in_work: obj.in_work.name === "В работе" ? true : false
         }).then(r => {
           this.$store.dispatch('getTasks', r.data.id)
         })
         })
         .catch(() => {
-          event.target.value = false
-          event.path[1].classList.remove('green')
-          event.path[1].classList.add('gray')
+          // event.target.value = false
+          // event.path[1].classList.remove('green')
+          // event.path[1].classList.add('gray')
 
-          this.$store.dispatch('changeinWork', {
-          id: obj.id,
-          in_work: obj.in_work === "true" ? true : false
-        })
-        obj.in_work = false
+        //   this.$store.dispatch('changeinWork', {
+        //   id: obj.id,
+        //   // in_work: obj.in_work === "true" ? true : false
+        //   in_work: obj.in_work.name === "В работе" ? true : false
+        // })
+        // obj.in_work = false
         })
 
         
@@ -276,6 +285,7 @@
 
   #remove {
     display: none;
+    margin: 0;
   }
 
   #list:hover #remove {
@@ -449,6 +459,7 @@
 
   .icons {
     display: flex;
+    justify-content: space-between;
     flex-direction: row;
     font-style: normal;
     font-weight: normal;
@@ -515,9 +526,10 @@
 
 
   .select {
-    max-width: 158px;
+    max-width: 195px;
     width: fit-content;
-        min-width: 127px;
+    max-width: 195px;
+        // min-width: 127px;
     border-radius: 10px;
     height: 36px;
 
