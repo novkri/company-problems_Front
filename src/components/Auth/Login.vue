@@ -62,7 +62,7 @@
     },
     mounted() {
       this.$store.commit('setError401', '')
-      this.$store.commit('errorU', '')
+      this.$store.commit('setErrorU', '')
     },
     watch: {
       errorU() {},

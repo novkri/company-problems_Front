@@ -2,9 +2,8 @@
   <div id="app">
     <div id="nav">
       <nav class="navbar navbar-light bg-light" v-if="isLoggedIn" style="height: 78px;">
-
-        <span style="margin: 0 55px;">Вы вошли как: {{userLoggedIn.surname}} {{userLoggedIn.name}}
-          {{userLoggedIn.father_name}}</span>
+        <span style="margin: 0 55px;">Вы вошли как: {{user.surname}} {{user.name}}
+          {{user.father_name}}</span>
         <log-in-icon @click="logout" size="1.5x" class="custom-class"></log-in-icon>
       </nav>
     </div>
@@ -18,11 +17,16 @@
   import {
     LogInIcon
   } from 'vue-feather-icons'
+    import {
+    mapGetters
+  } from 'vuex'
+
   export default {
     components: {
       LogInIcon
     },
     computed: {
+       ...mapGetters(['user']),
       isLoggedIn: function () {
         return this.$store.getters.isLoggedIn
       },

@@ -515,7 +515,9 @@
 
 
   .select {
-    width: 158px;
+    max-width: 158px;
+    width: fit-content;
+        min-width: 127px;
     border-radius: 10px;
     height: 36px;
 
@@ -523,13 +525,15 @@
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;
-    margin: 0 30px;
+    // margin: 0 30px;
     letter-spacing: 0.15px;
     color: #828282;
 
     select {
       padding-bottom: 0;
-      width: 158px;
+      // width: 158px;
+      // width: fit-content;
+          width: 100%;
       appearance: none;
       outline: 0;
       -webkit-appearance: none;
@@ -625,6 +629,14 @@
     .subt1 {
       flex: 1;
     }
+  }
+  @media (max-width: 1100px) {
+    // select {
+      .form-control {
+        padding: 7px 8px;
+      }
+      
+    // }
   }
   @media (max-width: 1200px) {
      .modal-title, h6 {

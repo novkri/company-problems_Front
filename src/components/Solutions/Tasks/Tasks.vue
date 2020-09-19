@@ -804,8 +804,27 @@ if (task.description !== this.currentTaskName) {
 
 
 
+@media (max-width: 1400px) {
+  #select-toggle {
+    font-size: 14px;
+  }
+  .selectsInputAdd {
+    padding-left: 60px;
+  }
+}
 
+ @media (max-width: 1300px) {
+    * {
+      font-size: 13px;
+    }
+    .header {
+      div {
+        font-size: 12px;
+      }
+      
+    }
 
+ }
 
   @media (max-width: 1200px) {
 
@@ -814,6 +833,7 @@ if (task.description !== this.currentTaskName) {
     #list {
       display: flex;
       flex-direction: initial;
+      font-size: 13px;
       // flex-wrap: wrap;
       // justify-content: space-between;
 
@@ -840,10 +860,11 @@ if (task.description !== this.currentTaskName) {
       //   order: 5;
       // }
 
-      // .task-title {
+      .task-title {
+        font-size: 13px;
       //   order: 1;
       //   margin-right: 109px;
-      // }
+      }
     }
 
     // .task-title {
@@ -889,9 +910,13 @@ ol {
 .header {
   padding-left: 0;
 }
-    .addTask {
+    .selectsInputAdd {
       // border-radius: 9px;
-      width: 100%;
+      // width: 100%;
+      // padding: 0;
+      padding-left: 0;
+      padding-right: 0;
+      justify-content: space-evenly;
     }
   }
 

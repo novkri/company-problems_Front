@@ -3,7 +3,7 @@
 
     <div class="popup-show">
       <div id="popupShow" class="modal fade" role="dialog" style="padding: 0 !important; overflow: hidden;">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="width: 90vw; height: 750px;" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="height: 750px;" role="document">
           <div class="modal-content">
             <div class="modal-header tab row">
               
@@ -848,18 +848,39 @@
 
 
 
-  .stf-select_opened .stf-select__options {
-    z-index: 100000000000000 !important;
+
+.modal-dialog {
+    width: 1500px;
   }
 
 
 
-
-
-
+@media (max-width: 1600px) {
+  .modal-dialog {
+    width: 90vw;
+  }
+}
+ @media (max-width: 1300px) {
+    * {
+      font-size: 13px;
+    }
+    .tab .btnTab, .modal-title {
+      font-size: 14px;
+    }
+    .subtitle1 {
+      margin-top: 30px;
+    }
+    .subt div {
+      // div {
+        font-size: 13px;
+      // }
+    }
+ }
 
   @media (max-width: 1200px) {
-
+    // * {
+    //   font-size: 13px;
+    // }
       input[type="date"]::-webkit-calendar-picker-indicator {
     background: url('~@/assets/calendar.png') 100%;
     background-repeat: no-repeat;
@@ -884,9 +905,7 @@
   }
 
   
-    .tab .btnTab, .modal-title {
-      font-size: 16px;
-    }
+
     
     .subt {
         margin-left: 10px;
@@ -941,6 +960,13 @@
     // }
   }
 
+  @media (max-width: 1100px) {
+        .subt div {
+      // div {
+        font-size: 12px;
+      // }
+    }
+  }
   @media (max-width: 500px) {
     .tasks {
       width: 85% !important;

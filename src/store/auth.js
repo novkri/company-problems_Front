@@ -25,9 +25,13 @@ export default {
     errorUReg: [],
     token: localStorage.getItem('token') || '',
     status: '',
+    user: localStorage.getItem('user') || ''
  
   },
   getters: {
+    user: state => {
+      return state.user
+    },
     errorU: state => {
       return state.errorU
     },
@@ -43,8 +47,11 @@ export default {
   },
   mutations: {
     addUser: (state, payload) => {
-      state.users.push(payload)
+      state.user = payload
     },
+    // removeUser: (state) => {
+    //   state.users = []
+    // },
     auth_request(state){
       state.status = 'loading'
     },
@@ -92,6 +99,7 @@ export default {
           .then(resp => {
             const token = resp.data.access_token
             const user = resp.data.user
+            commit('addUser', user)
 
             localStorage.setItem('token', token)
             localStorage.setItem('user', JSON.stringify(user))
@@ -109,6 +117,7 @@ export default {
           commit('setErrorU', err.response.data.errors)
           
           commit('auth_error')
+          // commit('removeUser')
           localStorage.removeItem('token')
           localStorage.removeItem('user')
         })
@@ -116,6 +125,7 @@ export default {
     logout({commit}){
       return new Promise((resolve) => {
         commit('logout')
+        // commit('removeUser')
         localStorage.removeItem('token')
         localStorage.removeItem('user')
         delete axios.defaults.headers.common['Authorization']

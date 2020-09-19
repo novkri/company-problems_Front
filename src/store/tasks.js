@@ -153,7 +153,7 @@ export default {
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
           if (state.tasks.filter(t => t.description == param.description).length > 1 && state.tasks.filter(t => t.executor_id == param.executor_id).length > 1) {
-            commit('setError404', 'Такая задача уже существует с таким ответсвенным')
+            commit('setError404', 'Такая задача уже существует с таким ответственным')
             reject('false')
 
           } else {
