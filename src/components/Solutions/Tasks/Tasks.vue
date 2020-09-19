@@ -1,8 +1,7 @@
 <template>
   <div>
     <div class="header row">
-      <div class="col-5" style="    margin-right: -15px;
-    margin-left: 20px">
+      <div class="col-5" style="margin-right: -15px;margin-left: 20px">
         <img src="@/assets/tasks.png">
         Задачи:
       </div>
@@ -16,20 +15,19 @@
     <div class="container row">
       <ol>
         <li id="list" v-for="(task, idx) in tasks" :key="idx">
-          <!-- @blur="editTask(task.description, task.id)" -->
           <div class="task-title col-5"
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">
-            <input class="form-control" @focus="onFocusInput($event)" @keyup.enter="event => onKey(event)" @blur="event => editTask(task, event)" 
-              v-model="task.description" >
-
+            <input class="form-control" @focus="onFocusInput($event)" @keyup.enter="event => onKey(event)"
+              @blur="event => editTask(task, event)" v-model="task.description">
           </div>
+
           <div class="select col-2" style="position: relative;" ref="select">
             <ss-select v-model="task.status" :options="statusesT" track-by="name" search-by="name" class="form-control"
               @change="changeStatusTask(task.id, task.status)" disable-by="disabled"
               :class="[task.status == 'Выполнено' ? 'green' : task.status == 'В процессе' ? 'blue' : 'gray']"
               id="ss-select" style="width: fit-content;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                 style="cursor: pointer; width: 100%;">
+                style="cursor: pointer; width: 100%;">
                 <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
                   {{ $get(selectedOption, 'name') || `${task.status}`}}
                   <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
@@ -46,26 +44,26 @@
               </div>
             </ss-select>
           </div>
-          <div class="dateDiv col-2">
-            <input type="date" id="start" name="trip-start" class="date" onkeypress="return false" @click="onClickDate($event)"
-              @change="event => {changeDeadlineTask(task.deadline, task.id), event}" v-model="task.deadline">
 
+          <div class="dateDiv col-2">
+            <input type="date" id="start" name="trip-start" class="date" onkeypress="return false"
+              @click="onClickDate($event)" @change="event => {changeDeadlineTask(task.deadline, task.id), event}"
+              v-model="task.deadline">
           </div>
 
           <div class="selectResponsible col-2">
             <ss-select v-model="task.executor_id" :options="allUsers" track-by="name" search-by="name"
-              @change="event => {selectExecutorTask(task, event)}" disable-by="disabled" id="ss-select" style="width: fit-content;">
-              <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }" @click="onClickExecutor(selectedOption)"
-                 style="cursor: pointer; width: 100%;">
-
-                <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between" style="width: 100%; padding: 13px;">
+              @change="selectExecutorTask(task)" disable-by="disabled" id="ss-select"
+              style="width: fit-content;">
+              <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+                @click="onClickExecutor(selectedOption)" style="cursor: pointer; width: 100%;">
+                <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between"
+                  style="width: 100%; padding: 13px;">
                   <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                   {{ $get(selectedOption, 'name') ||  `${allUsers.find(u => u.id == task.executor_id) ? allUsers.find(u => u.id == task.executor_id).name : 'Выбрать'}`}}
-
                 </ss-select-toggle>
 
                 <section v-show="isOpen" class="absolute border-l border-r min-w-full">
-
                   <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
                     :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
@@ -76,8 +74,6 @@
               </div>
             </ss-select>
           </div>
-
-
 
           <div style="width: 54px" id="close" class="col">
             <button type="button" class="close" id="remove" style="margin: auto;" @click="showDelete(task.id)"
@@ -96,37 +92,30 @@
 
           <div v-else class="inputAdd">
             <div style="display: flex;">
-              <input type="text" placeholder="Добавить задачу" class="addTask" @input="enableB" @keyup.enter="addTask"
+              <input type="text" placeholder="Добавить задачу" class="addTask" @input="enableAddBtn" @keyup.enter="addTask"
                 v-model="formInput.taskName">
+
               <div class="selectsInputAdd">
                 <div class="dateDiv">
                   <input type="date" id="start" name="trip-start" class="date" onkeypress="return false"
                     v-model="formInput.deadline">
                 </div>
+
                 <div class="selectResponsible" style="background-color: #fff;">
-                  <!-- <user-icon size="1.5x" class="custom-class" style="margin: 0 10px 0 0"></user-icon>
-                  <select class="form-control" style="height: fit-content; padding: 0;" v-model="formInput.executor">
-                    <option default>
-                      Выбрать
-                    </option>
-                    <option v-for="(u, i) in allUsers" :key="i" :value="u.id">
-                      {{u.name.split(/\s+/).map((w,i) => i ? w.substring(0,1).toUpperCase() + '.' : w).join(' ')}}
-                    </option>
-                  </select> -->
                   <ss-select v-model="formInput.executor" :options="allUsers" track-by="name" search-by="name"
                     disable-by="disabled" id="ss-select" style="width: fit-content;">
                     <div
                       slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                       style="cursor: pointer; width: 100%;">
+                      style="cursor: pointer; width: 100%;">
 
-                      <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between" style="width: 100%; padding: 13px;" id="select-toggle">
+                      <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between"
+                        style="width: 100%; padding: 13px;" id="select-toggle">
                         <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                         {{ $get(selectedOption, 'name') ||  `${allUsers.find(u => u.id == formInput.executor) ? allUsers.find(u => u.id == formInput.executor).name : 'Выбрать'}`}}
                       </ss-select-toggle>
 
                       <section v-show="isOpen" class="absolute border-l border-r min-w-full"
                         style="position: relative; width: 368px;">
-
                         <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
                           :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
@@ -137,7 +126,6 @@
                     </div>
                   </ss-select>
                 </div>
-
               </div>
             </div>
             <div class="error" v-if="error">{{error.description}}</div>
@@ -145,8 +133,9 @@
           </div>
         </li>
       </ol>
+
       <div type="submit" class="btnsAddTask" v-if="!addNotClicked">
-        <button id="addBtn" class="btn btnPink" @click.prevent="addTask" :disabled="!enableBtn">Добавить задачу</button>
+        <button id="addBtn" class="btn btnPink" @click.prevent="addTask" :disabled="!enableAddBtntn">Добавить задачу</button>
         <span @click.prevent="addNotClicked = true">Отмена</span>
       </div>
     </div>
@@ -178,13 +167,15 @@
     name: 'tasks',
     props: ['val'],
     data: () => ({
-      addNotClicked: true,
-      enableBtn: false,
-      taskName: '',
       openDeleteTask: false,
-      taskIdDelete: '',
+
+
+      addNotClicked: true,
+      enableAddBtntn: false,
       inputActive: false,
-      currentExecutor: '',
+
+      taskName: '',
+      taskIdDelete: '',
 
       statusesT: [{
           name: "К исполнению"
@@ -196,6 +187,8 @@
           name: "Выполнено"
         }
       ],
+
+      currentExecutor: '',
       currentTaskName: '',
       currentTaskInput: '',
       currentDate: '',
@@ -222,43 +215,43 @@
     watch: {
       val: function (data) {
         console.log(data);
-        /////
+        // ??
       }
     },
     methods: {
+      displayInput() {
+        this.addNotClicked = false
+        this.formInput = []
+        this.$store.commit('setError', '')
+      },
 
-      enableB() {
-        this.enableBtn = true
+      enableAddBtn() {
+        this.enableAddBtntn = true
         document.getElementById('addBtn').classList.remove('btnPink')
         document.getElementById('addBtn').classList.add('btnGren')
       },
+
       async addTask() {
         let solutionId = this.solutions[0].id
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('postTask', {
-          // solutionId: this.currentSolution,
           solutionId: solutionId,
           params: this.formInput
         }).then(() => {
-          
           if (!this.error) {
             this.formInput = []
             this.addNotClicked = true
           }
         })
       },
-      displayInput() {
-        
-        this.addNotClicked = false
-        this.formInput = []
-        this.$store.commit('setError', '')
-      },
+
       async changeStatusTask(id, status) {
         await this.$store.dispatch('changeStatusTask', {
           status: status.name,
           id
         })
       },
+
       onClickDate(event) {
         this.currentDate = event.target.value
         this.currentDateInput = event.target
@@ -270,71 +263,63 @@
           deadline,
           id
         }).catch(() => {
-              this.$store.dispatch('changeDeadlineTask', {
-                description: this.currentDate,
-                id
-              })
+          this.$store.dispatch('changeDeadlineTask', {
+            description: this.currentDate,
+            id
+          })
         })
-
       },
 
       onClickExecutor(sol) {
         this.currentExecutor = sol
       },
-
-      async selectExecutorTask(task, event) {
-        // await this.$store.dispatch('changeExecutorTask', {
-        //   id: task.id,
-        //   uid: task.executor_id
-        // })
-        console.log(event);
-
+      async selectExecutorTask(task) {
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('checkIfOk', {
-            description: task.description,
-            executor_id: task.executor_id,
-            id: task.id
-          }).then(() => {
-            this.$store.dispatch('changeExecutorTask', {
-              id: task.id,
-              uid: task.executor_id
-            })
-     
-            }).catch(() => {
-              this.$store.commit('editExecutorTask', {id: task.id, executor_id: this.currentExecutor})
-            })
-
+          description: task.description,
+          executor_id: task.executor_id,
+          id: task.id
+        }).then(() => {
+          this.$store.dispatch('changeExecutorTask', {
+            id: task.id,
+            uid: task.executor_id
+          })
+        }).catch(() => {
+          this.$store.commit('editExecutorTask', {
+            id: task.id,
+            executor_id: this.currentExecutor
+          })
+        })
       },
+
       onFocusInput(event) {
         this.currentTaskName = event.target.value
         this.currentTaskInput = event.target
       },
       onKey(event) {
-          event.target.blur()
-        },
-
+        event.target.blur()
+      },
       async editTask(task, event) {
-console.log(event);
-if (task.description !== this.currentTaskName) {
+        console.log(event);
+        if (task.description !== this.currentTaskName) {
           await this.$store.commit('setError404', '')
-        await this.$store.dispatch('checkIfOk', {
+          await this.$store.dispatch('checkIfOk', {
             description: task.description,
             executor_id: task.executor_id,
             id: task.id
           }).then(() => {
             this.$store.dispatch('editTask', {
-            description: task.description,
-            id: task.id
-          }) 
-            }).catch(() => {
-              this.$store.commit('editTask', {id: task.id, description: this.currentTaskName})
-
+              description: task.description,
+              id: task.id
             })
-}
-
-          
+          }).catch(() => {
+            this.$store.commit('editTask', {
+              id: task.id,
+              description: this.currentTaskName
+            })
+          })
+        }
       },
-
 
       showDelete(id) {
         this.$store.commit('setError404', '')
@@ -478,7 +463,7 @@ if (task.description !== this.currentTaskName) {
       border-radius: 10px;
       text-align: center;
       padding-right: 0;
-        width: fit-content;
+      width: fit-content;
 
     }
 
@@ -629,9 +614,9 @@ if (task.description !== this.currentTaskName) {
   #ss-select {
     border-radius: 10px;
     padding: 0;
-        width: fit-content;
-        align-items: center;
-        display: flex;
+    width: fit-content;
+    align-items: center;
+    display: flex;
 
   }
 
@@ -804,27 +789,29 @@ if (task.description !== this.currentTaskName) {
 
 
 
-@media (max-width: 1400px) {
-  #select-toggle {
-    font-size: 14px;
-  }
-  .selectsInputAdd {
-    padding-left: 60px;
-  }
-}
+  @media (max-width: 1400px) {
+    #select-toggle {
+      font-size: 14px;
+    }
 
- @media (max-width: 1300px) {
+    .selectsInputAdd {
+      padding-left: 60px;
+    }
+  }
+
+  @media (max-width: 1300px) {
     * {
       font-size: 13px;
     }
+
     .header {
       div {
         font-size: 12px;
       }
-      
+
     }
 
- }
+  }
 
   @media (max-width: 1200px) {
 
@@ -862,8 +849,8 @@ if (task.description !== this.currentTaskName) {
 
       .task-title {
         font-size: 13px;
-      //   order: 1;
-      //   margin-right: 109px;
+        //   order: 1;
+        //   margin-right: 109px;
       }
     }
 
@@ -877,39 +864,42 @@ if (task.description !== this.currentTaskName) {
     // }
     #select-toggle {
       // padding: 0;
-          padding: 3px !important;
-          font-size: 13px;
+      padding: 3px !important;
+      font-size: 13px;
     }
-      input[type="date"]::-webkit-calendar-picker-indicator {
-    background: url('~@/assets/calendar.png') 100%;
-    background-repeat: no-repeat;
-    cursor: pointer;
-    color: #828282;
-    position: absolute;
-    top: -5%;
-    left: -95%;
-    width: 100%;
-    height: 100%;
-  }
 
-  input[class="date"]:focus::-webkit-calendar-picker-indicator {
-    background: url('~@/assets/calendarW.png') 100%;
-    background-repeat: no-repeat;
-    cursor: pointer;
-    position: absolute;
-    left: -95%;
-    width: 100%;
-    height: 100%;
-    top: -5%;
-  }
-ol {
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      background: url('~@/assets/calendar.png') 100%;
+      background-repeat: no-repeat;
+      cursor: pointer;
+      color: #828282;
+      position: absolute;
+      top: -5%;
+      left: -95%;
+      width: 100%;
+      height: 100%;
+    }
+
+    input[class="date"]:focus::-webkit-calendar-picker-indicator {
+      background: url('~@/assets/calendarW.png') 100%;
+      background-repeat: no-repeat;
+      cursor: pointer;
+      position: absolute;
+      left: -95%;
+      width: 100%;
+      height: 100%;
+      top: -5%;
+    }
+
+    ol {
       padding-left: 31px;
-    padding-right: 6px;
-}
+      padding-right: 6px;
+    }
 
-.header {
-  padding-left: 0;
-}
+    .header {
+      padding-left: 0;
+    }
+
     .selectsInputAdd {
       // border-radius: 9px;
       // width: 100%;

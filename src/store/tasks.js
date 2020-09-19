@@ -28,10 +28,10 @@ export default {
   },
   getters: {
     tasks: state => {
-      return state.tasks 
+      return state.tasks
     },
     currentSolution: state => {
-      return state.currentSolution 
+      return state.currentSolution
     },
 
   },
@@ -57,14 +57,17 @@ export default {
       state.tasks = state.tasks.filter(t => t.id !== payload)
     },
 
-    editTask: (state, {id, description}) => {
+    editTask: (state, {
+      id,
+      description
+    }) => {
       state.tasks.find(task => task.id == id).description = description
     },
     editinWorkTask: (state, payload) => {
       if (payload.in_work) {
         state.tasks.push(payload)
       } else {
-        state.tasks = state.tasks.filter(s=> s.id !== payload.id)
+        state.tasks = state.tasks.filter(s => s.id !== payload.id)
       }
     },
     editStatusTask: (state, payload) => {
@@ -83,10 +86,14 @@ export default {
 
   },
   actions: {
-    clearTasks: async ({commit}) => {
+    clearTasks: async ({
+      commit
+    }) => {
       commit('clearTasks')
     },
-    getCurrentSolution: async ({commit}, param) => {
+    getCurrentSolution: async ({
+      commit
+    }, param) => {
       commit('setCurrentSolution', param)
     },
     getTasks: async ({
@@ -104,38 +111,48 @@ export default {
           commit('setError', error.response.data.errors)
         )
     },
-    postTask: async ({commit}, param) => {
+    postTask: async ({
+      commit
+    }, param) => {
       // param.solutionId = 100000000
       return new Promise((resolve, reject) => {
-      axios.post(BASEURL + `/${param.solutionId}/task`, {description: param.params.taskName, deadline: param.params.deadline, executor_id: param.params.executor
-        })
-        .then(response => {
-          if (response.status == 201) {
-            commit('setError', '')
+        axios.post(BASEURL + `/${param.solutionId}/task`, {
+            description: param.params.taskName,
+            deadline: param.params.deadline,
+            executor_id: param.params.executor
+          })
+          .then(response => {
+            if (response.status == 201) {
+              commit('setError', '')
+              commit('setError404', '')
+              commit('addTask', {
+                ...response.data,
+                status: "К исполнению"
+              })
+              resolve(response)
+            }
+          })
+          .catch(error => {
             commit('setError404', '')
-            commit('addTask', {...response.data, status: "К исполнению"})
-            resolve(response)
-          }
-        })
-        .catch(error => {
-          commit('setError404', '')
-          if (error.response.status == 422) {
-            if (error.response.data.errors.description) {
-              commit('setError', error.response.data.errors.description[0])
-            } else if (error.response.data.errors.deadline) {
-              commit('setError404', error.response.data.errors.deadline[0])
+            if (error.response.status == 422) {
+              if (error.response.data.errors.description) {
+                commit('setError', error.response.data.errors.description[0])
+              } else if (error.response.data.errors.deadline) {
+                commit('setError404', error.response.data.errors.deadline[0])
+              } else {
+                commit('setError404', error.response.data.errors)
+              }
             } else {
-              commit('setError404', error.response.data.errors)
-            } 
-          } else {
-            commit('setError404', error.response.data.message)
-          }
-          reject(error.response)
-        })
+              commit('setError404', error.response.data.message)
+            }
+            reject(error.response)
+          })
       })
     },
 
-    deleteTask: async ({commit}, id) => {
+    deleteTask: async ({
+      commit
+    }, id) => {
       // id = 10000000000
       await axios.delete(URLTASK + `/${id}`).then(response => {
           if (response.status == 200) {
@@ -149,29 +166,34 @@ export default {
         })
     },
 
-    checkIfOk: async ({state, commit}, param) => {
+    checkIfOk: async ({
+      state,
+      commit
+    }, param) => {
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
-          if (state.tasks.filter(t => t.description == param.description).length > 1 && state.tasks.filter(t => t.executor_id == param.executor_id).length > 1) {
-            commit('setError404', 'Такая задача уже существует с таким ответственным')
-            reject('false')
+        if (state.tasks.filter(t => t.description == param.description).length > 1 && state.tasks.filter(t => t.executor_id == param.executor_id).length > 1) {
+          commit('setError404', 'Такая задача уже существует с таким ответственным')
+          reject('false')
 
-          } else {
-            resolve('true')
-          }
+        } else {
+          resolve('true')
+        }
       })
     },
-    editTask: async ({commit}, param) => {
+    editTask: async ({
+      commit
+    }, param) => {
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
         axios.put(URLTASK + `/${param.id}`, {
 
           description: param.description
         }).then(response => {
-            commit('setError', '')
-            commit('setError404', '')
-            commit('editTask', response.data)
-            resolve(response)
+          commit('setError', '')
+          commit('setError404', '')
+          commit('editTask', response.data)
+          resolve(response)
         }).catch((error) => {
           if (error.response.status == 422) {
             commit('setError404', '')
@@ -182,7 +204,7 @@ export default {
               commit('setError404', error.response.data.errors)
               reject(error.response.data.errors)
             }
-            
+
           } else {
             commit('setError404', '')
             commit('setError404', error.response.data.message)
@@ -193,64 +215,67 @@ export default {
     },
 
 
-    changeStatusTask: async ({commit}, param) => {
+    changeStatusTask: async ({
+      commit
+    }, param) => {
       // param.id = 10000000000
       axios.put(URLTASK + `/${param.id}/change-status`, {
         status: param.status
       }).then(response => {
-          commit('setError', '')
-          commit('editStatusTask', response.data)
+        commit('setError', '')
+        commit('editStatusTask', response.data)
       }).catch((error) => {
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
-        }
-        else if (error.response.status == 422) {
+        } else if (error.response.status == 422) {
           commit('setError404', error.response.data.errors)
         }
       })
     },
 
-    changeDeadlineTask: async ({commit}, param) => {
+    changeDeadlineTask: async ({
+      commit
+    }, param) => {
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
-      axios.put(URLTASK + `/${param.id}/set-deadline`, {
-        deadline: param.deadline
-      }).then(response => {
+        axios.put(URLTASK + `/${param.id}/set-deadline`, {
+          deadline: param.deadline
+        }).then(response => {
           commit('setError', '')
           commit('editDeadlineTask', response.data)
           resolve(response)
-      }).catch((error) => {
-        if (error.response.status == 404) {
-          commit('setError404', error.response.data.message)
-          reject(error.response.data.errors)
-        }
-        else if (error.response.status == 422) {
-          commit('setError404', error.response.data.errors.deadline[0])
-          reject(error.response.data.errors)
-        }
-      })
+        }).catch((error) => {
+          if (error.response.status == 404) {
+            commit('setError404', error.response.data.message)
+            reject(error.response.data.errors)
+          } else if (error.response.status == 422) {
+            commit('setError404', error.response.data.errors.deadline[0])
+            reject(error.response.data.errors)
+          }
+        })
 
-    })
+      })
     },
 
-    changeExecutorTask: async ({commit}, param) => {
+    changeExecutorTask: async ({
+      commit
+    }, param) => {
       // param.id = 10000000000
       axios.put(URLTASK + `/${param.id}/set-executor`, {
         executor_id: param.uid
       }).then(response => {
-          commit('setError', '')
-          commit('editExecutorTask', response.data)
+        commit('setError', '')
+        commit('editExecutorTask', response.data)
       }).catch((error) => {
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
-        }
-        else if (error.response.status == 422) {
+        } else if (error.response.status == 422) {
           if (error.response.data.errors.executor_id) {
             commit('setError404', error.response.data.errors.executor_id[0])
           } else {
             commit('setError404', error.response.data.errors)
           }
-          
+
         }
       })
     },

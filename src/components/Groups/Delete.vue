@@ -4,13 +4,13 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Вы точно хотите удалить проблему?</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Вы точно хотите удалить подразделение?</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <button type="submit" class="btn btn-secondary" data-dismiss="modal" @click="deleteProblem()">Да</button>
+            <button type="submit" class="btn btn-secondary" data-dismiss="modal" @click="deleteGroup()">Да</button>
             <button type="reset" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
           </div>
         </div>
@@ -35,7 +35,7 @@
       async deleteProblem() {
           await this.$store.dispatch('checkIfExists', {id: this.val.id})
           .then(async () => {
-              await this.$store.dispatch('deleteProblem', {id: this.val.id})
+              await this.$store.dispatch('deleteGroup', {id: this.val.id})
           })
           .catch(() => this.$store.commit('setError404', ''))
       },

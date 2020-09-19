@@ -1,12 +1,11 @@
 <template>
   <div>
-
     <div class="popup-show">
       <div id="popupShow" class="modal fade" role="dialog" style="padding: 0 !important; overflow: hidden;">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="height: 750px;" role="document">
           <div class="modal-content">
             <div class="modal-header tab row">
-              
+
               <div class="tabDiv col-xl-3 col-lg-4" :class="[tab ? 'active' : '']" @click="toggleTab1()">
                 <eye-icon size="1.5x" class="custom-class"></eye-icon>
                 <button class="btn btnTab">Просмотр проблемы</button>
@@ -14,9 +13,9 @@
               <div class="tabDiv col-xl-3 col-lg-4" :class="[tab ? '' : 'active']" @click="toggleTab2()">
                 <img src="@/assets/tasks.png" v-if="tab">
                 <img src="@/assets/listGreen.png" v-else>
-
                 <button class="btn btnTab">Добавить решение</button>
               </div>
+
               <div class="col" style="width: 100%;">
                 <button type="button" id="close" class="close" data-dismiss="modal" style="font-size: 24px;">
                   <span aria-hidden="true">&times;</span>
@@ -27,11 +26,10 @@
             <div class="modal-header" v-if="tab">
               <div class="subtitle subtitle1">
                 <h5 class="modal-title" @click="showEdit = !showEdit" v-if="!showEdit">{{val.name}}</h5>
-                                      
                 <div class="form-group" v-else>
-                  <input autofocus @blur="editProblem()" @keyup.enter="onKey($event)" @focus="onFocusInput($event)" ref="input" class="form-control"
-                     id="new-problem-title" v-model="val.name">
-                    <div class="error" v-if="error">{{error}}</div>
+                  <input autofocus @blur="editProblem()" @keyup.enter="onKey($event)" @focus="onFocusInput($event)"
+                    ref="input" class="form-control" id="new-problem-title" v-model="val.name">
+                  <div class="error" v-if="error">{{error}}</div>
                 </div>
                 <!-- <h6 v-if="progress !== ''">Прогресс решения {{progress}}%</h6>
                 <h6 v-else>Прогресс решения 0%</h6>
@@ -41,6 +39,7 @@
                 </div> -->
               </div>
             </div>
+
             <div class="modal-body" v-if="tab">
               <div>
                 <div class="subtitle row subt">
@@ -58,14 +57,13 @@
                   </div>
                   <div style="width: 20px" class="col">
                   </div>
-
                 </div>
                 <div>
 
                   <ol>
                     <li v-for="(solution, idx) in solutions" :key="idx" id="list" class="row">
                       <div class="list-item col-5">
-                        <div class="desc" ref="desc" ><span>{{idx+1}}.{{solution.name}}</span>
+                        <div class="desc" ref="desc"><span>{{idx+1}}.{{solution.name}}</span>
                         </div>
                       </div>
 
@@ -98,13 +96,7 @@
                       <div class="dateDiv col-2">
                         <input type="date" id="start" name="trip-start" class="date" v-model="solution.deadline"
                           onkeypress="return false" @change="changeDeadline(solution.deadline, solution.id)">
-                          <!-- <flat-pickr v-model="solution.deadline" :config="config" placeholder="Выбрать" class="date" @on-change="changeDeadline(solution.deadline, solution.id)">
-                            
-                          </flat-pickr> -->
-                          
                       </div>
-                      
-
 
                       <div class="selectResponsible col-2">
                         <ss-select v-model="solution.executor_id" :options="allUsers" track-by="id" search-by="id"
@@ -113,11 +105,10 @@
                           <div
                             slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                             style="cursor: pointer;">
-
-                            <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between" id="select-toggle">
+                            <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between"
+                              id="select-toggle">
                               <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                               {{ $get(selectedOption, 'id') || `${allUsers.find(u => u.id == solution.executor_id) ? allUsers.find(u => u.id == solution.executor_id).name : 'Выбрать'}`}}
-
                             </ss-select-toggle>
 
                             <section v-show="isOpen" class="absolute border-l border-r min-w-full">
@@ -135,13 +126,13 @@
                           </div>
                         </ss-select>
                       </div>
+
                       <div style="width: 20px" class="col">
                         <button type="button" class="close" id="remove" style="margin: auto;font-size: 20px;"
                           @click="removeFromWork(solution)" data-toggle="modal" data-target="#popupRemoveFromWOrk">
                           <span aria-hidden="true">&times;</span>
                         </button>
                       </div>
-
                     </li>
                   </ol>
                 </div>
@@ -149,22 +140,15 @@
                 <div class="tasks" v-if="solutions[0]">
                   <Tasks :val="solutions" />
                 </div>
-           
-
-                <!-- <button type="button" class="btn btnMain" @click="showSolutions(val)" data-toggle="modal"
-                  data-target="#popupSol" data-dismiss="modal"><span>Посмотреть/Добавить решение</span></button> -->
               </div>
             </div>
             <Solutions v-if="!tab" :openS="openSolutions" @closeSolutions="closeSolutions($event)" :val="val" />
-            <!-- </div> -->
-
-            <!-- <Solutions v-if="!openShow" :openS="openSolutions" @closeSolutions="closeSolutions($event)" :val="val" /> -->
           </div>
-
-
         </div>
       </div>
     </div>
+
+
     <Solutions v-if="openSolutions" :openS="openSolutions" @closeSolutions="closeSolutions($event)" :val="val" />
     <RemoveFromWork v-if="openRemoveFromWork" :openRemoveFromWork="openRemoveFromWork"
       @closeRemoveSolutions="closeRemoveSolutions($event)" :val="solutionIdRemove" />
@@ -175,10 +159,9 @@
 </template>
 
 <script>
-//  import flatPickr from 'vue-flatpickr-component';
-//   import 'flatpickr/dist/flatpickr.css';
-//   import { Russian } from "flatpickr/dist/l10n/ru.js"
-
+  //  import flatPickr from 'vue-flatpickr-component';
+  //   import 'flatpickr/dist/flatpickr.css';
+  //   import { Russian } from "flatpickr/dist/l10n/ru.js"
 
   import {
     UserIcon,
@@ -189,6 +172,7 @@
   import {
     mapGetters
   } from 'vuex'
+
   import Solutions from './Solutions'
   import RemoveFromWork from './RemoveFromWork'
   import Tasks from './Tasks/Tasks'
@@ -205,20 +189,21 @@
     name: 'popup',
     props: ['open', 'val', 'tab'],
     data: () => ({
-      // openShow: true,
       openSolutions: false,
       showTasks: false,
       showEdit: false,
-      solutionName: '',
-      progress: '',
       openRemoveFromWork: false,
-      solutionIdRemove: '',
-      btnRemove: false,
       openDeleteTask: false,
-      taskIdDelete: '',
-      selected: false,
+
+
+      solutionName: '',
+      solutionIdRemove: '',
       problemName: '',
-      
+      taskIdDelete: '',
+
+      progress: '',
+      btnRemove: false,
+      selected: false,
 
       obj: '',
 
@@ -230,10 +215,10 @@
         }
       ],
       // config: {
-         
+
       //     altInput: true,
       //     altFormat: 'd.m.Y',
-  
+
       //     dateFormat: 'Y-m-d',
       //     locale: Russian // locale for this instance only          
       //   }, 
@@ -242,7 +227,6 @@
       UserIcon,
       EyeIcon,
       ChevronDownIcon,
-
 
       Solutions,
       RemoveFromWork,
@@ -258,38 +242,32 @@
     },
     computed: {
       ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404', 'allUsers', 'currentSolution', 'tasks']),
-
-
-    
     },
     methods: {
       onFocusInput(event) {
         this.problemName = event.target.value
       },
-      onKey(event) {event.target.blur()},
+      onKey(event) {
+        event.target.blur()
+      },
 
       async editProblem() {
-          await this.$store.dispatch('checkIfExists', {id: this.val.id})
+        await this.$store.dispatch('checkIfExists', {
+            id: this.val.id
+          })
           .then(async () => {
             if (this.val.name !== this.problemName) {
-              await this.$store.dispatch('editProblem', {id: this.val.id, name: this.val.name}).then(() => this.showEdit = false).catch((e) => console.log(e))
+              await this.$store.dispatch('editProblem', {
+                id: this.val.id,
+                name: this.val.name
+              }).then(() => this.showEdit = false)
+              // .catch((e) => console.log(e))
             } else {
               this.showEdit = false
             }
           })
       },
-      toggleTab1() {
-        // this.openShow = true
-        this.$emit('changeTab', true)
-      },
-      toggleTab2() {
-        // this.openShow = false
-        this.$emit('changeTab', false)
-      },
-      // onClickExecutor(sol) {
-      //   this.currentExecutor = sol
-      //   console.log(sol)
-      // },
+
       async selectExecutor(id, uid) {
         await this.$store.dispatch('changeExecutor', {
           id,
@@ -310,6 +288,11 @@
         })
       },
 
+      async removeFromWork(obj) {
+        this.solutionIdRemove = obj.id
+        this.openRemoveFromWork = true
+      },
+
 
       showSolutions() {
         this.openSolutions = true
@@ -317,11 +300,13 @@
       closeSolutions() {
         this.openSolutions = false
       },
-
-      async removeFromWork(obj) {
-        this.solutionIdRemove = obj.id
-        this.openRemoveFromWork = true
+      toggleTab1() {
+        this.$emit('changeTab', true)
       },
+      toggleTab2() {
+        this.$emit('changeTab', false)
+      },
+
     }
   }
 </script>
@@ -364,6 +349,7 @@
     justify-content: center;
     background-color: #F2F2F2;
     cursor: pointer;
+    border-radius: 12px 12px 0px 0px;
 
     img {
       height: fit-content;
@@ -375,17 +361,65 @@
   .active {
     background-color: #fff !important;
     border-radius: 12px 12px 0 0px;
+
     .btnTab {
       background-color: #fff;
       color: #4EAD96;
       font-family: 'GothamPro-Medium';
+
     }
 
     svg {
       color: #4EAD96;
     }
-  
   }
+
+
+.tabDiv::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0; left: 0;
+    width: 70%;
+    height: 100%;
+    border-style: solid;
+    border-color: #eee;
+    border-width: 0px 0px 0px 2px;;
+    border-radius: 12px 0 0 0;
+
+    background-color: inherit;
+    z-index: -1;
+}
+.tabDiv::after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0; right: 0;
+    width: 70%;
+    height: 100%;
+    border-style: solid;
+    border-color: #eee;
+    border-width: 0px 2px 0px 0;
+    border-radius: 0 12px 0 0;
+
+    background-color: inherit;
+    z-index: -1;
+}
+.tabDiv.active {
+
+    z-index: 10;
+}
+.tab.active::before,
+.tab.active::after {
+    background-color: #fff;
+    border-bottom-color: #fff;
+}
+// .tab:not([class='active']):hover::before,
+// .tab:not([class='active']):hover::after {
+//     background-color: #efefef; 
+// }
+
+
 
   div {
     padding: 0;
@@ -483,6 +517,7 @@
     margin-top: 35px;
     // margin-left: 29px !important;
     margin-left: 29px;
+
     div {
       font-family: 'GothamPro';
       font-style: normal;
@@ -584,7 +619,7 @@
       height: 36px;
       border-radius: 10px;
       padding-right: 0;
-        width: fit-content;
+      width: fit-content;
     }
 
     select {
@@ -620,7 +655,7 @@
     }
   }
 
-    #new-problem-title {
+  #new-problem-title {
     border: none;
     // border-bottom: 2px solid #92D2C3;
     border-radius: 6px;
@@ -710,7 +745,7 @@
     top: 20%;
     left: -5%;
     // width: 100%;
-  
+
   }
 
   input[class="date"]:focus::-webkit-calendar-picker-indicator {
@@ -849,78 +884,86 @@
 
 
 
-.modal-dialog {
+  .modal-dialog {
     width: 1500px;
   }
 
 
 
-@media (max-width: 1600px) {
-  .modal-dialog {
-    width: 90vw;
+  @media (max-width: 1600px) {
+    .modal-dialog {
+      width: 90vw;
+    }
   }
-}
- @media (max-width: 1300px) {
+
+  @media (max-width: 1300px) {
     * {
       font-size: 13px;
     }
-    .tab .btnTab, .modal-title {
+
+    .tab .btnTab,
+    .modal-title {
       font-size: 14px;
     }
+
     .subtitle1 {
       margin-top: 30px;
     }
+
     .subt div {
       // div {
-        font-size: 13px;
+      font-size: 13px;
       // }
     }
- }
+  }
 
   @media (max-width: 1200px) {
+
     // * {
     //   font-size: 13px;
     // }
-      input[type="date"]::-webkit-calendar-picker-indicator {
-    background: url('~@/assets/calendar.png') 100%;
-    background-repeat: no-repeat;
-    cursor: pointer;
-    color: #828282;
-    position: absolute;
-    top: -5%;
-    left: -95%;
-    width: 100%;
-    height: 100%;
-  }
-
-  input[class="date"]:focus::-webkit-calendar-picker-indicator {
-    background: url('~@/assets/calendarW.png') 100%;
-    background-repeat: no-repeat;
-    cursor: pointer;
-    position: absolute;
-    left: -95%;
-    width: 100%;
-    height: 100%;
-    top: -5%;
-  }
-
-  
-
-    
-    .subt {
-        margin-left: 10px;
-    div {
-      font-size: 13px;
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      background: url('~@/assets/calendar.png') 100%;
+      background-repeat: no-repeat;
+      cursor: pointer;
+      color: #828282;
+      position: absolute;
+      top: -5%;
+      left: -95%;
+      width: 100%;
+      height: 100%;
     }
-    
+
+    input[class="date"]:focus::-webkit-calendar-picker-indicator {
+      background: url('~@/assets/calendarW.png') 100%;
+      background-repeat: no-repeat;
+      cursor: pointer;
+      position: absolute;
+      left: -95%;
+      width: 100%;
+      height: 100%;
+      top: -5%;
+    }
+
+
+
+
+    .subt {
+      margin-left: 10px;
+
+      div {
+        font-size: 13px;
+      }
+
     }
 
     #list {
       padding: 15px;
     }
+
     #select-toggle {
       padding: 0;
-          font-size: 13px;
+      font-size: 13px;
     }
 
     li {
@@ -961,12 +1004,13 @@
   }
 
   @media (max-width: 1100px) {
-        .subt div {
+    .subt div {
       // div {
-        font-size: 12px;
+      font-size: 12px;
       // }
     }
   }
+
   @media (max-width: 500px) {
     .tasks {
       width: 85% !important;

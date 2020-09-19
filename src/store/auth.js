@@ -12,7 +12,7 @@ axios.interceptors.request.use(
     }
 
     return config;
-  }, 
+  },
 
   (error) => {
     return Promise.reject(error);
@@ -26,7 +26,7 @@ export default {
     token: localStorage.getItem('token') || '',
     status: '',
     user: localStorage.getItem('user') || ''
- 
+
   },
   getters: {
     user: state => {
@@ -42,7 +42,8 @@ export default {
       return state.errorUReg
     },
     isLoggedIn: state => {
-      return !!state.token},
+      return !!state.token
+    },
     authStatus: state => state.status,
   },
   mutations: {
@@ -52,17 +53,17 @@ export default {
     // removeUser: (state) => {
     //   state.users = []
     // },
-    auth_request(state){
+    auth_request(state) {
       state.status = 'loading'
     },
-    auth_success(state, token){
+    auth_success(state, token) {
       state.status = 'success'
       state.token = token
     },
-    auth_error(state){
+    auth_error(state) {
       state.status = 'error'
     },
-    logout(state){
+    logout(state) {
       state.status = ''
       state.token = ''
     },
@@ -75,54 +76,60 @@ export default {
     setErrorUReg: (state, payload) => {
       state.errorUReg = payload
     }
-    
+
   },
   actions: {
-    register: async ({commit}, formData) => {
+    register: async ({
+      commit
+    }, formData) => {
       commit('auth_request')
       await axios.post(BASEURL + '/register', formData).then(response => {
-        if (response.status == 201) { 
-          commit('setErrorUReg', '')
-          commit('setErrorU', '')
-        }
-        })
-      .catch((error) => {
-        commit('auth_error')
-        localStorage.removeItem('token')
-        commit('setErrorUReg', '')
-        commit('setErrorUReg', error.response.data.errors)
-      })
-    },
-    login: async ({commit}, user) => {
-      commit('auth_request')
-        await axios.post( BASEURL+'/login', user)
-          .then(resp => {
-            const token = resp.data.access_token
-            const user = resp.data.user
-            commit('addUser', user)
-
-            localStorage.setItem('token', token)
-            localStorage.setItem('user', JSON.stringify(user))
-            axios.defaults.headers.common['Authorization'] = token
-            
-            commit('auth_success', token)
+          if (response.status == 201) {
+            commit('setErrorUReg', '')
             commit('setErrorU', '')
-            commit('setError401', '')
-          })
+          }
+        })
+        .catch((error) => {
+          commit('auth_error')
+          localStorage.removeItem('token')
+          commit('setErrorUReg', '')
+          commit('setErrorUReg', error.response.data.errors)
+        })
+    },
+    login: async ({
+      commit
+    }, user) => {
+      commit('auth_request')
+      await axios.post(BASEURL + '/login', user)
+        .then(resp => {
+          const token = resp.data.access_token
+          const user = resp.data.user
+          commit('addUser', user)
+
+          localStorage.setItem('token', token)
+          localStorage.setItem('user', JSON.stringify(user))
+          axios.defaults.headers.common['Authorization'] = token
+
+          commit('auth_success', token)
+          commit('setErrorU', '')
+          commit('setError401', '')
+        })
         .catch(err => {
           if (err.response.status == 401) {
             commit('setError401', err.response.data.errors)
           }
           commit('setErrorU', '')
           commit('setErrorU', err.response.data.errors)
-          
+
           commit('auth_error')
           // commit('removeUser')
           localStorage.removeItem('token')
           localStorage.removeItem('user')
         })
     },
-    logout({commit}){
+    logout({
+      commit
+    }) {
       return new Promise((resolve) => {
         commit('logout')
         // commit('removeUser')
@@ -131,6 +138,6 @@ export default {
         delete axios.defaults.headers.common['Authorization']
         resolve()
       })
-     }
+    }
   }
 }

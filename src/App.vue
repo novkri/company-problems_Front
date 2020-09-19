@@ -1,21 +1,51 @@
 <template>
   <div id="app">
     <div id="nav">
-      <nav class="navbar navbar-light bg-light" v-if="isLoggedIn" style="height: 78px;">
-        <span style="margin: 0 55px;">Вы вошли как: {{user.surname}} {{user.name}}
-          {{user.father_name}}</span>
-        <log-in-icon @click="logout" size="1.5x" class="custom-class"></log-in-icon>
+      <nav class="navbar navbar-light" v-if="isLoggedIn">
+        <div class="user">
+          <span>Вы вошли как: {{userLoggedIn.surname}} {{userLoggedIn.name}}
+            {{userLoggedIn.father_name}}</span>
+        </div>
+        <div class="logout">
+          <log-out-icon size="1.5x" class="custom-class"></log-out-icon>
+        </div>
       </nav>
     </div>
 
-    <router-view />
+    <div class="body" >
+      <div class="sidebar col" v-if="isLoggedIn">
+        <div class="links">
+          <div class="main">
+            <router-link to="/problems">Проблемы</router-link>
+          </div>
+          <div class="groups">
+            <a href="#">Проекты</a>
+            <a href="#">Отделы</a>
+            <a href="#">Команды</a>
+          </div>
+          <div class="info">
+            <router-link to="/groups">Список подразделений</router-link>
+            <a href="#">Статистика</a>
+          </div>
+          <div class="footer">
+            <a href="#">Помощь</a>
+            <a href="#">Выйти из системы</a>
+          </div>
+        </div>
+        
+      </div>
+      <div class="col">
+        <router-view />
+      </div>
+    </div>
+    
 
   </div>
 </template>
 
 <script>
   import {
-    LogInIcon
+    LogOutIcon 
   } from 'vue-feather-icons'
     import {
     mapGetters
@@ -23,7 +53,7 @@
 
   export default {
     components: {
-      LogInIcon
+      LogOutIcon 
     },
     computed: {
        ...mapGetters(['user']),
@@ -47,8 +77,44 @@
 </script>
 
 <style lang="scss">
+.body {
+  display: flex;
+}
+.sidebar {
+  max-width: 280px;
+  background-color: #F6F7F9;
+  padding: 0;
 
-
+  a {
+    margin-bottom: 17px;
+    font-family: 'GothamPro';
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    color: #4F4F4F;
+  }
+.router-link-active {
+    font-family: 'GothamPro-Medium';
+  }
+  .links {
+    display: flex;
+    flex-direction: column;
+    height: 77vh;
+    justify-content: space-between;
+    padding-top: 60px;
+    padding-left: 30px;
+    // padding: 60px 30px 0;
+  }
+  
+  
+  .groups {
+    padding-left: 13px;
+  }
+  .groups, .info, .footer {
+    display: flex;
+    flex-direction: column;
+  }
+}
   #remove {
     display: none;
 
@@ -74,7 +140,42 @@
 
   .navbar {
     justify-content: flex-end;
-    padding: .5rem 3rem;
+    padding: 0rem 3rem;
+    position: relative;
+    height: 70px;
+    background-color: #C1CFEC;
+
+    .user {
+      position: relative;
+          top: 50%;
+      padding: 6px 25px;
+      background-color: #fff;
+      border-radius: 5px;
+      height: 36px;
+      margin-right: -10px;
+      span {
+        font-family: 'GothamPro';
+        font-size: 18px;
+        line-height: 24px;
+        letter-spacing: 0.15px;
+        color: #4F4F4F;
+      }
+    }
+    .logout {
+      position: relative;
+          top: 50%;
+      width: 59px;
+      height: 59px;
+      background: #B3C3E4;
+      border-radius: 50%;
+      text-align: center;
+      display: flex;
+      svg {
+        margin: auto;
+        justify-content: center;
+        color: white;
+      }
+    }
   }
 
   .container {

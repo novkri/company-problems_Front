@@ -49,14 +49,8 @@
       ...mapGetters(['error', 'error404']),
     },
     watch: {
-    //   error404(newValue, oldValue) {
-    //     console.log(`Updating from ${oldValue} to ${newValue}`)
-    //     if (this.error404) {
-    //       this.$toast.error(this.error404);
-    //     }
-    //   },
-      val(newValue, oldValue) {
-        console.log(`Updating from ${oldValue.name} to ${newValue.name}`)
+      val(newValue) {
+        // console.log(`Updating from ${oldValue.name} to ${newValue.name}`)
         this.name = newValue.name
       }
     },

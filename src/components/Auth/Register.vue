@@ -71,8 +71,6 @@
         На страницу авторизации
       </button>
     </div>
-
-    <!-- <div class="to-login">Уже зарегистрированы? <router-link to="/login">Вход</router-link> </div> -->
   </div>
 
 
@@ -146,7 +144,7 @@
     },
     mounted() {
       this.$store.commit('setError401', '')
-      this.$store.commit('errorUReg', '')
+      this.$store.commit('setErrorUReg', '')
     },
     watch: {
       errorUReg() {
@@ -164,15 +162,6 @@
         this.passwordFieldTypeC = this.passwordFieldTypeC === 'password' ? 'text' : 'password'
       },
 
-      // toggleConfirm() {
-      //   if (this.$refs.confirm.type == 'text') {
-      //     this.$refs.confirm.type = 'password'
-      //     this.eyeC = false
-      //   } else {
-      //     this.$refs.confirm.type = 'text'
-      //     this.eyeC = true
-      //   }
-      // },
       async register() {
         const formData = {
           name: this.name,
@@ -181,7 +170,6 @@
           password: this.password,
           password_confirmation: this.confirm,
           email: this.email
-
         }
         await this.$store.dispatch('register', formData).then(() => {
           if (this.errorUReg == '') {

@@ -1,27 +1,20 @@
 <template>
   <div class="container" style="width: 1350px;">
-    <h2>Список всех проблем</h2>
+    <h2>Список всех проблем в компании</h2>
     <ul class="list-group">
-      <!-- @click.prevent="show(problem)" -->
       <li class="list-group-item" v-for="(problem, idx) in paginatedData" :key="idx" id="list">
         <div class="toggle-area" @click.prevent="show(problem)" data-toggle="modal" data-target="#popupShow">
           <p> {{ problem.name }} </p>
-          
         </div>
 
         <!-- <div class="creator">{{problem}} d</div>
         <div class="creator">{{allUsers.id == problem.creator_id}} f</div> -->
 
         <div class="icons">
-          <!-- <div class="borderline">
-            <edit-icon size="1.3x" class="custom-class" @click="edit(problem)" data-toggle="modal"
-              data-target="#popupEdit" style="margin-left: 0px;"></edit-icon>
-          </div> -->
           <div style="width: 50px;align-items: center;display: flex;margin: 4px 15px 4px 18px;">
             <trash-icon size="1.3x" class="custom-class" id="remove" style="margin: auto;"
               @click="deleteP(problem.id, problem.name)" data-toggle="modal" data-target="#popupDelete"></trash-icon>
           </div>
-
         </div>
       </li>
     </ul>
@@ -55,12 +48,10 @@
 
 
 
-    <!-- :open="openCreate"  -->
     <PopupCreate v-if="openCreate" @createProblem="createProblem(param = $event)" />
     <PopupEdit v-if="openEdit" :val="paramsModal" @editProblem="editProblem(param = $event)" />
     <PopupDelete v-if="openDelete" :val="paramsModal" @deleteProblem="deleteProblem(param = $event)" />
-    <PopupShow v-if="openShow" :val="paramsModal" :tab="tab" @changeTab="changeTab(param = $event)"/>
-    <!-- @showProblem="showProblem(param = $event)" -->
+    <PopupShow v-if="openShow" :val="paramsModal" :tab="tab" @changeTab="changeTab(param = $event)" />
   </div>
 </template>
 
@@ -73,7 +64,6 @@
     mapGetters
   } from 'vuex'
   import {
-    // EditIcon,
     TrashIcon,
     PlusIcon,
     ChevronRightIcon,
@@ -84,10 +74,12 @@
     name: "Problems",
     data: () => ({
       tab: true,
+
       openCreate: false,
       openEdit: false,
       openDelete: false,
       openShow: false,
+
       paramsModal: {},
       pageNumber: 0,
       size: 25,
@@ -97,7 +89,7 @@
       PopupEdit,
       PopupDelete,
       PopupShow,
-      // EditIcon,
+      
       TrashIcon,
       PlusIcon,
       ChevronRightIcon,
@@ -114,12 +106,14 @@
           this.$toast.error(this.error404);
         }
       },
-      val(newValue) {
-        this.name = newValue.name
-      }
+      // ??????
+      // val(newValue) {
+      //   this.name = newValue.name
+      // }
     },
     computed: {
       ...mapGetters(['problems', 'error', 'error404', 'allUsers']),
+
       pageCount() {
         let l = this.problems.length,
           s = this.size;
@@ -133,9 +127,12 @@
     },
 
     methods: {
+      //set default tab
       changeTab(e) {
         this.tab = e
       },
+
+      //pages
       reloadPage() {
         document.location.reload(true)
       },
@@ -147,6 +144,8 @@
           this.pageNumber--;
         }
       },
+
+      // for problems
       create() {
         this.openCreate = true
         this.$store.commit('setError', '')
@@ -173,24 +172,24 @@
       async deleteProblem(param) {
         await this.$store.dispatch('deleteProblem', param)
       },
+
       async show(obj) {
         this.openEdit = false
-          this.openDelete = false
-          this.openShow = true
-          this.tab = true
+        this.openDelete = false
+
+        this.openShow = true
+        this.tab = true
+        
         this.paramsModal = obj
         this.$store.commit('setError', '')
-        await this.$store.dispatch('getSolutions', obj.id).then(r => {
-          console.log(r);
-          if (r !== undefined) {
-            //  this.$store.dispatch('clearTasks')
-            this.$store.dispatch('getTasks', r.id)
+        await this.$store.dispatch('getSolutions', obj.id).then(response => {
+          if (response !== undefined) {
+            this.$store.dispatch('getTasks', response.id)
             this.$store.dispatch('getCurrentSolution', '')
-            this.$store.dispatch('getCurrentSolution', r.id)
+            this.$store.dispatch('getCurrentSolution', response.id)
           } else {
             this.$store.dispatch('clearTasks')
           }
-
         })
       }
     }

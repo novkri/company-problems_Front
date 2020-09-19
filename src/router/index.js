@@ -31,6 +31,14 @@ const routes = [
     component: () =>
       import("../components/Auth/Register.vue")
   },
+  {
+    path: "/groups",
+    name: "Groups",
+    component: () =>  import("../components/Groups/Groups.vue"),
+    meta: { 
+      requiresAuth: true
+    }
+  },
   { path: '*', component: () =>  import("../views/NotFound.vue")}
 ];
 

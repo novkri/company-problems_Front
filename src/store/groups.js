@@ -1,66 +1,47 @@
 import axios from "axios";
-const BASEURL = 'http://31.31.199.37/api/problem'
+const BASEURL = 'http://31.31.199.37/api/groups' 
 
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 axios.defaults.headers.common['Accept'] = 'application/json'
 axios.interceptors.request.use(
   (config) => {
     let token = localStorage.getItem('token');
-
     if (token) {
       config.headers['Authorization'] = `Bearer ${ token }`;
     }
-
     return config;
   },
-
   (error) => {
     return Promise.reject(error);
   })
 
 export default {
   state: {
-    problems: [],
-    error: '',
-    error404: '',
-    token: localStorage.getItem('user-token') || '',
+    groups: [],
+    // error: '',
+    // error404: '',
   },
   getters: {
-    problems: state => {
-      return state.problems = state.problems.sort(function (a, b) {
-        return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1
-      })
+    groups: state => {
+      return state.groups
     },
-    error: state => {
-      return state.error
-    },
-    error404: state => {
-      return state.error404
-    }
   },
   mutations: {
-    setProblems: (state, payload) => {
-      state.problems = payload
+    setGroups: (state, payload) => {
+      state.groups = payload
     },
-    addProblem: (state, payload) => {
-      state.problems.push(payload)
+    addGroup: (state, payload) => {
+      state.groups.push(payload)
     },
-    deleteProblem: (state, payload) => {
-      state.problems = state.problems.filter(problem => problem.id !== payload)
+    deleteGroup: (state, payload) => {
+      state.groups = state.groups.filter(group => group.id !== payload)
     },
-    editProblem: (state, payload) => {
-      state.problems.find(problem => problem.id == payload.id).name = payload.name
+    editGroup: (state, payload) => {
+      state.groups.find(group => group.id == payload.id).name = payload.name
     },
-    setError: (state, payload) => {
-      state.error = payload
-    },
-    setError404: (state, payload) => {
-      state.error404 = payload
-    },
-
   },
   actions: {
-    getProblems: async ({
+    getGroups: async ({
       commit
     }) => {
       await axios.get(BASEURL)
@@ -68,7 +49,7 @@ export default {
           if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
-            commit('setProblems', response.data)
+            commit('setGroups', response.data)
           }
         })
         .catch(error => {
@@ -79,7 +60,7 @@ export default {
           }
         })
     },
-    postProblem: async ({
+    postGroup: async ({
       commit
     }, param) => {
       await axios.post(BASEURL, param)
@@ -87,7 +68,7 @@ export default {
           if (response.status == 201) {
             commit('setError', '')
             commit('setError404', '')
-            commit('addProblem', response.data)
+            commit('addGroup', response.data)
           }
         })
         .catch(error => {
@@ -99,14 +80,14 @@ export default {
         })
 
     },
-    deleteProblem: async ({
+    deleteGroup: async ({
       commit
     }, param) => {
       await axios.delete(BASEURL + `/${param.id}`).then(response => {
           if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
-            commit('deleteProblem', param.id)
+            commit('deleteGroup', param.id)
           }
         })
         .catch(error => {
@@ -118,15 +99,15 @@ export default {
         })
 
     },
-    checkIfExists: async ({
-      commit
-    }, param) => {
-      axios.get(BASEURL + `/${param.id}`).catch((error) => {
-        commit('setError404', error.response.data.message)
-      })
-    },
+    // checkIfExists: async ({
+    //   commit
+    // }, param) => {
+    //   axios.get(BASEURL + `/${param.id}`).catch((error) => {
+    //     commit('setError404', error.response.data.message)
+    //   })
+    // },
 
-    editProblem: async ({
+    editGroup: async ({
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
@@ -136,7 +117,7 @@ export default {
           if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
-            commit('editProblem', response.data)
+            commit('editGroup', response.data)
             resolve(response)
           }
         }).catch((error) => {
