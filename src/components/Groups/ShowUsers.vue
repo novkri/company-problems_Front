@@ -38,11 +38,11 @@
     </div>
     
     <div v-else>
-      <half-circle-spinner
+      <!-- <half-circle-spinner
       :animation-duration="1500"
         :size="50"
         color="#92D2C3"
-      />
+      /> -->
     </div>
     <GroupDelete v-if="openDeleteGroup" :val="paramsModal" @deleteGroup="deleteGroup(param = $event)" />
   </div>
@@ -50,7 +50,7 @@
 </template>
 
 <script>
- import { HalfCircleSpinner } from 'epic-spinners'
+//  import { HalfCircleSpinner } from 'epic-spinners'
   import GroupDelete from '@/components/Groups/Delete'
   import {
     mapGetters
@@ -74,7 +74,7 @@
 
       GroupDelete,
 
-      HalfCircleSpinner
+      // HalfCircleSpinner
     },
     computed: {
       ...mapGetters(['error', 'error404', 'members', 'usersNoGroup', 'leaderReduced', 'allUsersReduced']),
