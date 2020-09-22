@@ -41,6 +41,7 @@ export default {
   mutations: {
     setProblems: (state, payload) => {
       state.problems = payload
+      console.log( payload, state.problems);
     },
     addProblem: (state, payload) => {
       state.problems.push(payload)
@@ -65,6 +66,7 @@ export default {
     }) => {
       await axios.get(BASEURL)
         .then(response => {
+          console.log(response);
           if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')

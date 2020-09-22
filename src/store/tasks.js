@@ -77,12 +77,11 @@ export default {
       state.tasks.find(task => task.id == payload.id).deadline = payload.deadline
     },
     editExecutorTask: (state, payload) => {
-
       state.tasks.find(task => task.id == payload.id).executor_id = payload.executor_id
     },
-    editExecutorT: (state, payload) => {
-      state.tasks.find(task => task.id == payload.id).executor_id = payload.executor_id
-    },
+    // editExecutorT: (state, payload) => {
+    //   state.tasks.find(task => task.id == payload.id).executor_id = payload.executor_id
+    // },
 
   },
   actions: {
@@ -275,7 +274,6 @@ export default {
           } else {
             commit('setError404', error.response.data.errors)
           }
-
         }
       })
     },

@@ -26,6 +26,7 @@ export default {
     solutionInWorkId: '',
     solutionsOther: [],
     allUsers: [],
+    usersNoGroup: [],
     token: localStorage.getItem('user-token') || '',
   },
   getters: {
@@ -41,6 +42,9 @@ export default {
     allUsers: state => {
       return state.allUsers
     },
+    usersNoGroup: state => {
+      return state.allUsers.filter(u => u.group_id == null)
+    }
   },
   mutations: {
     setSolution: (state, payload) => {

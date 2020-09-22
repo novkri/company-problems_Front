@@ -1,6 +1,7 @@
 <template>
   <div class="container" style="width: 1350px;">
     <h2>Список всех проблем в компании</h2>
+
     <ul class="list-group">
       <li class="list-group-item" v-for="(problem, idx) in paginatedData" :key="idx" id="list">
         <div class="toggle-area" @click.prevent="show(problem)" data-toggle="modal" data-target="#popupShow">

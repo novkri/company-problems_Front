@@ -1,30 +1,76 @@
 <template>
   <div class="popup-create">
-    <div class="modal fade" id="popupCreate" tabindex="-1">
+    <div class="modal fade" id="groupCreate" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Добавить подразделение</h5>
             <button type="button" id="close" class="close" data-dismiss="modal" aria-label="Close" @click="close">
               <span aria-hidden="true">&times;</span>
             </button>
+            <h5 class="modal-title" id="exampleModalLabel">Добавить подразделение</h5>
           </div>
+          <!--  v-model="name"  -->
           <div class="modal-body">
-            <div style="width: 100%; display: flex;">
-              <form @submit.prevent="addProblem()" class="form-group">
-              <div class="input-group">
-                <input type="text" ref="input" v-model="name" class="form-control form-control--valid"
-                  id="new-problem-title" placeholder="Название проблемы..." @blur="showClear = false" @focus="onFocus">
-                <div class="input-group-append" v-if="showClear" @click="onClear">
-                  <span class="input-group-text" style="background-color: #fff;">&times;</span>
+            <div>
+              <form class="form-group">
+                <div class="input-group">
+                  <label for="new-group-title">Название подразделения (полностью) *</label>
+                  <input type="text" ref="input" class="form-control form-control--valid" id="new-group-title"
+                    placeholder="Название проблемы..." @blur="showClear = false" @focus="onFocus" v-model="name">
+                  <div class="input-group-append" v-if="showClear" @click="onClear">
+                    <span class="input-group-text" style="background-color: #fff;">&times;</span>
+                  </div>
+                  <div class="error" v-if="error.name">{{error.name[0]}}</div>
                 </div>
-              </div>  
-            </form>
-            <button type="submit" class="btn btnMain" @click="addProblem()">
-              <img src="@/assets/Vector.png" alt="send">
-            </button>
+                <!-- v-model="nameShort" -->
+                <div class="input-group">
+                  <label for="new-group-title">Название подразделения (сокращенно)</label>
+                  <input type="text" ref="input" class="form-control form-control--valid" id="new-group-title__short"
+                    placeholder="Название проблемы..." @blur="showClear = false" @focus="onFocus" v-model="nameShort">
+                  <div class="input-group-append" v-if="showClear" @click="onClear">
+                    <span class="input-group-text" style="background-color: #fff;">&times;</span>
+                  </div>
+                  <div class="error" v-if="error.short_name">{{error.short_name[0]}}</div>
+                </div>
+                <div class="input-group">
+                  <label>Выбрать руководителя*</label>
+                  {}
+                  <div class="selectResponsible" style="background-color: transparent;">
+                    <ss-select v-model="leader_id" :options="usersNoGroup" track-by="name" search-by="name"
+                      disable-by="disabled" id="ss-select" style="width: fit-content;">
+                      <div
+                        slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+                        style="cursor: pointer; width: 100%;">
+                        <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between"
+                          style="width: 100%; padding: 13px;">
+                          <award-icon size="1.5x" class="custom-class"></award-icon>
+                          {{ $get(selectedOption, 'name') || selectedOption ? usersNoGroup.find(u => u.id == selectedOption).name : 'Выбрать руководителя'}}
+                          <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
+                        </ss-select-toggle>
+
+                        <section v-show="isOpen" class="absolute border-l border-r min-w-full">
+                          <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
+                            :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
+                                pointerIndex == index ? 'bg-light text-dark' : '',
+                                $selected(option) ? 'bg-light text-dark' : '',
+                                $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
+                              ]">{{ option.name }}</ss-select-option>
+                        </section>
+                      </div>
+                    </ss-select>
+                  </div>
+                  <div class="error" v-if="error.leader_id">{{error.leader_id[0]}}</div>
+                </div>
+              </form>
+              <!-- <div class="error" v-if="error">{{error}}</div> -->
             </div>
-            <div class="error" v-if="error">{{error}}</div>
+
+
+            <!-- :disabled="!enableAddBtntn" -->
+            <div type="submit" class="btnsAddTask">
+              <button id="addBtn" class="btn" :class="[error ? 'btnPink' : 'btnMain']"
+                @click.prevent="addGroup">Добавить подразделение</button>
+            </div>
           </div>
         </div>
       </div>
@@ -41,19 +87,50 @@
   import {
     mapGetters
   } from 'vuex'
+  import {
+    SsSelect,
+    SsSelectToggle,
+    SsSelectOption,
+  } from 'ss-select'
+  // // SsSelectSearchInput
+  import {
+    // UserIcon,
+    ChevronDownIcon,
+    AwardIcon
+  } from 'vue-feather-icons'
+
 
   export default {
     name: 'popup',
-    props: ['open'],
+    props: ['open', 'val'],
     data: () => ({
       name: '',
-      showClear: false
+      nameShort: '',
+      leader_id: '',
+
+      showClear: false,
+
+      // enableAddBtntn: false,
     }),
+    components: {
+      // UserIcon,
+      ChevronDownIcon,
+      AwardIcon,
+
+      SsSelect,
+      SsSelectToggle,
+      SsSelectOption,
+      // // SsSelectSearchInput
+    },
     validations: {
       name: {
         minLength: minLength(6),
         maxLength: maxLength(250)
-      }
+      },
+      // nameShort: {
+      //   minLength: minLength(6),
+      //   maxLength: maxLength(250)
+      // }
     },
     watch: {
       error() {
@@ -61,7 +138,7 @@
       }
     },
     computed: {
-      ...mapGetters(['error'])
+      ...mapGetters(['error', 'allUsers', 'usersNoGroup'])
     },
 
     methods: {
@@ -70,15 +147,45 @@
       },
       onClear() {
         this.name = ''
+
       },
-      async addProblem() {
-        await this.$store.dispatch('postProblem', {
-          name: this.name
+
+      // executor
+      async addGroup() {
+        console.log(this.name);
+        console.log(this.nameShort);
+        console.log(this.leader_id);
+        await this.$store.dispatch('postGroup', {
+          leader_id: this.leader_id,
+          name: this.name,
+          short_name: this.nameShort,
+        }).then((r) => {
+          console.log('d', r);
+          // if (!this.error) {
+          console.log('d', r);
+          this.name = ''
+          this.nameShort = ''
+          this.leader_id = ''
+          document.getElementById('close').click()
+          // }
+        })
+      },
+      async selectExecutorGroup(group) {
+        await this.$store.commit('setError404', '')
+        await this.$store.dispatch('checkIfOk', {
+          description: group.description,
+          executor_id: group.executor_id,
+          id: group.id
         }).then(() => {
-          if (!this.error) {
-            this.name = ''
-            document.getElementById('close').click()
-          } 
+          this.$store.dispatch('changeExecutorGroup', {
+            id: group.id,
+            uid: group.executor_id
+          })
+        }).catch(() => {
+          this.$store.commit('changeExecutorGroup', {
+            id: group.id,
+            executor_id: this.currentExecutor
+          })
         })
       },
 
@@ -91,17 +198,110 @@
 </script>
 
 <style scoped lang="scss">
+  .error {
+    font-size: 12px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    color: #EC7676;
+    // margin-bottom: 49px;
+  }
+
+  .selectResponsible {
+    display: flex;
+    background-color: #F6F6F6;
+    // padding-left: 10px;
+    padding-top: 10px;
+    margin-bottom: 10px;
+    height: 49px;
+    color: #828282;
+
+    font-family: 'GothamPro';
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+
+
+
+    #ss-select {
+      padding-left: 8px;
+      align-items: center;
+      display: flex;
+      height: 36px;
+      background-color: #F6F7F9;
+      border-radius: 10px;
+      text-align: center;
+      padding-right: 0;
+      width: fit-content;
+
+      section {
+        top: 52% !important;
+        left: 6% !important;
+        max-height: 170px !important;
+      }
+    }
+
+    select {
+      margin: 0;
+      width: 142px;
+      background-color: #f6f6f6;
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #92D2C3;
+      border-radius: 3px;
+      height: 73px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #F2F2F2;
+      border-left: 4px solid white;
+      border-right: 4px solid white;
+    }
+
+  }
+
+
+  .selectResponsible:hover {
+    #ss-select {
+      background-color: #e5e9f1;
+    }
+  }
+
+  .selectResponsible:focus,
+  .selectResponsible:active {
+    color: #fff;
+
+    #ss-select {
+      background-color: #4EAD96;
+    }
+
+    svg {
+      color: #fff !important;
+    }
+
+    #iconUser {
+      color: #fff;
+    }
+  }
+
   .modal-content {
     border-radius: 12px;
     border: none;
     padding: 30px 20px 40px 20px;
-    width: 530px;
-    height: 186px;
+
+    min-height: 638px;
+    height: fit-content;
   }
 
   .modal-header {
+    display: flex;
+    flex-wrap: wrap;
     border: none;
-    margin-bottom: 23px;
+    margin-bottom: 60px;
     padding: 0;
     font-family: 'Roboto';
     font-weight: 500;
@@ -109,20 +309,55 @@
     line-height: 24px;
   }
 
+  .modal-title {
+    margin: auto;
+  }
+
   .modal-body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     padding: 0;
+    padding-right: 71px;
+    padding-left: 43px;
+  }
+
+  form {
+    width: 100%;
+    margin: 0;
+  }
+
+  label {
+    margin-bottom: 5px;
   }
 
   .form-control {
     background-color: #F7F7F7;
+    width: 100%;
+    // margin-bottom: 51px;
+    margin-bottom: 5px;
+    // padding-bottom: 49px;
   }
 
   .form-control:active,
   .form-control:focus {
     background-color: #FFF;
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    // margin-bottom: 51px;
+    padding-bottom: 51px;
+    position: relative;
+  }
+
+  .input-group-append {
+    width: fit-content;
+    position: absolute;
+    top: 19%;
+    right: 0;
+    z-index: 1000;
   }
 
   .input-group-text {
@@ -133,16 +368,40 @@
     border-bottom: 2px solid #92D2C3;
   }
 
-  .btn {
-    background-color: #92D2C3;
-    border-radius: 50px;
-    border: none;
-    height: 34px;
-    width: 34px;
-    position: relative;
+  .btnsAddTask {
+    // padding-left: 50px;
+    // margin: auto;
+    text-align: center;
+    background-color: #fff;
+    width: 100%;
+    // padding-top: 19px;
+
+
   }
 
+  .btn {
+    margin-right: 17px;
+    border-radius: 9px;
+    background-color: #92D2C3;
+    padding: 17px 26px;
+
+    font-family: 'GothamPro-Medium';
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    color: #FFFFFF;
+  }
+
+  .btnPink {
+    background: #FFD3D3;
+    width: fit-content;
+  }
+
+
   .close {
+    width: 100%;
+    justify-content: flex-end;
+    display: flex;
     margin-right: -4px;
     font-weight: normal;
     color: #2D453F;
@@ -150,9 +409,11 @@
     font-family: 'GothamPro';
   }
 
-  .btn img {
-    position: absolute;
-    top: 8px;
-    left: 9px;
+
+
+  @media (min-width: 576px) {
+    .modal-dialog {
+      max-width: 672px;
+    }
   }
 </style>

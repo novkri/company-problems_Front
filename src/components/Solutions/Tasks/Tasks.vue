@@ -111,7 +111,7 @@
                       <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between"
                         style="width: 100%; padding: 13px;" id="select-toggle">
                         <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
-                        {{ $get(selectedOption, 'name') ||  `${allUsers.find(u => u.id == formInput.executor) ? allUsers.find(u => u.id == formInput.executor).name : 'Выбрать'}`}}
+                        {{ $get(selectedOption, 'name') ||  `${allUsers.find(u => u.id == formInput.executor) ? allUsers.find(u => u.id == formInput.executor).surname + ' ' + allUsers.find(u => u.id == formInput.executor).name[0] + '.': 'Выбрать'}`}}
                       </ss-select-toggle>
 
                       <section v-show="isOpen" class="absolute border-l border-r min-w-full"
@@ -121,7 +121,7 @@
                                 pointerIndex == index ? 'bg-light text-dark' : '',
                                 $selected(option) ? 'bg-light text-dark' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
-                              ]">{{ option.name }}</ss-select-option>
+                              ]">{{ option.surname }} {{option.name[0]}}.</ss-select-option>
                       </section>
                     </div>
                   </ss-select>
@@ -436,17 +436,17 @@
 
 
 
-  option {
-    background-color: #F6F6F6;
-    color: #2D453F;
-    font-size: 18px;
-    line-height: 24px;
-    letter-spacing: 0.15px;
-    border-radius: 10px;
-    font-size: 18px;
-    line-height: 24px;
-    letter-spacing: 0.15px;
-  }
+  // option {
+  //   background-color: #F6F6F6;
+  //   color: #2D453F;
+  //   font-size: 18px;
+  //   line-height: 24px;
+  //   letter-spacing: 0.15px;
+  //   border-radius: 10px;
+  //   font-size: 18px;
+  //   line-height: 24px;
+  //   letter-spacing: 0.15px;
+  // }
 
   .selectResponsible {
     display: flex;
@@ -464,7 +464,6 @@
       text-align: center;
       padding-right: 0;
       width: fit-content;
-
     }
 
     select {

@@ -108,7 +108,7 @@
                             <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between"
                               id="select-toggle">
                               <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
-                              {{ $get(selectedOption, 'id') || `${allUsers.find(u => u.id == solution.executor_id) ? allUsers.find(u => u.id == solution.executor_id).name : 'Выбрать'}`}}
+                              {{ $get(selectedOption, 'id') || `${allUsers.find(u => u.id == solution.executor_id) ? allUsers.find(u => u.id == solution.executor_id).surname + ' ' + allUsers.find(u => u.id == solution.executor_id).name[0] + '.' : 'Выбрать'}`}}
                             </ss-select-toggle>
 
                             <section v-show="isOpen" class="absolute border-l border-r min-w-full">
@@ -121,7 +121,7 @@
                                 pointerIndex == index ? 'bg-light text-dark' : '',
                                 $selected(option) ? 'bg-light text-dark' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
-                              ]">{{ option.name }}</ss-select-option>
+                              ]">{{ option.surname }} {{option.name[0]}}.</ss-select-option>
                             </section>
                           </div>
                         </ss-select>

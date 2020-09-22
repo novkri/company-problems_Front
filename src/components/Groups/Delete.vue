@@ -1,10 +1,10 @@
 <template>
   <div class="popup-delete">
-    <div class="modal fade" id="popupDelete" tabindex="-1">
+    <div class="modal fade" id="groupDelete" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Вы точно хотите удалить подразделение?</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Вы точно хотите удалить подразделение? {{val}} </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -32,7 +32,7 @@
       ...mapGetters(['error', 'error404']),
     },
     methods: {
-      async deleteProblem() {
+      async deleteGroup() {
           await this.$store.dispatch('checkIfExists', {id: this.val.id})
           .then(async () => {
               await this.$store.dispatch('deleteGroup', {id: this.val.id})

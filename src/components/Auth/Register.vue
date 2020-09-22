@@ -3,15 +3,38 @@
     <div class="form" v-if="!success"> 
       <div class="header">Регистрация</div>
           <form >
-     
-      <div class="form-group">
-        <label for="email">Адрес электронной почты *<span
+            <div class="form-group">
+              <div>
+                                                  <label for="text">Фамилия *<span
+            v-if="surname.length >= 20 && surname.length <= 25">{{$v.surname.$params.maxLength.max - surname.length}}</span></label>
+        <input type="text" class="form-control" id="surname" v-model="surname"
+          :class="{ 'form-control--error': $v.surname.$invalid, 'form-control--valid': surname && !$v.surname.$invalid}">
+        <div class="errorAuth" v-if="errorUReg.surname">{{errorUReg.surname[0]}} </div>
+
+              </div>
+              <div class="form-group-div">
+
+        <label for="text">Имя *<span
+            v-if="name.length >= 20 && name.length <= 25">{{$v.name.$params.maxLength.max - name.length}}</span></label>
+        <input type="text" class="form-control" id="name" v-model="name"
+          :class="{ 'form-control--error': $v.name.$invalid, 'form-control--valid': name && !$v.name.$invalid}">
+        <div class="errorAuth" v-if="errorUReg.name">{{errorUReg.name[0]}} </div>
+              </div>
+
+            </div>
+
+
+
+<div class="form-group-div">
+          <label for="email">Электронная почта *<span
             v-if="email.length >= 250 && email.length <= 255">{{$v.email.$params.maxLength.max - email.length}}</span></label>
         <input type="email" class="form-control" id="email" v-model="email"
           :class="{ 'form-control--error': $v.email.$invalid, 'form-control--valid': email && !$v.email.$invalid}">
         <div class="errorAuth" v-if="errorUReg.email">{{errorUReg.email[0]}} </div>
+</div>
 
-        <label for="password">Пароль *<span
+<div class="form-group-div">
+          <label for="password">Пароль *<span
             v-if="password.length >= 15 && password.length <= 20">{{$v.password.$params.maxLength.max - password.length}}</span></label>
         <div class="input-group" id="show_hide_password">
           <input :type="passwordFieldType" class="form-control" id="password" v-model="password" ref="password"
@@ -23,8 +46,11 @@
           </button>
           </div>
           <div class="errorAuth" v-if="errorUReg.password">{{errorUReg.password[0]}} </div>
+</div>
 
-          <label for="password">Повторите пароль *<span
+
+<div class="form-group-div">
+            <label for="password">Повторите пароль *<span
             v-if="confirm.length >= 15 && confirm.length <= 20">{{$v.confirm.$params.maxLength.max - confirm.length}}</span></label>
         <div class="input-group" id="show_hide_password">
           <input :type="passwordFieldTypeC" class="form-control" id="passwordConfirm" data-toggle="password" v-model="confirm"
@@ -37,28 +63,17 @@
           </button>
         </div>
         <div class="errorAuth" v-if="errorUReg.password">{{errorUReg.password[1]}} </div>
-      </div>
-
-      <div class="form-group">
-        <label for="text">Фамилия *<span
-            v-if="surname.length >= 20 && surname.length <= 25">{{$v.surname.$params.maxLength.max - surname.length}}</span></label>
-        <input type="text" class="form-control" id="surname" v-model="surname"
-          :class="{ 'form-control--error': $v.surname.$invalid, 'form-control--valid': surname && !$v.surname.$invalid}">
-        <div class="errorAuth" v-if="errorUReg.surname">{{errorUReg.surname[0]}} </div>
-
-        <label for="text">Имя *<span
-            v-if="name.length >= 20 && name.length <= 25">{{$v.name.$params.maxLength.max - name.length}}</span></label>
-        <input type="text" class="form-control" id="name" v-model="name"
-          :class="{ 'form-control--error': $v.name.$invalid, 'form-control--valid': name && !$v.name.$invalid}">
-        <div class="errorAuth" v-if="errorUReg.name">{{errorUReg.name[0]}} </div>
+</div>
 
 
-        <label for="text">Отчество<span
+ 
+
+        <!-- <label for="text">Отчество<span
             v-if="father_name.length >= 20 && father_name.length <= 25">{{$v.father_name.$params.maxLength.max - father_name.length}}</span></label>
         <input type="text" class="form-control" id="father_name" v-model="father_name"
           :class="{ 'form-control--error': errorUReg.father_name, 'form-control--valid': father_name && !errorUReg.father_name}">
-        <div class="errorAuth" v-if="errorUReg.father_name">{{errorUReg.father_name[0]}} </div>
-      </div>
+        <div class="errorAuth" v-if="errorUReg.father_name">{{errorUReg.father_name[0]}} </div> -->
+     
     </form>
     <button type="submit" class="btn" @click.prevent="register">Зарегистрироваться</button>
     <div class="to-login">Уже зарегистрированы? <router-link to="/login">Вход</router-link> </div>
@@ -196,11 +211,15 @@
     text-align: center;
   }
 
-  form {
+  form, .form {
     margin: 0;
     width: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
+    div {
+      margin-bottom: 47px;
+    }
   }
 
   .errorAuth {
@@ -224,7 +243,8 @@
 
   .container {
     // width: 409px;
-    width: auto;
+    // width: auto;
+        width: 703px;
     display: flex;
     margin: auto;
     justify-content: center;
@@ -268,7 +288,7 @@
     font-weight: normal;
     font-size: 18px;
     line-height: 17px;
-    margin-top: 95px;
+    margin-top: 40px;
   }
 
   input,
@@ -310,20 +330,24 @@
 
   .form-group {
     margin: 0;
-    // margin-bottom: 46px;
-    // width: 410px;
-    width: 445px;
+        width: 100%;
+    display: flex;
+    justify-content: space-between;
 
-    &:last-child {
-      // width: 315px;
-      margin-left: 28px;
+    div {
+      width: 315px;
+      margin-bottom: 0;
     }
     
     label {
       margin-top: 55px;
     }
   }
-
+  .form-group-div {
+    div {
+      margin-bottom: 0;
+    }
+  }
   .successfully {
     font-family: 'Roboto';
     font-size: 18px;

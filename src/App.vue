@@ -6,7 +6,7 @@
           <span>Вы вошли как: {{userLoggedIn.surname}} {{userLoggedIn.name}}
             {{userLoggedIn.father_name}}</span>
         </div>
-        <div class="logout">
+        <div class="logout" @click="logout">
           <log-out-icon size="1.5x" class="custom-class"></log-out-icon>
         </div>
       </nav>
@@ -93,6 +93,9 @@
     letter-spacing: 0.15px;
     color: #4F4F4F;
   }
+  a:hover {
+    color: #4F4F4F;
+  }
 .router-link-active {
     font-family: 'GothamPro-Medium';
   }
@@ -170,6 +173,8 @@
       border-radius: 50%;
       text-align: center;
       display: flex;
+      cursor: pointer;
+      z-index: 3;
       svg {
         margin: auto;
         justify-content: center;
@@ -177,6 +182,10 @@
       }
     }
   }
+
+  // option {
+  //   width: max-content;
+  // }
 
   .container {
     width: 436px;
@@ -325,10 +334,10 @@
         width: fit-content;
   }
     section {
-          width: fit-content;
+    width: max-content;
     padding: 22px;
     // width: 250px;
-        width: 215px;
+        // width: 215px;
     position: absolute;
     max-height: 257px;
     // right: -19%;
