@@ -26,6 +26,7 @@ export default {
     solutionInWorkId: '',
     solutionsOther: [],
     allUsers: [],
+    allUsersReduced: [],
     usersNoGroup: [],
     token: localStorage.getItem('user-token') || '',
   },
@@ -41,6 +42,9 @@ export default {
     },
     allUsers: state => {
       return state.allUsers
+    },
+    allUsersReduced: state => {
+      return state.allUsersReduced
     },
     usersNoGroup: state => {
       return state.allUsers.filter(u => u.group_id == null)
@@ -96,6 +100,14 @@ export default {
     setAllUsers: (state, payload) => {
       let usersPayload = Object.values(payload)
       state.allUsers = usersPayload
+    },
+    setAllUsersReduced: (state, payload) => {
+      payload.forEach(element => {
+        element.father_name ? element.father_name = element.father_name[0] + '.' :  element.father_name = ' '
+        element.name = element.name[0]+ '.'
+      });
+      let usersPayload = Object.values(payload)
+      state.allUsersReduced = usersPayload
     },
     editExecutor: (state, payload) => {
       state.solutions.find(solution => solution.id == payload.id).executor_id = payload.executor_id
@@ -280,6 +292,7 @@ export default {
             commit('setError', '')
             commit('setError404', '')
             commit('setAllUsers', response.data)
+            commit('setAllUsersReduced', response.data)
             commit('setSolution', response.data)
           }
         })

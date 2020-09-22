@@ -41,7 +41,7 @@
       </nav>
     </div>
 
-    <button type="button" class="btn btnMain" @click="create" data-toggle="modal" data-target="#popupCreate">
+    <button type="button" class="btn btnMain" @click="create" data-toggle="modal" data-target="#popupCreate" style="margin-bottom: 30px;">
       <plus-icon size="1.5x" class="custom-class" style="color: white; margin-right: 5px;"></plus-icon><span>Предложить
         проблему</span>
     </button>

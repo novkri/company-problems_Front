@@ -1,18 +1,17 @@
 <template>
   <div class="popup-delete">
-    <div class="modal fade" id="groupDelete" tabindex="-1">
+    <div class="modal fade" id="groupConfirm" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel" v-if="val.name">Вы точно хотите удалить подразделение?</h5>
-            <h5 class="modal-title" id="exampleModalLabel" v-else>Вы точно хотите удалить пользователя из подразделения?</h5>
+              {{val}}
+            <h5 class="modal-title">Вы точно хотите назначить нового руководителя для подразделения?</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <button type="submit" class="btn btn-secondary" v-if="val.name" data-dismiss="modal" @click="deleteGroup()">Да</button>
-            <button type="submit" class="btn btn-secondary" v-else data-dismiss="modal" @click="removeUserFromGroup()">Да</button>
+            <button type="submit" class="btn btn-secondary" data-dismiss="modal" @click="setNewLeader()">Да</button>
             <button type="reset" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
           </div>
         </div>
@@ -34,20 +33,16 @@
       ...mapGetters(['error', 'error404']),
     },
     methods: {
-      async deleteGroup() {
-          await this.$store.dispatch('checkIfExists', {id: this.val.id})
-          .then(async () => {
-              await this.$store.dispatch('deleteGroup', {id: this.val.id})
-          })
-          .catch(() => this.$store.commit('setError404', ''))
-      },
-      async removeUserFromGroup() {
-        console.log('here');
-        await this.$store.commit('setError404', '')
-        console.log(this.val);
-        this.$store.dispatch('removeUserFromGroup', {
-          id: this.val.id,
-          uid: this.val.uid
+      async setNewLeader() {
+                  // await this.$store.dispatch('checkIfOk', {
+        //   description: group.description,
+        //   leader_id: group.leader_id,
+        //   id: group.id
+        // }).then(() => {
+        this.$store.dispatch('changeExecutorGroup', {
+          id: this.val.groupId,
+          uid: this.val.leader_id
+          // })
         })
         // .catch(() => {
         //   this.$store.commit('changeExecutorGroup', {
@@ -55,7 +50,7 @@
         //     leader_id: this.currentExecutor
         //   })
         // })
-      },
+      }
     }
   }
 </script>

@@ -295,6 +295,8 @@
       onFocusInput(event) {
         this.currentTaskName = event.target.value
         this.currentTaskInput = event.target
+        console.log(this.currentTaskName);
+        console.log(this.currentTaskInput);
       },
       onKey(event) {
         event.target.blur()
@@ -303,19 +305,15 @@
         console.log(event);
         if (task.description !== this.currentTaskName) {
           await this.$store.commit('setError404', '')
-          await this.$store.dispatch('checkIfOk', {
-            description: task.description,
-            executor_id: task.executor_id,
-            id: task.id
-          }).then(() => {
-            this.$store.dispatch('editTask', {
+          await this.$store.dispatch('editTask', {
               description: task.description,
               id: task.id
-            })
-          }).catch(() => {
+          }).catch((e) => {
+            console.log(e);
+            console.log(this.currentTaskName);
             this.$store.commit('editTask', {
-              id: task.id,
-              description: this.currentTaskName
+              description: this.currentTaskName,
+              id: task.id
             })
           })
         }

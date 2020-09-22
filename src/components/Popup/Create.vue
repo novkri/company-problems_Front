@@ -14,7 +14,8 @@
               <form @submit.prevent="addProblem()" class="form-group">
               <div class="input-group">
                 <input type="text" ref="input" v-model="name" class="form-control form-control--valid"
-                  id="new-problem-title" placeholder="Название проблемы..." @blur="showClear = false" @focus="onFocus">
+                  id="new-problem-title" placeholder="Название проблемы..." @blur="showClear = false" @focus="onFocus"
+                  :class="{ 'form-control--error': $v.name.$invalid || !name, 'form-control--valid': name && !$v.name.$invalid}">
                 <div class="input-group-append" v-if="showClear" @click="onClear">
                   <span class="input-group-text" style="background-color: #fff;">&times;</span>
                 </div>

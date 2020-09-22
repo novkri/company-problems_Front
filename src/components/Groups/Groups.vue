@@ -65,24 +65,27 @@
             </div>
           </div>
           <div class="selectResponsible col-2">
-            <ss-select v-model="group.leader_id" :options="allUsers" track-by="name" search-by="name"
-              @change="selectExecutorGroup(group)" disable-by="disabled" id="ss-select" style="width: fit-content;">
+            <ss-select v-model="group.leader_id" :options="allUsersReduced" track-by="name" search-by="name"
+              @change="selectExecutorGroup(group, $event)" disable-by="disabled" id="ss-select" style="width: fit-content;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                @click="onClickExecutorG(selectedOption)" style="cursor: pointer; width: 100%;">
+                style="cursor: pointer; width: 100%;">
                 <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between"
                   style="width: 100%; padding: 0px;">
                   <award-icon size="1.5x" class="custom-class"></award-icon>
-                  {{ $get(selectedOption, 'name') ||  `${allUsers.find(u => u.id == group.leader_id) ? allUsers.find(u => u.id == group.leader_id).surname + ' ' + allUsers.find(u => u.id == group.leader_id).name[0] + '.': 'Выбрать'}`}}
+                  {{ $get(selectedOption, 'name') || 
+                  `${allUsersReduced.find(u => u.id == group.leader_id) ? allUsersReduced.find(u => u.id == group.leader_id).surname + ' ' 
+                    + allUsersReduced.find(u => u.id == group.leader_id).name + ' ' 
+                    + allUsersReduced.find(u => u.id == group.leader_id).father_name: 'Выбрать'}`}}
                   <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                 </ss-select-toggle>
 
                 <section v-show="isOpen" class="absolute border-l border-r min-w-full">
-                  <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
+                  <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index" data-toggle="modal" data-target="#groupConfirm"
                     :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
                                 $selected(option) ? 'bg-light text-dark' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
-                              ]">{{ option.surname }} {{option.name[0]}}.</ss-select-option>
+                              ]">{{ option.surname }} {{ option.name }} {{ option.father_name }} </ss-select-option>
                 </section>
               </div>
             </ss-select>
@@ -121,7 +124,7 @@
                                 pointerIndex == index ? 'bg-light text-dark' : '',
                                 $selected(option) ? 'bg-light text-dark' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
-                              ]">{{ option.surname }} {{ option.name[0] }}.</ss-select-option>
+                              ]">{{ option.surname }} {{ option.name }} {{option.father_name}} </ss-select-option>
                         </section>
                       </div>
                     </ss-select>
@@ -148,8 +151,7 @@
     </div>
 
 
-
-    <button type="button" class="btn btnMain" @click="createG" data-toggle="modal" data-target="#groupCreate">
+    <button type="button" class="btn btnMain" @click="createG" data-toggle="modal" data-target="#groupCreate" style="margin-bottom: 30px;">
       <plus-icon size="1.5x" class="custom-class" style="color: white; margin-right: 5px;"></plus-icon><span>Добавить
         группу</span>
     </button>
@@ -158,6 +160,7 @@
     <GroupCreate v-if="openCreateGroup" @createGroup="createGroup(param = $event)" />
     <GroupDelete v-if="openDeleteGroup" :val="paramsModal" @deleteGroup="deleteGroup(param = $event)" />
 
+    <PopupConfirm v-if="openConfirm" :val="newLeader" />
 
   </div>
 
@@ -167,6 +170,7 @@
 <script>
   import GroupCreate from '@/components/Groups/Create'
   import GroupDelete from '@/components/Groups/Delete'
+  import PopupConfirm from '@/components/Groups/PopupConfirm'
   import ShowUsers from '@/components/Groups/ShowUsers'
 
   import {
@@ -198,6 +202,7 @@
       openDeleteGroup: false,
       openCreateGroup: false,
       openShowUsers: false,
+      openConfirm: false,
 
       currentGroupName: '',
       currentGroupInput: '',
@@ -205,9 +210,9 @@
       currentGroupId: '',
 
       arrowDown: true,
-      // inputFocus: false,
 
       paramsModal: {},
+      newLeader: {},
 
       pageNumber: 0,
       size: 25,
@@ -216,6 +221,7 @@
       GroupCreate,
       GroupDelete,
       ShowUsers,
+      PopupConfirm,
 
 
       TrashIcon,
@@ -243,7 +249,7 @@
       //   await this.$store.dispatch('getAllUsers')
     },
     computed: {
-      ...mapGetters(['groups', 'error', 'error404', 'allUsers', 'members', 'usersNoGroup']),
+      ...mapGetters(['groups', 'error', 'error404', 'allUsers', 'members', 'usersNoGroup', 'allUsersReduced']),
 
       pageCount() {
         let l = this.groups.length,
@@ -256,20 +262,20 @@
         return this.groups.slice(start, end);
       }
     },
+    watch: {
+      error404() {
+        if (this.error404) {
+          this.$toast.error(this.error404);
+        }
+      },
+    },
     methods: {
       showOnClickUsers(id) {
+        this.openShowUsers = true
         console.log(id);
         this.currentGroupId = id
-        this.openShowUsers = true
+
       },
-      // async loadUsers(id) {
-      //   await this.$store.dispatch('getMembers', id)
-      // },
-      // group
-      // showDropsownList() {
-      //   this.showDropdown = true
-      //   //стрелка
-      // },
       createG() {
         this.openCreateGroup = true
         this.$store.commit('setError', '')
@@ -282,9 +288,7 @@
         this.currentGroupInput = event.target
         event.path[0].nextElementSibling.classList.add('flex')
       },
-      // onKey(event) {
-      //   event.target.blur()
-      // },
+
       onClear() {
         this.currentGroupName = ''
       },
@@ -295,12 +299,12 @@
             id
           })
           .then(() => {})
-        // .catch(() => {
-        //   this.$store.dispatch('editGroup', {
-        //     name: this.currentGroupName,
-        //     id
-        //   })
-        // })
+        .catch(() => {
+          this.$store.commit('editGroupShort', {
+            short_name: this.currentGroupName,
+            id
+          })
+        })
         event.target.blur()
         event.path[2].classList.remove('flex')
       },
@@ -311,47 +315,34 @@
             id
           })
           .then(() => {})
-        // .catch(() => {
-        //   this.$store.dispatch('editGroup', {
-        //     name: this.currentGroupName,
-        //     id
-        //   })
-        // })
+        .catch(() => {
+          this.$store.commit('editGroup', {
+            name: this.currentGroupName,
+            id
+          })
+        })
         event.target.blur()
         event.path[2].classList.remove('flex')
       },
 
       deleteGroup(id, name) {
-        // this.openCreateGroup = false
         this.openDeleteGroup = true
         this.paramsModal = {
           id,
           name
         }
       },
-      // async deleteProblem(param) {
-      //   await this.$store.dispatch('deleteProblem', param)
-      // },
+
       onClickExecutor(g) {
         this.currentExecutor = g
       },
-      async selectExecutorGroup(group) {
+      async selectExecutorGroup(group, event) {
         await this.$store.commit('setError404', '')
-        // await this.$store.dispatch('checkIfOk', {
-        //   description: group.description,
-        //   leader_id: group.leader_id,
-        //   id: group.id
-        // }).then(() => {
-        this.$store.dispatch('changeExecutorGroup', {
-          id: group.id,
-          uid: group.leader_id
-          // })
-        }).catch(() => {
-          this.$store.commit('changeExecutorGroup', {
-            id: group.id,
-            leader_id: this.currentExecutor
-          })
-        })
+        this.openConfirm = true
+        this.newLeader = {
+          groupId: group.id,
+          leader_id: event
+        }
       },
 
 
@@ -370,21 +361,7 @@
         //   })
         // })
       },
-      async removeUserFromGroup(uId, groupId) {
-        await this.$store.commit('setError404', '')
 
-        this.$store.dispatch('removeUserFromGroup', {
-          id: groupId,
-          uid: uId
-          // })
-        })
-        // .catch(() => {
-        //   this.$store.commit('changeExecutorGroup', {
-        //     id: group.id,
-        //     leader_id: this.currentExecutor
-        //   })
-        // })
-      },
 
 
       //pages
@@ -445,8 +422,9 @@
     display: none;
     margin: 0;
     justify-content: flex-end;
-    align-items: center;
-    margin-bottom: 5px;
+    // align-items: center;
+    // margin-bottom: 5px;
+    margin-top: 5px;
   }
 
   #card:hover #remove {

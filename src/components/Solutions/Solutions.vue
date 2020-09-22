@@ -209,7 +209,7 @@
           })
           .then(() => {})
           .catch(() => {
-            this.$store.dispatch('editSolution', {
+            this.$store.commit('editSolutionOther', {
               name: this.currentSolutionName,
               id
             })

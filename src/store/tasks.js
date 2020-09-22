@@ -186,7 +186,6 @@ export default {
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
         axios.put(URLTASK + `/${param.id}`, {
-
           description: param.description
         }).then(response => {
           commit('setError', '')
@@ -203,7 +202,6 @@ export default {
               commit('setError404', error.response.data.errors)
               reject(error.response.data.errors)
             }
-
           } else {
             commit('setError404', '')
             commit('setError404', error.response.data.message)

@@ -16,25 +16,28 @@
                 <div class="input-group">
                   <label for="new-group-title">Название подразделения (полностью) *</label>
                   <input type="text" ref="input" class="form-control form-control--valid" id="new-group-title"
-                    placeholder="Название проблемы..." @blur="showClear = false" @focus="onFocus" v-model="name">
-                  <div class="input-group-append" v-if="showClear" @click="onClear">
+                  :class="{ 'form-control--error': $v.name.$invalid || !name, 'form-control--valid': name && !$v.name.$invalid}"
+                    placeholder="Название проблемы..." @blur="onBlur($event)" @focus="onFocus($event)" v-model="name">
+                  <div class="input-group-append" @click="onClear">
                     <span class="input-group-text" style="background-color: #fff;">&times;</span>
                   </div>
                   <div class="error" v-if="error.name">{{error.name[0]}}</div>
                 </div>
-                <!-- v-model="nameShort" -->
+
                 <div class="input-group">
                   <label for="new-group-title">Название подразделения (сокращенно)</label>
                   <input type="text" ref="input" class="form-control form-control--valid" id="new-group-title__short"
-                    placeholder="Название проблемы..." @blur="showClear = false" @focus="onFocus" v-model="nameShort">
-                  <div class="input-group-append" v-if="showClear" @click="onClear">
+                  :class="{ 'form-control--error': $v.nameShort.$invalid || !nameShort, 'form-control--valid': nameShort && !$v.nameShort.$invalid}"
+                    placeholder="Название проблемы..." @blur="onBlur($event)" @focus="onFocus($event)" v-model="nameShort">
+                  <div class="input-group-append" @click="onClear">
                     <span class="input-group-text" style="background-color: #fff;">&times;</span>
                   </div>
-                  <div class="error" v-if="error.short_name">{{error.short_name[0]}}</div>
+                                  <div class="error" v-if="error.short_name">{{error.short_name[0]}}</div>
                 </div>
+
+
                 <div class="input-group">
                   <label>Выбрать руководителя*</label>
-                  {}
                   <div class="selectResponsible" style="background-color: transparent;">
                     <ss-select v-model="leader_id" :options="usersNoGroup" track-by="name" search-by="name"
                       disable-by="disabled" id="ss-select" style="width: fit-content;">
@@ -107,10 +110,6 @@
       name: '',
       nameShort: '',
       leader_id: '',
-
-      showClear: false,
-
-      // enableAddBtntn: false,
     }),
     components: {
       // UserIcon,
@@ -124,13 +123,13 @@
     },
     validations: {
       name: {
-        minLength: minLength(6),
-        maxLength: maxLength(250)
+        minLength: minLength(3),
+        maxLength: maxLength(100)
       },
-      // nameShort: {
-      //   minLength: minLength(6),
-      //   maxLength: maxLength(250)
-      // }
+      nameShort: {
+        minLength: minLength(2),
+        maxLength: maxLength(10)
+      }
     },
     watch: {
       error() {
@@ -142,15 +141,17 @@
     },
 
     methods: {
-      onFocus() {
-        this.showClear = true
+      onBlur(event) {
+        event.target.nextElementSibling.style.display = 'none'
+      },
+      onFocus(event) {
+        event.target.nextElementSibling.style.display = 'flex'
       },
       onClear() {
         this.name = ''
 
       },
 
-      // executor
       async addGroup() {
         console.log(this.name);
         console.log(this.nameShort);
@@ -159,15 +160,11 @@
           leader_id: this.leader_id,
           name: this.name,
           short_name: this.nameShort,
-        }).then((r) => {
-          console.log('d', r);
-          // if (!this.error) {
-          console.log('d', r);
+        }).then(() => {
           this.name = ''
           this.nameShort = ''
           this.leader_id = ''
           document.getElementById('close').click()
-          // }
         })
       },
       async selectExecutorGroup(group) {
@@ -203,7 +200,7 @@
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #EC7676;
-    // margin-bottom: 49px;
+    // padding-bottom: 49px;
   }
 
   .selectResponsible {
@@ -334,30 +331,38 @@
   .form-control {
     background-color: #F7F7F7;
     width: 100%;
-    // margin-bottom: 51px;
     margin-bottom: 5px;
-    // padding-bottom: 49px;
   }
 
   .form-control:active,
   .form-control:focus {
     background-color: #FFF;
   }
+  
+  #new-group-title, #new-group-title__short {
+    border-radius: 9px;
+    width: fit-content;
+  }
+    #new-group-title:focus, #new-group-title__short:focus {
+    border-radius: 9px 0 0 9px;
+    width: fit-content;
+  }
 
   .input-group {
     display: flex;
-    flex-direction: column;
-    // margin-bottom: 51px;
-    padding-bottom: 51px;
+    flex-direction: row;
     position: relative;
+    padding-bottom: 51px;
+  }
+  .input-group:last-child {
+    flex-direction: column;
   }
 
   .input-group-append {
     width: fit-content;
-    position: absolute;
-    top: 19%;
-    right: 0;
-    z-index: 1000;
+    height: fit-content;
+    // visibility: hidden;
+    display: none;
   }
 
   .input-group-text {
