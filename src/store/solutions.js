@@ -209,7 +209,6 @@ export default {
       state
     }, obj) => {
       // param.id = 10000000000
-      console.log('d');
       return new Promise((resolve, reject) => {
         if (state.solutions.find(s => s.id == obj.id) && obj.in_work.name == "В работе") {
           reject('false')
@@ -225,18 +224,16 @@ export default {
       commit
     }, param) => {
       // param.id = 10000000000
-      console.log(param);
       return new Promise((resolve, reject) => {
         axios.put(BASEURL + `/${param.id}/change-in-work`, {
           in_work: param.in_work
         }).then(response => {
-          console.log(response);
           commit('setError', '')
           commit('editinWork', response.data)
           commit('sortSolutions')
           resolve(response)
         }).catch((error) => {
-          console.log(error.response);
+
           if (error.response.status == 404) {
             commit('setError404', error.response.data.message)
             reject(error.response.data.message)

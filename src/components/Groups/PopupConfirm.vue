@@ -4,7 +4,6 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-              {{val}}
             <h5 class="modal-title">Вы точно хотите назначить нового руководителя для подразделения?</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
@@ -27,23 +26,24 @@
     name: 'popup',
     props: ['val'],
     data: () => ({
-      name: ''
     }),
     computed: {
       ...mapGetters(['error', 'error404']),
     },
     methods: {
       async setNewLeader() {
+          this.$emit('setNewLeader', this.val)
                   // await this.$store.dispatch('checkIfOk', {
         //   description: group.description,
         //   leader_id: group.leader_id,
         //   id: group.id
         // }).then(() => {
-        this.$store.dispatch('changeExecutorGroup', {
-          id: this.val.groupId,
-          uid: this.val.leader_id
-          // })
-        })
+            
+        // this.$store.dispatch('changeExecutorGroup', {
+        //   id: this.val.groupId,
+        //   uid: this.val.leader_id
+        //   // })
+        // })
         // .catch(() => {
         //   this.$store.commit('changeExecutorGroup', {
         //     id: group.id,

@@ -41,7 +41,6 @@ export default {
   mutations: {
     setGroups: (state, payload) => {
       state.groups = Object.values(payload)
-      console.log(payload, state.groups);
     },
     setLeader: (state, payload) => {
       state.leader = payload[0]
@@ -53,15 +52,10 @@ export default {
     },
     setMembers: (state, payload) => {
       payload.length > 0 ? state.members = Object.values(payload) : state.members = []
-      console.log(state.members);
-      console.log(payload);
     },
 
     addGroup: (state, payload) => {
-      console.log(state.groups);
-      console.log(typeof payload);
       state.groups.push(payload)
-      console.log(state.groups);
     },
     deleteGroup: (state, payload) => {
       state.groups = state.groups.filter(group => group.id !== payload)
@@ -73,7 +67,7 @@ export default {
       state.groups.find(group => group.id == payload.id).short_name = payload.short_name
     },
     editExecutorGroup: (state, payload) => {
-      state.groups.find(group => group.id == payload.id).executor_id = payload.executor_id
+      state.groups.find(group => group.id == payload.id).leader_id = payload.leader_id
     },
     setUserToGroup: (state, payload) => {
       state.members.push(payload)
@@ -88,7 +82,6 @@ export default {
     }) => {
       await axios.get(BASEURL)
         .then(response => {
-          console.log(response);
           if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
@@ -128,7 +121,6 @@ export default {
     }, id) => {
       await axios.get(BASEURL + `/${id}/user`)
         .then(response => {
-          console.log(response);
           if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
@@ -148,12 +140,9 @@ export default {
     postGroup: async ({
       commit
     }, param) => {
-      console.log(param);
       return new Promise((resolve, reject) => {
         axios.post(BASEURL, param)
           .then(response => {
-            console.log(response.data);
-
             commit('setError', '')
             commit('setError404', '')
             commit('addGroup', response.data)
@@ -161,7 +150,6 @@ export default {
             resolve(response.data)
           })
           .catch(error => {
-            console.log(error.response);
             if (error.response.status !== 422) {
               commit('setError404', error.response.data.message)
               reject(error.response.data.message)
@@ -187,7 +175,6 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error.response);
           if (error.response.status !== 422) {
             commit('setError404', error.response.data.message)
           } else {
@@ -207,7 +194,6 @@ export default {
     editGroup: async ({
       commit
     }, param) => {
-      console.log(param);
       return new Promise((resolve, reject) => {
         axios.put(BASEURL + `/${param.id}`, {
           name: param.name
@@ -223,7 +209,6 @@ export default {
             commit('setError404', error.response.data.message)
             reject(error.response.data.message)
           } else {
-            console.log(error.response);
             commit('setError404', error.response.data.errors.name[0])
             reject(error.response.data.errors.name[0])
           }
@@ -262,7 +247,7 @@ export default {
     // }, param) => {
     //   // param.id = 10000000000
     //   return new Promise((resolve, reject) => {
-    //     if (state.groups.filter(t => t.description == param.description).length > 1 && state.tasks.filter(t => t.executor_id == param.executor_id).length > 1) {
+    //     if (state.groups.filter(t => t.description == param.description).length > 1 && state.tasks.filter(t => t.leader_id == param.leader_id).length > 1) {
     //       commit('setError404', 'Такая задача уже существует с таким ответственным')
     //       reject('false')
 
@@ -275,27 +260,30 @@ export default {
       commit
     }, param) => {
       // param.id = 10000000000
-      axios.put(BASEURL + `/${param.id}/set-executor`, {
-        leader_id: param.uid
-      }).then(response => {
+      return new Promise((resolve, reject) => {
+      axios.put(BASEURL + `/${param.id}/change-leader/${param.uid}`).then(response => {
         commit('setError', '')
         commit('editExecutorGroup', response.data)
+        resolve(response.data)
       }).catch((error) => {
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
+          reject( error.response)
         } else if (error.response.status == 422) {
-          if (error.response.data.errors.executor_id) {
-            commit('setError404', error.response.data.errors.executor_id[0])
+          if (error.response.data.errors.leader_id) {
+            commit('setError404', error.response.data.errors.leader_id[0])
+            reject( error.response)
           } else {
             commit('setError404', error.response.data.errors)
+            reject( error.response)
           }
         }
       })
+    })
     },
     putUserToGroup: async ({
       commit
     }, param) => {
-      console.log(param);
       // param.uid = 10000000000
       axios.put(BASEURL + `/${param.id}/user/${param.uid}`).then(response => {
         commit('setError', '')
@@ -304,8 +292,8 @@ export default {
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
         } else if (error.response.status == 422) {
-          if (error.response.data.errors.executor_id) {
-            commit('setError404', error.response.data.errors.executor_id[0])
+          if (error.response.data.errors.leader_id) {
+            commit('setError404', error.response.data.errors.leader_id[0])
           } else {
             commit('setError404', error.response.data.errors)
           }
@@ -316,17 +304,15 @@ export default {
       commit
     }, param) => {
       // param.uid = 10000000000
-      axios.put(BASEURL + `/${param.id}/remove-user/${param.uid}`).then(response => {
+      axios.put(BASEURL + `/${param.id}/remove-user/${param.uid}`).then(() => {
         commit('setError', '')
         commit('setRemoveUser', param)
-        console.log(response.data);
       }).catch((error) => {
-        console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
         } else if (error.response.status == 422) {
-          if (error.response.data.errors.executor_id) {
-            commit('setError404', error.response.data.errors.executor_id[0])
+          if (error.response.data.errors.leader_id) {
+            commit('setError404', error.response.data.errors.leader_id[0])
           } else {
             commit('setError404', error.response.data.errors)
           }

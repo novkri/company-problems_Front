@@ -153,9 +153,6 @@
       },
 
       async addGroup() {
-        console.log(this.name);
-        console.log(this.nameShort);
-        console.log(this.leader_id);
         await this.$store.dispatch('postGroup', {
           leader_id: this.leader_id,
           name: this.name,

@@ -42,9 +42,7 @@
           .catch(() => this.$store.commit('setError404', ''))
       },
       async removeUserFromGroup() {
-        console.log('here');
         await this.$store.commit('setError404', '')
-        console.log(this.val);
         this.$store.dispatch('removeUserFromGroup', {
           id: this.val.id,
           uid: this.val.uid

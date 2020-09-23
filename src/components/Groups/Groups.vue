@@ -54,7 +54,7 @@
           </div>
           <div class="short-name col-4">
             <!-- style="width: fit-content;" -->
-            <input class="form-control input-name" 
+            <input class="form-control input-name"
               @keyup.enter="event => {editGroupShort(group.short_name, group.id, event)}" v-model="group.short_name"
               @focus="onFocusInput($event)" @blur="onBlurInput($event)">
             <div class="hidden">
@@ -66,13 +66,13 @@
               </button>
             </div>
           </div>
-          <div class="selectResponsible col-3" >
+          <div class="selectResponsible col-3">
             <ss-select v-model="group.leader_id" :options="allUsersReduced" track-by="name" search-by="name"
-              @change="selectExecutorGroup(group, $event)" disable-by="disabled" id="ss-select" style="width: fit-content;">
+              @change="selectExecutorGroup(group, $event)" disable-by="disabled" id="ss-select"
+              style="width: fit-content;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                style="cursor: pointer; width: 100%;">
-                <ss-select-toggle class="flex items-center justify-between"
-                  style="width: 100%; padding: 0px;">
+                @click.once="onClickExecutor(group.leader_id)" style="cursor: pointer; width: 100%;">
+                <ss-select-toggle class="flex items-center justify-between" style="width: 100%; padding: 0px;">
                   <award-icon size="1.5x" class="custom-class"></award-icon>
                   {{ $get(selectedOption, 'name') || 
                   `${allUsersReduced.find(u => u.id == group.leader_id) ? allUsersReduced.find(u => u.id == group.leader_id).surname + ' ' 
@@ -82,8 +82,9 @@
                 </ss-select-toggle>
 
                 <section v-show="isOpen" class="absolute border-l border-r min-w-full">
-                  <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index" data-toggle="modal" data-target="#groupConfirm"
-                    :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
+                  <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
+                    data-toggle="modal" data-target="#groupConfirm" :key="index"
+                    class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
                                 $selected(option) ? 'bg-light text-dark' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
@@ -153,7 +154,8 @@
     </div>
 
 
-    <button type="button" class="btn btnMain" @click="createG" data-toggle="modal" data-target="#groupCreate" style="margin: 100px auto 30px;">
+    <button type="button" class="btn btnMain" @click="createG" data-toggle="modal" data-target="#groupCreate"
+      style="margin: 100px auto 30px;">
       <plus-icon size="1.5x" class="custom-class" style="color: white; margin-right: 5px;"></plus-icon><span>Добавить
         группу</span>
     </button>
@@ -162,7 +164,7 @@
     <GroupCreate v-if="openCreateGroup" @createGroup="createGroup(param = $event)" />
     <GroupDelete v-if="openDeleteGroup" :val="paramsModal" @deleteGroup="deleteGroup(param = $event)" />
 
-    <PopupConfirm v-if="openConfirm" :val="newLeader" />
+    <PopupConfirm v-if="openConfirm" :val="newLeader" @setNewLeader="setNewLeader(param = $event)" />
 
   </div>
 
@@ -274,9 +276,7 @@
     methods: {
       showOnClickUsers(id) {
         this.openShowUsers = true
-        console.log(id);
         this.currentGroupId = id
-
       },
       createG() {
         this.openCreateGroup = true
@@ -301,12 +301,12 @@
             id
           })
           .then(() => {})
-        .catch(() => {
-          this.$store.commit('editGroupShort', {
-            short_name: this.currentGroupName,
-            id
+          .catch(() => {
+            this.$store.commit('editGroupShort', {
+              short_name: this.currentGroupName,
+              id
+            })
           })
-        })
         event.target.blur()
         event.path[2].classList.remove('flex')
       },
@@ -317,12 +317,12 @@
             id
           })
           .then(() => {})
-        .catch(() => {
-          this.$store.commit('editGroup', {
-            name: this.currentGroupName,
-            id
+          .catch(() => {
+            this.$store.commit('editGroup', {
+              name: this.currentGroupName,
+              id
+            })
           })
-        })
         event.target.blur()
         event.path[2].classList.remove('flex')
       },
@@ -335,16 +335,30 @@
         }
       },
 
-      onClickExecutor(g) {
-        this.currentExecutor = g
+      onClickExecutor(leader) {
+        this.currentExecutor = leader
       },
-      async selectExecutorGroup(group, event) {
-        await this.$store.commit('setError404', '')
+      selectExecutorGroup(group, event) {
         this.openConfirm = true
         this.newLeader = {
           groupId: group.id,
           leader_id: event
         }
+      },
+      async setNewLeader(param) {
+
+        await this.$store.commit('setError404', '')
+        console.log(this.currentExecutor);
+        this.$store.dispatch('changeExecutorGroup', {
+            id: param.groupId,
+            uid: param.leader_id
+          })
+          .catch(() => {
+            this.$store.commit('editExecutorGroup', {
+              id: param.groupId,
+              leader_id: this.currentExecutor
+            })
+          })
       },
 
 
@@ -518,6 +532,7 @@
   section {
     top: 62%;
   }
+
   .short-name,
   .selectResponsible {
     text-align: center;
@@ -595,7 +610,7 @@
       border-radius: 8px;
       // min-width: 231px;
       justify-content: space-between;
-          padding: 0;
+      padding: 0;
 
       div {
         justify-content: space-between;
@@ -781,50 +796,57 @@
     border-left: 1px solid #e0e0e0;
   }
 
-// @media (min-width: 1700px) {
-//   .container, .container-lg, .container-md, .container-sm, .container-xl {
-//     max-width: 1350px;
-// }
+  // @media (min-width: 1700px) {
+  //   .container, .container-lg, .container-md, .container-sm, .container-xl {
+  //     max-width: 1350px;
+  // }
 
-// }
-@media (max-width: 1500px) {
-  .page-item a {
-        margin: 0 9px;
-  }
-      #headingOneAdd {
+  // }
+  @media (max-width: 1500px) {
+    .page-item a {
+      margin: 0 9px;
+    }
+
+    #headingOneAdd {
       height: auto;
     }
-  .btnMain {
-    width: 200px;
-  }
-  h2 {
-    font-size: 20px;
-  }
-  .subtitle {
-    padding-left: 0;
-    align-items: center;
-  }
 
-  .selectResponsible #ss-select div {
-    // justify-content: center;
-        width: 100%;
+    .btnMain {
+      width: 200px;
+    }
 
-  }
+    h2 {
+      font-size: 20px;
+    }
 
-  #remove {
-        align-self: center;
-    svg {
-      font-size: 15px !important;
+    .subtitle {
+      padding-left: 0;
+      align-items: center;
+    }
+
+    .selectResponsible #ss-select div {
+      // justify-content: center;
+      width: 100%;
+
+    }
+
+    #remove {
+      align-self: center;
+
+      svg {
+        font-size: 15px !important;
+      }
+    }
+
+    .input-btn {
+      height: 25px;
+      align-self: center;
+
+      svg {
+        vertical-align: middle;
+      }
     }
   }
-  .input-btn {
-    height: 25px;
-    align-self: center;
-    svg {
-      vertical-align: middle;
-    }
-  }
-}
 
 
 
@@ -834,6 +856,7 @@
       width: 85% !important;
     }
   }
+
   .col-3 {
     // height: 100%  !important;
     padding: 0px;

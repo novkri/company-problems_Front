@@ -18,7 +18,7 @@
           <div class="task-title col-5"
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">
             <input class="form-control" @focus="onFocusInput($event)" @keyup.enter="event => onKey(event)"
-              @blur="event => editTask(task, event)" v-model="task.description">
+              @blur="editTask(task)" v-model="task.description">
           </div>
 
           <div class="select col-2" style="position: relative;" ref="select">
@@ -47,7 +47,7 @@
 
           <div class="dateDiv col-2">
             <input type="date" id="start" name="trip-start" class="date" onkeypress="return false"
-              @click="onClickDate($event)" @change="event => {changeDeadlineTask(task.deadline, task.id), event}"
+              @click="onClickDate($event)" @change="changeDeadlineTask(task.deadline, task.id)"
               v-model="task.deadline">
           </div>
 
@@ -256,9 +256,8 @@
         this.currentDate = event.target.value
         this.currentDateInput = event.target
       },
-      async changeDeadlineTask(deadline, id, event) {
+      async changeDeadlineTask(deadline, id) {
         await this.$store.commit('setError404', '')
-        console.log(event);
         await this.$store.dispatch('changeDeadlineTask', {
           deadline,
           id
@@ -295,22 +294,17 @@
       onFocusInput(event) {
         this.currentTaskName = event.target.value
         this.currentTaskInput = event.target
-        console.log(this.currentTaskName);
-        console.log(this.currentTaskInput);
       },
       onKey(event) {
         event.target.blur()
       },
-      async editTask(task, event) {
-        console.log(event);
+      async editTask(task) {
         if (task.description !== this.currentTaskName) {
           await this.$store.commit('setError404', '')
           await this.$store.dispatch('editTask', {
               description: task.description,
               id: task.id
-          }).catch((e) => {
-            console.log(e);
-            console.log(this.currentTaskName);
+          }).catch(() => {
             this.$store.commit('editTask', {
               description: this.currentTaskName,
               id: task.id
