@@ -47,7 +47,7 @@
                         <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between"
                           style="width: 100%; padding: 13px;">
                           <award-icon size="1.5x" class="custom-class"></award-icon>
-                          {{ $get(selectedOption, 'name') || selectedOption ? usersNoGroup.find(u => u.id == selectedOption).name : 'Выбрать руководителя'}}
+                          {{ $get(selectedOption, 'name') || selectedOption ? usersNoGroup.find(u => u.id == selectedOption).surname + ' ' + usersNoGroup.find(u => u.id == selectedOption).name + ' ' + usersNoGroup.find(u => u.id == selectedOption).father_name: 'Выбрать руководителя'}}
                           <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                         </ss-select-toggle>
 
@@ -57,7 +57,7 @@
                                 pointerIndex == index ? 'bg-light text-dark' : '',
                                 $selected(option) ? 'bg-light text-dark' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
-                              ]">{{ option.name }}</ss-select-option>
+                              ]">{{ option.surname }} {{ option.name }} {{ option.father_name }} </ss-select-option>
                         </section>
                       </div>
                     </ss-select>
