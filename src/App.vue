@@ -362,6 +362,9 @@
     * {
       font-size: 13px;
     }
+    .navbar .user span, .sidebar a {
+      font-size: 14px;
+    }
 
     .form-control {
         font-size: 14px !important;

@@ -1,10 +1,11 @@
 <template>
-  <div class="container" style="min-width: 1356px;">
+  <div class="container" style="width: 95%;">
     <h2>Список подразделений</h2>
     <div class="subtitle row">
-      <span class="col-4">Название подразделения</span>
+      <span class="col-3">Название подразделения</span>
       <span class="col-4">Название подразделения (сокращенно)</span>
-      <span class="col-2">Руководитель</span>
+      <span class="col-3" style="display: flex;
+    justify-content: center;">Руководитель</span>
       <div class="pagination col-2">
         <nav>
           <ul class="pagination">
@@ -31,7 +32,7 @@
       <div class="card" id="card" v-for="(group, idx) in groups" :key="idx">
         <div class="card-header row" id="heading">
           <div class="name col-4">
-            <h5 class="mb-0">
+            <h5 class="mb-0" style="height: 100%;">
               <button class="btn btn-link collapsed" data-toggle="collapse" :data-target="'#collapseOne'+idx"
                 @click="showOnClickUsers(group.id)" aria-expanded="false" :aria-controls="'collapseOne'+idx">
                 <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
@@ -52,7 +53,8 @@
             </h5>
           </div>
           <div class="short-name col-4">
-            <input class="form-control input-name" style="width: fit-content;"
+            <!-- style="width: fit-content;" -->
+            <input class="form-control input-name" 
               @keyup.enter="event => {editGroupShort(group.short_name, group.id, event)}" v-model="group.short_name"
               @focus="onFocusInput($event)" @blur="onBlurInput($event)">
             <div class="hidden">
@@ -64,12 +66,12 @@
               </button>
             </div>
           </div>
-          <div class="selectResponsible col-2">
+          <div class="selectResponsible col-3" >
             <ss-select v-model="group.leader_id" :options="allUsersReduced" track-by="name" search-by="name"
               @change="selectExecutorGroup(group, $event)" disable-by="disabled" id="ss-select" style="width: fit-content;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                 style="cursor: pointer; width: 100%;">
-                <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between"
+                <ss-select-toggle class="flex items-center justify-between"
                   style="width: 100%; padding: 0px;">
                   <award-icon size="1.5x" class="custom-class"></award-icon>
                   {{ $get(selectedOption, 'name') || 
@@ -90,7 +92,7 @@
               </div>
             </ss-select>
           </div>
-          <div style="width: 50px;" class="icons col-2">
+          <div style="width: 50px;height: 100%;" class="icons col-1">
             <button type="button" class="close" id="remove" data-toggle="modal" data-target="#groupDelete"
               @click="deleteGroup(group.id)">
               <trash-icon size="1x" class="custom-class"></trash-icon>
@@ -118,7 +120,7 @@
                         </ss-select-toggle>
 
                         <section v-show="isOpen" class="absolute border-l border-r min-w-full"
-                          style="top: 58%;left: 6%;">
+                          style="top: 66%;left: 6%;">
                           <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
                             :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
@@ -151,7 +153,7 @@
     </div>
 
 
-    <button type="button" class="btn btnMain" @click="createG" data-toggle="modal" data-target="#groupCreate" style="margin-bottom: 30px;">
+    <button type="button" class="btn btnMain" @click="createG" data-toggle="modal" data-target="#groupCreate" style="margin: 100px auto 30px;">
       <plus-icon size="1.5x" class="custom-class" style="color: white; margin-right: 5px;"></plus-icon><span>Добавить
         группу</span>
     </button>
@@ -399,8 +401,8 @@
     margin-left: 8px;
     background-color: #F4F4F4;
     border-radius: 8px;
-    font-size: 27px;
-    align-items: center;
+    // font-size: 27px;
+    // align-items: center;
 
     svg {
       color: #4F4F4F;
@@ -410,6 +412,7 @@
 
   .hidden {
     visibility: hidden;
+    // width: 90px;
   }
 
   .flex {
@@ -512,7 +515,9 @@
     }
   }
 
-
+  section {
+    top: 62%;
+  }
   .short-name,
   .selectResponsible {
     text-align: center;
@@ -577,7 +582,7 @@
 
 
     #ss-select {
-      padding-left: 8px;
+      // padding-left: 8px;
       align-items: center;
       display: flex;
       height: 36px;
@@ -585,11 +590,12 @@
       background-color: #fff;
       border-radius: 10px;
       text-align: center;
-      padding-right: 0;
+      // padding-right: 0;
       width: fit-content;
       border-radius: 8px;
-      min-width: 231px;
+      // min-width: 231px;
       justify-content: space-between;
+          padding: 0;
 
       div {
         justify-content: space-between;
@@ -775,10 +781,61 @@
     border-left: 1px solid #e0e0e0;
   }
 
+// @media (min-width: 1700px) {
+//   .container, .container-lg, .container-md, .container-sm, .container-xl {
+//     max-width: 1350px;
+// }
+
+// }
+@media (max-width: 1500px) {
+  .page-item a {
+        margin: 0 9px;
+  }
+      #headingOneAdd {
+      height: auto;
+    }
+  .btnMain {
+    width: 200px;
+  }
+  h2 {
+    font-size: 20px;
+  }
+  .subtitle {
+    padding-left: 0;
+    align-items: center;
+  }
+
+  .selectResponsible #ss-select div {
+    // justify-content: center;
+        width: 100%;
+
+  }
+
+  #remove {
+        align-self: center;
+    svg {
+      font-size: 15px !important;
+    }
+  }
+  .input-btn {
+    height: 25px;
+    align-self: center;
+    svg {
+      vertical-align: middle;
+    }
+  }
+}
+
+
 
   @media (max-width: 500px) {
+
     .container {
       width: 85% !important;
     }
+  }
+  .col-3 {
+    // height: 100%  !important;
+    padding: 0px;
   }
 </style>

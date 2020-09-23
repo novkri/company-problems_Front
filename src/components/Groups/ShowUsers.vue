@@ -10,9 +10,9 @@
             1. {{leaderReduced.surname}} {{leaderReduced.name}} {{leaderReduced.father_name}}
           </div>
           <div class="close">
-            <button type="button" id="close" class="close" data-dismiss="modal" style="font-size: 24px;"
+            <button type="button" id="close" class="close" data-dismiss="modal" 
               @click="removeUserFromGroup(member.id, val)">
-              <span aria-hidden="true">&times;</span>
+              <span aria-hidden="true"  style="font-size: 20px;">&times;</span>
             </button>
           </div>
         </li>
@@ -27,9 +27,9 @@
             </div>
             <div class="close">
               <!--  -->
-              <button type="button" id="close" class="close" data-dismiss="modal" style="font-size: 24px;"
+              <button type="button" id="close" class="close" data-dismiss="modal"
                 @click="removeUserFromGroup(member.id, val)" data-toggle="modal" data-target="#groupDelete">
-                <span aria-hidden="true">&times;</span>
+                <span aria-hidden="true" style="font-size: 20px;">&times;</span>
               </button>
             </div>
           </li>
@@ -143,4 +143,9 @@
       padding-right: 10px;
     }
   }
+  // @media (max-width: 1500px) {
+  //   #headingOneAdd {
+  //     height: auto;
+  //   }
+  // }
 </style>>
