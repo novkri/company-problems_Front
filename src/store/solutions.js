@@ -27,7 +27,7 @@ export default {
     solutionsOther: [],
     allUsers: [],
     allUsersReduced: [],
-    usersNoGroup: [],
+    // usersNoGroup: [],
     token: localStorage.getItem('user-token') || '',
   },
   getters: {
@@ -46,9 +46,9 @@ export default {
     allUsersReduced: state => {
       return state.allUsersReduced
     },
-    usersNoGroup: state => {
-      return state.allUsers.filter(u => u.group_id == null)
-    }
+    // usersNoGroup: state => {
+    //   return state.usersNoGroup = state.allUsers.filter(u => u.group_id == null)
+    // }
   },
   mutations: {
     setSolution: (state, payload) => {
@@ -267,18 +267,23 @@ export default {
       commit
     }, param) => {
       // param.id = 10000000000
+      return new Promise((resolve, reject) => {
       axios.put(BASEURL + `/${param.id}/set-deadline`, {
         deadline: param.deadline
       }).then(response => {
         commit('setError', '')
         commit('editDeadline', response.data)
+        resolve(response.data)
       }).catch((error) => {
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
+          reject(error.response.data.message)
         } else if (error.response.status == 422) {
           commit('setError404', error.response.data.errors.deadline[0])
+          reject(error.response.data.errors.deadline[0])
         }
       })
+    })
     },
 
     getAllUsers: async ({

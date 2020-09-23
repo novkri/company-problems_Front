@@ -136,7 +136,7 @@
 
       <div type="submit" class="btnsAddTask" v-if="!addNotClicked">
         <button id="addBtn" class="btn btnPink" @click.prevent="addTask" :disabled="!enableAddBtntn">Добавить задачу</button>
-        <span @click.prevent="addNotClicked = true">Отмена</span>
+        <span @click.prevent="addNotClicked = true">Отменить</span>
       </div>
     </div>
 
@@ -255,7 +255,8 @@
       onClickDate(event) {
         this.currentDate = event.target.value
         this.currentDateInput = event.target
-      },
+        console.log(this.currentDate);
+      }, 
       async changeDeadlineTask(deadline, id) {
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('changeDeadlineTask', {

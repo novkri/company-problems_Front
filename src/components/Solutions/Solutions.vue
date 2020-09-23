@@ -110,8 +110,8 @@
           <form class="form-group" @submit.prevent="addSolution(val)">
             <div class="input-group">
               <input type="text" v-model="solutionName" class="form-control form-control--valid"
-                placeholder="Предложите ваше решение..." @focus="onFocus" @blur="showClear = false">
-              <div class="input-group-append" v-if="showClear" @click="onClear">
+                placeholder="Предложите ваше решение..." @blur="onBlur($event)" @focus="onFocus($event)">
+              <div class="input-group-append" @mousedown="onClear">
                 <span class="input-group-text">&times;</span>
               </div>
             </div>
@@ -187,8 +187,11 @@
       ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404', 'allUsers']),
     },
     methods: {
-      onFocus() {
-        this.showClear = true
+      onBlur(event) {
+        event.target.nextSibling.style.display = 'none'
+      },
+      onFocus(event) {
+        event.target.nextSibling.style.display = 'flex'
       },
       onClear() {
         this.solutionName = ''
@@ -368,6 +371,10 @@
     .new-solution {
       justify-content: space-between;
       padding: 18px 56px 70px 56px;
+
+      input {
+        cursor: text;
+      }
     }
 
     form {
@@ -593,19 +600,42 @@
       color: #2D453F;
     }
   }
+  .input-group {
+    // display: flex;
+    // flex-direction: row;
+    // position: relative;
+    // padding-bottom: 51px;
+    position: relative;
 
+
+  }
 
   .new-solution {
-    display: flex;
+    display: flex;   
+     input {
+      border-radius: 10px !important;
+    }
+  }
+
+  .input-group-append {
+    display: none;
+    position: absolute;
+    border: transparent;
+    background-color: transparent;
+    // top: 20%;
+    top: 0;
+    right: 1%;
+    z-index: 10;
   }
 
   .input-group-text {
-    border: none;
+    border: transparent;
+    background-color: transparent;
     cursor: pointer;
-    background-color: #FFF;
-    border-radius: 6px;
-    border-bottom: 2px solid #92D2C3;
+    height: fit-content;
+    background-color: transparent;
   }
+
 
 
 

@@ -13,7 +13,7 @@
           <button type="submit" class="btn btn-secondary" @click="removeSolution(val)" data-dismiss="modal"
             data-target="#popupRemoveFromWOrk">Да</button>
           <button type="reset" class="btn btn-secondary" data-dismiss="modal" data-target="#popupRemoveFromWOrk"
-            @click="closeDeleteSolutions">Отменить</button>
+            @click="closeDeleteSolutions">Нет</button>
         </div>
       </div>
     </div>

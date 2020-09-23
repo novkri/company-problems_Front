@@ -1,5 +1,5 @@
 <template>
-  <div class="container" style="width: 95%;">
+  <div class="sfdf" style="height: 50vh;padding-top: 77px;">
     <h2>Список подразделений</h2>
     <div class="subtitle row">
       <span class="col-3">Название подразделения</span>
@@ -15,8 +15,8 @@
               </a>
             </li>
             <li class="page-item">
-              <span v-if="pageNumber ==0">1-25</span>
-              <span v-else>{{(25 * pageNumber)+1}}-{{(25 * pageNumber)+26}}</span>
+              <span v-if="pageNumber ==0">1-10</span>
+              <span v-else>{{(10 * pageNumber)+1}}-{{(10 * pageNumber)+11}}</span>
             </li>
             <li class="page-item">
               <a class="page-link" @click="nextPage" aria-label="Next" :class="{'block' : pageNumber >= pageCount - 1}">
@@ -28,136 +28,145 @@
       </div>
     </div>
 
-    <div id="accordion">
-      <div class="card" id="card" v-for="(group, idx) in groups" :key="idx">
-        <div class="card-header row" id="heading">
-          <div class="name col-4">
-            <h5 class="mb-0" style="height: 100%;">
-              <button class="btn btn-link collapsed" data-toggle="collapse" :data-target="'#collapseOne'+idx"
-                @click="showOnClickUsers(group.id)" aria-expanded="false" :aria-controls="'collapseOne'+idx">
-                <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
-              </button>
+    <div class="container">
+
+
+      <div id="accordion">
+        <div class="card" id="card" v-for="(group, idx) in paginatedDataGroups" :key="idx">
+          <div class="card-header row" id="heading">
+            <div class="name col-4">
+              <h5 class="mb-0" style="height: 100%;">
+                <button class="btn btn-link collapsed" data-toggle="collapse" :data-target="'#collapseOne'+group.id"
+                  @click="showOnClickUsers(group.id)" aria-expanded="false" :aria-controls="'collapseOne'+group.id">
+                  <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
+                </button>
+                <input class="form-control input-name"
+                  @keyup.enter="event => {editGroupName(group.name, group.id, event)}" v-model="group.name"
+                  @focus="onFocusInput($event)" @blur="onBlurInput($event)">
+                <div class="hidden">
+                  <button class="input-btn" @mousedown="event => {editGroupName(group.name, group.id, event)}">
+                    <check-icon size="1x" class="custom-class"></check-icon>
+                  </button>
+                  <button class="input-btn" @mousedown="onClear($event)">
+                  <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
+                </button>
+                </div>
+
+
+              </h5>
+            </div>
+            <div class="short-name col-4">
+              <!-- style="width: fit-content;" -->
               <input class="form-control input-name"
-                @keyup.enter="event => {editGroupName(group.name, group.id, event)}" v-model="group.name"
+                @keyup.enter="event => {editGroupShort(group.short_name, group.id, event)}" v-model="group.short_name"
                 @focus="onFocusInput($event)" @blur="onBlurInput($event)">
               <div class="hidden">
-                <button class="input-btn" @mousedown="event => {editGroupName(group.name, group.id, event)}">
+                <button class="input-btn" @mousedown="event => {editGroupShort(group.short_name, group.id, event)}">
                   <check-icon size="1x" class="custom-class"></check-icon>
                 </button>
                 <button class="input-btn" @mousedown="onClear($event)">
-                  <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
-                </button>
-              </div>
-
-
-            </h5>
-          </div>
-          <div class="short-name col-4">
-            <!-- style="width: fit-content;" -->
-            <input class="form-control input-name"
-              @keyup.enter="event => {editGroupShort(group.short_name, group.id, event)}" v-model="group.short_name"
-              @focus="onFocusInput($event)" @blur="onBlurInput($event)">
-            <div class="hidden">
-              <button class="input-btn" @mousedown="event => {editGroupShort(group.short_name, group.id, event)}">
-                <check-icon size="1x" class="custom-class"></check-icon>
-              </button>
-              <button class="input-btn" @mousedown="onClear($event)">
                 <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
               </button>
+              </div> 
             </div>
-          </div>
-          <div class="selectResponsible col-3">
-            <ss-select v-model="group.leader_id" :options="allUsersReduced" track-by="name" search-by="name"
-              @change="selectExecutorGroup(group, $event)" disable-by="disabled" id="ss-select"
-              style="width: fit-content;">
-              <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                @click.once="onClickExecutor(group.leader_id)" style="cursor: pointer; width: 100%;">
-                <ss-select-toggle class="flex items-center justify-between" style="width: 100%; padding: 0px;">
-                  <award-icon size="1.5x" class="custom-class"></award-icon>
-                  {{ $get(selectedOption, 'name') || 
+
+            <div class="selectResponsible col-3"> {{group.leader_id}}
+              <ss-select v-model="group.leader_id" :options="allUsersReduced.filter(u => u.group_id == group.id)"
+                track-by="name" search-by="name" @change="selectExecutorGroup(group, $event)" disable-by="disabled"
+                id="ss-select" style="width: fit-content;">
+                <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+                  @click.once="onClickExecutor(group.leader_id)" style="cursor: pointer; width: 100%;">
+                  <ss-select-toggle class="flex items-center justify-between" style="width: 100%; padding: 0px;">
+                    <award-icon size="1.5x" class="custom-class"></award-icon>
+                    {{ $get(selectedOption, 'name') || 
                   `${allUsersReduced.find(u => u.id == group.leader_id) ? allUsersReduced.find(u => u.id == group.leader_id).surname + ' ' 
                     + allUsersReduced.find(u => u.id == group.leader_id).name + ' ' 
                     + allUsersReduced.find(u => u.id == group.leader_id).father_name: 'Выбрать'}`}}
-                  <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
-                </ss-select-toggle>
+                    <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
+                  </ss-select-toggle>
 
-                <section v-show="isOpen" class="absolute border-l border-r min-w-full">
-                  <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
-                    data-toggle="modal" data-target="#groupConfirm" :key="index"
-                    class="px-4 py-2 border-b cursor-pointer" :class="[
+                  <section v-show="isOpen" class="absolute border-l border-r min-w-full">
+                    <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
+                      data-toggle="modal" data-target="#groupConfirm" :key="index"
+                      class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
                                 $selected(option) ? 'bg-light text-dark' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
                               ]">{{ option.surname }} {{ option.name }} {{ option.father_name }} </ss-select-option>
-                </section>
-              </div>
-            </ss-select>
+                  </section>
+                </div>
+              </ss-select>
+            </div>
+            <div style="width: 50px;height: 100%;" class="icons col-1">
+              <button type="button" class="close" id="remove" data-toggle="modal" data-target="#groupDelete"
+                @click="deleteGroup(group.id)">
+                <trash-icon size="1x" class="custom-class"></trash-icon>
+              </button>
+            </div>
           </div>
-          <div style="width: 50px;height: 100%;" class="icons col-1">
-            <button type="button" class="close" id="remove" data-toggle="modal" data-target="#groupDelete"
-              @click="deleteGroup(group.id)">
-              <trash-icon size="1x" class="custom-class"></trash-icon>
-            </button>
-          </div>
-        </div>
 
-        <div :id="'collapseOne'+idx" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-          <div class="card-body">
-            <div class="card">
-              <div class="card-header" id="headingOneAdd">
-                <h5 class="mb-0">
-                  <div>
-                    <ss-select :options="usersNoGroup" track-by="name" search-by="name" disable-by="disabled"
-                      id="ss-select" style="width: fit-content;" @change="putUserToGroup(group.id, $event)">
-                      <div
-                        slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                        style="cursor: pointer; width: 100%;">
-                        <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between"
-                          style="width: 100%; padding: 13px;">
-                          <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
-                          <plus-icon size="1x" class="custom-class" id="plusIcon"></plus-icon>
-                          {{ $get(selectedOption, 'name') || 'Добавить сотрудника'}}
-                          <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
-                        </ss-select-toggle>
+          <div :id="'collapseOne'+group.id" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+              <div class="card">
+                <div class="card-header" id="headingOneAdd">
+                  <h5 class="mb-0">
+                    <div>
+                      <ss-select :options="usersNoGroup" track-by="name" search-by="name" disable-by="disabled"
+                        id="ss-select" style="width: fit-content;" @change="putUserToGroup(group.id, $event)">
+                        <div
+                          slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+                          style="cursor: pointer; width: 100%;">
+                          <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between"
+                            style="width: 100%; padding: 13px;">
+                            <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
+                            <plus-icon size="1x" class="custom-class" id="plusIcon"></plus-icon>
+                            {{ $get(selectedOption, 'name') || 'Добавить сотрудника'}}
+                            <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
+                          </ss-select-toggle>
 
-                        <section v-show="isOpen" class="absolute border-l border-r min-w-full"
-                          style="top: 66%;left: 6%;">
-                          <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
-                            :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
+                          <section v-show="isOpen" class="absolute border-l border-r min-w-full"
+                            style="top: 66%;left: 6%;">
+                            <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id"
+                              :index="index" :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
                                 $selected(option) ? 'bg-light text-dark' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
                               ]">{{ option.surname }} {{ option.name }} {{option.father_name}} </ss-select-option>
-                        </section>
-                      </div>
-                    </ss-select>
-                  </div>
+                          </section>
+                        </div>
+                      </ss-select>
+                    </div>
 
 
-                  <!-- <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOneAdd"
+                    <!-- <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOneAdd"
                     aria-expanded="false" aria-controls="collapseOneAdd">
                     <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                   </button> -->
-                </h5>
-              </div>
+                  </h5>
+                </div>
 
-              <div id="collapseOneAdd" class="collapse" aria-labelledby="headingOneAdd" data-parent="#collapseOne">
-                <div class="card-body">
-                  <input type="text">
+                <div id="collapseOneAdd" class="collapse" aria-labelledby="headingOneAdd" data-parent="#collapseOne">
+                  <div class="card-body">
+                    <input type="text">
+                  </div>
                 </div>
               </div>
+              <ShowUsers v-if="openShowUsers && currentGroupId==group.id" :val="currentGroupId" />
             </div>
-            <ShowUsers v-if="openShowUsers && currentGroupId==group.id" :val="currentGroupId" />
           </div>
         </div>
       </div>
+
+
+
+
     </div>
 
 
     <button type="button" class="btn btnMain" @click="createG" data-toggle="modal" data-target="#groupCreate"
       style="margin: 100px auto 30px;">
       <plus-icon size="1.5x" class="custom-class" style="color: white; margin-right: 5px;"></plus-icon><span>Добавить
-        группу</span>
+        подразделение</span>
     </button>
 
 
@@ -165,17 +174,17 @@
     <GroupDelete v-if="openDeleteGroup" :val="paramsModal" @deleteGroup="deleteGroup(param = $event)" />
 
     <PopupConfirm v-if="openConfirm" :val="newLeader" @setNewLeader="setNewLeader(param = $event)" />
-
   </div>
+
 
 
 </template>
 
 <script>
   import GroupCreate from '@/components/Groups/Create'
-  import GroupDelete from '@/components/Groups/Delete'
+  import GroupDelete from '@/components/Groups/DeleteGroup'
   import PopupConfirm from '@/components/Groups/PopupConfirm'
-  import ShowUsers from '@/components/Groups/ShowUsers'
+  import ShowUsers from '@/components/Groups/Users/ShowUsers'
 
   import {
     mapGetters
@@ -219,7 +228,7 @@
       newLeader: {},
 
       pageNumber: 0,
-      size: 25,
+      size: 10,
     }),
     components: {
       GroupCreate,
@@ -248,9 +257,6 @@
     async mounted() {
       await this.$store.dispatch('getGroups')
       await this.$store.dispatch('getAllUsers')
-      // await this.$store.dispatch('getLeader', ????)
-      // await this.$store.dispatch('getMembers', ???)
-      //   await this.$store.dispatch('getAllUsers')
     },
     computed: {
       ...mapGetters(['groups', 'error', 'error404', 'allUsers', 'members', 'usersNoGroup', 'allUsersReduced']),
@@ -260,9 +266,11 @@
           s = this.size;
         return Math.ceil(l / s);
       },
-      paginatedData() {
+      paginatedDataGroups() {
+        console.log(this.groups);
         const start = this.pageNumber * this.size,
           end = start + this.size;
+        console.log(this.groups.slice(start, end));
         return this.groups.slice(start, end);
       }
     },
@@ -284,17 +292,28 @@
       },
       onBlurInput(event) {
         event.path[0].nextElementSibling.classList.remove('flex')
+        // console.log(this.currentGroupName);
+        // this.currentGroupName
+        // console.log('blur', event);
+        // event.target.value = this.currentGroupName
       },
       onFocusInput(event) {
         this.currentGroupName = event.target.value
         this.currentGroupInput = event.target
         event.path[0].nextElementSibling.classList.add('flex')
+        console.log(this.currentGroupName);
       },
 
-      onClear() {
-        this.currentGroupName = ''
+      onClear(event) {
+        event.preventDefault()
+        console.log(event.target.parentElement.parentElement.previousSibling.value);
+        event.target.parentElement.parentElement.previousSibling.value = ''
+        // console.log(this.currentGroupName);
+        // // this.currentGroupName = ''
+        // console.log(this.currentGroupName);
       },
       async editGroupShort(short_name, id, event) {
+        // event.preventDefault()
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('editGroupShort', {
             short_name,
@@ -311,6 +330,7 @@
         event.path[2].classList.remove('flex')
       },
       async editGroupName(name, id, event) {
+        // event.preventDefault()
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('editGroup', {
             name,
@@ -330,8 +350,7 @@
       deleteGroup(id) {
         this.openDeleteGroup = true
         this.paramsModal = {
-          id,
-          name: 'group'
+          id
         }
       },
 
@@ -346,12 +365,14 @@
         }
       },
       async setNewLeader(param) {
-
         await this.$store.commit('setError404', '')
-        console.log(this.currentExecutor);
         this.$store.dispatch('changeExecutorGroup', {
             id: param.groupId,
             uid: param.leader_id
+          })
+          .then((r) => {
+            console.log(r);
+            this.$store.commit('changeLeader', param.leader_id)
           })
           .catch(() => {
             this.$store.commit('editExecutorGroup', {
@@ -381,13 +402,17 @@
 
 
       //pages
-      reloadPage() {
-        document.location.reload(true)
-      },
+      // reloadPage() {
+      //   document.location.reload(true)
+      // },
       nextPage() {
+        // this.openShowUsers = false
+        document.getElementsByClassName('btn-link')[0].click()
         this.pageNumber++;
       },
       prevPage() {
+        // this.openShowUsers = false
+        document.getElementsByClassName('btn-link')[0].click()
         if (this.pageNumber > 0) {
           this.pageNumber--;
         }
@@ -398,6 +423,20 @@
 </script>
 
 <style scoped lang="scss">
+  .container {
+    width: 95%;
+    height: inherit;
+    overflow-y: scroll;
+    margin-top: 10px;
+  }
+
+  #accordion {
+    width: inherit;
+    margin: auto;
+    height: auto;
+    // margin-right: 20px;
+  }
+
   .name {
     padding-left: 0;
   }
@@ -457,12 +496,18 @@
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #4F4F4F;
-    margin-bottom: 15px;
+    // margin-bottom: 15px;
     display: flex;
     justify-content: space-between;
-    padding-left: 35px;
-    margin-left: 10px;
-    width: 100%;
+    // padding-left: 45px;
+    padding-left: 68px;
+    // margin-left: 10px;
+    // width: 100%;
+    height: auto;
+
+
+    width: 79%;
+    margin: 0 auto 15px;
   }
 
 
@@ -666,9 +711,11 @@
     font-size: 24px;
     line-height: 24px;
     letter-spacing: 0.15px;
-    margin-bottom: 59px;
+    // margin-bottom: 59px;
     color: #4F4F4F;
-    margin-left: 55px;
+    // margin-left: 55px;
+    // width: 71%;
+    margin: 0 auto 59px;
   }
 
   .btn {
@@ -796,16 +843,12 @@
     border-left: 1px solid #e0e0e0;
   }
 
-  // @media (min-width: 1700px) {
-  //   .container, .container-lg, .container-md, .container-sm, .container-xl {
-  //     max-width: 1350px;
-  // }
 
-  // }
   @media (max-width: 1500px) {
     svg {
       font-size: 20px !important;
     }
+
     .page-item a {
       margin: 0 9px;
     }
@@ -848,16 +891,31 @@
     }
   }
 
+  @media (min-width: 1400px) {
+    .container {
+      max-width: 1350px;
+    }
+        h2 {
+      max-width: 1270px;
+    }
+  }
+
   @media (max-width: 1200px) {
     .btnMain {
       width: 200px;
     }
   }
 
-  @media (max-width: 500px) {
-
+  @media (min-width: 500px) {
     .container {
       width: 85% !important;
+    }
+        h2 {
+       width: 64%;
+    }
+     .subtitle {
+       width: 73%;
+       padding-left: 68px !important;
     }
   }
 

@@ -14,10 +14,10 @@
               <form @submit.prevent="addProblem()" class="form-group">
               <div class="input-group">
                 <input type="text" ref="input" v-model="name" class="form-control form-control--valid"
-                  id="new-problem-title" placeholder="Название проблемы..." @blur="showClear = false" @focus="onFocus"
-                  :class="{ 'form-control--error': $v.name.$invalid || !name, 'form-control--valid': name && !$v.name.$invalid}">
-                <div class="input-group-append" v-if="showClear" @click="onClear">
-                  <span class="input-group-text" style="background-color: #fff;">&times;</span>
+                  id="new-problem-title" placeholder="Название проблемы..." @blur="onBlur($event)" @focus="onFocus($event)"
+                  :class="{ 'form-control--error': $v.name.$invalid, 'form-control--valid': name && !$v.name.$invalid}">
+                <div class="input-group-append" @mousedown="onClear">
+                  <span class="input-group-text">&times;</span>
                 </div>
               </div>  
             </form>
@@ -66,8 +66,11 @@
     },
 
     methods: {
-      onFocus() {
-        this.showClear = true
+      onBlur(event) {
+        event.target.nextSibling.style.display = 'none'
+      },
+      onFocus(event) {
+        event.target.nextSibling.style.display = 'flex'
       },
       onClear() {
         this.name = ''
@@ -125,14 +128,35 @@
   .form-control:focus {
     background-color: #FFF;
   }
+  .input-group {
+    // display: flex;
+    // flex-direction: row;
+    // position: relative;
+    // padding-bottom: 51px;
+    position: relative;
+  }
+#new-problem-title {
+  border-radius: 6px;
+}
+  .input-group-append {
+    display: none;
+    position: absolute;
+    border: transparent;
+    background-color: transparent;
+    // top: 20%;
+    top: 0;
+    right: 0;
+    z-index: 10;
+  }
 
   .input-group-text {
-    border: none;
+    border: transparent;
+    background-color: transparent;
     cursor: pointer;
-    background-color: #F7F7F7;
-    border-radius: 6px;
-    border-bottom: 2px solid #92D2C3;
+    height: fit-content;
+    background-color: transparent;
   }
+
 
   .btn {
     background-color: #92D2C3;

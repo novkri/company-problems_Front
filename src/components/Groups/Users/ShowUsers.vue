@@ -11,7 +11,7 @@
           </div>
           <div class="close">
             <button type="button" id="close" class="close" data-dismiss="modal" 
-              @click="removeUserFromGroup(member.id, val)">
+              @click="removeUserFromGroup(leaderReduced.id, val)">
               <span aria-hidden="true"  style="font-size: 20px;">&times;</span>
             </button>
           </div>
@@ -28,7 +28,7 @@
             <div class="close">
               <!--  -->
               <button type="button" id="close" class="close" data-dismiss="modal"
-                @click="removeUserFromGroup(member.id, val)" data-toggle="modal" data-target="#groupDelete">
+                @click="removeUserFromGroup(member.id, val)" data-toggle="modal" data-target="#groupDeleteUser">
                 <span aria-hidden="true" style="font-size: 20px;">&times;</span>
               </button>
             </div>
@@ -44,14 +44,14 @@
         color="#92D2C3"
       />
     </div>
-    <GroupDelete v-if="openDeleteGroup" :val="paramsModal" @deleteGroup="deleteGroup(param = $event)" />
+    <GroupDeleteUser v-if="openDeleteGroup" :val="paramsModal" @deleteGroup="deleteGroup(param = $event)" />
   </div>
 
 </template>
 
 <script>
  import { HalfCircleSpinner } from 'epic-spinners'
-  import GroupDelete from '@/components/Groups/Delete'
+  import GroupDeleteUser from '@/components/Groups/Users/DeleteUser'
   import {
     mapGetters
   } from 'vuex'
@@ -72,7 +72,7 @@
       UserIcon,
       AwardIcon,
 
-      GroupDelete,
+      GroupDeleteUser,
 
       HalfCircleSpinner
     },
@@ -85,6 +85,12 @@
       await this.$store.dispatch('getLeader', this.val)
       this.mounted = true
     },
+    // watch: {
+    //   leaderReduced(value) {
+    //     console.log(value);
+
+    //   }
+    // },
     methods: {
       removeUserFromGroup(uid, groupId) {
         this.openDeleteGroup = true

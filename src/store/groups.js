@@ -21,6 +21,7 @@ export default {
     members: [],
     leader: '',
     leaderReduced: '',
+    usersNoGroup: []
     // error: '',
     // error404: '',
   },
@@ -37,6 +38,10 @@ export default {
     members: state => {
       return state.members
     },
+    usersNoGroup: (state, rootState) => {
+      state.usersNoGroup = rootState.allUsers.filter(u => u.group_id == null)
+      return state.usersNoGroup
+    }
   },
   mutations: {
     setGroups: (state, payload) => {
@@ -49,6 +54,12 @@ export default {
       payload[0].name = payload[0].name[0]+'.'
       payload[0].father_name ? payload[0].father_name = payload[0].father_name[0]+'.' : ' '
       state.leaderReduced = payload[0]
+      console.log('setLeaderReduced', state.leaderReduced);
+    },
+    changeLeader: (state, payload) => {
+      // state.leaderReduced = ''
+      state.leaderReduced = state.members.filter(u => u.id == payload)[0]
+      console.log(state.leaderReduced);
     },
     setMembers: (state, payload) => {
       payload.length > 0 ? state.members = Object.values(payload) : state.members = []
@@ -56,12 +67,25 @@ export default {
 
     addGroup: (state, payload) => {
       state.groups.push(payload)
+      state.groups = state.groups.sort(function (a, b) {
+        return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1
+      })
+    },
+    updateUsersNoGroup: (state, rootState, payload) => {
+      console.log(rootState);
+      state.usersNoGroup = rootState.solutions.allUsers.filter(u => u.id !== payload.leader_id)
+      console.log(state.usersNoGroup);
+      console.log(payload);
+      
     },
     deleteGroup: (state, payload) => {
       state.groups = state.groups.filter(group => group.id !== payload)
     },
     editGroup: (state, payload) => {
       state.groups.find(group => group.id == payload.id).name = payload.name
+      state.groups = state.groups.sort(function (a, b) {
+        return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1
+      })
     },
     editGroupShort: (state, payload) => {
       state.groups.find(group => group.id == payload.id).short_name = payload.short_name
@@ -140,19 +164,26 @@ export default {
     postGroup: async ({
       commit
     }, param) => {
+      param.short_name == '' ? delete param.short_name : param.short_name
       return new Promise((resolve, reject) => {
         axios.post(BASEURL, param)
           .then(response => {
+            console.log(response.data);
             commit('setError', '')
             commit('setError404', '')
             commit('addGroup', response.data)
-
+            // commit('setUserToGroup', rootState.solutions.allUsers.find(u => u.id == response.data.leader_id))
+            // console.log(rootState.solutions.allUsers);
+            // rootState.solutions.allUsers = rootState.solutions.allUsers.find(u => u.id == response.data.leader_id).group_id == response.data
+            // commit('updateUsersNoGroup', response.data)
+            // console.log(rootState.solutions.allUsers);
             resolve(response.data)
           })
           .catch(error => {
+            console.log(error.response);
             if (error.response.status !== 422) {
-              commit('setError404', error.response.data.message)
-              reject(error.response.data.message)
+              error.response.data.message ? commit('setError404', error.response.data.message) : commit('setError404', error.response.data.errors)
+              reject(error.response)
             } else {
               error.response.data.errors ? commit('setError', error.response.data.errors) : commit('setError', error.response.data.error)
               // commit('setError', error.response.data.errors)
@@ -167,20 +198,25 @@ export default {
       commit
     }, param) => {
       // param.id = 10000000
-      await axios.delete(BASEURL + `/${param.id}`).then(response => {
+      return new Promise((resolve, reject) => {
+     axios.delete(BASEURL + `/${param.id}`).then(response => {
           if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
             commit('deleteGroup', param.id)
+            resolve(response.data)
           }
         })
         .catch(error => {
           if (error.response.status !== 422) {
             commit('setError404', error.response.data.message)
+            reject(error.response.data.message)
           } else {
             commit('setError', error.response.data.errors.name[0])
+            reject(error.response.data.errors.name[0])
           }
         })
+      })
 
     },
     // checkIfExists: async ({

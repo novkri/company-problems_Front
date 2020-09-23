@@ -1,16 +1,18 @@
 <template>
   <div class="popup-delete">
-    <div class="modal fade" id="popupDelete" tabindex="-1">
+    <div class="modal fade" id="groupDelete" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Вы точно хотите удалить проблему?</h5>
+            <h5 class="modal-title" id="exampleModalLabel" v-if="!val.uid">Вы точно хотите удалить подразделение?</h5>
+            <h5 class="modal-title" id="exampleModalLabel" v-else>Вы точно хотите удалить пользователя из подразделения?</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <button type="submit" class="btn btn-secondary" data-dismiss="modal" @click="deleteProblem()">Да</button>
+            <button type="submit" class="btn btn-secondary" v-if="!val.uid" data-dismiss="modal" @click="deleteGroup()">Да</button>
+            <button type="submit" class="btn btn-secondary" v-else data-dismiss="modal" @click="removeUserFromGroup()">Да</button>
             <button type="reset" class="btn btn-secondary" data-dismiss="modal">Нет</button>
           </div>
         </div>
@@ -24,7 +26,7 @@
 
   export default {
     name: 'popup',
-    props: ['open', 'val'],
+    props: ['val'],
     data: () => ({
       name: ''
     }),
@@ -32,12 +34,27 @@
       ...mapGetters(['error', 'error404']),
     },
     methods: {
-      async deleteProblem() {
-          await this.$store.dispatch('checkIfExists', {id: this.val.id})
-          .then(async () => {
-              await this.$store.dispatch('deleteProblem', {id: this.val.id})
-          })
+      async deleteGroup() {
+          // await this.$store.dispatch('checkIfExists', {id: this.val.id})
+          // .then(async () => {
+              await this.$store.dispatch('deleteGroup', {id: this.val.id}).then(() => {
+                this.$store.dispatch('getAllUsers')
+              })
+          // })
           .catch(() => this.$store.commit('setError404', ''))
+      },
+      async removeUserFromGroup() {
+        await this.$store.commit('setError404', '')
+        this.$store.dispatch('removeUserFromGroup', {
+          id: this.val.id,
+          uid: this.val.uid
+        })
+        // .catch(() => {
+        //   this.$store.commit('changeExecutorGroup', {
+        //     id: group.id,
+        //     leader_id: this.currentExecutor
+        //   })
+        // })
       },
     }
   }
@@ -59,6 +76,8 @@
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #2D453F;
+        width: 100%;
+    text-align: center;
   }
 
   #new-problem-title {

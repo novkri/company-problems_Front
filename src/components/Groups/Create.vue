@@ -15,30 +15,31 @@
               <form class="form-group">
                 <div class="input-group">
                   <label for="new-group-title">Название подразделения (полностью) *</label>
-                  <input type="text" ref="input" class="form-control form-control--valid" id="new-group-title"
-                  :class="{ 'form-control--error': $v.name.$invalid || !name, 'form-control--valid': name && !$v.name.$invalid}"
-                    placeholder="Название проблемы..." @blur="onBlur($event)" @focus="onFocus($event)" v-model="name">
-                  <div class="input-group-append" @click="onClear">
-                    <span class="input-group-text" style="background-color: #fff;">&times;</span>
+                  <input type="text" ref="input" class="form-control" id="new-group-title"
+                    :class="{ 'form-control--error': $v.name.$invalid, 'form-control--valid': name && !$v.name.$invalid}"
+                    placeholder="Название подразделения..." @blur="onBlur($event)" @focus="onFocus($event)"
+                    @input="clearError" v-model="name">
+                  <div class="input-group-append" @mousedown="onClear">
+                    <span class="input-group-text">&times;</span>
                   </div>
                   <div class="error" v-if="error.name">{{error.name[0]}}</div>
                 </div>
 
                 <div class="input-group">
                   <label for="new-group-title">Название подразделения (сокращенно)</label>
-                  <input type="text" ref="input" class="form-control form-control--valid" id="new-group-title__short"
-                  :class="{ 'form-control--error': $v.nameShort.$invalid || !nameShort, 'form-control--valid': nameShort && !$v.nameShort.$invalid}"
-                    placeholder="Название проблемы..." @blur="onBlur($event)" @focus="onFocus($event)" v-model="nameShort">
-                  <div class="input-group-append" @click="onClear">
-                    <span class="input-group-text" style="background-color: #fff;">&times;</span>
+                  <input type="text" ref="input" class="form-control" id="new-group-title__short"
+                    :class="{ 'form-control--error': $v.nameShort.$invalid, 'form-control--valid': nameShort && !$v.nameShort.$invalid}"
+                    placeholder="Название сокращения..." @blur="onBlur($event)" @focus="onFocus($event)"
+                    @input="clearError" v-model="nameShort">
+                  <div class="input-group-append" @mousedown="onClear">
+                    <span class="input-group-text">&times;</span>
                   </div>
-                                  <div class="error" v-if="error.short_name">{{error.short_name[0]}}</div>
+                  <div class="error" v-if="error.short_name">{{error.short_name[0]}}</div>
                 </div>
-
 
                 <div class="input-group">
                   <label>Выбрать руководителя*</label>
-                  <div class="selectResponsible" style="background-color: transparent;">
+                  <div class="selectResponsible" style="background-color: transparent;" @click="clearError">
                     <ss-select v-model="leader_id" :options="usersNoGroup" track-by="name" search-by="name"
                       disable-by="disabled" id="ss-select" style="width: fit-content;">
                       <div
@@ -88,7 +89,7 @@
     minLength
   } from 'vuelidate/lib/validators'
   import {
-    mapGetters
+    mapGetters,
   } from 'vuex'
   import {
     SsSelect,
@@ -137,19 +138,24 @@
       }
     },
     computed: {
-      ...mapGetters(['error', 'allUsers', 'usersNoGroup'])
+      ...mapGetters(['error', 'allUsers', 'usersNoGroup']),
+
     },
 
     methods: {
+      async clearError() {
+        await this.$store.commit('setError', '')
+      },
       onBlur(event) {
-        event.target.nextElementSibling.style.display = 'none'
+        console.log(event);
+        event.target.nextSibling.style.display = 'none'
       },
       onFocus(event) {
-        event.target.nextElementSibling.style.display = 'flex'
+        console.log(event);
+        event.target.nextSibling.style.display = 'flex'
       },
       onClear() {
         this.name = ''
-
       },
 
       async addGroup() {
@@ -161,11 +167,13 @@
           this.name = ''
           this.nameShort = ''
           this.leader_id = ''
+          this.$store.dispatch('getAllUsers')
           document.getElementById('close').click()
         })
       },
       async selectExecutorGroup(group) {
         await this.$store.commit('setError404', '')
+        await this.$store.commit('setError', '')
         await this.$store.dispatch('checkIfOk', {
           description: group.description,
           executor_id: group.executor_id,
@@ -193,7 +201,7 @@
 
 <style scoped lang="scss">
   .error {
-    font-size: 12px;
+    font-size: 13px;
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #EC7676;
@@ -335,13 +343,16 @@
   .form-control:focus {
     background-color: #FFF;
   }
-  
-  #new-group-title, #new-group-title__short {
+
+  #new-group-title,
+  #new-group-title__short {
     border-radius: 9px;
     width: fit-content;
   }
-    #new-group-title:focus, #new-group-title__short:focus {
-    border-radius: 9px 0 0 9px;
+
+  #new-group-title:focus,
+  #new-group-title__short:focus {
+    // border-radius: 9px 0 0 9px;
     width: fit-content;
   }
 
@@ -350,24 +361,30 @@
     flex-direction: row;
     position: relative;
     padding-bottom: 51px;
+    position: relative;
   }
+
   .input-group:last-child {
     flex-direction: column;
   }
 
   .input-group-append {
-    width: fit-content;
-    height: fit-content;
-    // visibility: hidden;
     display: none;
+    position: absolute;
+    border: transparent;
+    background-color: transparent;
+    top: 20%;
+    right: 0;
+    z-index: 10;
   }
 
   .input-group-text {
-    border: none;
+    border: transparent;
+    background-color: transparent;
     cursor: pointer;
-    background-color: #F7F7F7;
-    border-radius: 6px;
-    border-bottom: 2px solid #92D2C3;
+    height: fit-content;
+    margin-bottom: 5px;
+    background-color: transparent;
   }
 
   .btnsAddTask {

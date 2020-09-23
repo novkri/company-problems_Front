@@ -95,7 +95,7 @@
 
                       <div class="dateDiv col-2">
                         <input type="date" id="start" name="trip-start" class="date" v-model="solution.deadline"
-                          onkeypress="return false" @change="changeDeadline(solution.deadline, solution.id)">
+                          onkeypress="return false" @change="changeDeadline(solution.deadline, solution.id)" @click="onClickDate($event)">
                       </div>
 
                       <div class="selectResponsible col-2">
@@ -200,6 +200,8 @@
       solutionIdRemove: '',
       problemName: '',
       taskIdDelete: '',
+      currentDate: '',
+      currentDateInput: '',
 
       progress: '',
       btnRemove: false,
@@ -280,11 +282,23 @@
           id
         })
       },
+
+            onClickDate(event) {
+        this.currentDate = event.target.value
+        this.currentDateInput = event.target
+        console.log(this.currentDate);
+      }, 
+
       async changeDeadline(deadline, id) {
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('changeDeadline', {
           deadline,
           id
+        }).catch(() => {
+          this.$store.commit('editDeadline', {
+            deadline: this.currentDate,
+            id
+          })
         })
       },
 

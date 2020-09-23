@@ -1,47 +1,53 @@
 <template>
-  <div class="container" style="width: 1350px;">
+  <div>
     <h2>Список всех проблем в компании</h2>
+    <div class="container">
 
-    <ul class="list-group">
-      <li class="list-group-item" v-for="(problem, idx) in paginatedData" :key="idx" id="list">
-        <div class="toggle-area" @click.prevent="show(problem)" data-toggle="modal" data-target="#popupShow">
-          <p> {{ problem.name }} </p>
-        </div>
 
-        <!-- <div class="creator">{{problem}} d</div>
+      <ul class="list-group">
+        <li class="list-group-item" v-for="(problem, idx) in paginatedData" :key="idx" id="list">
+          <div class="toggle-area" @click.prevent="show(problem)" data-toggle="modal" data-target="#popupShow">
+            <p> {{ problem.name }} </p>
+          </div>
+
+          <!-- <div class="creator">{{problem}} d</div>
         <div class="creator">{{allUsers.id == problem.creator_id}} f</div> -->
 
-        <div class="icons">
-          <div style="width: 50px;align-items: center;display: flex;margin: 4px 15px 4px 18px;">
-            <trash-icon size="1.3x" class="custom-class" id="remove" style="margin: auto;"
-              @click="deleteP(problem.id, problem.name)" data-toggle="modal" data-target="#popupDelete"></trash-icon>
+          <div class="icons">
+            <div style="width: 50px;align-items: center;display: flex;margin: 4px 15px 4px 18px;">
+              <trash-icon size="1.3x" class="custom-class" id="remove" style="margin: auto;"
+                @click="deleteP(problem.id, problem.name)" data-toggle="modal" data-target="#popupDelete"></trash-icon>
+            </div>
           </div>
-        </div>
-      </li>
-    </ul>
+        </li>
+      </ul>
 
-    <div class="pagination">
-      <nav>
-        <ul class="pagination">
-          <li class="page-item">
-            <a class="page-link" @click="prevPage" aria-label="Previous" :class="{'block' : pageNumber==0}">
-              <chevron-left-icon size="1.5x" class="custom-class" style="color: #5F5F5F;"></chevron-left-icon>
-            </a>
-          </li>
-          <li class="page-item">
-            <span v-if="pageNumber ==0">1-25</span>
-            <span v-else>{{(25 * pageNumber)+1}}-{{(25 * pageNumber)+26}}</span>
-          </li>
-          <li class="page-item">
-            <a class="page-link" @click="nextPage" aria-label="Next" :class="{'block' : pageNumber >= pageCount - 1}">
-              <chevron-right-icon size="1.5x" class="custom-class" style="color: #5F5F5F;"></chevron-right-icon>
-            </a>
-          </li>
-        </ul>
-      </nav>
+      <div class="pagination">
+        <nav>
+          <ul class="pagination">
+            <li class="page-item">
+              <a class="page-link" @click="prevPage" aria-label="Previous" :class="{'block' : pageNumber==0}">
+                <chevron-left-icon size="1.5x" class="custom-class" style="color: #5F5F5F;"></chevron-left-icon>
+              </a>
+            </li>
+            <li class="page-item">
+              <span v-if="pageNumber ==0">1-25</span>
+              <span v-else>{{(25 * pageNumber)+1}}-{{(25 * pageNumber)+26}}</span>
+            </li>
+            <li class="page-item">
+              <a class="page-link" @click="nextPage" aria-label="Next" :class="{'block' : pageNumber >= pageCount - 1}">
+                <chevron-right-icon size="1.5x" class="custom-class" style="color: #5F5F5F;"></chevron-right-icon>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
     </div>
+    <hr>
 
-    <button type="button" class="btn btnMain" @click="create" data-toggle="modal" data-target="#popupCreate" style="margin-bottom: 30px;">
+    <button type="button" class="btn btnMain" @click="create" data-toggle="modal" data-target="#popupCreate"
+      style="margin-top: 25px;">
       <plus-icon size="1.5x" class="custom-class" style="color: white; margin-right: 5px;"></plus-icon><span>Предложить
         проблему</span>
     </button>
@@ -54,6 +60,7 @@
     <PopupDelete v-if="openDelete" :val="paramsModal" @deleteProblem="deleteProblem(param = $event)" />
     <PopupShow v-if="openShow" :val="paramsModal" :tab="tab" @changeTab="changeTab(param = $event)" />
   </div>
+
 </template>
 
 <script>
@@ -90,7 +97,7 @@
       PopupEdit,
       PopupDelete,
       PopupShow,
-      
+
       TrashIcon,
       PlusIcon,
       ChevronRightIcon,
@@ -180,7 +187,7 @@
 
         this.openShow = true
         this.tab = true
-        
+
         this.paramsModal = obj
         this.$store.commit('setError', '')
         await this.$store.dispatch('getSolutions', obj.id).then(response => {
@@ -198,6 +205,34 @@
 </script>
 
 <style scoped lang="scss">
+  .container {
+    width: 1370px;
+    max-height: 63vh;
+    overflow-y: scroll;
+    padding-right: 20px;
+    margin-top: 64px;
+    margin-bottom: 36px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #92D2C3;
+    border-radius: 3px;
+    height: 73px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #F2F2F2;
+    border-left: 4px solid white;
+    border-right: 4px solid white;
+  }
+
+  hr {
+    width: 90%;
+  }
   h2 {
     font-family: 'GothamPro-Medium';
     font-style: normal;
@@ -205,8 +240,9 @@
     font-size: 24px;
     line-height: 24px;
     letter-spacing: 0.15px;
-    margin-bottom: 59px;
     color: #4F4F4F;
+    // width: 78%;
+    margin: 51px auto;
   }
 
   .btn {
@@ -313,9 +349,22 @@
   }
 
 
-  @media (max-width: 500px) {
+
+  @media (min-width: 1430px) {
+    .container {
+      max-width: 1370px;
+    }
+    h2 {
+      max-width: 1270px;
+    }
+  }
+
+  @media (min-width: 500px) {
     .container {
       width: 85% !important;
+    }
+    h2 {
+       width: 75%;
     }
   }
 </style>
