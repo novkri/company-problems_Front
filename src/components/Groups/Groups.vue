@@ -327,11 +327,11 @@
         event.path[2].classList.remove('flex')
       },
 
-      deleteGroup(id, name) {
+      deleteGroup(id) {
         this.openDeleteGroup = true
         this.paramsModal = {
           id,
-          name
+          name: 'group'
         }
       },
 
@@ -803,6 +803,9 @@
 
   // }
   @media (max-width: 1500px) {
+    svg {
+      font-size: 20px !important;
+    }
     .page-item a {
       margin: 0 9px;
     }
@@ -811,9 +814,6 @@
       height: auto;
     }
 
-    .btnMain {
-      width: 200px;
-    }
 
     h2 {
       font-size: 20px;
@@ -834,7 +834,7 @@
       align-self: center;
 
       svg {
-        font-size: 15px !important;
+        font-size: 20px !important;
       }
     }
 
@@ -848,7 +848,11 @@
     }
   }
 
-
+  @media (max-width: 1200px) {
+    .btnMain {
+      width: 200px;
+    }
+  }
 
   @media (max-width: 500px) {
 

@@ -66,7 +66,7 @@
     data: () => ({
       mounted: false,
       openDeleteGroup: false,
-      paramsModal: []
+      paramsModal: {}
     }),
     components: {
       UserIcon,
