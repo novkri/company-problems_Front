@@ -39,22 +39,10 @@
           // .then(async () => {
               await this.$store.dispatch('deleteGroup', {id: this.val.id}).then(() => {
                 this.$store.dispatch('getAllUsers')
+                
               })
           // })
           .catch(() => this.$store.commit('setError404', ''))
-      },
-      async removeUserFromGroup() {
-        await this.$store.commit('setError404', '')
-        this.$store.dispatch('removeUserFromGroup', {
-          id: this.val.id,
-          uid: this.val.uid
-        })
-        // .catch(() => {
-        //   this.$store.commit('changeExecutorGroup', {
-        //     id: group.id,
-        //     leader_id: this.currentExecutor
-        //   })
-        // })
       },
     }
   }

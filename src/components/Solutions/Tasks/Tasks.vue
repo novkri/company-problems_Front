@@ -255,7 +255,6 @@
       onClickDate(event) {
         this.currentDate = event.target.value
         this.currentDateInput = event.target
-        console.log(this.currentDate);
       }, 
       async changeDeadlineTask(deadline, id) {
         await this.$store.commit('setError404', '')

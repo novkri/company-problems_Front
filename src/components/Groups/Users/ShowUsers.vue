@@ -11,7 +11,7 @@
           </div>
           <div class="close">
             <button type="button" id="close" class="close" data-dismiss="modal" 
-              @click="removeUserFromGroup(leaderReduced.id, val)">
+              @click="removeLeader(leaderReduced.id, val)">
               <span aria-hidden="true"  style="font-size: 20px;">&times;</span>
             </button>
           </div>
@@ -98,7 +98,14 @@
           id: groupId,
           uid
         }
-      }
+      },
+      async removeLeader(uid, groupId) {
+        await this.$store.commit('setError404', '')
+        this.$store.dispatch('removeUserFromGroup', {
+          id: groupId,
+          uid
+        })
+    }
     }
   }
 </script>

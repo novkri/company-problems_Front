@@ -48,8 +48,8 @@
                     <check-icon size="1x" class="custom-class"></check-icon>
                   </button>
                   <button class="input-btn" @mousedown="onClear($event)">
-                  <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
-                </button>
+                    <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
+                  </button>
                 </div>
 
 
@@ -65,12 +65,12 @@
                   <check-icon size="1x" class="custom-class"></check-icon>
                 </button>
                 <button class="input-btn" @mousedown="onClear($event)">
-                <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
-              </button>
-              </div> 
+                  <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
+                </button>
+              </div>
             </div>
 
-            <div class="selectResponsible col-3"> {{group.leader_id}}
+            <div class="selectResponsible col-3">
               <ss-select v-model="group.leader_id" :options="allUsersReduced.filter(u => u.group_id == group.id)"
                 track-by="name" search-by="name" @change="selectExecutorGroup(group, $event)" disable-by="disabled"
                 id="ss-select" style="width: fit-content;">
@@ -267,10 +267,8 @@
         return Math.ceil(l / s);
       },
       paginatedDataGroups() {
-        console.log(this.groups);
         const start = this.pageNumber * this.size,
           end = start + this.size;
-        console.log(this.groups.slice(start, end));
         return this.groups.slice(start, end);
       }
     },
@@ -301,7 +299,6 @@
         this.currentGroupName = event.target.value
         this.currentGroupInput = event.target
         event.path[0].nextElementSibling.classList.add('flex')
-        console.log(this.currentGroupName);
       },
 
       onClear(event) {
@@ -352,6 +349,9 @@
         this.paramsModal = {
           id
         }
+        document.getElementsByClassName('btn-link').forEach(element => {
+          element.classList.contains('collapsed') ? '' : element.click()
+        });
       },
 
       onClickExecutor(leader) {
@@ -370,8 +370,7 @@
             id: param.groupId,
             uid: param.leader_id
           })
-          .then((r) => {
-            console.log(r);
+          .then(() => {
             this.$store.commit('changeLeader', param.leader_id)
           })
           .catch(() => {
@@ -406,13 +405,15 @@
       //   document.location.reload(true)
       // },
       nextPage() {
-        // this.openShowUsers = false
-        document.getElementsByClassName('btn-link')[0].click()
+        document.getElementsByClassName('btn-link').forEach(element => {
+          element.classList.contains('collapsed') ? '' : element.click()
+        });
         this.pageNumber++;
       },
       prevPage() {
-        // this.openShowUsers = false
-        document.getElementsByClassName('btn-link')[0].click()
+        document.getElementsByClassName('btn-link').forEach(element => {
+          element.classList.contains('collapsed') ? '' : element.click()
+        });
         if (this.pageNumber > 0) {
           this.pageNumber--;
         }
@@ -895,7 +896,8 @@
     .container {
       max-width: 1350px;
     }
-        h2 {
+
+    h2 {
       max-width: 1270px;
     }
   }
@@ -910,12 +912,14 @@
     .container {
       width: 85% !important;
     }
-        h2 {
-       width: 64%;
+
+    h2 {
+      width: 64%;
     }
-     .subtitle {
-       width: 73%;
-       padding-left: 68px !important;
+
+    .subtitle {
+      width: 73%;
+      padding-left: 68px !important;
     }
   }
 

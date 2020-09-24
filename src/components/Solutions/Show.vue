@@ -95,7 +95,8 @@
 
                       <div class="dateDiv col-2">
                         <input type="date" id="start" name="trip-start" class="date" v-model="solution.deadline"
-                          onkeypress="return false" @change="changeDeadline(solution.deadline, solution.id)" @click="onClickDate($event)">
+                          onkeypress="return false" @change="changeDeadline(solution.deadline, solution.id)"
+                          @click="onClickDate($event)">
                       </div>
 
                       <div class="selectResponsible col-2">
@@ -283,11 +284,10 @@
         })
       },
 
-            onClickDate(event) {
+      onClickDate(event) {
         this.currentDate = event.target.value
         this.currentDateInput = event.target
-        console.log(this.currentDate);
-      }, 
+      },
 
       async changeDeadline(deadline, id) {
         await this.$store.commit('setError404', '')
@@ -389,26 +389,30 @@
   }
 
 
-.tabDiv::before {
+  .tabDiv::before {
     content: '';
     display: block;
     position: absolute;
-    top: 0; left: 0;
+    top: 0;
+    left: 0;
     width: 70%;
     height: 100%;
     border-style: solid;
     border-color: #eee;
-    border-width: 0px 0px 0px 2px;;
+    border-width: 0px 0px 0px 2px;
+    ;
     border-radius: 12px 0 0 0;
 
     background-color: inherit;
     z-index: -1;
-}
-.tabDiv::after {
+  }
+
+  .tabDiv::after {
     content: '';
     display: block;
     position: absolute;
-    top: 0; right: 0;
+    top: 0;
+    right: 0;
     width: 70%;
     height: 100%;
     border-style: solid;
@@ -418,20 +422,23 @@
 
     background-color: inherit;
     z-index: -1;
-}
-.tabDiv.active {
+  }
+
+  .tabDiv.active {
 
     z-index: 10;
-}
-.tab.active::before,
-.tab.active::after {
+  }
+
+  .tab.active::before,
+  .tab.active::after {
     background-color: #fff;
     border-bottom-color: #fff;
-}
-// .tab:not([class='active']):hover::before,
-// .tab:not([class='active']):hover::after {
-//     background-color: #efefef; 
-// }
+  }
+
+  // .tab:not([class='active']):hover::before,
+  // .tab:not([class='active']):hover::after {
+  //     background-color: #efefef; 
+  // }
 
 
 

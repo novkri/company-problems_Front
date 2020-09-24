@@ -147,11 +147,9 @@
         await this.$store.commit('setError', '')
       },
       onBlur(event) {
-        console.log(event);
         event.target.nextSibling.style.display = 'none'
       },
       onFocus(event) {
-        console.log(event);
         event.target.nextSibling.style.display = 'flex'
       },
       onClear() {
