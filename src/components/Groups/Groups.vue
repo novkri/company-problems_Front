@@ -385,10 +385,11 @@
       async putUserToGroup(groupId, uId) {
         await this.$store.commit('setError404', '')
 
-        this.$store.dispatch('putUserToGroup', {
+        await this.$store.dispatch('putUserToGroup', {
           id: groupId,
           uid: uId
-          // })
+        }).then(() => {
+          this.$store.dispatch('getAllUsers')
         })
         // .catch(() => {
         //   this.$store.commit('changeExecutorGroup', {

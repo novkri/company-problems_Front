@@ -293,20 +293,25 @@ export default {
       commit
     }, param) => {
       // param.uid = 10000000000
+      return new Promise((resolve, reject) => {
       axios.put(BASEURL + `/${param.id}/user/${param.uid}`).then(response => {
         commit('setError', '')
         commit('setUserToGroup', response.data)
+        resolve(response.data)
       }).catch((error) => {
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
+          reject(error.response.data.message)
         } else if (error.response.status == 422) {
           if (error.response.data.errors.leader_id) {
             commit('setError404', error.response.data.errors.leader_id[0])
           } else {
             commit('setError404', error.response.data.errors)
           }
+          reject(error.response.data.errors)
         }
       })
+    })
     },
     removeUserFromGroup: async ({
       commit
