@@ -865,7 +865,7 @@
 
     .subtitle {
       padding-left: 0;
-      align-items: flex-start;
+      align-items: center;
     }
 
     .selectResponsible #ss-select div {
@@ -884,7 +884,7 @@
 
     .input-btn {
       height: 25px;
-      align-self: center;
+      align-self: flex-start;
 
       svg {
         vertical-align: middle;
