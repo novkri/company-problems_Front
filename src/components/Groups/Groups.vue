@@ -865,7 +865,7 @@
 
     .subtitle {
       padding-left: 0;
-      align-items: center;
+      align-items: flex-start;
     }
 
     .selectResponsible #ss-select div {
