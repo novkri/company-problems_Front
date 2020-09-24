@@ -52,7 +52,7 @@
           </div>
 
           <div class="selectResponsible col-2">
-            <ss-select v-model="task.executor_id" :options="allUsers" track-by="name" search-by="name"
+            <ss-select v-model="task.executor_id" :options="allUsersReduced" track-by="name" search-by="name"
               @change="selectExecutorTask(task)" disable-by="disabled" id="ss-select"
               style="width: fit-content;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
@@ -60,7 +60,9 @@
                 <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between"
                   style="width: 100%; padding: 13px;">
                   <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
-                  {{ $get(selectedOption, 'name') ||  `${allUsers.find(u => u.id == task.executor_id) ? allUsers.find(u => u.id == task.executor_id).name : 'Выбрать'}`}}
+                  {{ $get(selectedOption, 'name') ||  `${allUsersReduced.find(u => u.id == task.executor_id) ? allUsersReduced.find(u => u.id == task.executor_id).surname + ' ' 
+                    + allUsersReduced.find(u => u.id == task.executor_id).name + ' ' 
+                    + allUsersReduced.find(u => u.id == task.executor_id).father_name : 'Выбрать'}`}}
                 </ss-select-toggle>
 
                 <section v-show="isOpen" class="absolute border-l border-r min-w-full">
@@ -69,7 +71,7 @@
                                 pointerIndex == index ? 'bg-light text-dark' : '',
                                 $selected(option) ? 'bg-light text-dark' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
-                              ]">{{ option.name }}</ss-select-option>
+                              ]">{{ option.surname }} {{ option.name }} {{ option.father_name }}</ss-select-option>
                 </section>
               </div>
             </ss-select>
@@ -101,9 +103,9 @@
                     v-model="formInput.deadline">
                 </div>
 
-                <div class="selectResponsible" style="background-color: #fff;">
-                  <ss-select v-model="formInput.executor" :options="allUsers" track-by="name" search-by="name"
-                    disable-by="disabled" id="ss-select" style="width: fit-content;">
+                <div class="selectResponsible" style="background-color: #fff;"> 
+                  <ss-select v-model="formInput.executor" :options="allUsersReduced" track-by="name" search-by="name"
+                    disable-by="disabled" id="ss-select" style="width: fit-content; position: relative;">
                     <div
                       slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                       style="cursor: pointer; width: 100%;">
@@ -111,17 +113,19 @@
                       <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between"
                         style="width: 100%; padding: 13px;" id="select-toggle">
                         <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
-                        {{ $get(selectedOption, 'name') ||  `${allUsers.find(u => u.id == formInput.executor) ? allUsers.find(u => u.id == formInput.executor).surname + ' ' + allUsers.find(u => u.id == formInput.executor).name[0] + '.': 'Выбрать'}`}}
+                        {{ $get(selectedOption, 'name') ||  `${allUsersReduced.find(u => u.id == formInput.executor) ? allUsersReduced.find(u => u.id == formInput.executor).surname + ' ' 
+                    + allUsersReduced.find(u => u.id == formInput.executor).name + ' ' 
+                    + allUsersReduced.find(u => u.id == formInput.executor).father_name : 'Выбрать'}`}}
                       </ss-select-toggle>
 
                       <section v-show="isOpen" class="absolute border-l border-r min-w-full"
-                        style="position: relative; width: 368px;">
+                         style="top: 126%; right: -25%; width: fit-content;">
                         <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
                           :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
                                 $selected(option) ? 'bg-light text-dark' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
-                              ]">{{ option.surname }} {{option.name[0]}}.</ss-select-option>
+                              ]">{{ option.surname }} {{ option.name }} {{ option.father_name }}</ss-select-option>
                       </section>
                     </div>
                   </ss-select>
@@ -210,7 +214,7 @@
     },
 
     computed: {
-      ...mapGetters(['tasks', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions']),
+      ...mapGetters(['tasks', 'error', 'error404', 'allUsers', 'allUsersReduced', 'currentSolution', 'solutions']),
     },
     watch: {
       val: function (data) {
