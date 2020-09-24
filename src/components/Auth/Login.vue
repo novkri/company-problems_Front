@@ -166,7 +166,7 @@
 
   input,
   input:active {
-    background-color: #F7F7F7;
+    background-color: #F6F7F9;
     margin-bottom: 22px;
     border-radius: 12px;
 
@@ -183,6 +183,7 @@
   .form-control:active,
   .form-control:focus {
     background-color: #FFF;
+    border-bottom: 2px solid #FF8585 !important;
   }
 
   .btn-and-link {

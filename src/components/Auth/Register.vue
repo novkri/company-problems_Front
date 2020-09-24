@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <div class="form" v-if="!success" style="height: 100vh;">
+  <div class="container" :style=" [success ? {'height': '100vh'} : {'height': 'inherit'} ]">
+    <div class="form" v-if="!success" >
       <div class="header">Регистрация</div>
       <form>
         <div class="form-group">
@@ -87,7 +87,8 @@
   import {
     maxLength,
     minLength,
-    sameAs
+    sameAs,
+    
   } from 'vuelidate/lib/validators'
   import {
     mapGetters
@@ -282,7 +283,7 @@
 
   input,
   input:active {
-    background-color: #F7F7F7;
+    background-color: #F6F7F9;
     // margin-bottom: 22px;
     border-radius: 12px;
     font-size: 18px;
@@ -294,6 +295,7 @@
   .form-control:active,
   .form-control:focus {
     background-color: #FFF;
+    border-bottom: 2px solid #FF8585;
   }
 
   label {
@@ -301,7 +303,7 @@
   }
 
   .add-on {
-    background-color: #F7F7F7;
+    background-color: #F6F7F9;
     border-radius: 0 12px 12px 0;
     padding: 0;
     border: none;
