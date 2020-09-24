@@ -192,7 +192,8 @@ export default {
         })
         .catch(error => {
           if (error.response.status !== 422) {
-            commit('setError404', error.response.data.message)
+            error.response.data.message ? commit('setError404', error.response.data.message) : commit('setError404', error.response.data.errors)
+            // commit('setError404', error.response.data.message)
             reject(error.response.data.message)
           } else {
             commit('setError', error.response.data.errors.name[0])
@@ -225,7 +226,8 @@ export default {
           }
         }).catch((error) => {
           if (error.response.status !== 422) {
-            commit('setError404', error.response.data.message)
+            error.response.data.message ? commit('setError404', error.response.data.message) : commit('setError404', error.response.data.errors)
+            // commit('setError404', error.response.data.message)
             reject(error.response.data.message)
           } else {
             commit('setError404', error.response.data.errors.name[0])
@@ -250,7 +252,8 @@ export default {
           }
         }).catch((error) => {
           if (error.response.status !== 422) {
-            commit('setError404', error.response.data.message)
+            error.response.data.message ? commit('setError404', error.response.data.message) : commit('setError404', error.response.data.errors)
+            // commit('setError404', error.response.data.message)
             reject(error.response.data.message)
           } else {
             commit('setError404', error.response.data.errors.short_name[0])
@@ -260,21 +263,6 @@ export default {
       })
     },
 
-    // checkIfOk: async ({
-    //   state,
-    //   commit
-    // }, param) => {
-    //   // param.id = 10000000000
-    //   return new Promise((resolve, reject) => {
-    //     if (state.groups.filter(t => t.description == param.description).length > 1 && state.tasks.filter(t => t.leader_id == param.leader_id).length > 1) {
-    //       commit('setError404', 'Такая задача уже существует с таким ответственным')
-    //       reject('false')
-
-    //     } else {
-    //       resolve('true')
-    //     }
-    //   })
-    // },
     changeExecutorGroup: async ({
       commit
     }, param) => {
@@ -286,7 +274,8 @@ export default {
         resolve(response.data)
       }).catch((error) => {
         if (error.response.status == 404) {
-          commit('setError404', error.response.data.message)
+          error.response.data.message ? commit('setError404', error.response.data.message) : commit('setError404', error.response.data.errors)
+          // commit('setError404', error.response.data.message)
           reject( error.response)
         } else if (error.response.status == 422) {
           if (error.response.data.errors.leader_id) {
