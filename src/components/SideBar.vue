@@ -1,17 +1,4 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <nav class="navbar navbar-light" v-if="isLoggedIn">
-        <div class="user">
-          {{isLoggedIn}}
-          <span>Вы вошли как: {{userLoggedIn.surname}} {{userLoggedIn.name}}
-            {{userLoggedIn.father_name}}</span>
-        </div>
-        <div class="logout" @click="logout">
-          <log-out-icon size="1.5x" class="custom-class"></log-out-icon>
-        </div>
-      </nav>
-    </div>
 
     <div class="body" >
       <div class="sidebar col" v-if="isLoggedIn">
@@ -36,48 +23,43 @@
         
       </div>
       <div class="col">
-        <Home v-if="isLoggedIn"/>
-        <router-view v-else />
+        <router-view />
       </div>
     </div>
     
-
-  </div>
 </template>
 
 <script>
-  import {
-    LogOutIcon 
-  } from 'vue-feather-icons'
-    import {
-    mapGetters
-  } from 'vuex'
-  import Home from '@/views/Home'
+//   import {
+//     LogOutIcon 
+//   } from 'vue-feather-icons'
+//     import {
+//     mapGetters
+//   } from 'vuex'
 
-  export default {
-    components: {
-      LogOutIcon,
-      Home
-    },
-    computed: {
-       ...mapGetters(['user']),
-      isLoggedIn: function () {
-        return this.$store.getters.isLoggedIn
-      },
-      userLoggedIn: function () {
-        return JSON.parse(localStorage.getItem('user'))
-      }
-    },
+//   export default {
+//     components: {
+//       LogOutIcon 
+//     },
+//     computed: {
+//        ...mapGetters(['user']),
+//       isLoggedIn: function () {
+//         return this.$store.getters.isLoggedIn
+//       },
+//       userLoggedIn: function () {
+//         return JSON.parse(localStorage.getItem('user'))
+//       }
+//     },
 
-    methods: {
-      logout: function () {
-        this.$store.dispatch('logout')
-          .then(() => {
-            this.$router.push('/login')
-          })
-      }
-    },
-  }
+//     methods: {
+//       logout: function () {
+//         this.$store.dispatch('logout')
+//           .then(() => {
+//             this.$router.push('/login')
+//           })
+//       }
+//     },
+//   }
 </script>
 
 <style lang="scss">

@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Main from "../views/Main.vue";
-import store from '../store'
+// import store from '../store'
 
 Vue.use(VueRouter);
 
@@ -47,16 +47,30 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 });
+
+// router.beforeEach((to, from, next) => {
+//   if(to.matched.some(record => record.meta.requiresAuth)) {
+//     if (store.getters.isLoggedIn) {
+//       next()
+//       return
+//     }
+//     next('/login') 
+//   } else {
+//     next() 
+//   }
+// })
+const isAuthenticated = () => true;
+
 router.beforeEach((to, from, next) => {
-  if(to.matched.some(record => record.meta.requiresAuth)) {
-    if (store.getters.isLoggedIn) {
-      next()
-      return
+  if (to.matched.some((route) => route.meta?.requiresAuth)) {
+    if (isAuthenticated()) {
+      next();
+    } else {
+      next("/login");
     }
-    next('/login') 
   } else {
-    next() 
+    next();
   }
-})
+});
 
 export default router;
