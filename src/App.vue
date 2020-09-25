@@ -35,8 +35,8 @@
         
       </div>
       <div class="col">
-        <Home v-if="isLoggedIn"/>
-        <router-view v-else />
+        <!-- <Home v-if="isLoggedIn"/> -->
+        <router-view />
       </div>
     </div>
     
@@ -51,12 +51,12 @@
     import {
     mapGetters
   } from 'vuex'
-  import Home from '@/views/Home'
+  // import Home from '@/views/Home'
 
   export default {
     components: {
       LogOutIcon,
-      Home
+      // Home
     },
     computed: {
        ...mapGetters(['user']),
