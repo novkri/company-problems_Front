@@ -3,7 +3,6 @@
     <div id="nav">
       <nav class="navbar navbar-light" v-if="isLoggedIn">
         <div class="user">
-          {{isLoggedIn}}
           <span>Вы вошли как: {{userLoggedIn.surname}} {{userLoggedIn.name}}
             {{userLoggedIn.father_name}}</span>
         </div>
