@@ -40,7 +40,7 @@
                   @click="showOnClickUsers(group.id)" aria-expanded="false" :aria-controls="'collapseOne'+group.id">
                   <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                 </button>
-                <input class="form-control input-name"
+                <input class="form-control input-name" :id="'groupname'+group.id"
                   @keyup.enter="event => {editGroupName(group.name, group.id, event)}" v-model="group.name"
                   @focus="onFocusInput($event)" @blur="onBlurInput($event)">
                 <div class="hidden">
@@ -333,7 +333,14 @@
             name,
             id
           })
-          .then(() => {})
+          .then((r) => {console.log(r)
+          console.log(event.target);
+          setTimeout(function() {
+              document.getElementById('groupname' + id).scrollIntoView();
+          }, 200);
+          
+          // event.moveTo()
+          })
           .catch(() => {
             this.$store.commit('editGroup', {
               name: this.currentGroupName,
