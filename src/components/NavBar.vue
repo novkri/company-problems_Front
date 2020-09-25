@@ -1,59 +1,48 @@
 <template>
-      <div class="sidebar col">
-        <div class="links">
-          <div class="main">
-            <router-link to="/" >Проблемы</router-link>
-          </div>
-          <div class="groups">
-            <a href="#">Проекты</a>
-            <a href="#">Отделы</a>
-            <a href="#">Команды</a>
-          </div>
-          <div class="info">
-            <router-link to="/groups">Список подразделений</router-link>
-            <a href="#">Статистика</a>
-          </div>
-          <div class="footer">
-            <a href="#">Помощь</a>
-            <a href="#">Выйти из системы</a>
-          </div>
+    <div id="nav">
+      <nav class="navbar navbar-light" v-if="isLoggedIn">
+        <div class="user">
+          <span>Вы вошли как: {{userLoggedIn.surname}} {{userLoggedIn.name}}
+            {{userLoggedIn.father_name}}</span>
         </div>
-        
-      </div>
-    
+        <div class="logout" @click="logout">
+          <log-out-icon size="1.5x" class="custom-class"></log-out-icon>
+        </div>
+      </nav>
+    </div>
 </template>
 
 <script>
-//   import {
-//     LogOutIcon 
-//   } from 'vue-feather-icons'
-//     import {
-//     mapGetters
-//   } from 'vuex'
+  import {
+    LogOutIcon 
+  } from 'vue-feather-icons'
+    import {
+    mapGetters
+  } from 'vuex'
+  // import Home from '@/views/Home'
 
   export default {
-      name: 'sidebar'
-//     components: {
-//       LogOutIcon 
-//     },
-//     computed: {
-//        ...mapGetters(['user']),
-//       isLoggedIn: function () {
-//         return this.$store.getters.isLoggedIn
-//       },
-//       userLoggedIn: function () {
-//         return JSON.parse(localStorage.getItem('user'))
-//       }
-//     },
+    components: {
+      LogOutIcon,
+    },
+    computed: {
+       ...mapGetters(['user']),
+      isLoggedIn: function () {
+        return this.$store.getters.isLoggedIn
+      },
+      userLoggedIn: function () {
+        return JSON.parse(localStorage.getItem('user'))
+      }
+    },
 
-//     methods: {
-//       logout: function () {
-//         this.$store.dispatch('logout')
-//           .then(() => {
-//             this.$router.push('/login')
-//           })
-//       }
-//     },
+    methods: {
+      logout: function () {
+        this.$store.dispatch('logout')
+          .then(() => {
+            this.$router.push('/login')
+          })
+      }
+    },
   }
 </script>
 
@@ -65,7 +54,6 @@
   max-width: 280px;
   background-color: #F6F7F9;
   padding: 0;
-  height: 100vh;
 
   a {
     margin-bottom: 17px;
@@ -356,5 +344,9 @@
       }
 
   }
+
+</style>
+
+<style>
 
 </style>

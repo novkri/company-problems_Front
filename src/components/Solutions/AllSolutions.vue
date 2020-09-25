@@ -3,26 +3,18 @@
     <div style="margin: 60px 41px 0 41px;">
       <h5 class="modal-title">Список решений</h5>
       <h6>Решения в работе</h6>
+
       <ul class="list-group">
         <li class="list-group-item" id="list" v-for="(sol, idx) in solutions" :key="idx">
           <input class="form-control col-9" v-model="sol.name" @keyup.enter="event => {onKey(event)}"
             @focus="onFocusInput($event)" @blur="editSolClick(sol.name, sol.id)"
             :class="{ 'form-control--error': sol.name.length < 6 ||  sol.name.length > 100 || sol.name.length == 0}">
-          <div class="icons col-3" ref="iconInWork">
-            <!-- old select -->
-            <!-- <div class="select col-8" style="position: relative;" ref="select" :class="[sol.in_work ? 'green' : 'gray']"> -->
-            <!-- <select v-model="sol.in_work" class="form-control" @change="event => {changeinWork(sol, event)}">
-                <option value="true">
-                  В работе</option>
-                <option value="false">
-                  Не в работе</option>
-              </select>
-            </div> -->
 
+          <div class="icons col-3" ref="iconInWork">
             <div class="select col" style="position: relative;" ref="select">
               <ss-select v-model="sol.in_work" :options="statuses" track-by="name" search-by="name"
-                class="form-control green" @change="event => {changeinWork(sol)}" disable-by="disabled"
-                id="ss-select" style="width: auto; ">
+                class="form-control green" @change="event => {changeinWork(sol)}" disable-by="disabled" id="ss-select"
+                style="width: auto; ">
                 <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                   style="cursor: pointer; width: 100%;">
                   <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
@@ -41,6 +33,7 @@
                 </div>
               </ss-select>
             </div>
+
             <div style="width: 50px;" class="col-2">
               <button type="button" class="close" id="remove" @click="showDelete(sol.id)" data-toggle="modal"
                 data-target="#popupDeleteSolution">
@@ -59,16 +52,6 @@
             @blur="editSolClick(notinworksol.name, notinworksol.id)" @focus="onFocusInput($event)"
             :class="{ 'form-control--error': notinworksol.name.length < 6 ||  notinworksol.name.length > 100 || notinworksol.name.length == 0}">
           <div class="icons col-3" ref="iconInWork">
-            <!-- old select -->
-            <!-- <div class="select col-8" style="position: relative;" ref="select"
-              :class="[notinworksol.in_work ? 'green' : 'gray']">
-              <select v-model="notinworksol.in_work" class="form-control" @change="event => {changeinWork(notinworksol, event)}">
-                <option value="true">
-                  В работе</option>
-                <option value="false">
-                  Не в работе</option>
-              </select>
-            </div> -->
 
             <div class="select col" style="position: relative;" ref="select">
               <ss-select v-model="notinworksol.in_work" :options="statuses" track-by="name" search-by="name"
@@ -117,17 +100,17 @@
             </div>
             <div class="error" v-if="error">{{error}}</div>
           </form>
-          <button type="submit" class="btn btnMain" style="height: 35px; width: 35px; border-radius: 50px;"
-            @click="addSolution(val)">
+          <button type="submit" class="btn btnMain addSolutionBtn" @click="addSolution(val)">
             <img src="@/assets/Vector.png" alt="send">
           </button>
         </div>
       </div>
 
-      <DeleteSolution v-if="showDeleteSol" :openDeleteS="showDeleteSol"
+
+<!-- v-if="showDeleteSol" -->
+      <DeleteSolution  :openDeleteS="showDeleteSol"
         @closeDeleteSolutions="closeDeleteSolutions($event)" :val="solutionIdDelete" />
     </div>
-
   </div>
 </template>
 
@@ -157,10 +140,9 @@
       showDeleteSol: false,
       showClear: false,
 
-
       solutionName: '',
       solutionIdDelete: '',
-      
+
       currentSolutionInput: '',
       currentSolutionName: '',
       currentSolStatus: '',
@@ -204,6 +186,7 @@
         event.target.blur()
       },
 
+
       async editSolClick(name, id) {
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('editSolution', {
@@ -228,14 +211,12 @@
         await this.$store.dispatch('checkAmountSolInWork', obj).then(() => {
             this.$store.dispatch('changeinWork', {
               id: obj.id,
-              // in_work: obj.in_work === "true" ? true : false
               in_work: obj.in_work.name === "В работе" ? true : false
             }).then(response => {
               this.$store.dispatch('getTasks', response.data.id)
             })
           })
-          .catch(() => {
-          })
+          .catch(() => {})
       },
 
       async addSolution(obj) {
@@ -379,6 +360,12 @@
 
     form {
       width: 100% !important;
+    }
+
+    .addSolutionBtn {
+      height: 35px;
+      width: 35px;
+      border-radius: 50px;
     }
   }
 
@@ -600,6 +587,7 @@
       color: #2D453F;
     }
   }
+
   .input-group {
     // display: flex;
     // flex-direction: row;
@@ -611,8 +599,9 @@
   }
 
   .new-solution {
-    display: flex;   
-     input {
+    display: flex;
+
+    input {
       border-radius: 10px !important;
     }
   }

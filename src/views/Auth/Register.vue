@@ -1,6 +1,6 @@
 <template>
   <div class="container" :style=" [success ? {'height': '100vh'} : {'height': 'inherit'} ]">
-    <div class="form" v-if="!success" >
+    <div class="form" v-if="!success">
       <div class="header">Регистрация</div>
       <form>
         <div class="form-group">

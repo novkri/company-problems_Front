@@ -1,45 +1,51 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Main from "../views/Main.vue";
-// import store from '../store'
+import store from '../store'
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
-    name: "Main",
-    component: Main,
-  },
-  {
-    path: "/problems",
     name: "Home",
     component: () =>  import("../views/Home.vue"),
     meta: { 
-      requiresAuth: true
+      requiresAuth: true,
+      layout: 'main'
     }
   },
   {
     path: "/login",
     name: "Login",
     component: () =>
-      import("../components/Auth/Login.vue")
+      import("../views/Auth/Login.vue"),
+      meta: { 
+        layout: 'none'
+      }
   },
   {
     path: "/register",
     name: "Register",
     component: () =>
-      import("../components/Auth/Register.vue")
+      import("../views/Auth/Register.vue"),
+      meta: { 
+        layout: 'none'
+      }
   },
   {
     path: "/groups",
     name: "Groups",
-    component: () =>  import("../components/Groups/Groups.vue"),
+    component: () =>  import("../views/Groups.vue"),
     meta: { 
-      requiresAuth: true
+      requiresAuth: true,
+      layout: 'main'
     }
   },
-  { path: '*', component: () =>  import("../views/NotFound.vue")}
+  { path: '*', component: () =>  import("../views/NotFound.vue"),
+  meta: { 
+    requiresAuth: true,
+    layout: 'none'
+  }}
 ];
 
 const router = new VueRouter({
@@ -48,29 +54,17 @@ const router = new VueRouter({
   routes
 });
 
-// router.beforeEach((to, from, next) => {
-//   if(to.matched.some(record => record.meta.requiresAuth)) {
-//     if (store.getters.isLoggedIn) {
-//       next()
-//       return
-//     }
-//     next('/login') 
-//   } else {
-//     next() 
-//   }
-// })
-const isAuthenticated = () => true;
-
 router.beforeEach((to, from, next) => {
-  if (to.matched.some((route) => route.meta?.requiresAuth)) {
-    if (isAuthenticated()) {
-      next();
-    } else {
-      next("/login");
+  if(to.matched.some(record => record.meta.requiresAuth)) {
+    if (store.getters.isLoggedIn) {
+      next()
+      return
     }
+    next('/login') 
   } else {
-    next();
+    next() 
   }
-});
+})
+
 
 export default router;

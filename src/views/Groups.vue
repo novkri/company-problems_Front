@@ -1,181 +1,183 @@
 <template>
-  <div class="sfdf" style="height: 50vh;padding-top: 77px;">
-    <h2>Список подразделений</h2>
-    <div class="subtitle row">
-      <span class="col-3">Название подразделения</span>
-      <span class="col-4">Название подразделения (сокращенно)</span>
-      <span class="col-3" style="display: flex;
+
+    <div style="height: 50vh;padding-top: 77px;">
+      <h2>Список подразделений</h2>
+      <div class="subtitle row">
+        <span class="col-3">Название подразделения</span>
+        <span class="col-4">Название подразделения (сокращенно)</span>
+        <span class="col-3" style="display: flex;
     justify-content: center;">Руководитель</span>
-      <div class="pagination col-2">
-        <nav>
-          <ul class="pagination">
-            <li class="page-item">
-              <a class="page-link" @click="prevPage" aria-label="Previous" :class="{'block' : pageNumber==0}">
-                <chevron-left-icon size="1.5x" class="custom-class" style="color: #5F5F5F;"></chevron-left-icon>
-              </a>
-            </li>
-            <li class="page-item">
-              <span v-if="pageNumber ==0">1-10</span>
-              <span v-else>{{(10 * pageNumber)+1}}-{{(10 * pageNumber)+11}}</span>
-            </li>
-            <li class="page-item">
-              <a class="page-link" @click="nextPage" aria-label="Next" :class="{'block' : pageNumber >= pageCount - 1}">
-                <chevron-right-icon size="1.5x" class="custom-class" style="color: #5F5F5F;"></chevron-right-icon>
-              </a>
-            </li>
-          </ul>
-        </nav>
+        <div class="pagination col-2">
+          <nav>
+            <ul class="pagination">
+              <li class="page-item">
+                <a class="page-link" @click="prevPage" aria-label="Previous" :class="{'block' : pageNumber==0}">
+                  <chevron-left-icon size="1.5x" class="custom-class" style="color: #5F5F5F;"></chevron-left-icon>
+                </a>
+              </li>
+              <li class="page-item">
+                <span v-if="pageNumber ==0">1-10</span>
+                <span v-else>{{(10 * pageNumber)+1}}-{{(10 * pageNumber)+11}}</span>
+              </li>
+              <li class="page-item">
+                <a class="page-link" @click="nextPage" aria-label="Next"
+                  :class="{'block' : pageNumber >= pageCount - 1}">
+                  <chevron-right-icon size="1.5x" class="custom-class" style="color: #5F5F5F;"></chevron-right-icon>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
       </div>
-    </div>
 
-    <div class="container">
+      <div class="container">
 
 
-      <div id="accordion">
-        <div class="card" id="card" v-for="(group, idx) in paginatedDataGroups" :key="idx">
-          <div class="card-header row" id="heading">
-            <div class="name col-4">
-              <h5 class="mb-0" style="height: 100%;">
-                <button class="btn btn-link collapsed" data-toggle="collapse" :data-target="'#collapseOne'+group.id"
-                  @click="showOnClickUsers(group.id)" aria-expanded="false" :aria-controls="'collapseOne'+group.id">
-                  <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
-                </button>
-                <input class="form-control input-name" :id="'groupname'+group.id"
-                  @keyup.enter="event => {editGroupName(group.name, group.id, event)}" v-model="group.name"
+        <div id="accordion">
+          <div class="card" id="card" v-for="(group, idx) in paginatedDataGroups" :key="idx">
+            <div class="card-header row" id="heading">
+              <div class="name col-4">
+                <h5 class="mb-0" style="height: 100%;">
+                  <button class="btn btn-link collapsed" data-toggle="collapse" :data-target="'#collapseOne'+group.id"
+                    @click="showOnClickUsers(group.id)" aria-expanded="false" :aria-controls="'collapseOne'+group.id">
+                    <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
+                  </button>
+                  <input class="form-control input-name" :id="'groupname'+group.id"
+                    @keyup.enter="event => {editGroupName(group.name, group.id, event)}" v-model="group.name"
+                    @focus="onFocusInput($event)" @blur="onBlurInput($event)">
+                  <div class="hidden">
+                    <button class="input-btn" @mousedown="event => {editGroupName(group.name, group.id, event)}">
+                      <check-icon size="1x" class="custom-class"></check-icon>
+                    </button>
+                    <button class="input-btn" @mousedown="onClear($event)">
+                      <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
+                    </button>
+                  </div>
+
+
+                </h5>
+              </div>
+              <div class="short-name col-4">
+                <!-- style="width: fit-content;" -->
+                <input class="form-control input-name"
+                  @keyup.enter="event => {editGroupShort(group.short_name, group.id, event)}" v-model="group.short_name"
                   @focus="onFocusInput($event)" @blur="onBlurInput($event)">
                 <div class="hidden">
-                  <button class="input-btn" @mousedown="event => {editGroupName(group.name, group.id, event)}">
+                  <button class="input-btn" @mousedown="event => {editGroupShort(group.short_name, group.id, event)}">
                     <check-icon size="1x" class="custom-class"></check-icon>
                   </button>
                   <button class="input-btn" @mousedown="onClear($event)">
                     <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
                   </button>
                 </div>
-
-
-              </h5>
-            </div>
-            <div class="short-name col-4">
-              <!-- style="width: fit-content;" -->
-              <input class="form-control input-name"
-                @keyup.enter="event => {editGroupShort(group.short_name, group.id, event)}" v-model="group.short_name"
-                @focus="onFocusInput($event)" @blur="onBlurInput($event)">
-              <div class="hidden">
-                <button class="input-btn" @mousedown="event => {editGroupShort(group.short_name, group.id, event)}">
-                  <check-icon size="1x" class="custom-class"></check-icon>
-                </button>
-                <button class="input-btn" @mousedown="onClear($event)">
-                  <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
-                </button>
               </div>
-            </div>
 
-            <div class="selectResponsible col-3">
-              <ss-select v-model="group.leader_id" :options="allUsersReduced.filter(u => u.group_id == group.id)"
-                track-by="name" search-by="name" @change="selectExecutorGroup(group, $event)" disable-by="disabled"
-                id="ss-select" style="width: fit-content;">
-                <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                  @click.once="onClickExecutor(group.leader_id)" style="cursor: pointer; width: 100%;">
-                  <ss-select-toggle class="flex items-center justify-between" style="width: 100%; padding: 0px;">
-                    <award-icon size="1.5x" class="custom-class"></award-icon>
-                    {{ $get(selectedOption, 'name') || 
+              <div class="selectResponsible col-3">
+                <ss-select v-model="group.leader_id" :options="allUsersReduced.filter(u => u.group_id == group.id)"
+                  track-by="name" search-by="name" @change="selectExecutorGroup(group, $event)" disable-by="disabled"
+                  id="ss-select" style="width: fit-content;">
+                  <div
+                    slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+                    @click.once="onClickExecutor(group.leader_id)" style="cursor: pointer; width: 100%;">
+                    <ss-select-toggle class="flex items-center justify-between" style="width: 100%; padding: 0px;">
+                      <award-icon size="1.5x" class="custom-class"></award-icon>
+                      {{ $get(selectedOption, 'name') || 
                   `${allUsersReduced.find(u => u.id == group.leader_id) ? allUsersReduced.find(u => u.id == group.leader_id).surname + ' ' 
                     + allUsersReduced.find(u => u.id == group.leader_id).name + ' ' 
                     + allUsersReduced.find(u => u.id == group.leader_id).father_name: 'Выбрать'}`}}
-                    <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
-                  </ss-select-toggle>
+                      <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
+                    </ss-select-toggle>
 
-                  <section v-show="isOpen" class="absolute border-l border-r min-w-full">
-                    <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
-                      data-toggle="modal" data-target="#groupConfirm" :key="index"
-                      class="px-4 py-2 border-b cursor-pointer" :class="[
+                    <section v-show="isOpen" class="absolute border-l border-r min-w-full">
+                      <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
+                        data-toggle="modal" data-target="#groupConfirm" :key="index"
+                        class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
                                 $selected(option) ? 'bg-light text-dark' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
                               ]">{{ option.surname }} {{ option.name }} {{ option.father_name }} </ss-select-option>
-                  </section>
-                </div>
-              </ss-select>
+                    </section>
+                  </div>
+                </ss-select>
+              </div>
+              <div style="width: 50px;height: 100%;" class="icons col-1">
+                <button type="button" class="close" id="remove" data-toggle="modal" data-target="#groupDelete"
+                  @click="deleteGroup(group.id)">
+                  <trash-icon size="1x" class="custom-class"></trash-icon>
+                </button>
+              </div>
             </div>
-            <div style="width: 50px;height: 100%;" class="icons col-1">
-              <button type="button" class="close" id="remove" data-toggle="modal" data-target="#groupDelete"
-                @click="deleteGroup(group.id)">
-                <trash-icon size="1x" class="custom-class"></trash-icon>
-              </button>
-            </div>
-          </div>
 
-          <div :id="'collapseOne'+group.id" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-            <div class="card-body">
-              <div class="card">
-                <div class="card-header" id="headingOneAdd">
-                  <h5 class="mb-0">
-                    <div>
-                      <ss-select :options="usersNoGroup" track-by="name" search-by="name" disable-by="disabled"
-                        id="ss-select" style="width: fit-content;" @change="putUserToGroup(group.id, $event)">
-                        <div
-                          slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                          style="cursor: pointer; width: 100%;">
-                          <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between"
-                            style="width: 100%; padding: 13px;">
-                            <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
-                            <plus-icon size="1x" class="custom-class" id="plusIcon"></plus-icon>
-                            {{ $get(selectedOption, 'name') || 'Добавить сотрудника'}}
-                            <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
-                          </ss-select-toggle>
+            <div :id="'collapseOne'+group.id" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+              <div class="card-body">
+                <div class="card">
+                  <div class="card-header" id="headingOneAdd">
+                    <h5 class="mb-0">
+                      <div>
+                        <ss-select :options="usersNoGroup" track-by="name" search-by="name" disable-by="disabled"
+                          id="ss-select" style="width: fit-content;" @change="putUserToGroup(group.id, $event)">
+                          <div
+                            slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+                            style="cursor: pointer; width: 100%;">
+                            <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between"
+                              style="width: 100%; padding: 13px;">
+                              <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
+                              <plus-icon size="1x" class="custom-class" id="plusIcon"></plus-icon>
+                              {{ $get(selectedOption, 'name') || 'Добавить сотрудника'}}
+                              <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
+                            </ss-select-toggle>
 
-                          <section v-show="isOpen" class="absolute border-l border-r min-w-full"
-                            style="top: 66%;left: 6%;">
-                            <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id"
-                              :index="index" :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
+                            <section v-show="isOpen" class="absolute border-l border-r min-w-full"
+                              style="top: 66%;left: 6%;">
+                              <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id"
+                                :index="index" :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
                                 $selected(option) ? 'bg-light text-dark' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
                               ]">{{ option.surname }} {{ option.name }} {{option.father_name}} </ss-select-option>
-                          </section>
-                        </div>
-                      </ss-select>
-                    </div>
+                            </section>
+                          </div>
+                        </ss-select>
+                      </div>
 
 
-                    <!-- <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOneAdd"
+                      <!-- <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOneAdd"
                     aria-expanded="false" aria-controls="collapseOneAdd">
                     <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                   </button> -->
-                  </h5>
-                </div>
+                    </h5>
+                  </div>
 
-                <div id="collapseOneAdd" class="collapse" aria-labelledby="headingOneAdd" data-parent="#collapseOne">
-                  <div class="card-body">
-                    <input type="text">
+                  <div id="collapseOneAdd" class="collapse" aria-labelledby="headingOneAdd" data-parent="#collapseOne">
+                    <div class="card-body">
+                      <input type="text">
+                    </div>
                   </div>
                 </div>
+                <ShowUsers v-if="openShowUsers && currentGroupId==group.id" :val="currentGroupId" />
               </div>
-              <ShowUsers v-if="openShowUsers && currentGroupId==group.id" :val="currentGroupId" />
             </div>
           </div>
         </div>
+
+
+
+
       </div>
 
 
+      <button type="button" class="btn btnMain" @click="createG" data-toggle="modal" data-target="#groupCreate"
+        style="margin: 100px auto 30px;">
+        <plus-icon size="1.5x" class="custom-class" style="color: white; margin-right: 5px;"></plus-icon><span>Добавить
+          подразделение</span>
+      </button>
 
 
+      <GroupCreate v-if="openCreateGroup" @createGroup="createGroup(param = $event)" />
+      <GroupDelete v-if="openDeleteGroup" :val="paramsModal" @deleteGroup="deleteGroup(param = $event)" />
+
+      <PopupConfirm v-if="openConfirm" :val="newLeader" @setNewLeader="setNewLeader(param = $event)" />
     </div>
-
-
-    <button type="button" class="btn btnMain" @click="createG" data-toggle="modal" data-target="#groupCreate"
-      style="margin: 100px auto 30px;">
-      <plus-icon size="1.5x" class="custom-class" style="color: white; margin-right: 5px;"></plus-icon><span>Добавить
-        подразделение</span>
-    </button>
-
-
-    <GroupCreate v-if="openCreateGroup" @createGroup="createGroup(param = $event)" />
-    <GroupDelete v-if="openDeleteGroup" :val="paramsModal" @deleteGroup="deleteGroup(param = $event)" />
-
-    <PopupConfirm v-if="openConfirm" :val="newLeader" @setNewLeader="setNewLeader(param = $event)" />
-  </div>
-
 
 
 </template>
@@ -236,7 +238,6 @@
       ShowUsers,
       PopupConfirm,
 
-
       TrashIcon,
       ChevronRightIcon,
       ChevronLeftIcon,
@@ -290,10 +291,6 @@
       },
       onBlurInput(event) {
         event.path[0].nextElementSibling.classList.remove('flex')
-        // console.log(this.currentGroupName);
-        // this.currentGroupName
-        // console.log('blur', event);
-        // event.target.value = this.currentGroupName
       },
       onFocusInput(event) {
         this.currentGroupName = event.target.value
@@ -303,15 +300,10 @@
 
       onClear(event) {
         event.preventDefault()
-        console.log('dj');
-        console.log(event.target.parentElement.parentElement.previousSibling.value);
         event.target.parentElement.parentElement.previousSibling.value = ''
-        // console.log(this.currentGroupName);
-        // // this.currentGroupName = ''
-        // console.log(this.currentGroupName);
       },
+
       async editGroupShort(short_name, id, event) {
-        // event.preventDefault()
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('editGroupShort', {
             short_name,
@@ -328,19 +320,16 @@
         event.path[2].classList.remove('flex')
       },
       async editGroupName(name, id, event) {
-        // event.preventDefault()
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('editGroup', {
             name,
             id
           })
-          .then((r) => {console.log(r)
-          console.log(event.target);
-          setTimeout(function() {
+          .then(() => {
+            
+            setTimeout(function () {
               document.getElementById('groupname' + id).scrollIntoView();
-          }, 200);
-          
-          // event.moveTo()
+            }, 200);
           })
           .catch(() => {
             this.$store.commit('editGroup', {
@@ -408,11 +397,6 @@
       },
 
 
-
-      //pages
-      // reloadPage() {
-      //   document.location.reload(true)
-      // },
       nextPage() {
         document.getElementsByClassName('btn-link').forEach(element => {
           element.classList.contains('collapsed') ? '' : element.click()

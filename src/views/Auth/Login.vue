@@ -76,7 +76,7 @@
         }
         await this.$store.dispatch('login', formData).then(() => {
           if (!this.errorU) {
-            this.$router.push('/problems')
+            this.$router.push('/')
           }
         })
       },

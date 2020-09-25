@@ -6,11 +6,11 @@
           <div class="modal-content">
             <div class="modal-header tab row">
 
-              <div class="tabDiv col-xl-3 col-lg-4" :class="[tab ? 'active' : '']" @click="toggleTab1()">
+              <div class="tabDiv col-xl-3 col-lg-4" :class="[tab ? 'active' : '']" @click="toggleTab(true)">
                 <eye-icon size="1.5x" class="custom-class"></eye-icon>
                 <button class="btn btnTab">Просмотр проблемы</button>
               </div>
-              <div class="tabDiv col-xl-3 col-lg-4" :class="[tab ? '' : 'active']" @click="toggleTab2()">
+              <div class="tabDiv col-xl-3 col-lg-4" :class="[tab ? '' : 'active']" @click="toggleTab(false)">
                 <img src="@/assets/tasks.png" v-if="tab">
                 <img src="@/assets/listGreen.png" v-else>
                 <button class="btn btnTab">Добавить решение</button>
@@ -31,12 +31,6 @@
                     ref="input" class="form-control" id="new-problem-title" v-model="val.name">
                   <div class="error" v-if="error">{{error}}</div>
                 </div>
-                <!-- <h6 v-if="progress !== ''">Прогресс решения {{progress}}%</h6>
-                <h6 v-else>Прогресс решения 0%</h6>
-                <div class="icons">
-                  <img src="~@/assets/star.png">
-                  <span>95</span>
-                </div> -->
               </div>
             </div>
 
@@ -114,7 +108,7 @@
 
                             <section v-show="isOpen" class="absolute border-l border-r min-w-full">
                               <!-- <div class="px-px" >
-                              <ss-select-search-input class="w-full px-3 py-1" style="width: 238px; border: none; background-color: #F2F2F2;" placeholder="Впишите имя"></ss-select-search-input>
+                              <ss-select-search-input class="w-full px-3 py-1" placeholder="Впишите имя"></ss-select-search-input>
                             </div> -->
 
                               <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id"
@@ -129,7 +123,7 @@
                       </div>
 
                       <div style="width: 20px" class="col">
-                        <button type="button" class="close" id="remove" style="margin: auto;font-size: 20px;"
+                        <button type="button" class="close" id="remove"
                           @click="removeFromWork(solution)" data-toggle="modal" data-target="#popupRemoveFromWOrk">
                           <span aria-hidden="true">&times;</span>
                         </button>
@@ -174,7 +168,7 @@
     mapGetters
   } from 'vuex'
 
-  import Solutions from './Solutions'
+  import Solutions from './AllSolutions'
   import RemoveFromWork from './RemoveFromWork'
   import Tasks from './Tasks/Tasks'
   import DeleteTask from './Tasks/DeleteTask'
@@ -195,7 +189,6 @@
       showEdit: false,
       openRemoveFromWork: false,
       openDeleteTask: false,
-
 
       solutionName: '',
       solutionIdRemove: '',
@@ -223,7 +216,7 @@
       //     altFormat: 'd.m.Y',
 
       //     dateFormat: 'Y-m-d',
-      //     locale: Russian // locale for this instance only          
+      //     locale: Russian      
       //   }, 
     }),
     components: {
@@ -240,7 +233,6 @@
       SsSelectToggle,
       SsSelectOption,
       // SsSelectSearchInput
-
       // flatPickr
     },
     computed: {
@@ -264,7 +256,6 @@
                 id: this.val.id,
                 name: this.val.name
               }).then(() => this.showEdit = false)
-              // .catch((e) => console.log(e))
             } else {
               this.showEdit = false
             }
@@ -314,13 +305,10 @@
       closeSolutions() {
         this.openSolutions = false
       },
-      toggleTab1() {
-        this.$emit('changeTab', true)
+      toggleTab(value) {
+        console.log(value);
+        this.$emit('changeTab', value)
       },
-      toggleTab2() {
-        this.$emit('changeTab', false)
-      },
-
     }
   }
 </script>
@@ -714,8 +702,10 @@
   }
 
   .close {
-    margin: 1rem 1rem 1rem auto;
+    // margin: 1rem 1rem 1rem auto;
     padding: 0;
+    margin: auto;
+    font-size: 20px;
   }
 
 

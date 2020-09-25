@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header row">
-      <div class="col-5" style="margin-right: -15px;margin-left: 20px">
+      <div class="col-5" style="margin: 0 20px 0 -15px;">
         <img src="@/assets/tasks.png">
         Задачи:
       </div>
@@ -87,7 +87,7 @@
 
         <li>
           <div v-if="addNotClicked">
-            <plus-icon size="1.5x" class="custom-class" id="plus" @click.prevent="displayInput" style="color: #92D2C3;">
+            <plus-icon size="1.5x" class="custom-class" @click.prevent="displayInput" style="color: #92D2C3;">
             </plus-icon>
             <span @click.prevent="displayInput" style="margin-left: 16px; cursor: pointer;">Добавить задачу</span>
           </div>
@@ -173,7 +173,6 @@
     data: () => ({
       openDeleteTask: false,
 
-
       addNotClicked: true,
       enableAddBtntn: false,
       inputActive: false,
@@ -216,12 +215,12 @@
     computed: {
       ...mapGetters(['tasks', 'error', 'error404', 'allUsers', 'allUsersReduced', 'currentSolution', 'solutions']),
     },
-    watch: {
-      val: function (data) {
-        console.log(data);
-        // ??
-      }
-    },
+    // watch: {
+    //   val: function (data) {
+    //     console.log(data);
+    //     // ??
+    //   }
+    // },
     methods: {
       displayInput() {
         this.addNotClicked = false
@@ -295,6 +294,7 @@
         })
       },
 
+
       onFocusInput(event) {
         this.currentTaskName = event.target.value
         this.currentTaskInput = event.target
@@ -330,10 +330,7 @@
 </script>
 
 <style scoped lang="scss">
-  .subt1 {
-    flex: 0 0 42.666667%;
-    max-width: 42.666667%;
-  }
+
 
   #remove {
     display: none;
@@ -510,7 +507,10 @@
     border-right: 4px solid white;
   }
 
-
+  .subt1 {
+    flex: 0 0 42.666667%;
+    max-width: 42.666667%;
+  }
 
   .date {
     width: 200px;

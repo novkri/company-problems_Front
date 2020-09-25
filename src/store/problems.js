@@ -65,6 +65,7 @@ export default {
     }) => {
       await axios.get(BASEURL)
         .then(response => {
+          console.log(response);
           if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
@@ -72,6 +73,7 @@ export default {
           }
         })
         .catch(error => {
+          console.log(error.response);
           if (error.response.status == 401) {
             commit('setError404', error.response.data.errors)
           } else {
