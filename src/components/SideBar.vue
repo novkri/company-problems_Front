@@ -2,7 +2,7 @@
       <div class="sidebar col">
         <div class="links">
           <div class="main">
-            <router-link to="/" >Проблемы</router-link>
+            <router-link to="/" exact>Проблемы</router-link>
           </div>
           <div class="groups">
             <a href="#">Проекты</a>

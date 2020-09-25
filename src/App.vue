@@ -15,8 +15,7 @@ import NoneLayout from '@/layouts/NoLayout'
     },
     computed: {
       layout() {
-        console.log(this.$route.meta);
-          return (this.$route.meta.layout) + '-layout';
+        return (this.$route.meta.layout) + '-layout';
       }
     },
   }
