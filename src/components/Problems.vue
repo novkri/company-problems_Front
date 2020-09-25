@@ -22,7 +22,16 @@
         </li>
       </ul>
 
-      <div class="pagination">
+    </div>
+    <hr>
+    <div class="footer">
+          <button type="button" class="btn btnMain" @click="create" data-toggle="modal" data-target="#popupCreate"
+      style="margin-top: 25px;">
+      <plus-icon size="1.5x" class="custom-class" style="color: white; margin-right: 5px;"></plus-icon><span>Предложить
+        проблему</span>
+    </button>
+
+          <div class="pagination">
         <nav>
           <ul class="pagination">
             <li class="page-item">
@@ -42,15 +51,9 @@
           </ul>
         </nav>
       </div>
-
     </div>
-    <hr>
 
-    <button type="button" class="btn btnMain" @click="create" data-toggle="modal" data-target="#popupCreate"
-      style="margin-top: 25px;">
-      <plus-icon size="1.5x" class="custom-class" style="color: white; margin-right: 5px;"></plus-icon><span>Предложить
-        проблему</span>
-    </button>
+
 
 
 
@@ -252,7 +255,7 @@
     height: 58px;
     background: #92D2C3;
     color: #fff;
-    margin: auto;
+    // margin: auto;
 
     font-size: 18px;
     line-height: 17px;
@@ -348,6 +351,13 @@
     border-left: 1px solid #e0e0e0;
   }
 
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    width: 85%;
+    margin: auto;
+    max-width: 1350px;
+  }
 
 
   @media (min-width: 1430px) {
