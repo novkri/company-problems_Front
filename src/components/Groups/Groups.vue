@@ -303,6 +303,7 @@
 
       onClear(event) {
         event.preventDefault()
+        console.log('dj');
         console.log(event.target.parentElement.parentElement.previousSibling.value);
         event.target.parentElement.parentElement.previousSibling.value = ''
         // console.log(this.currentGroupName);

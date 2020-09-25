@@ -19,7 +19,7 @@
                     :class="{ 'form-control--error': $v.name.$invalid, 'form-control--valid': name && !$v.name.$invalid}"
                     placeholder="Название подразделения..." @blur="onBlur($event)" @focus="onFocus($event)"
                     @input="clearError" v-model="name">
-                  <div class="input-group-append" @mousedown="onClear">
+                  <div class="input-group-append" @mousedown="onClear('name')">
                     <span class="input-group-text">&times;</span>
                   </div>
                   <div class="error" v-if="error.name">{{error.name[0]}}</div>
@@ -31,7 +31,7 @@
                     :class="{ 'form-control--error': $v.nameShort.$invalid, 'form-control--valid': nameShort && !$v.nameShort.$invalid}"
                     placeholder="Название сокращения..." @blur="onBlur($event)" @focus="onFocus($event)"
                     @input="clearError" v-model="nameShort">
-                  <div class="input-group-append" @mousedown="onClear">
+                  <div class="input-group-append" @mousedown="onClear('short')">
                     <span class="input-group-text">&times;</span>
                   </div>
                   <div class="error" v-if="error.short_name">{{error.short_name[0]}}</div>
@@ -152,8 +152,8 @@
       onFocus(event) {
         event.target.nextSibling.style.display = 'flex'
       },
-      onClear() {
-        this.name = ''
+      onClear(type) {
+        type === 'name' ? this.name = '' : this.nameShort = ''
       },
 
       async addGroup() {
