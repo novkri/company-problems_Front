@@ -44,7 +44,7 @@
         color="#92D2C3"
       />
     </div>
-    <GroupDeleteUser v-if="openDeleteGroup" :val="paramsModal" @deleteGroup="deleteGroup(param = $event)" />
+    <GroupDeleteUser v-if="openDeleteGroup" :val="paramsModal" @removeUserFromGroup="removeUserFromGroup(param = $event)" />
   </div>
 
 </template>
@@ -85,12 +85,7 @@
       await this.$store.dispatch('getLeader', this.val)
       this.mounted = true
     },
-    // watch: {
-    //   leaderReduced(value) {
-    //     console.log(value);
 
-    //   }
-    // },
     methods: {
       removeUserFromGroup(uid, groupId) {
         this.openDeleteGroup = true
