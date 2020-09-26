@@ -51,18 +51,14 @@ export default {
       state.leader = payload[0]
     },
     setLeaderReduced: (state, payload) => {
-      console.log(payload[0]);
       payload[0].name = payload[0].name[0]+'.'
       payload[0].father_name ? payload[0].father_name = payload[0].father_name[0]+'.' : ' '
       state.leaderReduced = payload[0]
-      console.log(state.leaderReduced);
     },
     changeLeader: (state, payload) => {
-      // console.log(state, payload);
       state.leaderReduced = state.members.filter(u => u.id == payload)[0]
       state.leaderReduced.name = state.leaderReduced.name[0]+'.'
       state.leaderReduced.father_name ? state.leaderReduced.father_name = state.leaderReduced.father_name[0]+'.' : ' '
-      // console.log(state.leaderReduced);
     },
     setMembers: (state, payload) => {
       payload.length > 0 ? state.members = Object.values(payload) : state.members = []
