@@ -49,9 +49,6 @@ export default {
   },
   mutations: {
     setSolution: (state, payload) => {
-      // let solution = payload.find(solution => solution.in_work)
-      // console.log(payload.find(solution => solution.in_work));
-      console.log(payload);
       state.solutions = payload.filter(solution => solution.in_work)
     },
     addSolution: (state, payload) => {

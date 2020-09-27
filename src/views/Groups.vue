@@ -226,11 +226,12 @@
       ChevronRightIcon,
       ChevronLeftIcon,
       PlusIcon,
+      CheckIcon,
       ChevronUpIcon,
       UserIcon,
       ChevronDownIcon,
       AwardIcon,
-      CheckIcon,
+      
 
 
       SsSelect,

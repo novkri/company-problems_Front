@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="filters">
-      Фильтрация: 
+      Фильтрация:
     </div>
     <h2>Список всех проблем в компании</h2>
     <div class="container">
@@ -32,8 +32,8 @@
           </div>
 
           <div :id="'collapseOne'+problem.id" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-            <div class="card-body" v-if="mounted">
-              <div class="card" style="padding-top: 0;">
+            <div class="card-body">
+              <div class="card" style="padding-top: 0;" v-if="mounted">
                 <PopupShow v-if="openShow" :val="paramsModal" />
                 <!-- + 4 accordions -->
                 <div class="row" style="display: flex; flex-direction: row; margin-bottom: 8px;">
@@ -159,11 +159,10 @@
                   </div>
                 </div>
               </div>
+              <div v-else>
+                <half-circle-spinner :animation-duration="1500" :size="50" color="#92D2C3" />
+              </div>
             </div>
-
-            <!-- <div v-else>
-              <half-circle-spinner :animation-duration="1500" :size="50" color="#92D2C3" />
-            </div> -->
           </div>
         </div>
       </div>
@@ -213,9 +212,9 @@
   import PopupShow from '@/components/Solutions/ShowSolution'
   import Tasks from '@/components/Solutions/Tasks/Tasks'
 
-  // import {
-  //   HalfCircleSpinner
-  // } from 'epic-spinners'
+  import {
+    HalfCircleSpinner
+  } from 'epic-spinners'
 
   import {
     mapGetters
@@ -258,9 +257,9 @@
       ChevronLeftIcon,
       ChevronUpIcon,
       FileTextIcon,
-      ClockIcon
+      ClockIcon,
 
-      // HalfCircleSpinner
+      HalfCircleSpinner
     },
 
     async mounted() {
@@ -346,11 +345,13 @@
 
           this.$store.commit('setError', '')
           await this.$store.dispatch('getSolutions', problem.id).then(response => {
-            console.log(response);
             this.mounted = true
             this.$store.dispatch('getTasks', response.id)
             this.$store.dispatch('getCurrentSolution', '')
             this.$store.dispatch('getCurrentSolution', response.id)
+            setTimeout(function () {
+              document.getElementById('heading' + problem.id).scrollIntoView();
+            }, 200);
           }).catch(() => {
             this.$store.dispatch('clearTasks')
           })
@@ -369,6 +370,10 @@
 </script>
 
 <style scoped lang="scss">
+  .half-circle-spinner {
+    margin: auto;
+  }
+
   .card {
     border: none;
     margin-bottom: 16px;
@@ -379,7 +384,7 @@
     .card {
       border: 1px solid rgba(0, 0, 0, 0.36);
       border-radius: 9px;
-      padding: 22px;
+      padding: 16px 13px;
 
       .card-header {
         height: fit-content;

@@ -15,7 +15,7 @@
       <div>
         <div class="subtitle row subt">
           <div class="col-5">
-            
+
           </div>
           <div class="col-2">
             Статус выполнения
@@ -34,7 +34,24 @@
           <ol>
             <li v-for="(solution, idx) in solutions" :key="idx" id="list" class="row">
               <div class="list-item col-5">
-                <div class="desc" ref="desc">Решение: <span>{{solution.name}}</span>
+                <div class="desc" ref="desc">
+                  <span>Решение: </span>
+                  <div @click="onClickInput(solution.id)" v-show="!editable">{{solution.name}}</div>
+                  <input v-show="editable" class="form-control" :id="'textarea'+solution.id" v-model="solution.name" :ref="'textarea' + solution.id"
+                    @keyup.enter.prevent="event => {editSolClick(solution.name, solution.id, event)}"
+                    @focus="onFocusInput($event)" @blur="event => {onBlurInput(solution.name, solution.id, event)}"
+                    :class="{ 'form-control--error': solution.name.length < 6 ||  solution.name.length > 250 || solution.name.length == 0}" />
+                  <div class="hidden">
+                      <button class="input-btn"
+                        @mousedown="event => {editSolClick(solution.name, solution.id, event)}">
+                        <check-icon size="1x" class="custom-class"></check-icon>
+                      </button>
+                      <div @mousedown="event => onClear(event, solution.id)">
+                        <button class="input-btn">
+                          <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
+                        </button>
+                      </div>
+                    </div>
                 </div>
               </div>
 
@@ -76,7 +93,8 @@
                     slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                     style="cursor: pointer;">
                     <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between" id="select-toggle">
-                      <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
+                      <!-- <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon> -->
+                      <award-icon size="1.5x" class="custom-class"></award-icon>
                       {{ $get(selectedOption, 'id') || `${allUsers.find(u => u.id == solution.executor_id) ? allUsers.find(u => u.id == solution.executor_id).surname + ' ' + allUsers.find(u => u.id == solution.executor_id).name[0] + '.' : 'Выбрать'}`}}
                     </ss-select-toggle>
 
@@ -105,17 +123,11 @@
             </li>
           </ol>
         </div>
-
-        <!-- <div class="tasks" v-if="solutions[0]">
-          <Tasks :val="solutions" />
-        </div> -->
       </div>
     </div>
     <div class="col-3"></div>
-    <!-- <Solutions :openS="openSolutions" @closeSolutions="closeSolutions($event)" :val="val" />
 
 
-    <Solutions v-if="openSolutions" :openS="openSolutions" @closeSolutions="closeSolutions($event)" :val="val" /> -->
     <RemoveFromWork v-if="openRemoveFromWork" :openRemoveFromWork="openRemoveFromWork"
       @closeRemoveSolutions="closeRemoveSolutions($event)" :val="solutionIdRemove" />
     <DeleteTask v-if="openDeleteTask" :openDeleteT="openDeleteTask" @closeDeleteTask="closeDeleteTask($event)"
@@ -126,9 +138,12 @@
 
 <script>
   import {
-    UserIcon,
+    // UserIcon,
     // EyeIcon,
-    ChevronDownIcon
+    AwardIcon,
+    ChevronDownIcon,
+          PlusIcon,
+      CheckIcon,
   } from 'vue-feather-icons'
 
   import {
@@ -157,6 +172,7 @@
       showEdit: false,
       openRemoveFromWork: false,
       openDeleteTask: false,
+      editable: false,
 
       solutionName: '',
       solutionIdRemove: '',
@@ -164,6 +180,11 @@
       taskIdDelete: '',
       currentDate: '',
       currentDateInput: '',
+
+      currentSolutionInput: '',
+      currentSolutionName: '',
+      currentSolStatus: '',
+      currentSolInput: '',
 
       progress: '',
       btnRemove: false,
@@ -188,9 +209,12 @@
       //   }, 
     }),
     components: {
-      UserIcon,
+      // UserIcon,
       // EyeIcon,
+      AwardIcon,
       ChevronDownIcon,
+            PlusIcon,
+      CheckIcon,
 
       // Solutions,
       RemoveFromWork,
@@ -206,29 +230,6 @@
       ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404', 'allUsers', 'currentSolution', 'tasks']),
     },
     methods: {
-      onFocusInput(event) {
-        this.problemName = event.target.value
-      },
-      onKey(event) {
-        event.target.blur()
-      },
-
-      async editProblem() {
-        await this.$store.dispatch('checkIfExists', {
-            id: this.val.id
-          })
-          .then(async () => {
-            if (this.val.name !== this.problemName) {
-              await this.$store.dispatch('editProblem', {
-                id: this.val.id,
-                name: this.val.name
-              }).then(() => this.showEdit = false)
-            } else {
-              this.showEdit = false
-            }
-          })
-      },
-
       async selectExecutor(id, uid) {
         await this.$store.dispatch('changeExecutor', {
           id,
@@ -271,6 +272,52 @@
       },
       closeSolutions() {
         this.openSolutions = false
+      },
+
+      onClickInput(id) {
+        this.editable = true
+        console.log(this.$refs['textarea' + id][0].focus())
+        this.$nextTick(() => {
+          this.$refs['textarea' + id][0].focus()
+        })
+      },
+
+      onBlurInput(name, id, event) {
+        this.editable = false
+        event.path[0].nextElementSibling.classList.remove('flex')
+        this.$store.commit('editSolutionOther', {
+          name: this.currentSolutionName,
+          id
+        }) 
+      },
+      onFocusInput(event) {
+        this.currentSolutionName = event.target.value
+        this.currentSolutionInput = event.target
+
+        console.log(this.currentSolutionName,this.currentSolutionInput );
+        event.path[0].nextElementSibling.classList.add('flex')
+      },
+
+      onClear(event, id) {
+        event.preventDefault()
+        document.getElementById('textarea' + id).value = this.currentSolutionName 
+      },
+
+      async editSolClick(name, id) {
+        this.editable = false
+        // event.preventDefault();
+        await this.$store.commit('setError404', '')
+        await this.$store.dispatch('editSolution', {
+            name,
+            id
+          })
+          .then(() => {})
+          // .catch(() => {
+          //   this.$store.commit('editSolutionOther', {
+          //     name: this.currentSolutionName,
+          //     id
+          //   })
+          // })
       },
     }
   }
@@ -374,7 +421,7 @@
     margin-bottom: 35px;
     // margin-top: 35px;
     // margin-left: 29px !important;
-    margin-left: 29px;
+    margin-left: 11px;
 
     div {
       font-family: 'GothamPro';
@@ -420,9 +467,10 @@
     margin-left: 10px;
 
     li {
-      padding: 15px 49px 12px;
+      // padding: 15px 49px 12px;
+      padding: 0;
       border-radius: 9px;
-      background-color: #FFF;
+      background-color: #F6F7F9;
       margin: 0 24px 16px 0;
       align-items: flex-start;
     }
@@ -432,7 +480,7 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
+    // box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
     position: relative;
 
     span {
@@ -450,14 +498,28 @@
     display: flex;
     flex-direction: row;
     width: fit-content;
-    cursor: pointer;
-    margin-right: 57px;
+    // margin-right: 57px;
     font-family: 'GothamPro-Medium';
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #4F4F4F;
-    width: 420px;
+    // width: 420px;
+        width: 95%;
+
+    span {
+      font-family: "GothamPro";
+      cursor: default;
+    }
+
+    input {
+      background-color: #F6F7F9;
+      padding-top: 0;
+      padding-bottom: 0;
+      cursor: pointer;
+      overflow: hidden;
+      resize: vertical;
+    }
   }
 
   .tasks {
@@ -491,7 +553,7 @@
 
   .selectResponsible:hover {
     #ss-select {
-      background-color: #F6F6F6;
+      background-color: #F6F7F9;
     }
   }
 
@@ -543,11 +605,33 @@
     font-family: 'GothamPro-Medium';
   }
 
-  @media (min-width: 576px) {
-    .modal-dialog {
-      max-width: inherit;
-      margin: 1.75rem auto;
+
+  .input-btn {
+    border: none;
+    width: auto;
+    height: 32px;
+    margin-left: 8px;
+    background-color: #e2e2e2;
+    border-radius: 8px;
+
+    svg {
+      color: #4F4F4F;
+      vertical-align: text-top;
     }
+  }
+
+  .hidden {
+    display: flex;
+    visibility: hidden;
+    flex-direction: row;
+  }
+
+  .flex {
+    display: flex;
+    visibility: visible;
+  }
+    #closeIcon {
+    transform: rotate(45deg);
   }
 
   .close {
@@ -568,6 +652,7 @@
     padding-top: 5px;
     border-radius: 10px;
     width: 168px;
+    background-color: #F6F7F9;
   }
 
   .date:hover {
@@ -709,10 +794,28 @@
     align-items: center;
     padding: 18px auto 18px 32px;
 
+
     &:last-child {
       margin-bottom: 43px;
     }
+
+    &:hover {
+      background-color: #fff;
+
+      input {
+        background-color: #fff;
+      }
+    }
   }
+
+  input:active,
+  input:focus {
+    background-color: #f0f0f0 !important;
+  }
+
+
+
+
 
   .addNewTask {
     display: flex;
@@ -823,45 +926,12 @@
     li {
       display: flex;
       flex-direction: initial;
-
-      // .close {
-      //   order: 2;
-      //   width: 100%;
-      // }
-
-      // .select {
-      //   order: 3;
-      // }
-
-      // .dateDiv {
-      //   order: 4;
-      // }
-
-      // .selectResponsible {
-      //   order: 5;
-      // }
-
-      // .list-item {
-      //   order: 1;
-      // }
     }
-
-    // .list-item {
-    //   flex: 0 1;
-    //   max-width: initial;
-    //   min-width: fit-content;
-    // }
-
-    // .desc {
-    //   width: 100%;
-    // }
   }
 
   @media (max-width: 1100px) {
     .subt div {
-      // div {
       font-size: 12px;
-      // }
     }
   }
 
@@ -869,6 +939,5 @@
     .tasks {
       width: 85% !important;
     }
-
   }
 </style>

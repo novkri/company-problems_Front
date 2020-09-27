@@ -186,7 +186,6 @@
         event.target.blur()
       },
 
-
       async editSolClick(name, id) {
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('editSolution', {
