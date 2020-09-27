@@ -99,11 +99,10 @@ export default {
     }) => {
       await axios.get(BASEURL)
         .then(response => {
-          if (response.status == 200) {
+          console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('setGroups', response.data)
-          }
         })
         .catch(error => {
           if (error.response.status == 401) {
@@ -118,13 +117,10 @@ export default {
     }, id) => {
       await axios.get(BASEURL + `/${id}/leader`)
         .then(response => {
-          if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
             commit('setLeader', response.data)
             commit('setLeaderReduced', response.data)
-            
-          }
         })
         .catch(error => {
           if (error.response.status == 401) {
@@ -139,11 +135,9 @@ export default {
     }, id) => {
       await axios.get(BASEURL + `/${id}/user`)
         .then(response => {
-          if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
             commit('setMembers', response.data)
-          }
         })
         .catch(error => {
           if (error.response.status == 401) {
@@ -186,12 +180,10 @@ export default {
       // param.id = 10000000
       return new Promise((resolve, reject) => {
      axios.delete(BASEURL + `/${param.id}`).then(response => {
-          if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
             commit('deleteGroup', param.id)
             resolve(response.data)
-          }
         })
         .catch(error => {
           if (error.response.status !== 422) {
@@ -221,12 +213,10 @@ export default {
         axios.put(BASEURL + `/${param.id}`, {
           name: param.name
         }).then(response => {
-          if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
             commit('editGroup', response.data)
             resolve(response)
-          }
         }).catch((error) => {
           if (error.response.status !== 422) {
             error.response.data.message ? commit('setError404', error.response.data.message) : commit('setError404', error.response.data.errors)
@@ -247,12 +237,10 @@ export default {
         axios.put(BASEURL + `/${param.id}/change-short-name`, {
           short_name: param.short_name
         }).then(response => {
-          if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
             commit('editGroup', response.data)
             resolve(response)
-          }
         }).catch((error) => {
           if (error.response.status !== 422) {
             error.response.data.message ? commit('setError404', error.response.data.message) : commit('setError404', error.response.data.errors)

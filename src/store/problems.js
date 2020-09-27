@@ -57,21 +57,24 @@ export default {
     setError404: (state, payload) => {
       state.error404 = payload
     },
-
+    changeProblemLike: (state, payload) => {
+      state.problems.find(problem => problem.id == payload).is_liked = !state.problems.find(problem => problem.id == payload).is_liked
+    },
   },
+
   actions: {
     getProblems: async ({
       commit
     }) => {
       await axios.get(BASEURL)
         .then(response => {
-          if (response.status == 200) {
+          // console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
-          }
         })
         .catch(error => {
+          // console.log(error.response);
           if (error.response.status == 401) {
             commit('setError404', error.response.data.errors)
           } else {
@@ -102,12 +105,10 @@ export default {
     deleteProblem: async ({
       commit
     }, param) => {
-      await axios.delete(BASEURL + `/${param.id}`).then(response => {
-          if (response.status == 200) {
+      await axios.delete(BASEURL + `/${param.id}`).then(() => {
             commit('setError', '')
             commit('setError404', '')
             commit('deleteProblem', param.id)
-          }
         })
         .catch(error => {
           if (error.response.status !== 422) {
@@ -133,12 +134,10 @@ export default {
         axios.put(BASEURL + `/${param.id}`, {
           name: param.name
         }).then(response => {
-          if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
             commit('editProblem', response.data)
             resolve(response)
-          }
         }).catch((error) => {
           if (error.response.status !== 422) {
             commit('setError404', error.response.data.message)
@@ -149,6 +148,32 @@ export default {
           }
         })
       })
-    }
+    },
+
+    problemLike: async ({commit}, id) => {
+      axios.post(BASEURL + `/${id}/like`)
+        .then(() => {
+          commit('setError', '')
+          commit('setError404', '')
+          commit('changeProblemLike', id)
+        })
+        .catch((error) => {
+          commit('setError404', error.response.data.message)
+        })
+    },
+
+    sendToGroup: async ({commit}, param) => {
+      console.log(param);
+      axios.post(BASEURL + `/${param.id}/send-to-group`, {group_id: param.groupsArray})
+        .then(() => {
+          commit('setError', '')
+          commit('setError404', '')
+          // ?????
+          // commit('changeProblemLike', id)
+        })
+        .catch((error) => {
+          commit('setError404', error.response.data.message)
+        })
+    },
   }
 }

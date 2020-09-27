@@ -46,12 +46,12 @@ export default {
     allUsersReduced: state => {
       return state.allUsersReduced
     },
-    // usersNoGroup: state => {
-    //   return state.usersNoGroup = state.allUsers.filter(u => u.group_id == null)
-    // }
   },
   mutations: {
     setSolution: (state, payload) => {
+      // let solution = payload.find(solution => solution.in_work)
+      // console.log(payload.find(solution => solution.in_work));
+      console.log(payload);
       state.solutions = payload.filter(solution => solution.in_work)
     },
     addSolution: (state, payload) => {
@@ -121,13 +121,11 @@ export default {
       return await new Promise((resolve, reject) => {
         axios.get(URLSOLUTION + `/${problemId}/solution`)
           .then(response => {
-            if (response.status == 200) {
               commit('setError', '')
               commit('setError404', '')
               commit('setOtherSolution', response.data)
               commit('setSolution', response.data)
               resolve(response.data[0])
-            }
           })
           .catch(error => {
             commit('setError', error.response.data.errors)
@@ -167,12 +165,10 @@ export default {
       commit
     }, id) => {
       // id = 10000000000
-      await axios.delete(BASEURL + `/${id}`).then(response => {
-          if (response.status == 200) {
+      await axios.delete(BASEURL + `/${id}`).then(() => {
             commit('setError', '')
             commit('setError404', '')
             commit('deleteSolution', id)
-          }
         })
         .catch(error => {
           commit('setError404', error.response.data.message)
@@ -289,14 +285,12 @@ export default {
     getAllUsers: async ({
       commit
     }) => {
-      axios.get(ALLUSERS).then(response => {
-          if (response.status == 200) {
+      await axios.get(ALLUSERS).then(response => {
             commit('setError', '')
             commit('setError404', '')
             commit('setAllUsers', response.data)
             commit('setAllUsersReduced', response.data)
             commit('setSolution', response.data)
-          }
         })
         .catch(error => {
           commit('setError404', '')

@@ -28,7 +28,7 @@
               id="ss-select" style="width: fit-content;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                 style="cursor: pointer; width: 100%;">
-                <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
+                <ss-select-toggle style="width: 100%; padding: 6px;" id="select-toggle">
                   {{ $get(selectedOption, 'name') || `${task.status}`}}
                   <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                 </ss-select-toggle>

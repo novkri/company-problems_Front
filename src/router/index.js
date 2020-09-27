@@ -7,8 +7,8 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: () =>  import("../views/Home.vue"),
+    name: "Problems",
+    component: () =>  import("../views/Problems.vue"),
     meta: { 
       requiresAuth: true,
       layout: 'main'

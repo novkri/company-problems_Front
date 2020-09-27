@@ -100,11 +100,9 @@ export default {
     }, param) => {
       await axios.get(BASEURL + `/${param}/task`)
         .then(response => {
-          if (response.status == 200) {
             commit('setError', '')
             commit('setError404', '')
             commit('setTasks', response.data)
-          }
         })
         .catch(error =>
           commit('setError', error.response.data.errors)
@@ -153,12 +151,10 @@ export default {
       commit
     }, id) => {
       // id = 10000000000
-      await axios.delete(URLTASK + `/${id}`).then(response => {
-          if (response.status == 200) {
+      await axios.delete(URLTASK + `/${id}`).then(() => {
             commit('setError', '')
             commit('setError404', '')
             commit('deleteTask', id)
-          }
         })
         .catch(error => {
           commit('setError404', error.response.data.message)

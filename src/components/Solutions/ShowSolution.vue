@@ -1,29 +1,6 @@
 <template>
-  <div>
-    <div class="popup-show">
-      <div id="popupShow" class="modal fade" role="dialog" style="padding: 0 !important; overflow: hidden;">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="height: 750px;" role="document">
-          <div class="modal-content">
-            <div class="modal-header tab row">
-
-              <div class="tabDiv col-xl-3 col-lg-4" :class="[tab ? 'active' : '']" @click="toggleTab(true)">
-                <eye-icon size="1.5x" class="custom-class"></eye-icon>
-                <button class="btn btnTab">Просмотр проблемы</button>
-              </div>
-              <div class="tabDiv col-xl-3 col-lg-4" :class="[tab ? '' : 'active']" @click="toggleTab(false)">
-                <img src="@/assets/tasks.png" v-if="tab">
-                <img src="@/assets/listGreen.png" v-else>
-                <button class="btn btnTab">Добавить решение</button>
-              </div>
-
-              <div class="col" style="width: 100%;">
-                <button type="button" id="close" class="close" data-dismiss="modal" style="font-size: 24px;">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-            </div>
-
-            <div class="modal-header" v-if="tab">
+  <div class="row">
+    <!-- <div class="modal-header" >
               <div class="subtitle subtitle1">
                 <h5 class="modal-title" @click="showEdit = !showEdit" v-if="!showEdit">{{val.name}}</h5>
                 <div class="form-group" v-else>
@@ -32,119 +9,113 @@
                   <div class="error" v-if="error">{{error}}</div>
                 </div>
               </div>
-            </div>
+            </div> -->
 
-            <div class="modal-body" v-if="tab">
-              <div>
-                <div class="subtitle row subt">
-                  <div class="col-5">
-                    Решение в работе:
-                  </div>
-                  <div class="col-2">
-                    Статус выполнения
-                  </div>
-                  <div class="col-2">
-                    Срок исполнения
-                  </div>
-                  <div class="col-2">
-                    Ответственный
-                  </div>
-                  <div style="width: 20px" class="col">
-                  </div>
+    <div class="modal-body col-9">
+      <div>
+        <div class="subtitle row subt">
+          <div class="col-5">
+            
+          </div>
+          <div class="col-2">
+            Статус выполнения
+          </div>
+          <div class="col-2">
+            Срок исполнения
+          </div>
+          <div class="col-2">
+            Ответственный
+          </div>
+          <div style="width: 20px" class="col">
+          </div>
+        </div>
+        <div>
+
+          <ol>
+            <li v-for="(solution, idx) in solutions" :key="idx" id="list" class="row">
+              <div class="list-item col-5">
+                <div class="desc" ref="desc">Решение: <span>{{solution.name}}</span>
                 </div>
-                <div>
+              </div>
 
-                  <ol>
-                    <li v-for="(solution, idx) in solutions" :key="idx" id="list" class="row">
-                      <div class="list-item col-5">
-                        <div class="desc" ref="desc"><span>{{idx+1}}.{{solution.name}}</span>
-                        </div>
-                      </div>
+              <div class="select col-2" style="position: relative;" ref="select">
+                <ss-select v-model="solution.status" :options="statuses" track-by="name" search-by="name"
+                  class="form-control" @change="changeStatus(solution.id, solution.status)" disable-by="disabled"
+                  :class="[solution.status == 'Выполнено' ? 'green' : 'gray']" id="ss-select"
+                  style="width: fit-content;">
+                  <div
+                    slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+                    style="cursor: pointer; width: 100%;">
+                    <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
+                      {{ $get(selectedOption, 'name') || `${solution.status ? solution.status : 'Выбрать'}`}}
+                      <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
+                    </ss-select-toggle>
 
-                      <div class="select col-2" style="position: relative;" ref="select">
-                        <ss-select v-model="solution.status" :options="statuses" track-by="name" search-by="name"
-                          class="form-control" @change="changeStatus(solution.id, solution.status)"
-                          disable-by="disabled" :class="[solution.status == 'Выполнено' ? 'green' : 'gray']"
-                          id="ss-select" style="width: fit-content;">
-                          <div
-                            slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                            style="cursor: pointer; width: 100%;">
-                            <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
-                              {{ $get(selectedOption, 'name') || `${solution.status ? solution.status : 'Выбрать'}`}}
-                              <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
-                            </ss-select-toggle>
-
-                            <section v-show="isOpen" class="absolute border-l border-r min-w-full"
-                              style="height: auto;">
-                              <ss-select-option v-for="(option, index) in filteredOptions" :value="option"
-                                :index="index" :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
+                    <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;">
+                      <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index"
+                        :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
                                 $selected(option) ? 'bg-light text-dark' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
                               ]">{{ option.name }}</ss-select-option>
-                            </section>
-                          </div>
-                        </ss-select>
-                      </div>
+                    </section>
+                  </div>
+                </ss-select>
+              </div>
 
-                      <div class="dateDiv col-2">
-                        <input type="date" id="start" name="trip-start" class="date" v-model="solution.deadline"
-                          onkeypress="return false" @change="changeDeadline(solution.deadline, solution.id)"
-                          @click="onClickDate($event)">
-                      </div>
+              <div class="dateDiv col-2">
+                <input type="date" id="start" name="trip-start" class="date" v-model="solution.deadline"
+                  onkeypress="return false" @change="changeDeadline(solution.deadline, solution.id)"
+                  @click="onClickDate($event)">
+              </div>
 
-                      <div class="selectResponsible col-2">
-                        <ss-select v-model="solution.executor_id" :options="allUsers" track-by="id" search-by="id"
-                          @change="selectExecutor(solution.id, solution.executor_id)" disable-by="disabled"
-                          id="ss-select">
-                          <div
-                            slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                            style="cursor: pointer;">
-                            <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between"
-                              id="select-toggle">
-                              <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
-                              {{ $get(selectedOption, 'id') || `${allUsers.find(u => u.id == solution.executor_id) ? allUsers.find(u => u.id == solution.executor_id).surname + ' ' + allUsers.find(u => u.id == solution.executor_id).name[0] + '.' : 'Выбрать'}`}}
-                            </ss-select-toggle>
+              <div class="selectResponsible col-2">
+                <ss-select v-model="solution.executor_id" :options="allUsers" track-by="id" search-by="id"
+                  @change="selectExecutor(solution.id, solution.executor_id)" disable-by="disabled" id="ss-select">
+                  <div
+                    slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+                    style="cursor: pointer;">
+                    <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between" id="select-toggle">
+                      <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
+                      {{ $get(selectedOption, 'id') || `${allUsers.find(u => u.id == solution.executor_id) ? allUsers.find(u => u.id == solution.executor_id).surname + ' ' + allUsers.find(u => u.id == solution.executor_id).name[0] + '.' : 'Выбрать'}`}}
+                    </ss-select-toggle>
 
-                            <section v-show="isOpen" class="absolute border-l border-r min-w-full">
-                              <!-- <div class="px-px" >
+                    <section v-show="isOpen" class="absolute border-l border-r min-w-full">
+                      <!-- <div class="px-px" >
                               <ss-select-search-input class="w-full px-3 py-1" placeholder="Впишите имя"></ss-select-search-input>
                             </div> -->
 
-                              <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id"
-                                :index="index" :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
+                      <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
+                        :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
                                 $selected(option) ? 'bg-light text-dark' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
                               ]">{{ option.surname }} {{option.name[0]}}.</ss-select-option>
-                            </section>
-                          </div>
-                        </ss-select>
-                      </div>
-
-                      <div style="width: 20px" class="col">
-                        <button type="button" class="close" id="remove"
-                          @click="removeFromWork(solution)" data-toggle="modal" data-target="#popupRemoveFromWOrk">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                    </li>
-                  </ol>
-                </div>
-
-                <div class="tasks" v-if="solutions[0]">
-                  <Tasks :val="solutions" />
-                </div>
+                    </section>
+                  </div>
+                </ss-select>
               </div>
-            </div>
-            <Solutions v-if="!tab" :openS="openSolutions" @closeSolutions="closeSolutions($event)" :val="val" />
-          </div>
+
+              <div style="width: 20px" class="col">
+                <button type="button" class="close" id="remove" @click="removeFromWork(solution)" data-toggle="modal"
+                  data-target="#popupRemoveFromWOrk">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            </li>
+          </ol>
         </div>
+
+        <!-- <div class="tasks" v-if="solutions[0]">
+          <Tasks :val="solutions" />
+        </div> -->
       </div>
     </div>
+    <div class="col-3"></div>
+    <!-- <Solutions :openS="openSolutions" @closeSolutions="closeSolutions($event)" :val="val" />
 
 
-    <Solutions v-if="openSolutions" :openS="openSolutions" @closeSolutions="closeSolutions($event)" :val="val" />
+    <Solutions v-if="openSolutions" :openS="openSolutions" @closeSolutions="closeSolutions($event)" :val="val" /> -->
     <RemoveFromWork v-if="openRemoveFromWork" :openRemoveFromWork="openRemoveFromWork"
       @closeRemoveSolutions="closeRemoveSolutions($event)" :val="solutionIdRemove" />
     <DeleteTask v-if="openDeleteTask" :openDeleteT="openDeleteTask" @closeDeleteTask="closeDeleteTask($event)"
@@ -154,13 +125,9 @@
 </template>
 
 <script>
-  //  import flatPickr from 'vue-flatpickr-component';
-  //   import 'flatpickr/dist/flatpickr.css';
-  //   import { Russian } from "flatpickr/dist/l10n/ru.js"
-
   import {
     UserIcon,
-    EyeIcon,
+    // EyeIcon,
     ChevronDownIcon
   } from 'vue-feather-icons'
 
@@ -168,10 +135,11 @@
     mapGetters
   } from 'vuex'
 
-  import Solutions from './AllSolutions'
+  // import Solutions from './AllSolutions'
   import RemoveFromWork from './RemoveFromWork'
-  import Tasks from './Tasks/Tasks'
+  // import Tasks from './Tasks/Tasks'
   import DeleteTask from './Tasks/DeleteTask'
+
   import {
     SsSelect,
     SsSelectToggle,
@@ -182,7 +150,7 @@
 
   export default {
     name: 'popup',
-    props: ['open', 'val', 'tab'],
+    props: ['open', 'val'],
     data: () => ({
       openSolutions: false,
       showTasks: false,
@@ -221,19 +189,18 @@
     }),
     components: {
       UserIcon,
-      EyeIcon,
+      // EyeIcon,
       ChevronDownIcon,
 
-      Solutions,
+      // Solutions,
       RemoveFromWork,
-      Tasks,
+      // Tasks,
       DeleteTask,
 
       SsSelect,
       SsSelectToggle,
       SsSelectOption,
       // SsSelectSearchInput
-      // flatPickr
     },
     computed: {
       ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404', 'allUsers', 'currentSolution', 'tasks']),
@@ -305,130 +272,11 @@
       closeSolutions() {
         this.openSolutions = false
       },
-      toggleTab(value) {
-        console.log(value);
-        this.$emit('changeTab', value)
-      },
     }
   }
 </script>
 
 <style scoped lang="scss">
-  .tab {
-    height: 51px !important;
-    padding: 0 !important;
-    display: flex;
-    flex-direction: row !important;
-    justify-content: flex-start !important;
-    // background-color: #F2F2F2;
-    border-radius: 12px;
-    margin-left: -42px;
-    // width: 42%;
-
-    .btnTab {
-      width: fit-content;
-      border-radius: 12px;
-      background-color: #F2F2F2;
-      margin: 0;
-      color: #828282;
-      font-family: 'GothamPro';
-      font-size: 18px;
-      line-height: 24px;
-      letter-spacing: 0.15px;
-      height: 100%;
-      margin-left: 17px;
-
-    }
-
-  }
-
-  .tabDiv {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-    width: 50%;
-    align-items: center;
-    justify-content: center;
-    background-color: #F2F2F2;
-    cursor: pointer;
-    border-radius: 12px 12px 0px 0px;
-
-    img {
-      height: fit-content;
-      cursor: pointer;
-    }
-
-  }
-
-  .active {
-    background-color: #fff !important;
-    border-radius: 12px 12px 0 0px;
-
-    .btnTab {
-      background-color: #fff;
-      color: #4EAD96;
-      font-family: 'GothamPro-Medium';
-
-    }
-
-    svg {
-      color: #4EAD96;
-    }
-  }
-
-
-  .tabDiv::before {
-    content: '';
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 70%;
-    height: 100%;
-    border-style: solid;
-    border-color: #eee;
-    border-width: 0px 0px 0px 2px;
-    ;
-    border-radius: 12px 0 0 0;
-
-    background-color: inherit;
-    z-index: -1;
-  }
-
-  .tabDiv::after {
-    content: '';
-    display: block;
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 70%;
-    height: 100%;
-    border-style: solid;
-    border-color: #eee;
-    border-width: 0px 2px 0px 0;
-    border-radius: 0 12px 0 0;
-
-    background-color: inherit;
-    z-index: -1;
-  }
-
-  .tabDiv.active {
-
-    z-index: 10;
-  }
-
-  .tab.active::before,
-  .tab.active::after {
-    background-color: #fff;
-    border-bottom-color: #fff;
-  }
-
-  // .tab:not([class='active']):hover::before,
-  // .tab:not([class='active']):hover::after {
-  //     background-color: #efefef; 
-  // }
-
-
 
   div {
     padding: 0;
@@ -442,6 +290,7 @@
 
   #remove {
     display: none;
+    margin: auto;
 
     span {
       margin: 0;
@@ -523,7 +372,7 @@
 
   .subt {
     margin-bottom: 35px;
-    margin-top: 35px;
+    // margin-top: 35px;
     // margin-left: 29px !important;
     margin-left: 29px;
 
@@ -702,9 +551,8 @@
   }
 
   .close {
-    // margin: 1rem 1rem 1rem auto;
+    margin: 1rem 1rem 1rem auto;
     padding: 0;
-    margin: auto;
     font-size: 20px;
   }
 
@@ -910,11 +758,6 @@
   @media (max-width: 1300px) {
     * {
       font-size: 13px;
-    }
-
-    .tab .btnTab,
-    .modal-title {
-      font-size: 14px;
     }
 
     .subtitle1 {

@@ -21,3 +21,9 @@ import NoneLayout from '@/layouts/NoLayout'
   }
 
 </script>
+<style>
+  .form-control.input {
+    border-radius: 0 10px 10px 0 !important;
+    background-color: transparent;
+  }
+</style>

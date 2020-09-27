@@ -28,8 +28,6 @@
     </div>
 
     <div class="container">
-
-
       <div id="accordion">
         <div class="card" id="card" v-for="(group, idx) in paginatedDataGroups" :key="idx">
           <div class="card-header row" id="heading">
@@ -55,7 +53,6 @@
               </h5>
             </div>
             <div class="short-name col-4">
-              <!-- style="width: fit-content;" -->
               <input class="form-control input-name" :id="'groupshort'+group.id"
                 @keyup.enter="event => {editGroupShort(group.short_name, group.id, event)}" v-model="group.short_name"
                 @focus="onFocusInput($event)"
@@ -138,12 +135,6 @@
                         </div>
                       </ss-select>
                     </div>
-
-
-                    <!-- <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOneAdd"
-                    aria-expanded="false" aria-controls="collapseOneAdd">
-                    <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
-                  </button> -->
                   </h5>
                 </div>
 
@@ -158,10 +149,6 @@
           </div>
         </div>
       </div>
-
-
-
-
     </div>
 
 
@@ -433,7 +420,6 @@
     width: inherit;
     margin: auto;
     height: auto;
-    // margin-right: 20px;
   }
 
   .name {
@@ -447,14 +433,11 @@
 
   .input-btn {
     border: none;
-    // width: 35px;
     width: auto;
     height: 32px;
     margin-left: 8px;
     background-color: #F4F4F4;
     border-radius: 8px;
-    // font-size: 27px;
-    // align-items: center;
 
     svg {
       color: #4F4F4F;
@@ -464,7 +447,6 @@
 
   .hidden {
     visibility: hidden;
-    // width: 90px;
   }
 
   .flex {
@@ -472,13 +454,10 @@
     visibility: visible;
   }
 
-
   #remove {
     display: none;
     margin: 0;
     justify-content: flex-end;
-    // align-items: center;
-    // margin-bottom: 5px;
     margin-top: 5px;
   }
 
@@ -495,15 +474,10 @@
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #4F4F4F;
-    // margin-bottom: 15px;
     display: flex;
     justify-content: space-between;
-    // padding-left: 45px;
     padding-left: 68px;
-    // margin-left: 10px;
-    // width: 100%;
     height: auto;
-
 
     width: 79%;
     margin: 0 auto 15px;
@@ -591,7 +565,6 @@
     svg {
       color: #9b9b9b;
       cursor: pointer;
-      // margin: 0 10px;
     }
   }
 
@@ -603,15 +576,12 @@
     cursor: pointer;
     background-color: #fff;
     border-radius: 8px;
-    // width: fit-content;
     width: 100%;
   }
 
   .input-name:active,
   .input-name:focus {
     background-color: #F4F4F4;
-    // width: 100%;
-
   }
 
   ::-webkit-scrollbar {
@@ -632,7 +602,6 @@
 
   .selectResponsible {
     display: flex;
-    // background-color: #F6F6F6;
     padding-left: 10px;
     font-size: 16px;
     line-height: 24px;
@@ -641,18 +610,14 @@
 
 
     #ss-select {
-      // padding-left: 8px;
       align-items: center;
       display: flex;
       height: 36px;
-      // background-color: #F4F4F4;
       background-color: #fff;
       border-radius: 10px;
       text-align: center;
-      // padding-right: 0;
       width: fit-content;
       border-radius: 8px;
-      // min-width: 231px;
       justify-content: space-between;
       padding: 0;
 
@@ -690,16 +655,9 @@
 
   }
 
-  // #iconUser {
-  // position: relative;
-  // }
   #plusIcon {
-    //  position: absolute;
-    //  top: 0%;
-    //  right: -34%;
     vertical-align: super;
     margin-right: 11px;
-
   }
 
   // from Groups
@@ -710,10 +668,7 @@
     font-size: 24px;
     line-height: 24px;
     letter-spacing: 0.15px;
-    // margin-bottom: 59px;
     color: #4F4F4F;
-    // margin-left: 55px;
-    // width: 71%;
     margin: 0 auto 59px;
   }
 
@@ -740,13 +695,11 @@
     width: fit-content;
     height: fit-content;
     margin: 0;
-
   }
 
   .collapsed {
     transform: rotate(180deg);
     padding-left: 16px;
-
   }
 
   .icons {

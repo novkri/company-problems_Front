@@ -1,105 +1,131 @@
 <template>
-      <div class="sidebar col">
-        <div class="links">
-          <div class="main">
-            <router-link to="/" exact>Проблемы</router-link>
-          </div>
-          <div class="groups">
-            <a href="#">Проекты</a>
-            <a href="#">Отделы</a>
-            <a href="#">Команды</a>
-          </div>
-          <div class="info">
-            <router-link to="/groups">Список подразделений</router-link>
-            <a href="#">Статистика</a>
-          </div>
-          <div class="footer">
-            <a href="#">Помощь</a>
-            <a href="#">Выйти из системы</a>
-          </div>
-        </div>
-        
+  <div class="sidebar col">
+    <div class="links">
+
+
+      <div class="main">
+        <ul>
+          <li>Списки проблем:</li>
+          <li>-Предложенные мной</li>
+          <li>-На рассмотрении</li>
+          <li>-Для исполнения</li>
+          <li>-По подразделениям</li>
+        </ul>
+
+        <router-link to="/" exact>Проблемы</router-link>
+        <ul>
+          <li><router-link to="/" exact>Все</router-link></li>
+          <li v-for="(group, idx) in groups" :key="idx">
+            {{group.name}}
+          </li>
+        </ul>
       </div>
-    
+      <div class="groups">
+        <a href="#">Проекты</a>
+        <a href="#">Отделы</a>
+        <a href="#">Команды</a>
+      </div>
+      <div class="info">
+        <router-link to="/groups">Список подразделений</router-link>
+        <a href="#">Статистика</a>
+      </div>
+      <div class="footer">
+        <a href="#">Помощь</a>
+        <a href="#">Выйти из системы</a>
+      </div>
+    </div>
+
+  </div>
+
 </template>
 
 <script>
-//   import {
-//     LogOutIcon 
-//   } from 'vue-feather-icons'
-//     import {
-//     mapGetters
-//   } from 'vuex'
+  //   import {
+  //     LogOutIcon 
+  //   } from 'vue-feather-icons'
+  import {
+    mapGetters
+  } from 'vuex'
 
   export default {
-      name: 'sidebar'
-//     components: {
-//       LogOutIcon 
-//     },
-//     computed: {
-//        ...mapGetters(['user']),
-//       isLoggedIn: function () {
-//         return this.$store.getters.isLoggedIn
-//       },
-//       userLoggedIn: function () {
-//         return JSON.parse(localStorage.getItem('user'))
-//       }
-//     },
+    name: 'sidebar',
+    //     components: {
+    //       LogOutIcon 
+    //     },
+    computed: {
+      ...mapGetters(['groups']),
+      //       isLoggedIn: function () {
+      //         return this.$store.getters.isLoggedIn
+      //       },
+      //       userLoggedIn: function () {
+      //         return JSON.parse(localStorage.getItem('user'))
+      //       }
+    },
 
-//     methods: {
-//       logout: function () {
-//         this.$store.dispatch('logout')
-//           .then(() => {
-//             this.$router.push('/login')
-//           })
-//       }
-//     },
+    //     methods: {
+    //       logout: function () {
+    //         this.$store.dispatch('logout')
+    //           .then(() => {
+    //             this.$router.push('/login')
+    //           })
+    //       }
+    //     },
   }
 </script>
 
 <style lang="scss">
-.body {
-  display: flex;
-}
-.sidebar {
-  max-width: 280px;
-  background-color: #F6F7F9;
-  padding: 0;
-  height: 100vh;
+  .body {
+    display: flex;
+  }
 
-  a {
-    margin-bottom: 17px;
-    font-family: 'GothamPro';
-    font-size: 18px;
-    line-height: 24px;
-    letter-spacing: 0.15px;
-    color: #4F4F4F;
+  .sidebar {
+    max-width: 280px;
+    background-color: #F6F7F9;
+    padding: 0;
+    height: 100vh;
+    padding-left: 20px;
+    padding-right: 16px;
+
+    a {
+      margin-bottom: 17px;
+      font-family: 'GothamPro';
+      font-size: 18px;
+      line-height: 24px;
+      letter-spacing: 0.15px;
+      color: #4F4F4F;
+    }
+
+    a:hover {
+      color: #4F4F4F;
+    }
+
+    .router-link-active {
+      font-family: 'GothamPro-Medium';
+    }
+
+    .links {
+      display: flex;
+      flex-direction: column;
+      height: 77vh;
+      justify-content: space-between;
+      padding-top: 60px;
+      padding-left: 30px;
+      // padding: 60px 30px 0;
+    }
+
+
+    .groups {
+      padding-left: 13px;
+    }
+
+    .groups,
+    .info,
+    .footer {
+      display: flex;
+      flex-direction: column;
+    }
   }
-  a:hover {
-    color: #4F4F4F;
-  }
-.router-link-active {
-    font-family: 'GothamPro-Medium';
-  }
-  .links {
-    display: flex;
-    flex-direction: column;
-    height: 77vh;
-    justify-content: space-between;
-    padding-top: 60px;
-    padding-left: 30px;
-    // padding: 60px 30px 0;
-  }
-  
-  
-  .groups {
-    padding-left: 13px;
-  }
-  .groups, .info, .footer {
-    display: flex;
-    flex-direction: column;
-  }
-}
+
   #remove {
     display: none;
 
@@ -132,12 +158,13 @@
 
     .user {
       position: relative;
-          top: 50%;
+      top: 50%;
       padding: 6px 25px;
       background-color: #fff;
       border-radius: 5px;
       height: 36px;
       margin-right: -10px;
+
       span {
         font-family: 'GothamPro';
         font-size: 18px;
@@ -146,9 +173,10 @@
         color: #4F4F4F;
       }
     }
+
     .logout {
       position: relative;
-          top: 50%;
+      top: 50%;
       width: 59px;
       height: 59px;
       background: #B3C3E4;
@@ -157,6 +185,7 @@
       display: flex;
       cursor: pointer;
       z-index: 3;
+
       svg {
         margin: auto;
         justify-content: center;
@@ -232,7 +261,8 @@
     margin-bottom: 3px;
     caret-color: #92D2C3;
 
-    &:focus, &:active {
+    &:focus,
+    &:active {
       box-shadow: none;
       border-bottom: none;
 
@@ -252,7 +282,7 @@
       box-shadow: none;
       border-bottom: 2px solid #92D2C3;
     }
-   
+
   }
 
   .error {
@@ -306,20 +336,21 @@
   //     font-size: 15px;
   //   }
   // }
-    #ss-select {
+  #ss-select {
     align-items: center;
     display: flex;
     height: 36px;
     border-radius: 10px;
     display: flex;
     padding: 0;
-        width: fit-content;
+    width: fit-content;
   }
-    section {
+
+  section {
     width: max-content;
     padding: 22px;
     // width: 250px;
-        // width: 215px;
+    // width: 215px;
     position: absolute;
     max-height: 257px;
     // right: -19%;
@@ -344,17 +375,19 @@
     * {
       font-size: 13px;
     }
-    .navbar .user span, .sidebar a {
+
+    .navbar .user span,
+    .sidebar a {
       font-size: 14px;
     }
 
     .form-control {
-        font-size: 14px !important;
-      }
-      .footer {
-        margin-top: 60px !important;
-      }
+      font-size: 14px !important;
+    }
+
+    .footer {
+      margin-top: 60px !important;
+    }
 
   }
-
 </style>
