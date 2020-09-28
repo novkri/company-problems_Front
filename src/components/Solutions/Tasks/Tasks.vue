@@ -17,8 +17,23 @@
         <li id="list" v-for="(task, idx) in tasks" :key="idx">
           <div class="task-title col-5"
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">
-            <input class="form-control" @focus="onFocusInput($event)" @keyup.enter="event => onKey(event)"
-              @blur="editTask(task)" v-model="task.description">
+            <!-- <input class="form-control" @focus="onFocusInput($event)" @keyup.enter="event => onKey(event)"
+              @blur="editTask(task)" v-model="task.description"> -->
+            <div @click="onClickInput(task.id)" v-show="!editable">{{task.description}}</div>
+            <input v-show="editable" class="form-control" v-model="task.description" :ref="'textarea_task' + task.id"
+              @keyup.enter.prevent="event => {editTask(task.description, task.id, event)}" @focus="onFocusInput($event)"
+              @blur="event => {onBlurInput(task.description, task.id, event)}" />
+            <div class="hidden">
+              <button class="input-btn" @mousedown="event => {editTask(task.description, task.id, event)}">
+                <check-icon size="1x" class="custom-class"></check-icon>
+              </button>
+              <div @mousedown="event => onClear(event, task.id)">
+                <button class="input-btn">
+                  <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
+                </button>
+              </div>
+            </div>
+
           </div>
 
           <div class="select col-2" style="position: relative;" ref="select">
@@ -47,14 +62,12 @@
 
           <div class="dateDiv col-2">
             <input type="date" id="start" name="trip-start" class="date" onkeypress="return false"
-              @click="onClickDate($event)" @change="changeDeadlineTask(task.deadline, task.id)"
-              v-model="task.deadline">
+              @click="onClickDate($event)" @change="changeDeadlineTask(task.deadline, task.id)" v-model="task.deadline">
           </div>
 
           <div class="selectResponsible col-2">
             <ss-select v-model="task.executor_id" :options="allUsersReduced" track-by="name" search-by="name"
-              @change="selectExecutorTask(task)" disable-by="disabled" id="ss-select"
-              style="width: fit-content;">
+              @change="selectExecutorTask(task)" disable-by="disabled" id="ss-select" style="width: fit-content;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                 @click="onClickExecutor(selectedOption)" style="cursor: pointer; width: 100%;">
                 <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between"
@@ -94,8 +107,8 @@
 
           <div v-else class="inputAdd">
             <div style="display: flex;">
-              <input type="text" placeholder="Добавить задачу" class="addTask" @input="enableAddBtn" @keyup.enter="addTask"
-                v-model="formInput.taskName">
+              <input type="text" placeholder="Добавить задачу" class="addTask" @input="enableAddBtn"
+                @keyup.enter="addTask" v-model="formInput.taskName">
 
               <div class="selectsInputAdd">
                 <div class="dateDiv">
@@ -103,7 +116,7 @@
                     v-model="formInput.deadline">
                 </div>
 
-                <div class="selectResponsible" style="background-color: #fff;"> 
+                <div class="selectResponsible" style="background-color: #fff;">
                   <ss-select v-model="formInput.executor" :options="allUsersReduced" track-by="name" search-by="name"
                     disable-by="disabled" id="ss-select" style="width: fit-content; position: relative;">
                     <div
@@ -119,7 +132,7 @@
                       </ss-select-toggle>
 
                       <section v-show="isOpen" class="absolute border-l border-r min-w-full"
-                         style="top: 126%; right: -25%; width: fit-content;">
+                        style="top: 126%; right: -25%; width: fit-content;">
                         <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
                           :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
@@ -139,7 +152,8 @@
       </ol>
 
       <div type="submit" class="btnsAddTask" v-if="!addNotClicked">
-        <button id="addBtn" class="btn btnPink" @click.prevent="addTask" :disabled="!enableAddBtntn">Добавить задачу</button>
+        <button id="addBtn" class="btn btnPink" @click.prevent="addTask" :disabled="!enableAddBtntn">Добавить
+          задачу</button>
         <span @click.prevent="addNotClicked = true">Отменить</span>
       </div>
     </div>
@@ -153,6 +167,7 @@
   import {
     UserIcon,
     PlusIcon,
+    CheckIcon,
     TrashIcon,
     ChevronDownIcon
   } from 'vue-feather-icons'
@@ -172,7 +187,7 @@
     props: ['val'],
     data: () => ({
       openDeleteTask: false,
-
+      editable: false,
       addNotClicked: true,
       enableAddBtntn: false,
       inputActive: false,
@@ -202,6 +217,7 @@
     components: {
       UserIcon,
       PlusIcon,
+      CheckIcon,
       TrashIcon,
       ChevronDownIcon,
 
@@ -258,7 +274,7 @@
       onClickDate(event) {
         this.currentDate = event.target.value
         this.currentDateInput = event.target
-      }, 
+      },
       async changeDeadlineTask(deadline, id) {
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('changeDeadlineTask', {
@@ -295,19 +311,48 @@
       },
 
 
+      // onFocusInput(event) {
+      //   this.currentTaskName = event.target.value
+      //   this.currentTaskInput = event.target
+      // },
+      // onKey(event) {
+      //   event.target.blur()
+      // },
+      onClickInput(id) {
+        this.editable = true
+        console.log(this.$refs['textarea_task' + id][0].focus())
+        this.$nextTick(() => {
+          this.$refs['textarea_task' + id][0].focus()
+        })
+      },
+
+      onBlurInput(name, id, event) {
+        this.editable = false
+        event.path[0].nextElementSibling.classList.remove('flex')
+        this.$store.commit('editSolutionOther', {
+          name: this.currentTaskName,
+          id
+        })
+      },
       onFocusInput(event) {
         this.currentTaskName = event.target.value
         this.currentTaskInput = event.target
+
+        console.log(this.currentTaskName, this.currentTaskInput);
+        event.path[0].nextElementSibling.classList.add('flex')
       },
-      onKey(event) {
-        event.target.blur()
+
+      onClear(event, id) {
+        event.preventDefault()
+        this.$refs['textarea_task' + id][0].value = this.currentTaskName
       },
+
       async editTask(task) {
         if (task.description !== this.currentTaskName) {
           await this.$store.commit('setError404', '')
           await this.$store.dispatch('editTask', {
-              description: task.description,
-              id: task.id
+            description: task.description,
+            id: task.id
           }).catch(() => {
             this.$store.commit('editTask', {
               description: this.currentTaskName,
@@ -330,7 +375,34 @@
 </script>
 
 <style scoped lang="scss">
+  .input-btn {
+    border: none;
+    width: auto;
+    height: 32px;
+    margin-left: 8px;
+    background-color: #e2e2e2;
+    border-radius: 8px;
 
+    svg {
+      color: #4F4F4F;
+      vertical-align: text-top;
+    }
+  }
+
+  .hidden {
+    display: flex;
+    visibility: hidden;
+    flex-direction: row;
+  }
+
+  .flex {
+    display: flex;
+    visibility: visible;
+  }
+
+  #closeIcon {
+    transform: rotate(45deg);
+  }
 
   #remove {
     display: none;

@@ -37,21 +37,20 @@
                 <div class="desc" ref="desc">
                   <span>Решение: </span>
                   <div @click="onClickInput(solution.id)" v-show="!editable">{{solution.name}}</div>
-                  <input v-show="editable" class="form-control" :id="'textarea'+solution.id" v-model="solution.name" :ref="'textarea' + solution.id"
-                    @keyup.enter.prevent="event => {editSolClick(solution.name, solution.id, event)}"
-                    @focus="onFocusInput($event)" @blur="event => {onBlurInput(solution.name, solution.id, event)}"
-                    :class="{ 'form-control--error': solution.name.length < 6 ||  solution.name.length > 250 || solution.name.length == 0}" />
+                  <input v-show="editable" class="form-control" :id="'textarea'+solution.id" v-model="solution.name"
+                    :ref="'textarea' + solution.id"
+                    @keyup.enter="event => {editSolClick(solution.name, solution.id, event)}"
+                    @focus="onFocusInput($event)" @blur="event => {onBlurInput(solution.name, solution.id, event)}" />
                   <div class="hidden">
-                      <button class="input-btn"
-                        @mousedown="event => {editSolClick(solution.name, solution.id, event)}">
-                        <check-icon size="1x" class="custom-class"></check-icon>
+                    <button class="input-btn" @mousedown="event => {editSolClick(solution.name, solution.id, event)}">
+                      <check-icon size="1x" class="custom-class"></check-icon>
+                    </button>
+                    <div @mousedown="event => onClear(event, solution.id)">
+                      <button class="input-btn">
+                        <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
                       </button>
-                      <div @mousedown="event => onClear(event, solution.id)">
-                        <button class="input-btn">
-                          <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
-                        </button>
-                      </div>
                     </div>
+                  </div>
                 </div>
               </div>
 
@@ -142,8 +141,8 @@
     // EyeIcon,
     AwardIcon,
     ChevronDownIcon,
-          PlusIcon,
-      CheckIcon,
+    PlusIcon,
+    CheckIcon,
   } from 'vue-feather-icons'
 
   import {
@@ -213,7 +212,7 @@
       // EyeIcon,
       AwardIcon,
       ChevronDownIcon,
-            PlusIcon,
+      PlusIcon,
       CheckIcon,
 
       // Solutions,
@@ -288,19 +287,18 @@
         this.$store.commit('editSolutionOther', {
           name: this.currentSolutionName,
           id
-        }) 
+        })
       },
       onFocusInput(event) {
         this.currentSolutionName = event.target.value
         this.currentSolutionInput = event.target
 
-        console.log(this.currentSolutionName,this.currentSolutionInput );
         event.path[0].nextElementSibling.classList.add('flex')
       },
 
       onClear(event, id) {
         event.preventDefault()
-        document.getElementById('textarea' + id).value = this.currentSolutionName 
+        document.getElementById('textarea' + id).value = this.currentSolutionName
       },
 
       async editSolClick(name, id) {
@@ -312,19 +310,18 @@
             id
           })
           .then(() => {})
-          // .catch(() => {
-          //   this.$store.commit('editSolutionOther', {
-          //     name: this.currentSolutionName,
-          //     id
-          //   })
-          // })
+        // .catch(() => {
+        //   this.$store.commit('editSolutionOther', {
+        //     name: this.currentSolutionName,
+        //     id
+        //   })
+        // })
       },
     }
   }
 </script>
 
 <style scoped lang="scss">
-
   div {
     padding: 0;
   }
@@ -498,14 +495,12 @@
     display: flex;
     flex-direction: row;
     width: fit-content;
-    // margin-right: 57px;
     font-family: 'GothamPro-Medium';
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #4F4F4F;
-    // width: 420px;
-        width: 95%;
+    width: 95%;
 
     span {
       font-family: "GothamPro";
@@ -630,7 +625,8 @@
     display: flex;
     visibility: visible;
   }
-    #closeIcon {
+
+  #closeIcon {
     transform: rotate(45deg);
   }
 
@@ -812,8 +808,6 @@
   input:focus {
     background-color: #f0f0f0 !important;
   }
-
-
 
 
 

@@ -81,8 +81,20 @@
                       <div id="collapsePlan" class="collapse show" aria-labelledby="headingPlan" data-parent="#plan"
                         style="width: 100%;">
                         <div class="card-body">
-                          <textarea name="" id="" cols="30" rows="10"></textarea>
-                          +buttons
+                          <textarea cols="30" rows="10" :ref="'textarea_plan'+problem.id"
+                            @focus="event => onFocusTextarea(event)"
+                            @blur="event => {onBlurTextarea( event, 'plan')}"></textarea>
+                          <div class="hidden">
+                            <button class="input-btn" @mousedown="event => {editPlan(plan, event)}">
+                              <check-icon size="1x" class="custom-class"></check-icon>
+                            </button>
+                            <div @mousedown="event => onClear(event, problem.id, 'plan')">
+                              <button class="input-btn">
+                                <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
+                              </button>
+                            </div>
+                          </div>
+
                         </div>
                       </div>
                     </div>
@@ -109,16 +121,57 @@
                         data-parent="#results">
                         <div class="card-body row" style="flex-direction: row;">
                           <div class="col-4" style="flex-direction: column;">
-                            <textarea name="" id="" cols="30" rows="10"></textarea>
-                            +buttons
+                            <textarea cols="30" rows="10" :ref="'textarea_team'+problem.id"
+                              @focus="event => onFocusTextarea(event)"
+                              @blur="event => {onBlurTextarea(event, 'team')}"></textarea>
+                            <div class="hidden">
+                              <button class="input-btn" @mousedown="event => {editTeam(team, event)}">
+                                <check-icon size="1x" class="custom-class"></check-icon>
+                              </button>
+                              <div @mousedown="event => onClear(event, problem.id, 'team')">
+                                <button class="input-btn">
+                                  <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
+                                </button>
+                              </div>
+                            </div>
+
+
+
                           </div>
                           <div class="col-4" style="flex-direction: column;">
-                            <textarea name="" id="" cols="30" rows="10"></textarea>
-                            +buttons
+                            <!-- v-model="solution.name"  :ref="'textarea' + solution.id" -->
+                            <!-- exprnce, -->
+                            <textarea cols="30" rows="10" :ref="'textarea_exp'+problem.id"
+                              @focus="event => onFocusTextarea(event)"
+                              @blur="event => {onBlurTextarea( event, 'exp')}"></textarea>
+                            <div class="hidden">
+                              <button class="input-btn"
+                                @mousedown="event => {editExp(solution.name, solution.id, event)}">
+                                <check-icon size="1x" class="custom-class"></check-icon>
+                              </button>
+                              <div @mousedown="event => onClear(event, problem.id, 'exp')">
+                                <button class="input-btn">
+                                  <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
+                                </button>
+                              </div>
+                            </div>
                           </div>
                           <div class="col-4" style="flex-direction: column;">
-                            <textarea name="" id="" cols="30" rows="10"></textarea>
-                            +buttons
+                            <textarea cols="30" rows="10" :ref="'textarea_result'+problem.id"
+                              @focus="event => onFocusTextarea(event)"
+                              @blur="event => {onBlurTextarea(event, 'result')}"></textarea>
+                            <div class="hidden">
+                              <button class="input-btn" @mousedown="event => {editResult(result, event)}">
+                                <check-icon size="1x" class="custom-class"></check-icon>
+                              </button>
+                              <div @mousedown="event => onClear(event, problem.id, 'result')">
+                                <button class="input-btn">
+                                  <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
+                                </button>
+                              </div>
+                            </div>
+
+
                           </div>
                           <button class="btn btnMain">Проблема решена</button>
                         </div>
@@ -226,7 +279,8 @@
     ChevronRightIcon,
     ChevronLeftIcon,
     FileTextIcon,
-    ClockIcon
+    ClockIcon,
+    CheckIcon,
   } from 'vue-feather-icons'
 
   export default {
@@ -242,7 +296,9 @@
       pageNumber: 0,
       size: 25,
 
-      checkedGroups: []
+      checkedGroups: [],
+
+      currentTextarea: '',
     }),
     components: {
       PopupCreate,
@@ -258,6 +314,7 @@
       ChevronUpIcon,
       FileTextIcon,
       ClockIcon,
+      CheckIcon,
 
       HalfCircleSpinner
     },
@@ -365,11 +422,102 @@
           groupsArray
         })
       },
+
+      onFocusTextarea(event) {
+        this.currentTextarea = event.target.value
+        console.log(this.currentTextarea);
+        event.path[0].nextElementSibling.classList.add('flex')
+      },
+
+// name, 
+      onBlurTextarea(event, type) {
+        console.log(event);
+        event.path[0].nextElementSibling.classList.remove('flex')
+
+        switch (type) {
+          case 'exp':
+            console.log('blur');
+            // this.$store.commit('editSolutionOther', {
+            //   name: this.currentSolutionName,
+            //   id
+            // })
+            break;
+          case 'plan':
+            console.log(this.currentTextarea);
+            break;
+          case 'team':
+            console.log(this.currentTextarea);
+            break;
+          case 'result':
+            console.log(this.currentTextarea);
+            break;
+          default:
+            alert("Нет таких значений");
+        }
+      },
+
+      onClear(event, id, type) {
+        event.preventDefault()
+        switch (type) {
+          case 'exp':
+            this.$refs['textarea_exp' + id][0].value = this.currentTextarea
+            break;
+          case 'plan':
+            this.$refs['textarea_plan' + id][0].value = this.currentTextarea
+            break;
+          case 'team':
+            this.$refs['textarea_team' + id][0].value = this.currentTextarea
+            break;
+          case 'result':
+           this.$refs['textarea_result' + id][0].value = this.currentTextarea
+            break;
+          default:
+            alert("Нет таких значений");
+        }
+      },
+
+
     }
   };
 </script>
 
 <style scoped lang="scss">
+  .input-btn {
+    border: none;
+    width: auto;
+    height: 32px;
+    margin-left: 8px;
+    background-color: #e2e2e2;
+    border-radius: 8px;
+
+    svg {
+      color: #4F4F4F;
+      vertical-align: text-top;
+    }
+  }
+
+  .hidden {
+    display: flex;
+    visibility: hidden;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .flex {
+    display: flex;
+    visibility: visible;
+  }
+
+  #closeIcon {
+    transform: rotate(45deg);
+  }
+
+  textarea {
+    outline: none;
+    border: none;
+    resize: none;
+  }
+
   .half-circle-spinner {
     margin: auto;
   }
