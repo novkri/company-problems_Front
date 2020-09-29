@@ -1,155 +1,253 @@
 <template>
-    <div id="nav">
-      <nav class="navbar navbar-light" v-if="isLoggedIn">
-        <div class="user">
-          <span>Вы вошли как: {{userLoggedIn.surname}} {{userLoggedIn.name}}
-            {{userLoggedIn.father_name}}</span>
+  <div id="nav">
+    <div class="dropdown">
+      <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        Меню
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+        <div class="links">
+          <div class="main">
+            <ul>
+              <li>Списки проблем:</li>
+              <li>-Предложенные мной</li>
+              <li>-На рассмотрении</li>
+              <li>-Для исполнения</li>
+              <li>-По подразделениям</li>
+            </ul>
+
+            <router-link to="/" exact>Проблемы</router-link>
+            <ul>
+              <li>
+                <router-link to="/" exact>Все</router-link>
+              </li>
+              <li v-for="(group, idx) in groups" :key="idx">
+                {{group.name}}
+              </li>
+            </ul>
+          </div>
+          <div class="groups">
+            <a href="#">Проекты</a>
+            <a href="#">Отделы</a>
+            <a href="#">Команды</a>
+          </div>
+          <div class="info">
+            <router-link to="/groups">Список подразделений</router-link>
+            <a href="#">Статистика</a>
+          </div>
+          <div class="footer">
+            <a href="#">Помощь</a>
+            <a href="#">Выйти из системы</a>
+          </div>
         </div>
-        <div class="logout" @click="logout">
-          <log-out-icon size="1.5x" class="custom-class"></log-out-icon>
-        </div>
-      </nav>
+      </div>
     </div>
+    <nav class="navbar navbar-light">
+      <!-- <div class="user">
+        <span>Вы вошли как: {{userLoggedIn.surname}} {{userLoggedIn.name}}
+          {{userLoggedIn.father_name}}</span>
+      </div>
+      <div class="logout" @click="logout">
+        <log-out-icon size="1.5x" class="custom-class"></log-out-icon>
+      </div> -->
+      <div class="logo">
+        logo
+      </div>
+      <div v-if="$route.matched.some(({ name }) => name === 'Problems')">
+        Список проблем: (отдел)
+      </div>
+      <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')">
+        Срочность/важность:
+        <div class="select col-2" style="position: relative;" ref="select">
+          <ss-select v-model="importance" :options="statusesImportance" track-by="name" class="form-control"
+            @change="changeImportance(importance)" disable-by="disabled"
+            :class="[solution.status == 'Выполнено' ? 'green' : 'gray']" id="ss-select" style="width: fit-content;">
+            <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+              style="cursor: pointer; width: 100%;">
+              <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
+                {{ $get(selectedOption, 'name') || `${importance ? importance : 'Выбрать'}`}}
+                <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
+              </ss-select-toggle>
+
+              <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;">
+                <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index" :key="index"
+                  class="px-4 py-2 border-b cursor-pointer" :class="[
+                                pointerIndex == index ? 'bg-light text-dark' : '',
+                                $selected(option) ? 'bg-light text-dark' : '',
+                                $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
+                              ]">{{ option.name }}</ss-select-option>
+              </section>
+            </div>
+          </ss-select>
+        </div>
+      </div>
+      <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')">
+        Срок исполнения:
+      </div>
+      <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')">
+        Статус:
+      </div>
+    </nav>
+  </div>
 </template>
 
 <script>
   import {
-    LogOutIcon 
-  } from 'vue-feather-icons'
+    SsSelect,
+    SsSelectToggle,
+    SsSelectOption
+  } from 'ss-select'
+
     import {
+    ChevronDownIcon,
+  } from 'vue-feather-icons'
+
+  import {
     mapGetters
   } from 'vuex'
-  // import Home from '@/views/Home'
+
 
   export default {
+    data: () => ({
+      
+    }),
     components: {
-      LogOutIcon,
+      ChevronDownIcon,
+
+      SsSelect,
+      SsSelectToggle,
+      SsSelectOption
     },
     computed: {
-       ...mapGetters(['user']),
-      isLoggedIn: function () {
-        return this.$store.getters.isLoggedIn
-      },
-      userLoggedIn: function () {
-        return JSON.parse(localStorage.getItem('user'))
-      }
+      ...mapGetters(['groups']),
+      //   isLoggedIn: function () {
+      //     return this.$store.getters.isLoggedIn
+      //   },
+      //   userLoggedIn: function () {
+      //     return JSON.parse(localStorage.getItem('user'))
+      //   }
     },
+    // mounted() {
+    //   console.log(this.$route);
+    // }
 
-    methods: {
-      logout: function () {
-        this.$store.dispatch('logout')
-          .then(() => {
-            this.$router.push('/login')
-          })
-      }
-    },
+    // methods: {
+    //   logout: function () {
+    //     this.$store.dispatch('logout')
+    //       .then(() => {
+    //         this.$router.push('/login')
+    //       })
+    //   }
+    // },
   }
 </script>
 
 <style lang="scss">
-.body {
-  display: flex;
-}
-.sidebar {
-  max-width: 280px;
-  background-color: #F6F7F9;
-  padding: 0;
-
-  a {
-    margin-bottom: 17px;
-    font-family: 'GothamPro';
-    font-size: 18px;
-    line-height: 24px;
-    letter-spacing: 0.15px;
-    color: #4F4F4F;
-  }
-  a:hover {
-    color: #4F4F4F;
-  }
-.router-link-active {
-    font-family: 'GothamPro-Medium';
-  }
-  .links {
-    display: flex;
-    flex-direction: column;
-    height: 77vh;
-    justify-content: space-between;
-    padding-top: 60px;
-    padding-left: 30px;
-    // padding: 60px 30px 0;
-  }
-  
-  
-  .groups {
-    padding-left: 13px;
-  }
-  .groups, .info, .footer {
-    display: flex;
-    flex-direction: column;
-  }
-}
-  #remove {
-    display: none;
-
-    span {
-      margin: 0;
-      color: #848484;
-      font-size: 26px;
-    }
-  }
-
-  #list:hover #remove {
+  .body {
     display: flex;
   }
 
-
-  #app {
-    font-family: 'GothamPro', sans-serif;
-    font-size: 18px;
-    line-height: 17px;
-    font-weight: 500;
-    letter-spacing: 0.15px;
+  #nav {
+    background-color: #fff;
+    display: flex;
+    flex-direction: row;
+    height: 70px;
+    box-shadow: 0px 4px 8px rgba(31, 23, 83, 0.15);
+    position: relative !important;
+    padding: 21px 26px 22px 25px;
+    z-index: 2;
   }
 
   .navbar {
-    justify-content: flex-end;
-    padding: 0rem 3rem;
-    position: relative;
-    height: 70px;
-    background-color: #C1CFEC;
+    width: 100%;
+    display: flex;
+    justify-content: space-between !important;
+  }
 
-    .user {
-      position: relative;
-          top: 50%;
-      padding: 6px 25px;
-      background-color: #fff;
-      border-radius: 5px;
-      height: 36px;
-      margin-right: -10px;
-      span {
-        font-family: 'GothamPro';
-        font-size: 18px;
-        line-height: 24px;
-        letter-spacing: 0.15px;
-        color: #4F4F4F;
+  //   justify-content: flex-end;
+  //   padding: 0rem 3rem;
+  //   position: relative;
+  //   height: 70px;
+
+  //   .user {
+  //     position: relative;
+  //     top: 50%;
+  //     padding: 6px 25px;
+  //     background-color: #fff;
+  //     border-radius: 5px;
+  //     height: 36px;
+  //     margin-right: -10px;
+
+  //     span {
+  //       font-family: 'GothamPro';
+  //       font-size: 18px;
+  //       line-height: 24px;
+  //       letter-spacing: 0.15px;
+  //       color: #4F4F4F;
+  //     }
+  //   }
+
+  //   .logout {
+  //     position: relative;
+  //     top: 50%;
+  //     width: 59px;
+  //     height: 59px;
+  //     background: #B3C3E4;
+  //     border-radius: 50%;
+  //     text-align: center;
+  //     display: flex;
+  //     cursor: pointer;
+  //     z-index: 3;
+
+  //     svg {
+  //       margin: auto;
+  //       justify-content: center;
+  //       color: white;
+  //     }
+  //   }
+  // }
+
+  .dropdown {
+    display: none;
+    align-self: flex-end;
+  }
+
+  .btn-info,
+  .btn-info:active {
+    color: #000;
+    font-family: 'GothamPro-Medium';
+    background-color: #B3C3E4;
+    border: none;
+  }
+
+  .dropdown-menu {
+    background-color: #EBEBEB;
+    width: max-content;
+  }
+
+  .links {
+    padding: 25px;
+
+    div {
+      display: flex;
+      flex-direction: column;
+    }
+
+    ul {
+      padding: 0;
+      list-style-type: none;
+
+      li {
+        margin-bottom: 6px;
       }
     }
-    .logout {
-      position: relative;
-          top: 50%;
-      width: 59px;
-      height: 59px;
-      background: #B3C3E4;
-      border-radius: 50%;
-      text-align: center;
-      display: flex;
-      cursor: pointer;
-      z-index: 3;
-      svg {
-        margin: auto;
-        justify-content: center;
-        color: white;
-      }
+
+    a {
+      font-family: 'GothamPro';
+      color: #000;
+      font-size: 14px;
+      line-height: 24px;
+      letter-spacing: 0.15px;
     }
   }
 
@@ -211,106 +309,27 @@
     box-shadow: none;
   }
 
-  .form-control {
-    border: transparent;
-    border-bottom: none;
-    border-radius: 6px;
-    background-color: #FAFAFA;
-    color: #2D453F;
-    margin-bottom: 3px;
-    caret-color: #92D2C3;
-
-    &:focus, &:active {
-      box-shadow: none;
-      border-bottom: none;
-
-    }
-  }
-
-  .form-control--valid {
-    border: transparent;
-    border-radius: 6px;
-    background-color: #FAFAFA;
-    color: #2D453F;
-    caret-color: #92D2C3;
-    border-bottom: 2px solid #92D2C3 !important;
-
-
-    &:focus {
-      box-shadow: none;
-      border-bottom: 2px solid #92D2C3;
-    }
-   
-  }
-
-  .error {
-    color: red;
-    font-family: 'Roboto';
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 24px;
-    letter-spacing: 0.15px;
-  }
-
-  form {
-    margin-right: 30px;
-    width: 85%;
-  }
-
-
-  .form-control--error {
-    border: transparent;
-    border-radius: 6px;
-    background-color: #FAFAFA;
-    color: #2D453F;
-    caret-color: #FF8585;
-    border-bottom: 2px solid #FF8585 !important;
-
-    &:focus {
-      box-shadow: none;
-      border-bottom: 2px solid #FF8585;
-    }
-  }
-
-  select:focus {
-    outline: none;
-  }
 
   body {
 
     overflow-x: hidden !important;
-    /* Hide horizontal scrollbar */
   }
 
-  // @media (max-width: 1440px) {
-  //   html {
-  //     display: flex;
-  //     flex-wrap: inherit;
-  //   }
-  // }
-  // @media (max-width: 1600px) {
-  //   * {
-  //     font-size: 15px;
-  //   }
-  // }
-    #ss-select {
+  #ss-select {
     align-items: center;
     display: flex;
     height: 36px;
     border-radius: 10px;
     display: flex;
     padding: 0;
-        width: fit-content;
+    width: fit-content;
   }
-    section {
+
+  section {
     width: max-content;
     padding: 22px;
-    // width: 250px;
-        // width: 215px;
     position: absolute;
     max-height: 257px;
-    // right: -19%;
     top: 102%;
 
     border-radius: 10px;
@@ -329,22 +348,28 @@
 
 
   @media (max-width: 1300px) {
+    .dropdown {
+      display: flex;
+    }
+
     * {
       font-size: 13px;
     }
-    .navbar .user span, .sidebar a {
+
+    .navbar .user span,
+    .sidebar a {
       font-size: 14px;
     }
 
     .form-control {
-        font-size: 14px !important;
-      }
-      .footer {
-        margin-top: 60px !important;
-      }
+      font-size: 14px !important;
+    }
+
+    .footer {
+      margin-top: 60px !important;
+    }
 
   }
-
 </style>
 
 <style>

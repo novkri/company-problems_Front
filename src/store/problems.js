@@ -59,6 +59,12 @@ export default {
     },
     changeProblemLike: (state, payload) => {
       state.problems.find(problem => problem.id == payload).is_liked = !state.problems.find(problem => problem.id == payload).is_liked
+      state.problems.find(problem => problem.id == payload).is_liked ? state.problems.find(problem => problem.id == payload).likes_count++ : state.problems.find(problem => problem.id == payload).likes_count--
+    },
+
+    /////
+    editPlan: (state, payload) => {
+      state.problems.find(problem => problem.id == payload.id).plan = payload.plan
     },
   },
 
@@ -175,5 +181,28 @@ export default {
           commit('setError404', error.response.data.message)
         })
     },
+
+    // editPlan: async ({
+    //   commit
+    // }, param) => {
+    //   return new Promise((resolve, reject) => {
+    //     axios.put(BASEURL + `/${param.id}`, {
+    //       name: param.name
+    //     }).then(response => {
+    //         commit('setError', '')
+    //         commit('setError404', '')
+    //         commit('editPlan', response.data)
+    //         resolve(response)
+    //     }).catch((error) => {
+    //       if (error.response.status !== 422) {
+    //         commit('setError404', error.response.data.message)
+    //         reject(error.response.data.message)
+    //       } else {
+    //         commit('setError', error.response.data.errors.name[0])
+    //         reject(error.response.data.errors.name[0])
+    //       }
+    //     })
+    //   })
+    // },
   }
 }

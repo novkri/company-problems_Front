@@ -55,7 +55,7 @@
               </div>
 
               <div class="select col-2" style="position: relative;" ref="select">
-                <ss-select v-model="solution.status" :options="statuses" track-by="name" search-by="name"
+                <ss-select v-model="solution.status" :options="statuses" track-by="name"
                   class="form-control" @change="changeStatus(solution.id, solution.status)" disable-by="disabled"
                   :class="[solution.status == 'Выполнено' ? 'green' : 'gray']" id="ss-select"
                   style="width: fit-content;">
@@ -86,21 +86,21 @@
               </div>
 
               <div class="selectResponsible col-2">
-                <ss-select v-model="solution.executor_id" :options="allUsers" track-by="id" search-by="id"
+                <ss-select v-model="solution.executor_id" :options="allUsers" track-by="id" search-by="surname"
                   @change="selectExecutor(solution.id, solution.executor_id)" disable-by="disabled" id="ss-select">
                   <div
                     slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                     style="cursor: pointer;">
                     <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between" id="select-toggle">
-                      <!-- <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon> -->
                       <award-icon size="1.5x" class="custom-class"></award-icon>
                       {{ $get(selectedOption, 'id') || `${allUsers.find(u => u.id == solution.executor_id) ? allUsers.find(u => u.id == solution.executor_id).surname + ' ' + allUsers.find(u => u.id == solution.executor_id).name[0] + '.' : 'Выбрать'}`}}
                     </ss-select-toggle>
 
                     <section v-show="isOpen" class="absolute border-l border-r min-w-full">
-                      <!-- <div class="px-px" >
-                              <ss-select-search-input class="w-full px-3 py-1" placeholder="Впишите имя"></ss-select-search-input>
-                            </div> -->
+                      <div class="px-px">
+                        <ss-select-search-input class="w-full px-3 py-2 search" placeholder="Впишите фамилию">
+                        </ss-select-search-input>
+                      </div>
 
                       <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
                         :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
@@ -158,8 +158,9 @@
     SsSelect,
     SsSelectToggle,
     SsSelectOption,
+    SsSelectSearchInput
   } from 'ss-select'
-  // SsSelectSearchInput
+
 
 
   export default {
@@ -198,14 +199,6 @@
           name: "Выполнено"
         }
       ],
-      // config: {
-
-      //     altInput: true,
-      //     altFormat: 'd.m.Y',
-
-      //     dateFormat: 'Y-m-d',
-      //     locale: Russian      
-      //   }, 
     }),
     components: {
       // UserIcon,
@@ -223,7 +216,7 @@
       SsSelect,
       SsSelectToggle,
       SsSelectOption,
-      // SsSelectSearchInput
+      SsSelectSearchInput
     },
     computed: {
       ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404', 'allUsers', 'currentSolution', 'tasks']),
@@ -275,7 +268,6 @@
 
       onClickInput(id) {
         this.editable = true
-        console.log(this.$refs['textarea' + id][0].focus())
         this.$nextTick(() => {
           this.$refs['textarea' + id][0].focus()
         })
@@ -542,8 +534,15 @@
       width: 100%;
       background-color: #f6f6f6;
     }
-
-
+  }
+  .search {
+    outline: none;
+    border: none;
+    background-color: #F7F7F7;
+    border-radius: 8px;
+  }
+  .cursor-pointer {
+    border-radius: 8px;
   }
 
   .selectResponsible:hover {
@@ -806,7 +805,7 @@
 
   input:active,
   input:focus {
-    background-color: #f0f0f0 !important;
+    background-color: #f0f0f0;
   }
 
 
@@ -855,6 +854,10 @@
   @media (max-width: 1300px) {
     * {
       font-size: 13px;
+
+      .middle-icons_text span {
+        font-size: 10px !important;
+      }
     }
 
     .subtitle1 {

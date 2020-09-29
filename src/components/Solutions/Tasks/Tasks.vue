@@ -37,7 +37,7 @@
           </div>
 
           <div class="select col-2" style="position: relative;" ref="select">
-            <ss-select v-model="task.status" :options="statusesT" track-by="name" search-by="name" class="form-control"
+            <ss-select v-model="task.status" :options="statusesT" track-by="name" class="form-control"
               @change="changeStatusTask(task.id, task.status)" disable-by="disabled"
               :class="[task.status == 'Выполнено' ? 'green' : task.status == 'В процессе' ? 'blue' : 'gray']"
               id="ss-select" style="width: fit-content;">
@@ -66,7 +66,7 @@
           </div>
 
           <div class="selectResponsible col-2">
-            <ss-select v-model="task.executor_id" :options="allUsersReduced" track-by="name" search-by="name"
+            <ss-select v-model="task.executor_id" :options="allUsersReduced" track-by="name" search-by="surname"
               @change="selectExecutorTask(task)" disable-by="disabled" id="ss-select" style="width: fit-content;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                 @click="onClickExecutor(selectedOption)" style="cursor: pointer; width: 100%;">
@@ -79,6 +79,10 @@
                 </ss-select-toggle>
 
                 <section v-show="isOpen" class="absolute border-l border-r min-w-full">
+                  <div class="px-px">
+                    <ss-select-search-input class="w-full px-3 py-2 search" placeholder="Впишите фамилию">
+                    </ss-select-search-input>
+                  </div>
                   <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
                     :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
@@ -97,59 +101,61 @@
             </button>
           </div>
         </li>
+      </ol>
+    </div>
 
-        <li>
-          <div v-if="addNotClicked">
-            <plus-icon size="1.5x" class="custom-class" @click.prevent="displayInput" style="color: #92D2C3;">
-            </plus-icon>
-            <span @click.prevent="displayInput" style="margin-left: 16px; cursor: pointer;">Добавить задачу</span>
-          </div>
 
-          <div v-else class="inputAdd">
-            <div style="display: flex;">
-              <input type="text" placeholder="Добавить задачу" class="addTask" @input="enableAddBtn"
-                @keyup.enter="addTask" v-model="formInput.taskName">
+    <div>
+      <div style="padding: 20px; cursor: pointer; width: fit-content;" v-if="addNotClicked"
+        @click.prevent="displayInput">
+        <plus-icon size="1.5x" class="custom-class" style="color: #92D2C3;">
+        </plus-icon>
+        <span style="margin-left: 16px; cursor: pointer;">Добавить задачу</span>
+      </div>
 
-              <div class="selectsInputAdd">
-                <div class="dateDiv">
-                  <input type="date" id="start" name="trip-start" class="date" onkeypress="return false"
-                    v-model="formInput.deadline">
-                </div>
+      <div v-else class="inputAdd">
+        <div style="display: flex;">
+          <input type="text" placeholder="Добавить задачу" ref="addTaskInput" class="addTask" @input="enableAddBtn"
+            @keyup.enter="addTask" v-model="formInput.taskName">
 
-                <div class="selectResponsible" style="background-color: #fff;">
-                  <ss-select v-model="formInput.executor" :options="allUsersReduced" track-by="name" search-by="name"
-                    disable-by="disabled" id="ss-select" style="width: fit-content; position: relative;">
-                    <div
-                      slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                      style="cursor: pointer; width: 100%;">
+          <div class="selectsInputAdd">
+            <div class="dateDiv">
+              <input type="date" id="start" name="trip-start" class="date" onkeypress="return false"
+                v-model="formInput.deadline">
+            </div>
 
-                      <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between"
-                        style="width: 100%; padding: 13px;" id="select-toggle">
-                        <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
-                        {{ $get(selectedOption, 'name') ||  `${allUsersReduced.find(u => u.id == formInput.executor) ? allUsersReduced.find(u => u.id == formInput.executor).surname + ' ' 
+            <div class="selectResponsible" style="background-color: #fff;">
+              <ss-select v-model="formInput.executor" :options="allUsersReduced" track-by="name" search-by="name"
+                disable-by="disabled" id="ss-select" style="width: fit-content; position: relative;">
+                <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+                  style="cursor: pointer; width: 100%;">
+
+                  <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between"
+                    style="width: 100%; padding: 13px;" id="select-toggle">
+                    <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
+                    {{ $get(selectedOption, 'name') ||  `${allUsersReduced.find(u => u.id == formInput.executor) ? allUsersReduced.find(u => u.id == formInput.executor).surname + ' ' 
                     + allUsersReduced.find(u => u.id == formInput.executor).name + ' ' 
                     + allUsersReduced.find(u => u.id == formInput.executor).father_name : 'Выбрать'}`}}
-                      </ss-select-toggle>
+                  </ss-select-toggle>
 
-                      <section v-show="isOpen" class="absolute border-l border-r min-w-full"
-                        style="top: 126%; right: -25%; width: fit-content;">
-                        <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
-                          :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
+                  <section v-show="isOpen" class="absolute border-l border-r min-w-full"
+                    style="top: 126%; right: -25%; width: fit-content;">
+                    <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
+                      :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
                                 $selected(option) ? 'bg-light text-dark' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
                               ]">{{ option.surname }} {{ option.name }} {{ option.father_name }}</ss-select-option>
-                      </section>
-                    </div>
-                  </ss-select>
+                  </section>
                 </div>
-              </div>
+              </ss-select>
             </div>
-            <div class="error" v-if="error">{{error.description}}</div>
-            <div class="error" v-if="error">{{error}}</div>
           </div>
-        </li>
-      </ol>
+        </div>
+        <div class="error" v-if="error">{{error.description}}</div>
+        <div class="error" v-if="error">{{error}}</div>
+      </div>
+
 
       <div type="submit" class="btnsAddTask" v-if="!addNotClicked">
         <button id="addBtn" class="btn btnPink" @click.prevent="addTask" :disabled="!enableAddBtntn">Добавить
@@ -179,8 +185,9 @@
     SsSelect,
     SsSelectToggle,
     SsSelectOption,
+    SsSelectSearchInput
   } from 'ss-select'
-  // SsSelectSearchInput
+
 
   export default {
     name: 'tasks',
@@ -225,23 +232,22 @@
       SsSelect,
       SsSelectToggle,
       SsSelectOption,
-      // SsSelectSearchInput
+      SsSelectSearchInput
     },
 
     computed: {
       ...mapGetters(['tasks', 'error', 'error404', 'allUsers', 'allUsersReduced', 'currentSolution', 'solutions']),
     },
-    // watch: {
-    //   val: function (data) {
-    //     console.log(data);
-    //     // ??
-    //   }
-    // },
+
     methods: {
       displayInput() {
         this.addNotClicked = false
         this.formInput = []
         this.$store.commit('setError', '')
+        console.log(this.$refs['addTaskInput']);
+        this.$nextTick(() => {
+          this.$refs['addTaskInput'].focus()
+        })
       },
 
       enableAddBtn() {
@@ -375,6 +381,22 @@
 </script>
 
 <style scoped lang="scss">
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #92D2C3;
+    border-radius: 3px;
+    height: 73px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #F2F2F2;
+    border-left: 4px solid #F6F7F9;
+    border-right: 4px solid #F6F7F9;
+  }
+
   .input-btn {
     border: none;
     width: auto;
@@ -424,7 +446,7 @@
 
   .header {
     margin: 0;
-    padding-top: 30px;
+    // padding-top: 30px;
     max-width: inherit;
     width: -webkit-fill-available;
     padding-left: 26px;
@@ -455,13 +477,20 @@
     font-style: normal;
     font-weight: normal;
     background-color: #F6F7F9;
+
+    ol {
+      max-height: 300px;
+      min-height: 240px;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
   }
 
   ol {
     padding: 0;
     padding-left: 60px;
     width: 100%;
-    padding-right: 42px;
+    // padding-right: 42px;
     margin-bottom: 0;
   }
 
@@ -536,6 +565,21 @@
       width: 142px;
       background-color: #f6f6f6;
     }
+
+    section {
+      right: -32%;
+    }
+  }
+
+  .search {
+    outline: none;
+    border: none;
+    background-color: #F7F7F7;
+    border-radius: 8px;
+  }
+
+  .cursor-pointer {
+    border-radius: 8px;
   }
 
   .selectResponsible:hover {
@@ -562,22 +606,6 @@
   }
 
 
-
-  ::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: #92D2C3;
-    border-radius: 3px;
-    height: 73px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: #F2F2F2;
-    border-left: 4px solid white;
-    border-right: 4px solid white;
-  }
 
   .subt1 {
     flex: 0 0 42.666667%;
@@ -733,7 +761,7 @@
     line-height: 24px;
     font-family: 'GothamPro-Medium';
     letter-spacing: 0.15px;
-
+    position: relative;
 
     input {
       padding: 6px;
@@ -755,9 +783,9 @@
 
   .task-title::before {
     content: '';
-    position: relative;
-    top: 14px;
-    right: 2%;
+    position: absolute;
+    top: 29%;
+    left: -4%;
     display: inline-block;
     width: 8px;
     height: 8px;
@@ -813,9 +841,10 @@
 
   .btnsAddTask {
     padding-left: 50px;
-    background-color: #fff;
+    background-color: #F6F7F9;
     width: 100%;
     padding-top: 19px;
+    cursor: default;
 
     span {
       font-family: 'GothamPro';
@@ -824,6 +853,7 @@
       letter-spacing: 0.15px;
       color: #4F4F4F;
       padding-bottom: 3px;
+      cursor: pointer;
     }
 
     span:hover {
@@ -842,14 +872,20 @@
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #FFFFFF;
+    cursor: pointer;
   }
 
   .btnPink {
-    background: #FFD3D3;
+    background: #ffbdbd;
   }
 
   .btnGren {
     background: #92D2C3;
+  }
+
+  #close {
+    display: flex;
+    justify-content: center;
   }
 
 

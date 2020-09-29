@@ -1,79 +1,123 @@
 <template>
   <div class="sidebar col">
-    <div class="links">
 
+    <div class="links">
+      <!-- <nav class="navbar navbar-light" v-if="isLoggedIn"> -->
+      <div class="user">
+        <span>{{userLoggedIn.surname}} {{userLoggedIn.name[0]+'.'}}
+          {{userLoggedIn.father_name ? userLoggedIn.father_name[0]+'.' : ''}}</span>
+        <div class="logout" @click="logout">
+          <log-out-icon size="1.5x" class="custom-class"></log-out-icon>
+        </div>
+      </div>
+      <!-- </nav> -->
 
       <div class="main">
-        <ul>
-          <li>Списки проблем:</li>
-          <li>-Предложенные мной</li>
-          <li>-На рассмотрении</li>
-          <li>-Для исполнения</li>
-          <li>-По подразделениям</li>
-        </ul>
+        <a href="#">Списки проблем:</a>
+        <a href="#">-Предложенные мной</a>
+        <a href="#">-На рассмотрении</a>
+        <a href="#">-Для исполнения</a>
+        <a>-По подразделениям <chevron-down-icon ref="linkIcon" @click="showLinks" size="1.5x" class="custom-class">
+          </chevron-down-icon></a>
+        <a href="#" v-show="showGroups">
+          <router-link to="/" exact>Все</router-link>
+        </a>
+        <a href="#" v-show="showGroups" v-for="(group, idx) in groups" :key="idx">{{group.name}}</a>
+      </div>
 
-        <router-link to="/" exact>Проблемы</router-link>
-        <ul>
-          <li><router-link to="/" exact>Все</router-link></li>
-          <li v-for="(group, idx) in groups" :key="idx">
-            {{group.name}}
-          </li>
-        </ul>
+      <div class="addProblem">
+        <button type="button" class="btn btnMain" @click="create" data-toggle="modal" data-target="#popupCreate">
+
+          <span>Предложить проблему</span>
+        </button>
       </div>
-      <div class="groups">
-        <a href="#">Проекты</a>
-        <a href="#">Отделы</a>
-        <a href="#">Команды</a>
-      </div>
+
+
       <div class="info">
-        <router-link to="/groups">Список подразделений</router-link>
+        <router-link to="/groups">Состав подразделений</router-link>
         <a href="#">Статистика</a>
-      </div>
-      <div class="footer">
-        <a href="#">Помощь</a>
-        <a href="#">Выйти из системы</a>
+        <a href="#">Архив проблем</a>
       </div>
     </div>
 
+    <PopupCreate v-if="openCreate" @createProblem="createProblem(param = $event)" />
   </div>
 
 </template>
 
 <script>
-  //   import {
-  //     LogOutIcon 
-  //   } from 'vue-feather-icons'
+  import {
+    ChevronDownIcon,
+    LogOutIcon
+  } from 'vue-feather-icons'
   import {
     mapGetters
   } from 'vuex'
+  import PopupCreate from '@/components/PopupProblems/Create'
 
   export default {
     name: 'sidebar',
-    //     components: {
-    //       LogOutIcon 
-    //     },
-    computed: {
-      ...mapGetters(['groups']),
-      //       isLoggedIn: function () {
-      //         return this.$store.getters.isLoggedIn
-      //       },
-      //       userLoggedIn: function () {
-      //         return JSON.parse(localStorage.getItem('user'))
-      //       }
-    },
+    data: () => ({
+      showGroups: false,
+      openCreate: false
+    }),
+    components: {
+      ChevronDownIcon,
+      LogOutIcon,
 
-    //     methods: {
-    //       logout: function () {
-    //         this.$store.dispatch('logout')
-    //           .then(() => {
-    //             this.$router.push('/login')
-    //           })
-    //       }
-    //     },
+      PopupCreate
+    },
+    computed: {
+      ...mapGetters(['groups', 'user']),
+      isLoggedIn: function () {
+        return this.$store.getters.isLoggedIn
+      },
+      userLoggedIn: function () {
+        return JSON.parse(localStorage.getItem('user'))
+      }
+    },
+    methods: {
+      showLinks() {
+        this.showGroups = !this.showGroups
+        this.showGroups ? this.$refs['linkIcon'].classList.add('rotated') : this.$refs['linkIcon'].classList.remove(
+          'rotated')
+      },
+      create() {
+        this.openCreate = true
+        this.$store.commit('setError', '')
+      },
+
+      logout: function () {
+        this.$store.dispatch('logout')
+          .then(() => {
+            this.$router.push('/login')
+          })
+      }
+    }
   }
 </script>
 
 <style lang="scss">
+  .btnMain {
+    padding: 13px 9px;
+    border-radius: 12px;
+    width: 213px;
+    height: 58px;
+    background: #92D2C3;
+    color: #fff;
+    font-size: 16px;
+    line-height: 17px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'GothamPro-Medium';
+  }
+
+  .btnMain:hover {
+    color: #fff;
+  }
+
   .body {
     display: flex;
   }
@@ -83,8 +127,9 @@
     background-color: #F6F7F9;
     padding: 0;
     height: 100vh;
-    padding-left: 20px;
-    padding-right: 16px;
+
+    // padding-left: 20px;
+    // padding-right: 16px;
 
     a {
       margin-bottom: 17px;
@@ -106,21 +151,55 @@
     .links {
       display: flex;
       flex-direction: column;
-      height: 77vh;
+      height: 80vh;
       justify-content: space-between;
-      padding-top: 60px;
-      padding-left: 30px;
-      // padding: 60px 30px 0;
+      // padding-top: 60px;
+      // padding-left: 30px;
+      padding: 60px 48px 0;
+
+      .user {
+        position: relative;
+        justify-content: space-between;
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        background-color: #fff;
+        border-radius: 5px;
+        margin-bottom: 65px;
+
+        span {
+          font-family: 'GothamPro';
+          font-size: 18px;
+          line-height: 24px;
+          letter-spacing: 0.15px;
+          color: #4F4F4F;
+          padding: 4px 13px;
+        }
+      }
+
+      .logout {
+        position: relative;
+        width: 37.25px;
+        height: 37.25px;
+        background: #B9CBEF;
+        border-radius: 50%;
+        text-align: center;
+        display: flex;
+        cursor: pointer;
+        z-index: 3;
+        right: -13%;
+
+        svg {
+          margin: auto;
+          justify-content: center;
+          color: white;
+        }
+      }
+
     }
 
-
-    .groups {
-      padding-left: 13px;
-    }
-
-    .groups,
     .info,
-    .footer {
+    .main {
       display: flex;
       flex-direction: column;
     }
@@ -140,63 +219,13 @@
     display: flex;
   }
 
-
-  #app {
-    font-family: 'GothamPro', sans-serif;
-    font-size: 18px;
-    line-height: 17px;
-    font-weight: 500;
-    letter-spacing: 0.15px;
+  .rotated {
+    transform: rotate(180deg);
   }
 
-  .navbar {
-    justify-content: flex-end;
-    padding: 0rem 3rem;
-    position: relative;
-    height: 70px;
-    background-color: #C1CFEC;
 
-    .user {
-      position: relative;
-      top: 50%;
-      padding: 6px 25px;
-      background-color: #fff;
-      border-radius: 5px;
-      height: 36px;
-      margin-right: -10px;
 
-      span {
-        font-family: 'GothamPro';
-        font-size: 18px;
-        line-height: 24px;
-        letter-spacing: 0.15px;
-        color: #4F4F4F;
-      }
-    }
-
-    .logout {
-      position: relative;
-      top: 50%;
-      width: 59px;
-      height: 59px;
-      background: #B3C3E4;
-      border-radius: 50%;
-      text-align: center;
-      display: flex;
-      cursor: pointer;
-      z-index: 3;
-
-      svg {
-        margin: auto;
-        justify-content: center;
-        color: white;
-      }
-    }
-  }
-
-  // option {
-  //   width: max-content;
-  // }
+ 
 
   .container {
     width: 436px;
@@ -372,14 +401,14 @@
 
 
   @media (max-width: 1300px) {
+    .sidebar {
+      display: none;
+    }
+
     * {
       font-size: 13px;
     }
 
-    .navbar .user span,
-    .sidebar a {
-      font-size: 14px;
-    }
 
     .form-control {
       font-size: 14px !important;
