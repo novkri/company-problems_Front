@@ -15,7 +15,7 @@
             </li>
             <li class="page-item">
               <span v-if="pageNumber ==0">1-10</span>
-              <span v-else>{{(10 * pageNumber)+1}}-{{(10 * pageNumber)+11}}</span>
+              <span v-else>{{(10 * pageNumber)+1}}-{{(10 * pageNumber)+10}}</span>
             </li>
             <li class="page-item">
               <a class="page-link" @click="nextPage" aria-label="Next" :class="{'block' : pageNumber >= pageCount - 1}">

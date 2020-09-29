@@ -227,7 +227,8 @@
       align-items: center;
       display: flex;
       height: 36px;
-      background-color: #F6F7F9;
+
+      background-color: #F0F0F0;
       border-radius: 10px;
       text-align: center;
       padding-right: 0;
@@ -333,7 +334,7 @@
 
   .form-control {
     background-color: #F7F7F7;
-    width: 100%;
+    width: 100% !important;
     margin-bottom: 5px;
   }
 
@@ -356,10 +357,13 @@
 
   .input-group {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     position: relative;
     padding-bottom: 51px;
     position: relative;
+        input {
+      background-color: #F0F0F0;
+    }
   }
 
   .input-group:last-child {

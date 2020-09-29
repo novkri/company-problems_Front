@@ -58,10 +58,10 @@
       </div>
       <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')">
         Срочность/важность:
-        <div class="select col-2" style="position: relative;" ref="select">
+        <div class="select" style="position: relative;" ref="select">
           <ss-select v-model="importance" :options="statusesImportance" track-by="name" class="form-control"
             @change="changeImportance(importance)" disable-by="disabled"
-            :class="[solution.status == 'Выполнено' ? 'green' : 'gray']" id="ss-select" style="width: fit-content;">
+            :class="[importance == 'Выполнено' ? 'green' : 'gray']" id="ss-select" style="width: fit-content;">
             <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
               style="cursor: pointer; width: 100%;">
               <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
@@ -109,7 +109,22 @@
 
   export default {
     data: () => ({
-      
+            statusesImportance: [{
+          name: "Только важные"
+        },
+        {
+          name: "Только срочные"
+        },
+        {
+          name: "Важные и срочные"
+        },
+        {
+          name: "Остальные"
+        },
+        {
+          name: "Все"
+        }
+      ],
     }),
     components: {
       ChevronDownIcon,
@@ -145,6 +160,10 @@
 <style lang="scss">
   .body {
     display: flex;
+  }
+  .filter {
+    display: flex;
+    align-items: center;
   }
 
   #nav {
