@@ -36,7 +36,7 @@
                 :aria-controls="'collapseOne'+problem.id">
                 <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
               </button>
-              {{problem}}
+
               <h5 class="mb-0" style="display: flex;">
                 <p>{{idx+1}}.</p>
                 <div :ref="'name-div'+problem.id" @click="event => {onClickInput(problem.id, event)}"> {{ problem.name}}
@@ -85,7 +85,8 @@
                 <span v-show="!progressClicked" slot="legend-value"
                   @click="clickProgress(problem.id)">{{problem.progress}}%</span>
                 <input v-show="progressClicked" :ref="'progress-bar'+problem.id" class="progress-input" type="text"
-                  v-model="problem.progress" @blur="editProgress(problem.id, problem.progress)" @keyup.enter="editProgress(problem.id, problem.progress)">
+                  v-model="problem.progress" @blur="editProgress(problem.id, problem.progress)"
+                  @keyup.enter="editProgress(problem.id, problem.progress)">
               </vue-ellipse-progress>
             </div>
 
@@ -140,7 +141,8 @@
                   <span v-show="!progressClicked" slot="legend-value" style="padding: 0;"
                     @click="clickProgress(problem.id)">{{problem.progress}}%</span>
                   <input v-show="progressClicked" :ref="'progress-bar'+problem.id" class="progress-input" type="text"
-                    v-model="problem.progress" @blur="editProgress(problem.id, problem.progress)" @keyup.enter="editProgress(problem.id, problem.progress)">
+                    v-model="problem.progress" @blur="editProgress(problem.id, problem.progress)"
+                    @keyup.enter="editProgress(problem.id, problem.progress)">
                 </vue-ellipse-progress>
               </div>
             </div>
@@ -157,8 +159,8 @@
 
           <div :id="'collapseOne'+problem.id" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
             <div class="card-body">
-              {{problem.possible_solution}}
-              {{solutions}}
+              <!-- {{problem.possible_solution}}
+              {{solutions}} -->
               <div class="card" style="padding-top: 34px;" v-if="mounted">
                 <PopupShow v-if="openShow" :val="paramsModal" />
                 <!-- + 4 accordions -->
@@ -302,10 +304,15 @@
                                 </button>
                               </div>
                             </div>
-                            <button v-show="solutions[0].executor_id == currentUid" class="btn btnMain problem-solved" @click="problemSolved(problem.id)">Проблема решена</button>
+                            <button v-show="solutions[0].executor_id == currentUid" class="btn btnMain problem-solved"
+                              @click="problemSolved(problem.id)">Проблема решена</button>
+                            <div style="display: flex;margin: 0 -20px; justify-content: space-between;">
+                              <button v-show="problem.creator_id == currentUid" class="btn btnMain problem-confirm"
+                                @click="problemConfirm(problem.id)">Подтвердить решение</button>
+                              <button v-show="problem.creator_id == currentUid" class="btn btnMain problem-confirm"
+                                @click="problemReject(problem.id)">Отклонить</button>
+                            </div>
 
-                            <button v-show="problem.creator_id == currentUid" class="btn btnMain problem-solved" @click="problemConfirm(problem.id)">Подтвердить решение</button>
-                            <button v-show="problem.creator_id == currentUid" class="btn btnMain problem-solved" @click="problemReject(problem.id)">Отклонить</button>
                           </div>
                         </div>
                       </div>
@@ -447,7 +454,9 @@
       },
     },
     computed: {
-      ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', 'user', 'currentUid']),
+      ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', 'user',
+        'currentUid'
+      ]),
 
       // pageCount() {
       //   let l = this.problems.length,
@@ -504,7 +513,10 @@
         this.progressClicked = false
         console.log(id);
 
-        await this.$store.dispatch('editProgress', {id, progress})
+        await this.$store.dispatch('editProgress', {
+          id,
+          progress
+        })
       },
 
       nextPage() {
@@ -1064,6 +1076,14 @@
     font-size: 16px;
     height: fit-content !important;
     line-height: 15px;
+  }
+  .problem-confirm {
+    padding: 10px 7px;
+    font-family: 'GothamPro';
+width: fit-content;
+height: fit-content;
+font-size: 16px;
+line-height: 15px;
   }
 
   .btn-to-groups {

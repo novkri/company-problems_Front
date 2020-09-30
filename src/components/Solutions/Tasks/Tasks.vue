@@ -36,11 +36,11 @@
 
           </div>
 
-          <div class="select col-3" style="position: relative; margin:auto;" ref="select">
+          <div class="select col-3" style="position: relative;" ref="select">
             <ss-select v-model="task.status" :options="statusesT" track-by="name" class="form-control"
               @change="changeStatusTask(task.id, task.status)" disable-by="disabled"
               :class="[task.status == 'Выполнено' ? 'green' : task.status == 'В процессе' ? 'blue' : 'gray']"
-              id="ss-select" style="width: fit-content;">
+              id="ss-select" style="width: fit-content; margin:auto;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                 style="cursor: pointer; width: 100%;">
                 <ss-select-toggle style="width: 100%; padding: 6px;" id="select-toggle">
@@ -331,13 +331,26 @@
         })
       },
 
-      onBlurInput(name, id, event) {
+      async onBlurInput(name, id, event) {
         this.editable = false
         event.path[0].nextElementSibling.classList.remove('flex')
-        this.$store.commit('editTask', {
-          description: this.currentTaskName,
-          id
-        })
+        // this.$store.commit('editTask', {
+        //   description: this.currentTaskName,
+        //   id
+        // })
+        if (name !== this.currentTaskName) {
+          await this.$store.commit('setError404', '')
+          await this.$store.dispatch('editTask', {
+            description: name,
+            id: id
+          }).catch(() => {
+            this.$store.commit('editTask', {
+              description: this.currentTaskName,
+              id
+            })
+          })
+        }
+        
       },
       onFocusInput(event) {
         this.currentTaskName = event.target.value
@@ -352,20 +365,21 @@
         this.$refs['textarea_task' + id][0].value = this.currentTaskName
       },
 
-      async editTask(task, id) {
+      editTask(task, id) {
         console.log(task, id);
-        if (task.description !== this.currentTaskName) {
-          await this.$store.commit('setError404', '')
-          await this.$store.dispatch('editTask', {
-            description: task,
-            id: id
-          }).catch(() => {
-            this.$store.commit('editTask', {
-              description: this.currentTaskName,
-              id: task.id
-            })
-          })
-        }
+        // if (task.description !== this.currentTaskName) {
+        //   await this.$store.commit('setError404', '')
+        //   await this.$store.dispatch('editTask', {
+        //     description: task,
+        //     id: id
+        //   }).catch(() => {
+        //     this.$store.commit('editTask', {
+        //       description: this.currentTaskName,
+        //       id: task.id
+        //     })
+        //   })
+        // }
+        this.currentTaskInput.blur()
       },
 
       showDelete(id) {

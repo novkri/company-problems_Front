@@ -37,14 +37,15 @@
                   @click="showOnClickUsers(group.id)" aria-expanded="false" :aria-controls="'collapseOne'+group.id">
                   <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                 </button>
-                <div class="name_div" :ref="'name-div'+group.id" @click="event => {onClickInput(group.id, 'name',event)}">{{group.name}}
+                <div class="name_div" :ref="'name-div'+group.id"
+                  @click="event => {onClickInput(group.id, 'name',event)}">{{group.name}}
                 </div>
                 <input class="form-control input-name" :id="'groupname'+group.id" style="display: none;"
                   :ref="'group-name' + group.id" @keyup.enter="event => {editGroupName(group.name, group.id, event)}"
-                  v-model="group.name" @focus="onFocusInput($event)"
+                  v-model="group.name" @focus="event => onFocusInput(event, group.id, 'name')"
                   @blur="event => {onBlurInput(group.name, group.id, event, 'name')}">
 
-                <div class="hidden">
+                <div class="hidden" :ref="'hidden'+group.id">
                   <button class="input-btn" @mousedown="event => {editGroupName(group.name, group.id, event)}">
                     <check-icon size="1x" class="custom-class"></check-icon>
                   </button>
@@ -57,14 +58,15 @@
               </h5>
             </div>
             <div class="short-name col-4">
-              <div class="short-name_div" :ref="'short-name-div'+group.id" @click="event => {onClickInput(group.id, 'short', event)}">
+              <div class="short-name_div" :ref="'short-name-div'+group.id"
+                @click="event => {onClickInput(group.id, 'short', event)}">
                 {{group.short_name}}</div>
               <input class="form-control input-name" :id="'groupshort'+group.id" style="display: none;"
                 :ref="'group-name-short' + group.id"
                 @keyup.enter="event => {editGroupShort(group.short_name, group.id, event)}" v-model="group.short_name"
-                @focus="onFocusInput($event)"
+                @focus="event => onFocusInput(event, group.id, 'short')"
                 @blur="event => {onBlurInput(group.short_name, group.id, event, 'short')}">
-              <div class="hidden">
+              <div class="hidden" :ref="'hidden-short' + group.id">
                 <button class="input-btn" @mousedown="event => {editGroupShort(group.short_name, group.id, event)}">
                   <check-icon size="1x" class="custom-class"></check-icon>
                 </button>
@@ -117,7 +119,7 @@
               <div class="card">
                 <div class="card-header" id="headingOneAdd">
                   <h5 class="mb-0">
-                    
+
                     <div>
                       <ss-select :options="usersNoGroup" track-by="name" search-by="name" disable-by="disabled"
                         id="ss-select" style="width: fit-content;" @change="putUserToGroup(group.id, $event)">
@@ -303,123 +305,88 @@
           element.classList.contains('collapsed') ? '' : element.click()
         });
       },
+
+
       async onBlurInput(name, id, event, type) {
-        // event.path[0].nextElementSibling.classList.remove('flex')
-        console.log(name, this.currentGroupName);
-        // if (name == this.currentGroupName) {
-        //   type === 'name' ? this.$store.commit('editGroup', {
-        //   id,
-        //   name: this.currentGroupName
-        // }) : this.$store.commit('editGroupShort', {
-        //   id,
-        //   short_name: this.currentGroupName
-        // })
-        // }
-
-        if (type === 'name') {
-          if (name !== this.currentGroupName) {
-            await this.$store.dispatch('editGroup', {
-                name,
-                id
-              })
-              .then(() => {
-                setTimeout(function () {
-                  document.getElementById('groupname' + id).scrollIntoView();
-                }, 200);
-              })
-              .catch(() => {
-                this.$store.commit('editGroup', {
-                  name: this.currentGroupName,
-                  id
-                })
-              })
-          }
-
-          event.target.style.display = 'none'
-          this.$refs['name-div' + id][0].style.display = 'flex'
-          event.path[0].nextElementSibling.classList.remove('flex')
-        } else {
-          console.log(name, 'd');
-          if (name !== this.currentGroupName) {
-            await this.$store.dispatch('editGroupShort', {
-                name,
-                id
-              })
-              // .then(() => {})
-              .catch(() => {
-                this.$store.commit('editGroupShort', {
-                  name: this.currentGroupName,
-                  id
-                })
-              })
-          }
-
-
-          event.target.style.display = 'none'
-          this.$refs['short-name-div' + id][0].style.display = 'flex'
-          event.path[0].nextElementSibling.classList.remove('flex')
+        console.log(name, 'blur');
+        if (name !== this.currentGroupName) {
+          type === 'name' ? this.$store.dispatch('editGroup', {
+            id,
+            name
+          }) : this.$store.dispatch('editGroupShort', {
+            id,
+            short_name: name
+          })
         }
 
+if (type == 'name' ) {
+  this.$refs['group-name' + id][0].style.display = 'none'
+        this.$refs['name-div' + id][0].style.display = 'flex'
+        this.$refs['hidden' + id][0].classList.remove('flex')
+
+ 
+} else {
+ this.$refs['group-name-short' + id][0].style.display = 'none'
+        this.$refs['short-name-div' + id][0].style.display = 'flex'
+        this.$refs['hidden-short' + id][0].classList.remove('flex')
+}
+
       },
-      onFocusInput(event) {
+
+      onFocusInput(event, id, type) {
         this.currentGroupName = event.target.value
         this.currentGroupInput = event.target
-        event.path[0].nextElementSibling.classList.add('flex')
+
+        type == 'name' ? this.$refs['hidden' + id][0].classList.add('flex') : this.$refs['hidden-short' + id][0]
+          .classList.add('flex')
+
       },
 
       onClear(event, id, type) {
         event.preventDefault()
-        type === 'name' ? document.getElementById('groupname' + id).value = this.currentGroupName : document
-          .getElementById('groupshort' + id).value = this.currentGroupName
+        // type === 'name' ? document.getElementById('groupname' + id).value = this.currentGroupName : document
+        //   .getElementById('groupshort' + id).value = this.currentGroupName
+        type === 'name' ? this.$store.commit('editGroup', {
+          name: this.currentGroupName,
+          id
+        }) : this.$store.commit('editGroupShort', {
+          short_name: this.currentGroupName,
+          id
+        })
       },
 
       async editGroupShort(short_name, id, event) {
         await this.$store.commit('setError404', '')
+        console.log(short_name, 'short_name');
+        if (short_name !== this.currentGroupName) {
+          await this.$store.commit('editGroupShort', {
+            short_name,
+            id
+          })
+        }
 
         event.target.blur()
-        // if (short_name !== this.currentGroupName) {
-        //   await this.$store.dispatch('editGroupShort', {
-        //     short_name,
-        //     id
-        //   })
-        //   .then(() => {})
-        //   .catch(() => {
-        //     this.$store.commit('editGroupShort', {
-        //       short_name: this.currentGroupName,
-        //       id
-        //     })
-        //   })
-        // }
-
-
-        console.log(event);
-        event.path[2].classList.remove('flex')
+        // this.$refs['group-name-short' + id][0].style.display = 'none'
+        // this.$refs['short-name-div' + id][0].style.display = 'flex'
+        // this.$refs['hidden-short' + id][0].classList.remove('flex')
       },
+
       async editGroupName(name, id, event) {
         await this.$store.commit('setError404', '')
-        // console.log(name);
-        // console.log(this.currentGroupName);
-        // if (name !== this.currentGroupName) {
-        //   await this.$store.dispatch('editGroup', {
-        //     name,
-        //     id
-        //   })
-        //   .then(() => {
-        //     setTimeout(function () {
-        //       document.getElementById('groupname' + id).scrollIntoView();
-        //     }, 200);
-        //   })
-        //   .catch(() => {
-        //     this.$store.commit('editGroup', {
-        //       name: this.currentGroupName,
-        //       id
-        //     })
-        //   })
-        // }
+
+        if (name !== this.currentGroupName) {
+          await this.$store.commit('editGroup', {
+            name,
+            id
+          })
+        }
 
         event.target.blur()
 
-        event.path[2].classList.remove('flex')
+        // this.$refs['group-name' + id][0].style.display = 'none'
+        // this.$refs['name-div' + id][0].style.display = 'flex'
+        // this.$refs['hidden' + id][0].classList.remove('flex')
+
       },
 
       deleteGroup(group) {
@@ -512,13 +479,15 @@
     height: auto;
   }
 
-  .name_div, .short-name_div {
+  .name_div,
+  .short-name_div {
     font-family: 'GothamPro';
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #000000;
   }
+
   .name {
     padding-left: 0;
   }
@@ -592,7 +561,7 @@
     background-color: #fff;
     width: 100%;
     display: flex;
-   min-height: 60px;
+    min-height: 60px;
     height: auto;
   }
 
@@ -675,6 +644,8 @@
     background-color: #fff;
     border-radius: 8px;
     width: 100%;
+        font-size: 18px;
+    line-height: 24px;
   }
 
   .input-name:active,

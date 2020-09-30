@@ -245,7 +245,7 @@ export default {
       console.log(param);
       return new Promise((resolve, reject) => {
         axios.put(BASEURL + `/${param.id}/change-short-name`, {
-          short_name: param.name
+          short_name: param.short_name
         }).then(response => {
             commit('setError', '')
             commit('setError404', '')
