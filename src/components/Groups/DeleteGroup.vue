@@ -4,15 +4,13 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel" v-if="!val.uid">Вы точно хотите удалить подразделение?</h5>
-            <h5 class="modal-title" id="exampleModalLabel" v-else>Вы точно хотите удалить пользователя из подразделения?</h5>
+            <h5 class="modal-title" id="exampleModalLabel" >Вы точно хотите удалить подразделение?</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <button type="submit" class="btn btn-secondary" v-if="!val.uid" data-dismiss="modal" @click="deleteGroup()">Да</button>
-            <button type="submit" class="btn btn-secondary" v-else data-dismiss="modal" @click="removeUserFromGroup()">Да</button>
+            <button type="submit" class="btn btn-secondary" data-dismiss="modal" @click="deleteGroup()">Да</button>
             <button type="reset" class="btn btn-secondary" data-dismiss="modal">Нет</button>
           </div>
         </div>
@@ -31,15 +29,16 @@
       name: ''
     }),
     computed: {
-      ...mapGetters(['error', 'error404']),
+      ...mapGetters(['error', 'error404', 'getAllUsers', 'usersNoGroup', 'allUsers', 'groups']),
     },
     methods: {
       async deleteGroup() {
           // await this.$store.dispatch('checkIfExists', {id: this.val.id})
           // .then(async () => {
-              await this.$store.dispatch('deleteGroup', {id: this.val.id}).then(() => {
+              await this.$store.dispatch('deleteGroup', {id: this.val.group.id}).then(() => {
                 this.$store.dispatch('getAllUsers')
-                
+
+                this.allUsers.find(u => u.id == this.val.group.leader_id).group_id == null
               })
           // })
           .catch(() => this.$store.commit('setError404', ''))

@@ -26,7 +26,6 @@
               {{idx+2}}. {{member.surname}} {{member.name[0]}}. {{member.father_name ? member.father_name[0]+'.' : ''}}
             </div>
             <div class="close">
-              <!--  -->
               <button type="button" id="close" class="close" data-dismiss="modal"
                 @click="removeUserFromGroup(member.id, val)" data-toggle="modal" data-target="#groupDeleteUser">
                 <span aria-hidden="true" style="font-size: 20px;">&times;</span>

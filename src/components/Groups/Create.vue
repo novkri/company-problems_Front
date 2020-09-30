@@ -157,6 +157,7 @@
       },
 
       async addGroup() {
+        await this.$store.commit('setError404', '')
         await this.$store.dispatch('postGroup', {
           leader_id: this.leader_id,
           name: this.name,

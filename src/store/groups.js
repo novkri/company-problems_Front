@@ -44,6 +44,9 @@ export default {
     }
   },
   mutations: {
+    // usersNoGroup: (state) => {
+    //   state.usersNoGroup
+    // },
     setGroups: (state, payload) => {
       state.groups = Object.values(payload)
     },
@@ -76,12 +79,16 @@ export default {
     },
     editGroup: (state, payload) => {
       state.groups.find(group => group.id == payload.id).name = payload.name
+      console.log(state.groups.find(group => group.id == payload.id).name);
       state.groups = state.groups.sort(function (a, b) {
         return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1
       })
     },
     editGroupShort: (state, payload) => {
+      console.log(payload.short_name, '444');
+      
       state.groups.find(group => group.id == payload.id).short_name = payload.short_name
+      console.log(state.groups.find(group => group.id == payload.id).short_name);
     },
     editExecutorGroup: (state, payload) => {
       state.groups.find(group => group.id == payload.id).leader_id = payload.leader_id
@@ -156,6 +163,7 @@ export default {
       return new Promise((resolve, reject) => {
         axios.post(BASEURL, param)
           .then(response => {
+            console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('addGroup', response.data)
@@ -209,6 +217,7 @@ export default {
     editGroup: async ({
       commit
     }, param) => {
+      console.log(param);
       return new Promise((resolve, reject) => {
         axios.put(BASEURL + `/${param.id}`, {
           name: param.name
@@ -233,13 +242,14 @@ export default {
     editGroupShort: async ({
       commit
     }, param) => {
+      console.log(param);
       return new Promise((resolve, reject) => {
         axios.put(BASEURL + `/${param.id}/change-short-name`, {
-          short_name: param.short_name
+          short_name: param.name
         }).then(response => {
             commit('setError', '')
             commit('setError404', '')
-            commit('editGroup', response.data)
+            commit('editGroupShort', response.data)
             resolve(response)
         }).catch((error) => {
           if (error.response.status !== 422) {

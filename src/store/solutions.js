@@ -299,6 +299,7 @@ export default {
       commit
     }) => {
       await axios.get(ALLUSERS).then(response => {
+        console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('setAllUsers', response.data)

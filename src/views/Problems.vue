@@ -38,7 +38,6 @@
               </button>
               {{problem}}
               <h5 class="mb-0" style="display: flex;">
-                <!-- <p>{{idx+1}}. {{ problem.name }} </p> -->
                 <p>{{idx+1}}.</p>
                 <div :ref="'name-div'+problem.id" @click="event => {onClickInput(problem.id, event)}"> {{ problem.name}}
                 </div>
@@ -575,8 +574,6 @@
 
 
       onClickInput(id, event) {
-        // this.editableProblem = true
-        console.log(id);
         event.target.style.display = 'none'
         this.$nextTick(() => {
           console.log(this.$refs['problem-name' + id][0]);
