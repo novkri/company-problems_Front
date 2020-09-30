@@ -1,7 +1,7 @@
 <template>
   <div style="height: 50vh;padding-top: 77px;">
     <h2>Список подразделений</h2>
-    <div class="subtitle row">
+    <div class="subtitle row" style="width: 79%;">
       <span class="col-3">Название подразделения</span>
       <span class="col-4">Название подразделения (сокращенно)</span>
       <span class="col-3" style="display: flex; justify-content: center;">Руководитель</span>
@@ -37,7 +37,7 @@
                   @click="showOnClickUsers(group.id)" aria-expanded="false" :aria-controls="'collapseOne'+group.id">
                   <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                 </button>
-                <div :ref="'name-div'+group.id" @click="event => {onClickInput(group.id, 'name',event)}">{{group.name}}
+                <div class="name_div" :ref="'name-div'+group.id" @click="event => {onClickInput(group.id, 'name',event)}">{{group.name}}
                 </div>
                 <input class="form-control input-name" :id="'groupname'+group.id" style="display: none;"
                   :ref="'group-name' + group.id" @keyup.enter="event => {editGroupName(group.name, group.id, event)}"
@@ -57,7 +57,7 @@
               </h5>
             </div>
             <div class="short-name col-4">
-              <div :ref="'short-name-div'+group.id" @click="event => {onClickInput(group.id, 'short', event)}">
+              <div class="short-name_div" :ref="'short-name-div'+group.id" @click="event => {onClickInput(group.id, 'short', event)}">
                 {{group.short_name}}</div>
               <input class="form-control input-name" :id="'groupshort'+group.id" style="display: none;"
                 :ref="'group-name-short' + group.id"
@@ -512,6 +512,13 @@
     height: auto;
   }
 
+  .name_div, .short-name_div {
+    font-family: 'GothamPro';
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    color: #000000;
+  }
   .name {
     padding-left: 0;
   }
