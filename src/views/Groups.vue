@@ -309,9 +309,19 @@
           type === 'name' ? this.$store.dispatch('editGroup', {
             id,
             name
+          }).catch(() => {
+            this.$store.commit('editGroup',{
+            id,
+            name: this.currentGroupName
+          })
           }) : this.$store.dispatch('editGroupShort', {
             id,
             short_name: name
+          }).catch(() => {
+            this.$store.commit('editGroupShort',{
+            id,
+            short_name: this.currentGroupName
+          })
           })
         }
 
