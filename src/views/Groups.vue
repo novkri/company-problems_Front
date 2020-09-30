@@ -585,7 +585,8 @@
     background-color: #fff;
     width: 100%;
     display: flex;
-    height: 60px;
+   min-height: 60px;
+    height: auto;
   }
 
   .card-body {
