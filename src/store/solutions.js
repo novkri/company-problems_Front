@@ -35,11 +35,11 @@ export default {
       return state.solutions
     },
 
-    solutionsOther: state => {
-      return state.solutionsOther = state.solutionsOther.sort(function (a, b) {
-        return (new Date(a.created_at).toISOString() > new Date(b.created_at).toISOString()) ? 1 : -1
-      })
-    },
+    // solutionsOther: state => {
+    //   return state.solutionsOther = state.solutionsOther.sort(function (a, b) {
+    //     return (new Date(a.created_at).toISOString() > new Date(b.created_at).toISOString()) ? 1 : -1
+    //   })
+    // },
     allUsers: state => {
       return state.allUsers
     },
@@ -49,15 +49,16 @@ export default {
   },
   mutations: {
     setSolution: (state, payload) => {
-      state.solutions = payload.filter(solution => solution.in_work)
+      state.solutions = payload
+      console.log(state.solutions);
     },
     addSolution: (state, payload) => {
       payload.in_work = false
       state.solutionsOther.push(payload)
     },
-    setOtherSolution: (state, payload) => {
-      state.solutionsOther = payload.filter(sol => !sol.in_work)
-    },
+    // setOtherSolution: (state, payload) => {
+    //   state.solutionsOther = payload.filter(sol => !sol.in_work)
+    // },
     deleteSolution: (state, payload) => {
       state.solutions = state.solutions.filter(s => s.id !== payload)
       state.solutionsOther = state.solutionsOther.filter(s => s.id !== payload)
@@ -110,6 +111,14 @@ export default {
       state.solutions.find(solution => solution.id == payload.id).executor_id = payload.executor_id
     },
 
+    editPlan: (state, payload) => {
+      state.solutions.find(solution => solution.id == payload.id).plan = payload.plan
+    },
+    editTeam: (state, payload) => {
+      state.solutions.find(solution => solution.id == payload.id).team = payload.team
+    },
+
+
   },
   actions: {
     getSolutions: async ({
@@ -117,10 +126,12 @@ export default {
     }, problemId) => {
       return await new Promise((resolve, reject) => {
         axios.get(URLSOLUTION + `/${problemId}/solution`)
+        
           .then(response => {
+            console.log(response);
               commit('setError', '')
               commit('setError404', '')
-              commit('setOtherSolution', response.data)
+              // commit('setOtherSolution', response.data)
               commit('setSolution', response.data)
               resolve(response.data[0])
           })
@@ -242,18 +253,23 @@ export default {
       commit
     }, param) => {
       // param.id = 10000000000
+      return new Promise((resolve, reject) => {
       axios.put(BASEURL + `/${param.id}/change-status`, {
         status: param.status
       }).then(response => {
         commit('setError', '')
         commit('editStatus', response.data)
+        resolve(response.data)
       }).catch((error) => {
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
+          reject(error.response.data.message)
         } else if (error.response.status == 422) {
           commit('setError404', error.response.data.errors)
+          reject(error.response.data.errors)
         }
       })
+    })
     },
 
     changeDeadline: async ({
@@ -312,5 +328,57 @@ export default {
         }
       })
     },
+
+    editPlan: async ({
+      commit
+    }, param) => {
+      // param.id = 10000000000
+      return new Promise((resolve, reject) => {
+      axios.put(BASEURL + `/${param.id}/set-plan`, {
+        plan: param.plan
+      }).then(response => {
+        console.log(response);
+        commit('setError', '')
+        commit('setError404', '')
+        commit('editPlan', response.data)
+        resolve(response.data)
+      }).catch((error) => {
+        console.log(error.response);
+        if (error.response.status == 404) {
+          commit('setError404', error.response.data.message)
+          reject(error.response.data.message)
+        } else if (error.response.status == 422) {
+          commit('setError404', error.response.data.errors.plan[0])
+          reject(error.response.data.errors.plan[0])
+        }
+      })
+    })
+    },
+    editTeam: async ({
+      commit
+    }, param) => {
+      console.log(param);
+      // param.id = 10000000000
+      return new Promise((resolve, reject) => {
+      axios.put(BASEURL + `/${param.id}/set-team`, {
+        team: param.team
+      }).then(response => {
+        console.log(response);
+        commit('setError', '')
+        commit('setError404', '')
+        commit('editTeam', response.data)
+        resolve(response.data)
+      }).catch((error) => {
+        if (error.response.status == 404) {
+          commit('setError404', error.response.data.message)
+          reject(error.response.data.message)
+        } else if (error.response.status == 422) {
+          commit('setError404', error.response.data.errors.team[0])
+          reject(error.response.data.errors.team[0])
+        }
+      })
+    })
+    },
+
   }
 }

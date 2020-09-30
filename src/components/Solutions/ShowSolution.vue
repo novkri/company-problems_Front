@@ -15,30 +15,34 @@
       <div>
         <div class="subtitle row subt">
           <div class="col-5">
-
+ 
           </div>
-          <div class="col-2">
-            Статус выполнения
+          <div class="col-2" style="justify-content: center;display: flex;">
+            <span>Статус выполнения</span>
           </div>
-          <div class="col-2">
-            Срок исполнения
+          <div class="col-2" style="justify-content: center;display: flex;">
+            <span>Срок исполнения</span>
           </div>
-          <div class="col-2">
-            Ответственный
+          <div class="col-2" style="justify-content: center;display: flex;">
+            <span>Ответственный</span>
           </div>
           <div style="width: 20px" class="col">
+             
           </div>
         </div>
         <div>
 
           <ol>
             <li v-for="(solution, idx) in solutions" :key="idx" id="list" class="row">
+<!-- {{solution}} -->
               <div class="list-item col-5">
                 <div class="desc" ref="desc">
                   <span>Решение: </span>
-                  <div @click="onClickInput(solution.id)" v-show="!editable">{{solution.name}}</div>
-                  <input v-show="editable" class="form-control" :id="'textarea'+solution.id" v-model="solution.name"
-                    :ref="'textarea' + solution.id"
+                  <!-- {{val.possible_solution}} -->
+                   <div @click="onClickInput(val.id)" v-show="!editable && !solution.name">{{val.possible_solution}}</div>
+                  <div @click="onClickInput(val.id)" v-show="!editable && solution.name">{{solution.name}}</div>
+                  <input v-show="editable" class="form-control" :id="'textarea'+val.id" v-model="solution.name"
+                    :ref="'textarea' + val.id"
                     @keyup.enter="event => {editSolClick(solution.name, solution.id, event)}"
                     @focus="onFocusInput($event)" @blur="event => {onBlurInput(solution.name, solution.id, event)}" />
                   <div class="hidden">
@@ -219,7 +223,7 @@
       SsSelectSearchInput
     },
     computed: {
-      ...mapGetters(['solutions', 'solutionsOther', 'error', 'error404', 'allUsers', 'currentSolution', 'tasks']),
+      ...mapGetters(['solutions', 'error', 'error404', 'allUsers', 'currentSolution', 'tasks']),
     },
     methods: {
       async selectExecutor(id, uid) {
@@ -229,10 +233,15 @@
         })
       },
       async changeStatus(id, status) {
+        await this.$store.commit('setError404', '')
         await this.$store.dispatch('changeStatus', {
           status: status.name,
           id
-        })
+        }).catch(() => {
+          this.$store.commit('editStatus', {id, status: 'В процессе'})
+        }
+          
+        )
       },
 
       onClickDate(event) {
@@ -382,7 +391,7 @@
     font-style: normal;
     font-weight: normal;
     width: 97%;
-    margin-left: 20px;
+    // margin-left: 20px;
 
     h6 {
       font-family: 'GothamPro';
@@ -410,7 +419,8 @@
     margin-bottom: 35px;
     // margin-top: 35px;
     // margin-left: 29px !important;
-    margin-left: 11px;
+    // margin-left: 11px;
+    width: 100%;
 
     div {
       font-family: 'GothamPro';

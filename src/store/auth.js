@@ -25,12 +25,16 @@ export default {
     errorUReg: [],
     token: localStorage.getItem('token') || '',
     status: '',
-    user: localStorage.getItem('user') || ''
+    user: localStorage.getItem('user') || '',
+    currentUid: localStorage.getItem('currentUid') || ''
 
   },
   getters: {
     user: state => {
       return state.user
+    },
+    currentUid: state => {
+      return state.currentUid = localStorage.getItem('currentUid') 
     },
     errorU: state => {
       return state.errorU
@@ -49,6 +53,9 @@ export default {
   mutations: {
     addUser: (state, payload) => {
       state.user = payload
+      console.log(payload);
+      console.log(typeof payload);
+      state.currentUid = payload.id
     },
     // removeUser: (state) => {
     //   state.users = []
@@ -107,6 +114,7 @@ export default {
           commit('addUser', user)
 
           localStorage.setItem('token', token)
+          localStorage.setItem('currentUid', resp.data.user.id)
           localStorage.setItem('user', JSON.stringify(user))
           axios.defaults.headers.common['Authorization'] = token
 

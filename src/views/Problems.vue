@@ -36,8 +36,16 @@
                 :aria-controls="'collapseOne'+problem.id">
                 <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
               </button>
-              <h5 class="mb-0">
-                <p>{{idx+1}}. {{ problem.name }} </p>
+              {{problem}}
+              <h5 class="mb-0" style="display: flex;">
+                <!-- <p>{{idx+1}}. {{ problem.name }} </p> -->
+                <p>{{idx+1}}.</p>
+                <div :ref="'name-div'+problem.id" @click="event => {onClickInput(problem.id, event)}"> {{ problem.name}}
+                </div>
+                <input class="form-control" style="display: none;" :id="'problem-name'+problem.id"
+                  v-model="problem.name" :ref="'problem-name' + problem.id"
+                  @keyup.enter="event => {editProblemName(problem.name, problem.id, event)}"
+                  @focus="onFocusInput($event)" @blur="event => {onBlurInput(problem.name, problem.id, event)}" />
               </h5>
             </div>
 
@@ -55,10 +63,13 @@
                 </v-popover>
               </div>
               <div>
-                <clock-icon size="1.5x" class="custom-class" style="color: #4EAD96;"></clock-icon>
+                <clock-icon size="1.5x" class="custom-class" @click="changeUrgency(problem.id, problem.urgency)"
+                  :style="[problem.urgency == `Срочная` ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]"></clock-icon>
               </div>
               <div>
-                <alert-circle-icon size="1.5x" class="custom-class" style="color: #4EAD96;"></alert-circle-icon>
+                <alert-circle-icon size="1.5x" class="custom-class"
+                  :style="[problem.importance == `Важная` ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]"
+                  @click="changeImportance(problem.id, problem.importance)"></alert-circle-icon>
               </div>
 
               <div>
@@ -71,11 +82,11 @@
                   </button>
                 </div>
               </div>
-              <vue-ellipse-progress :progress="progress" color="#56CCF2" :size=45 :thickness="4">
+              <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=45 :thickness="4">
                 <span v-show="!progressClicked" slot="legend-value"
-                  @click="clickProgress(problem.id)">{{progress}}%</span>
+                  @click="clickProgress(problem.id)">{{problem.progress}}%</span>
                 <input v-show="progressClicked" :ref="'progress-bar'+problem.id" class="progress-input" type="text"
-                  v-model="progress" @blur="editProgress(problem.id)" @keyup.enter="editProgress(problem.id)">
+                  v-model="problem.progress" @blur="editProgress(problem.id, problem.progress)" @keyup.enter="editProgress(problem.id, problem.progress)">
               </vue-ellipse-progress>
             </div>
 
@@ -84,7 +95,7 @@
                 <span style="color: #828282;">
                   Подробнее:
                 </span>
-               <v-popover offset="16">
+                <v-popover offset="16">
                   <file-text-icon size="1.5x" class="custom-class details tooltip-target b3">
                   </file-text-icon>
 
@@ -97,16 +108,20 @@
                 <!-- <file-text-icon size="1.5x" class="custom-class"></file-text-icon> -->
               </div>
               <div>
-                <span style="color: #4EAD96;">
-                  Срочная:
+                <span :style="[problem.urgency == `Срочная` ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]">
+                  {{problem.urgency}}:
+
                 </span>
-                <clock-icon size="1.5x" class="custom-class" style="color: #4EAD96;"></clock-icon>
+                <clock-icon size="1.5x" class="custom-class" @click="changeUrgency(problem.id, problem.urgency)"
+                  :style="[problem.urgency == `Срочная` ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]"></clock-icon>
               </div>
               <div>
-                <span style="color: #4EAD96;">Важная: </span>
-                <alert-circle-icon size="1.5x" class="custom-class" style="color: #4EAD96;"></alert-circle-icon>
+                <span
+                  :style="[problem.importance == `Важная` ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]">{{problem.importance}}:</span>
+                <alert-circle-icon size="1.5x" class="custom-class"
+                  :style="[problem.importance == `Важная` ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]"
+                  @click="changeImportance(problem.id, problem.importance)"></alert-circle-icon>
               </div>
-
               <div>
                 <span style="color: #828282;">У меня такая же проблема: </span>
                 <div class="like">
@@ -120,17 +135,14 @@
               </div>
               <div>
                 <span style="color: #828282;">
-                  Прогресс решения:              
+                  Прогресс решения:
                 </span>
-                <vue-ellipse-progress :progress="progress" color="#56CCF2" :size=45 :thickness="4">
-                <span v-show="!progressClicked" slot="legend-value" style="padding: 0;"
-                  @click="clickProgress(problem.id)">{{progress}}%</span>
-                <input v-show="progressClicked" :ref="'progress-bar'+problem.id" class="progress-input" type="text"
-                  v-model="progress" @blur="editProgress(problem.id)" @keyup.enter="editProgress(problem.id)">
-              </vue-ellipse-progress>
-                <!-- <circle-counter width="20rem" height="20rem" text="label"/> -->
-                <!-- <thumbs-up-icon size="1.5x" class="custom-class"></thumbs-up-icon>
-                <thumbs-up-icon size="1.5x" class="custom-class"></thumbs-up-icon> -->
+                <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=45 :thickness="4">
+                  <span v-show="!progressClicked" slot="legend-value" style="padding: 0;"
+                    @click="clickProgress(problem.id)">{{problem.progress}}%</span>
+                  <input v-show="progressClicked" :ref="'progress-bar'+problem.id" class="progress-input" type="text"
+                    v-model="problem.progress" @blur="editProgress(problem.id, problem.progress)" @keyup.enter="editProgress(problem.id, problem.progress)">
+                </vue-ellipse-progress>
               </div>
             </div>
 
@@ -146,6 +158,8 @@
 
           <div :id="'collapseOne'+problem.id" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
             <div class="card-body">
+              {{problem.possible_solution}}
+              {{solutions}}
               <div class="card" style="padding-top: 34px;" v-if="mounted">
                 <PopupShow v-if="openShow" :val="paramsModal" />
                 <!-- + 4 accordions -->
@@ -193,13 +207,14 @@
                         style="width: 100%;">
                         <div class="card-body">
                           <!-- plan,  -->
-                          <textarea cols="30" rows="10" :ref="'textarea_plan'+problem.id"
-                            @keydown.enter.prevent.exact="event => {editPlan(event)}"
+                          <textarea cols="35" rows="10" :ref="'textarea_plan'+problem.id" v-model="solutions[0].plan"
+                            @keydown.enter.prevent.exact="event => {editPlan(solutions[0].id,solutions[0].plan, event)}"
                             @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
-                            @blur="event => {onBlurTextarea( event, 'plan')}"></textarea>
-                          <div class="hidden">
+                            @blur="event => {onBlurTextarea(event, 'plan')}"></textarea>
+                          <div class="hidden" style="bottom: 13%; right: 11%;">
                             <!-- plan, -->
-                            <button class="input-btn" @mousedown="event => {editPlan( event)}">
+                            <button class="input-btn"
+                              @mousedown="event => {editPlan(solutions[0].id,solutions[0].plan, event)}">
                               <check-icon size="1x" class="custom-class"></check-icon>
                             </button>
                             <div @mousedown="event => onClear(event, problem.id, 'plan')">
@@ -235,13 +250,14 @@
                         data-parent="#results">
                         <div class="card-body row" style="flex-direction: row;">
                           <div class="col-4" style="flex-direction: column;">
-                            <label>Команда</label>
-                            <textarea cols="30" rows="10" :ref="'textarea_team'+problem.id"
-                              @keydown.enter.prevent.exact="event => {editTeam(event)}"
+                            <label style="width: 100%;">Команда</label>
+                            <textarea cols="35" rows="10" :ref="'textarea_team'+problem.id" v-model="solutions[0].team"
+                              @keydown.enter.prevent.exact="event => {editTeam(solutions[0].id, solutions[0].team, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea(event, 'team')}"></textarea>
                             <div class="hidden">
-                              <button class="input-btn" @mousedown="event => {editTeam(team, event)}">
+                              <button class="input-btn"
+                                @mousedown="event => {editTeam(solutions[0].id, solutions[0].team, event)}">
                                 <check-icon size="1x" class="custom-class"></check-icon>
                               </button>
                               <div @mousedown="event => onClear(event, problem.id, 'team')">
@@ -251,17 +267,16 @@
                               </div>
                             </div>
                           </div>
+
                           <div class="col-4" style="flex-direction: column;">
-                            <label>Опыт</label>
-                            <!-- v-model="solution.name"  :ref="'textarea' + solution.id" -->
-                            <!-- exprnce, -->
-                            <textarea cols="30" rows="10" :ref="'textarea_exp'+problem.id"
-                              @keydown.enter.prevent.exact="event => {editExp(event)}"
+                            <label style="width: 100%;">Опыт</label>
+                            <textarea cols="35" rows="10" :ref="'textarea_exp'+problem.id" v-model="problem.experience"
+                              @keydown.enter.prevent.exact="event => {editExp(problem.id, problem.experience, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea( event, 'exp')}"></textarea>
                             <div class="hidden">
                               <button class="input-btn"
-                                @mousedown="event => {editExp(solution.name, solution.id, event)}">
+                                @mousedown="event => {editExp(problem.id, problem.experience, event)}">
                                 <check-icon size="1x" class="custom-class"></check-icon>
                               </button>
                               <div @mousedown="event => onClear(event, problem.id, 'exp')">
@@ -272,13 +287,14 @@
                             </div>
                           </div>
                           <div class="col-4" style="flex-direction: column;">
-                            <label>Результат</label>
-                            <textarea cols="30" rows="10" :ref="'textarea_result'+problem.id"
-                              @keydown.enter.prevent.exact="event => {editResult(event)}"
+                            <label style="width: 100%;">Результат</label>
+                            <textarea cols="35" rows="10" :ref="'textarea_result'+problem.id" v-model="problem.result"
+                              @keydown.enter.prevent.exact="event => {editResult(problem.id, problem.result, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea(event, 'result')}"></textarea>
                             <div class="hidden">
-                              <button class="input-btn" @mousedown="event => {editResult(result, event)}">
+                              <button class="input-btn"
+                                @mousedown="event => {editResult(problem.id, problem.result, event)}">
                                 <check-icon size="1x" class="custom-class"></check-icon>
                               </button>
                               <div @mousedown="event => onClear(event, problem.id, 'result')">
@@ -287,7 +303,10 @@
                                 </button>
                               </div>
                             </div>
-                            <button class="btn btnMain problem-solved">Проблема решена</button>
+                            <button v-show="solutions[0].executor_id == currentUid" class="btn btnMain problem-solved" @click="problemSolved(problem.id)">Проблема решена</button>
+
+                            <button v-show="problem.creator_id == currentUid" class="btn btnMain problem-solved" @click="problemConfirm(problem.id)">Подтвердить решение</button>
+                            <button v-show="problem.creator_id == currentUid" class="btn btnMain problem-solved" @click="problemReject(problem.id)">Отклонить</button>
                           </div>
                         </div>
                       </div>
@@ -383,16 +402,18 @@
       openDelete: false,
       openShow: false,
       mounted: false,
+      editableProblem: false,
 
       paramsModal: {},
       // pageNumber: 0,
       // size: 25,
-      progress: 35,
+      // progress: 35,
       progressClicked: false,
 
       checkedGroups: [],
 
       currentTextarea: '',
+      currentProblemName: ''
     }),
     components: {
       TooltipProblem,
@@ -427,7 +448,7 @@
       },
     },
     computed: {
-      ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups']),
+      ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', 'user', 'currentUid']),
 
       // pageCount() {
       //   let l = this.problems.length,
@@ -442,15 +463,49 @@
     },
 
     methods: {
+      async problemReject(id) {
+        await this.$store.dispatch('problemReject', id)
+      },
+      async problemConfirm(id) {
+        await this.$store.dispatch('problemConfirm', id)
+      },
+      async problemSolved(id) {
+        await this.$store.dispatch('problemSolved', id)
+      },
+      async changeUrgency(id, urgency) {
+        urgency === 'Обычная' ? await this.$store.dispatch('changeUrgency', {
+          id,
+          urgency: "Срочная"
+        }) : await this.$store.dispatch('changeUrgency', {
+          id,
+          urgency: "Обычная"
+        })
+      },
+      async changeImportance(id, importance) {
+        console.log(importance);
+        importance === 'Обычная' ? await this.$store.dispatch('changeImportance', {
+          id,
+          importance: "Важная"
+        }) : await this.$store.dispatch('changeImportance', {
+          id,
+          importance: "Обычная"
+        })
+      },
+
       clickProgress(id) {
         this.progressClicked = true
         this.$nextTick(() => {
           this.$refs['progress-bar' + id][0].focus()
+          this.$refs['progress-bar' + id][1].focus()
         })
       },
-      editProgress(id) {
+
+      async editProgress(id, progress) {
+        console.log(progress);
         this.progressClicked = false
         console.log(id);
+
+        await this.$store.dispatch('editProgress', {id, progress})
       },
 
       nextPage() {
@@ -518,10 +573,68 @@
         })
       },
 
+
+      onClickInput(id, event) {
+        // this.editableProblem = true
+        console.log(id);
+        event.target.style.display = 'none'
+        this.$nextTick(() => {
+          console.log(this.$refs['problem-name' + id][0]);
+          this.$refs['problem-name' + id][0].style.display = 'flex'
+          this.$refs['problem-name' + id][0].focus()
+        })
+      },
+
+      async onBlurInput(name, id, event) {
+        // this.editableProblem = false
+        console.log(event);
+        console.log(name, id);
+        // event.path[0].nextElementSibling.classList.remove('flex')
+        await this.$store.commit('setError404', '')
+        if (name !== this.currentProblemName) {
+          await this.$store.dispatch('editProblemName', {
+            name,
+            id
+          }).catch(() => {
+            this.$store.commit('editProblemName', {
+              name: this.currentProblemName,
+              id
+            })
+          })
+          event.target.style.display = 'none'
+          this.$refs['name-div' + id][0].style.display = 'flex'
+        } else {
+          this.$store.commit('editProblemName', {
+            name: this.currentProblemName,
+            id
+          })
+          event.target.style.display = 'none'
+          this.$refs['name-div' + id][0].style.display = 'flex'
+        }
+
+      },
+      onFocusInput(event) {
+        this.currentProblemName = event.target.value
+        console.log(this.currentProblemName);
+        // event.path[0].nextElementSibling.classList.add('flex')
+      },
+
+
+      async editProblemName(name, id, event) {
+        // event.preventDefault();
+        console.log(name, id, event);
+        await this.$store.commit('setError404', '')
+        event.target.blur()
+      },
+
+
+
+
       onFocusTextarea(event) {
         this.currentTextarea = event.target.value
         console.log(this.currentTextarea);
         event.path[0].nextElementSibling.classList.add('flex')
+        console.log(this.solutions);
       },
 
       // name, 
@@ -577,47 +690,69 @@
         e.target.setRangeText("\n", caret, caret, "end");
         this.text = e.target.value;
       },
-      editPlan(event) {
+      async editPlan(id, plan, event) {
         event.target.blur()
-
-        console.log(this.currentTextarea);
-        console.log('ok');
-        // send v-model
-        //   await this.$store.commit('setError404', '')
-        // await this.$store.dispatch('editPlan', {
-        //     name,
-        //     id
-        //   })
+        console.log(id);
+        console.log(plan);
+        // console.log(this.currentTextarea);
+        await this.$store.commit('setError404', '')
+        await this.$store.dispatch('editPlan', {
+            plan,
+            id
+          })
+          .catch(() => {
+            this.$store.commit('editPlan', {
+              plan: this.currentTextarea,
+              id
+            })
+          })
       },
-      editTeam(event) {
+      async editTeam(id, team, event) {
+        console.log(id, team);
+        console.log(event);
+        // console.log(this.currentTextarea);
+        await this.$store.commit('setError404', '')
+        await this.$store.dispatch('editTeam', {
+            team,
+            id
+          })
+          .catch(() => {
+            this.$store.commit('editTeam', {
+              team: this.currentTextarea,
+              id
+            })
+          })
+      },
+      async editExp(id, experience, event) {
+        console.log(event);
+        console.log(this.currentTextarea);
+        await this.$store.commit('setError404', '')
+        await this.$store.dispatch('editExp', {
+            experience,
+            id
+          })
+          .catch(() => {
+            this.$store.commit('editExp', {
+              experience: this.currentTextarea,
+              id
+            })
+          })
+      },
+      async editResult(id, result, event) {
         console.log(event);
         console.log(this.currentTextarea);
         // send v-model
-        //   await this.$store.commit('setError404', '')
-        // await this.$store.dispatch('editTeam', {
-        //     name,
-        //     id
-        //   })
-      },
-      editExp(event) {
-        console.log(event);
-        console.log(this.currentTextarea);
-        // send v-model
-        //   await this.$store.commit('setError404', '')
-        // await this.$store.dispatch('editExp', {
-        //     name,
-        //     id
-        //   })
-      },
-      editResult(event) {
-        console.log(event);
-        console.log(this.currentTextarea);
-        // send v-model
-        //   await this.$store.commit('setError404', '')
-        // await this.$store.dispatch('editResult', {
-        //     name,
-        //     id
-        //   })
+        await this.$store.commit('setError404', '')
+        await this.$store.dispatch('editResult', {
+            result,
+            id
+          })
+          .catch(() => {
+            this.$store.commit('editResult', {
+              result: this.currentTextarea,
+              id
+            })
+          })
       },
 
     }
@@ -625,6 +760,13 @@
 </script>
 
 <style scoped lang="scss">
+  .form-control {
+    border: none;
+    border-radius: 6px;
+    background-color: #F0F0F0;
+    color: #2D453F;
+    font-size: 18px;
+  }
 
   .progress-input {
     width: 22px;
@@ -681,7 +823,7 @@
     width: auto;
     height: 32px;
     margin-left: 8px;
-    background-color: #e2e2e2;
+    background-color: #F4F4F4;
     border-radius: 8px;
 
     svg {
@@ -695,6 +837,9 @@
     visibility: hidden;
     flex-direction: row;
     justify-content: flex-end;
+    // position: absolute;
+    // bottom: 17%;
+    // right: 18%;
   }
 
   .flex {
@@ -710,6 +855,8 @@
     outline: none;
     border: none;
     resize: none;
+    background-color: #EBEBEB;
+    border-radius: 9px;
   }
 
   .spinner-border {

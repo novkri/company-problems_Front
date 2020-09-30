@@ -157,17 +157,18 @@
       },
       async addProblem() {
         console.log(this.formData);
-        // await this.$store.dispatch('postProblem', {
-        //   // name: this.name,
-        //   // description: this.description,
-        //   // solution: this.solution,
-        //   // group: this.group
-        // }).then(() => {
-        //   if (!this.error) {
-        //     this.name = ''
-        //     document.getElementById('close').click()
-        //   } 
-        // })
+        await this.$store.dispatch('postProblem', {
+          // params: {...this.formData}
+          name: this.formData.name,
+          description: this.formData.description,
+          possible_solution: this.formData.solution,
+          // group: this.group
+        }).then(() => {
+          if (!this.error) {
+            this.name = ''
+            document.getElementById('close').click()
+          } 
+        })
       },
 
       close() {

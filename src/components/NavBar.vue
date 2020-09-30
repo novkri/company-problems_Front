@@ -57,11 +57,10 @@
         Список проблем: (отдел)
       </div>
       <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')">
-        Срочность/важность:
+        <span>Срочность/важность:</span>
         <div class="select" style="position: relative;" ref="select">
           <ss-select v-model="importance" :options="statusesImportance" track-by="name" class="form-control"
-            @change="changeImportance(importance)" disable-by="disabled"
-            :class="[importance == 'Выполнено' ? 'green' : 'gray']" id="ss-select" style="width: fit-content;">
+            @change="filterImportance(importance)" disable-by="disabled" id="ss-select" style="width: fit-content;">
             <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
               style="cursor: pointer; width: 100%;">
               <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
@@ -82,10 +81,52 @@
         </div>
       </div>
       <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')">
-        Срок исполнения:
+        <span>Срок исполнения:</span>
+        <div class="select" style="position: relative;" ref="select">
+          <ss-select v-model="time" :options="statusesTime" track-by="name" class="form-control"
+            @change="filterTime(time)" disable-by="disabled" :class="[importance == 'Выполнено' ? 'green' : 'gray']"
+            id="ss-select" style="width: fit-content;">
+            <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+              style="cursor: pointer; width: 100%;">
+              <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
+                {{ $get(selectedOption, 'name') || `${time ? time : 'Выбрать'}`}}
+                <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
+              </ss-select-toggle>
+
+              <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;">
+                <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index" :key="index"
+                  class="px-4 py-2 border-b cursor-pointer" :class="[
+                                pointerIndex == index ? 'bg-light text-dark' : '',
+                                $selected(option) ? 'bg-light text-dark' : '',
+                                $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
+                              ]">{{ option.name }}</ss-select-option>
+              </section>
+            </div>
+          </ss-select>
+        </div>
       </div>
       <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')">
-        Статус:
+        <span>Статус:</span>
+                  <ss-select v-model="statusProblem" :options="statusesProblem" track-by="name" class="form-control"
+            @change="filterProblemStatus(statusProblem)" disable-by="disabled" :class="[importance == 'Выполнено' ? 'green' : 'gray']"
+            id="ss-select" style="width: fit-content;">
+            <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+              style="cursor: pointer; width: 100%;">
+              <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
+                {{ $get(selectedOption, 'name') || `${statusProblem ? statusProblem : 'Выбрать'}`}}
+                <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
+              </ss-select-toggle>
+
+              <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;">
+                <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index" :key="index"
+                  class="px-4 py-2 border-b cursor-pointer" :class="[
+                                pointerIndex == index ? 'bg-light text-dark' : '',
+                                $selected(option) ? 'bg-light text-dark' : '',
+                                $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
+                              ]">{{ option.name }}</ss-select-option>
+              </section>
+            </div>
+          </ss-select>
       </div>
     </nav>
   </div>
@@ -98,7 +139,7 @@
     SsSelectOption
   } from 'ss-select'
 
-    import {
+  import {
     ChevronDownIcon,
   } from 'vue-feather-icons'
 
@@ -109,7 +150,7 @@
 
   export default {
     data: () => ({
-            statusesImportance: [{
+      statusesImportance: [{
           name: "Только важные"
         },
         {
@@ -125,6 +166,29 @@
           name: "Все"
         }
       ],
+      statusesTime: [{
+          name: "Текущий квартал"
+        },
+        {
+          name: "Остальные"
+        },
+        {
+          name: "Все"
+        },
+      ],
+            statusesProblem: [{
+          name: "на рассмотрении"
+        },
+        {
+          name: "В работе"
+        },
+        {
+          name: "На проверке заказчика"
+        },
+        {
+          name: "Все"
+        },
+      ]
     }),
     components: {
       ChevronDownIcon,
@@ -161,9 +225,14 @@
   .body {
     display: flex;
   }
+
   .filter {
     display: flex;
     align-items: center;
+
+    span {
+      padding-right: 5px;
+    }
   }
 
   #nav {
@@ -342,6 +411,23 @@
     display: flex;
     padding: 0;
     width: fit-content;
+
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #92D2C3;
+      border-radius: 3px;
+      height: 73px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #F2F2F2;
+      border-left: 4px solid white;
+      border-right: 4px solid white;
+    }
+
   }
 
   section {

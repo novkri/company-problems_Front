@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="header row">
-      <div class="col-5" style="margin: 0 20px 0 -15px;">
+      <div class="col-4" style="margin: 0 20px 0 -15px;">
         <img src="@/assets/tasks.png">
-        Задачи:
+        <span>Задачи:</span>
       </div>
-      <div class="subt col-2">Статус выполнения</div>
-      <div class="subt col-2">Срок исполнения</div>
-      <div class="subt col-2">Исполнитель</div>
+      <div class="subt col-3" style="justify-content: center;display: flex;"><span>Статус выполнения</span></div>
+      <div class="subt col-2"><span>Срок исполнения</span></div>
+      <div class="subt col-2" style="justify-content: center;display: flex;"><span>Исполнитель</span></div>
       <div style="width: 54px" class="col">
       </div>
     </div>
@@ -15,7 +15,7 @@
     <div class="container row">
       <ol>
         <li id="list" v-for="(task, idx) in tasks" :key="idx">
-          <div class="task-title col-5"
+          <div class="task-title col-4"
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">
             <!-- <input class="form-control" @focus="onFocusInput($event)" @keyup.enter="event => onKey(event)"
               @blur="editTask(task)" v-model="task.description"> -->
@@ -36,7 +36,7 @@
 
           </div>
 
-          <div class="select col-2" style="position: relative;" ref="select">
+          <div class="select col-3" style="position: relative; margin:auto;" ref="select">
             <ss-select v-model="task.status" :options="statusesT" track-by="name" class="form-control"
               @change="changeStatusTask(task.id, task.status)" disable-by="disabled"
               :class="[task.status == 'Выполнено' ? 'green' : task.status == 'В процессе' ? 'blue' : 'gray']"
@@ -103,8 +103,6 @@
         </li>
       </ol>
     </div>
-
-
     <div>
       <div style="padding: 20px; cursor: pointer; width: fit-content;" v-if="addNotClicked"
         @click.prevent="displayInput">
@@ -271,6 +269,7 @@
       },
 
       async changeStatusTask(id, status) {
+        await this.$store.commit('setError404', '')
         await this.$store.dispatch('changeStatusTask', {
           status: status.name,
           id
@@ -335,8 +334,8 @@
       onBlurInput(name, id, event) {
         this.editable = false
         event.path[0].nextElementSibling.classList.remove('flex')
-        this.$store.commit('editSolutionOther', {
-          name: this.currentTaskName,
+        this.$store.commit('editTask', {
+          description: this.currentTaskName,
           id
         })
       },
@@ -353,12 +352,13 @@
         this.$refs['textarea_task' + id][0].value = this.currentTaskName
       },
 
-      async editTask(task) {
+      async editTask(task, id) {
+        console.log(task, id);
         if (task.description !== this.currentTaskName) {
           await this.$store.commit('setError404', '')
           await this.$store.dispatch('editTask', {
-            description: task.description,
-            id: task.id
+            description: task,
+            id: id
           }).catch(() => {
             this.$store.commit('editTask', {
               description: this.currentTaskName,
@@ -541,6 +541,7 @@
   //   line-height: 24px;
   //   letter-spacing: 0.15px;
   // }
+
 
   .selectResponsible {
     display: flex;
