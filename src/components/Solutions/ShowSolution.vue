@@ -41,10 +41,12 @@
                   <!-- {{val.possible_solution}} -->
                   <div @click="onClickInput(val.id)" v-show="!editable && !solution.name">{{val.possible_solution}}
                   </div>
-                  <div :ref="'sol-div'+val.id" @click="onClickInput(val.id)" v-show="!editable && solution.name">{{solution.name}}</div>
+                  <div :ref="'sol-div'+val.id" @click="onClickInput(val.id)" v-show="!editable && solution.name">
+                    {{solution.name}}</div>
                   <input v-show="editable" class="form-control" :id="'textarea'+val.id" v-model="solution.name"
                     :ref="'textarea' + val.id" @keyup.enter="event => {editSolClick(solution.name, solution.id, event)}"
-                    @focus="event => onFocusInput(event, val.id)" @blur="event => {onBlurInput(solution.name, solution.id, event)}" />
+                    @focus="event => onFocusInput(event, val.id)"
+                    @blur="event => {onBlurInput(solution.name, solution.id, event)}" />
                   <div class="hidden" :ref="'hidden'+val.id">
                     <button class="input-btn" @mousedown="event => {editSolClick(solution.name, solution.id, event)}">
                       <check-icon size="1x" class="custom-class"></check-icon>
@@ -294,13 +296,18 @@
           this.$store.dispatch('editSolution', {
             id,
             name
-          }) 
+          }).catch(() => {
+            this.$store.commit('editSolutionOther', {
+              name: this.currentSolutionName,
+              id
+            })
+          })
         }
 
-          this.$refs['textarea' + id][0].style.display = 'none'
-          this.$refs['sol-div' + id][0].style.display = 'flex'
-          this.$refs['hidden' + id][0].classList.remove('flex')
-       
+        this.$refs['textarea' + id][0].style.display = 'none'
+        this.$refs['sol-div' + id][0].style.display = 'flex'
+        this.$refs['hidden' + id][0].classList.remove('flex')
+
 
       },
       onFocusInput(event, id) {
