@@ -281,15 +281,12 @@
         event.target.style.display = 'none'
         this.$nextTick(() => {
           if (type == 'name') {
-
             this.$refs['group-name' + id][0].style.display = 'flex'
             this.$refs['group-name' + id][0].focus()
           } else {
             this.$refs['group-name-short' + id][0].style.display = 'flex'
             this.$refs['group-name-short' + id][0].focus()
           }
-
-
         })
       },
 
@@ -308,7 +305,6 @@
 
 
       async onBlurInput(name, id, event, type) {
-        console.log(name, 'blur');
         if (name !== this.currentGroupName) {
           type === 'name' ? this.$store.dispatch('editGroup', {
             id,
@@ -319,18 +315,15 @@
           })
         }
 
-if (type == 'name' ) {
-  this.$refs['group-name' + id][0].style.display = 'none'
-        this.$refs['name-div' + id][0].style.display = 'flex'
-        this.$refs['hidden' + id][0].classList.remove('flex')
-
- 
-} else {
- this.$refs['group-name-short' + id][0].style.display = 'none'
-        this.$refs['short-name-div' + id][0].style.display = 'flex'
-        this.$refs['hidden-short' + id][0].classList.remove('flex')
-}
-
+        if (type == 'name') {
+          this.$refs['group-name' + id][0].style.display = 'none'
+          this.$refs['name-div' + id][0].style.display = 'flex'
+          this.$refs['hidden' + id][0].classList.remove('flex')
+        } else {
+          this.$refs['group-name-short' + id][0].style.display = 'none'
+          this.$refs['short-name-div' + id][0].style.display = 'flex'
+          this.$refs['hidden-short' + id][0].classList.remove('flex')
+        }
       },
 
       onFocusInput(event, id, type) {
@@ -344,8 +337,6 @@ if (type == 'name' ) {
 
       onClear(event, id, type) {
         event.preventDefault()
-        // type === 'name' ? document.getElementById('groupname' + id).value = this.currentGroupName : document
-        //   .getElementById('groupshort' + id).value = this.currentGroupName
         type === 'name' ? this.$store.commit('editGroup', {
           name: this.currentGroupName,
           id
@@ -366,9 +357,6 @@ if (type == 'name' ) {
         }
 
         event.target.blur()
-        // this.$refs['group-name-short' + id][0].style.display = 'none'
-        // this.$refs['short-name-div' + id][0].style.display = 'flex'
-        // this.$refs['hidden-short' + id][0].classList.remove('flex')
       },
 
       async editGroupName(name, id, event) {
@@ -382,11 +370,6 @@ if (type == 'name' ) {
         }
 
         event.target.blur()
-
-        // this.$refs['group-name' + id][0].style.display = 'none'
-        // this.$refs['name-div' + id][0].style.display = 'flex'
-        // this.$refs['hidden' + id][0].classList.remove('flex')
-
       },
 
       deleteGroup(group) {
@@ -644,7 +627,7 @@ if (type == 'name' ) {
     background-color: #fff;
     border-radius: 8px;
     width: 100%;
-        font-size: 18px;
+    font-size: 18px;
     line-height: 24px;
   }
 

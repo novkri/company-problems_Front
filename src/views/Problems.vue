@@ -899,6 +899,20 @@
 
   }
 
+  h5 {
+
+    font-family: 'GothamPro';
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    color: #000000;
+
+    input {
+      height: fit-content;
+      padding: 3px;
+    }
+  }
+
   .name {
     display: flex;
 
@@ -994,6 +1008,7 @@
         line-height: 24px;
         letter-spacing: 0.15px;
         display: flex;
+
       }
 
       .card-header {
@@ -1077,13 +1092,14 @@
     height: fit-content !important;
     line-height: 15px;
   }
+
   .problem-confirm {
     padding: 10px 7px;
     font-family: 'GothamPro';
-width: fit-content;
-height: fit-content;
-font-size: 16px;
-line-height: 15px;
+    width: fit-content;
+    height: fit-content;
+    font-size: 16px;
+    line-height: 15px;
   }
 
   .btn-to-groups {

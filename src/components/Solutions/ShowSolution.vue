@@ -15,7 +15,7 @@
       <div>
         <div class="subtitle row subt">
           <div class="col-5">
- 
+
           </div>
           <div class="col-2" style="justify-content: center;display: flex;">
             <span>Статус выполнения</span>
@@ -27,25 +27,25 @@
             <span>Ответственный</span>
           </div>
           <div style="width: 20px" class="col">
-             
+
           </div>
         </div>
         <div>
 
           <ol>
             <li v-for="(solution, idx) in solutions" :key="idx" id="list" class="row">
-<!-- {{solution}} -->
+              <!-- {{solution}} -->
               <div class="list-item col-5">
                 <div class="desc" ref="desc">
                   <span>Решение: </span>
                   <!-- {{val.possible_solution}} -->
-                   <div @click="onClickInput(val.id)" v-show="!editable && !solution.name">{{val.possible_solution}}</div>
-                  <div @click="onClickInput(val.id)" v-show="!editable && solution.name">{{solution.name}}</div>
+                  <div @click="onClickInput(val.id)" v-show="!editable && !solution.name">{{val.possible_solution}}
+                  </div>
+                  <div :ref="'sol-div'+val.id" @click="onClickInput(val.id)" v-show="!editable && solution.name">{{solution.name}}</div>
                   <input v-show="editable" class="form-control" :id="'textarea'+val.id" v-model="solution.name"
-                    :ref="'textarea' + val.id"
-                    @keyup.enter="event => {editSolClick(solution.name, solution.id, event)}"
-                    @focus="onFocusInput($event)" @blur="event => {onBlurInput(solution.name, solution.id, event)}" />
-                  <div class="hidden">
+                    :ref="'textarea' + val.id" @keyup.enter="event => {editSolClick(solution.name, solution.id, event)}"
+                    @focus="event => onFocusInput(event, val.id)" @blur="event => {onBlurInput(solution.name, solution.id, event)}" />
+                  <div class="hidden" :ref="'hidden'+val.id">
                     <button class="input-btn" @mousedown="event => {editSolClick(solution.name, solution.id, event)}">
                       <check-icon size="1x" class="custom-class"></check-icon>
                     </button>
@@ -59,14 +59,13 @@
               </div>
 
               <div class="select col-2" style="position: relative;" ref="select">
-                <ss-select v-model="solution.status" :options="statuses" track-by="name"
-                  class="form-control" @change="changeStatus(solution.id, solution.status)" disable-by="disabled"
-                  :class="[solution.status == 'Выполнено' ? 'green' : 'gray']" id="ss-select"
-                  style="width: fit-content;">
+                <ss-select v-model="solution.status" :options="statuses" track-by="name" class="form-control"
+                  @change="changeStatus(solution.id, solution.status)" disable-by="disabled"
+                  :class="[solution.status == 'Выполнено' ? 'green' : 'gray']" id="ss-select" style="width: auto;">
                   <div
                     slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                     style="cursor: pointer; width: 100%;">
-                    <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
+                    <ss-select-toggle id="select-toggle">
                       {{ $get(selectedOption, 'name') || `${solution.status ? solution.status : 'Выбрать'}`}}
                       <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                     </ss-select-toggle>
@@ -95,7 +94,7 @@
                   <div
                     slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                     style="cursor: pointer;">
-                    <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between" id="select-toggle">
+                    <ss-select-toggle class="flex items-center justify-between" id="select-toggle">
                       <award-icon size="1.5x" class="custom-class"></award-icon>
                       {{ $get(selectedOption, 'id') || `${allUsers.find(u => u.id == solution.executor_id) ? allUsers.find(u => u.id == solution.executor_id).surname + ' ' + allUsers.find(u => u.id == solution.executor_id).name[0] + '.' : 'Выбрать'}`}}
                     </ss-select-toggle>
@@ -238,9 +237,12 @@
           status: status.name,
           id
         }).catch(() => {
-          this.$store.commit('editStatus', {id, status: 'В процессе'})
-        }
-          
+            this.$store.commit('editStatus', {
+              id,
+              status: 'В процессе'
+            })
+          }
+
         )
       },
 
@@ -277,6 +279,8 @@
 
       onClickInput(id) {
         this.editable = true
+
+        event.target.style.display = 'none'
         this.$nextTick(() => {
           this.$refs['textarea' + id][0].focus()
         })
@@ -284,39 +288,48 @@
 
       onBlurInput(name, id, event) {
         this.editable = false
-        event.path[0].nextElementSibling.classList.remove('flex')
+        console.log(event);
+
+        if (name !== this.currentSolutionName) {
+          this.$store.dispatch('editSolution', {
+            id,
+            name
+          }) 
+        }
+
+          this.$refs['textarea' + id][0].style.display = 'none'
+          this.$refs['sol-div' + id][0].style.display = 'flex'
+          this.$refs['hidden' + id][0].classList.remove('flex')
+       
+
+      },
+      onFocusInput(event, id) {
+        this.currentSolutionName = event.target.value
+        this.currentSolutionInput = event.target
+
+        this.$refs['hidden' + id][0].classList.add('flex')
+      },
+
+      onClear(event, id) {
+        event.preventDefault()
+
         this.$store.commit('editSolutionOther', {
           name: this.currentSolutionName,
           id
         })
       },
-      onFocusInput(event) {
-        this.currentSolutionName = event.target.value
-        this.currentSolutionInput = event.target
-
-        event.path[0].nextElementSibling.classList.add('flex')
-      },
-
-      onClear(event, id) {
-        event.preventDefault()
-        document.getElementById('textarea' + id).value = this.currentSolutionName
-      },
 
       async editSolClick(name, id) {
         this.editable = false
-        // event.preventDefault();
-        await this.$store.commit('setError404', '')
-        await this.$store.dispatch('editSolution', {
+
+        if (name !== this.currentSolutionName) {
+          await this.$store.commit('editSolutionOther', {
             name,
             id
           })
-          .then(() => {})
-        // .catch(() => {
-        //   this.$store.commit('editSolutionOther', {
-        //     name: this.currentSolutionName,
-        //     id
-        //   })
-        // })
+        }
+
+        event.target.blur()
       },
     }
   }
@@ -527,10 +540,10 @@
 
   .selectResponsible {
     display: flex;
-    padding-left: 10px;
+    margin-left: 10px;
 
     #ss-select {
-      padding-left: 8px;
+      // padding-left: 8px;
       align-items: center;
       display: flex;
       height: 36px;
@@ -539,18 +552,24 @@
       width: fit-content;
     }
 
+    #select-toggle {
+      font-family: "GothamPro"
+    }
+
     select {
       margin: 0;
       width: 100%;
       background-color: #f6f6f6;
     }
   }
+
   .search {
     outline: none;
     border: none;
     background-color: #F7F7F7;
     border-radius: 8px;
   }
+
   .cursor-pointer {
     border-radius: 8px;
   }
@@ -818,7 +837,14 @@
     background-color: #f0f0f0;
   }
 
-
+  #select-toggle {
+    font-family: 'GothamPro-Medium';
+    font-size: 16px;
+    line-height: 24px;
+    width: fit-content;
+    margin: auto;
+    letter-spacing: 0.15px;
+  }
 
   .addNewTask {
     display: flex;

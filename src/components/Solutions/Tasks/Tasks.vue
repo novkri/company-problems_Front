@@ -70,8 +70,8 @@
               @change="selectExecutorTask(task)" disable-by="disabled" id="ss-select" style="width: fit-content;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                 @click="onClickExecutor(selectedOption)" style="cursor: pointer; width: 100%;">
-                <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between"
-                  style="width: 100%; padding: 13px;">
+                <ss-select-toggle class="flex items-center justify-between"
+                  >
                   <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                   {{ $get(selectedOption, 'name') ||  `${allUsersReduced.find(u => u.id == task.executor_id) ? allUsersReduced.find(u => u.id == task.executor_id).surname + ' ' 
                     + allUsersReduced.find(u => u.id == task.executor_id).name + ' ' 
@@ -325,7 +325,6 @@
       // },
       onClickInput(id) {
         this.editable = true
-        console.log(this.$refs['textarea_task' + id][0].focus())
         this.$nextTick(() => {
           this.$refs['textarea_task' + id][0].focus()
         })
