@@ -50,7 +50,7 @@ export default {
   mutations: {
     setSolution: (state, payload) => {
       state.solutions = payload
-      console.log(state.solutions);
+      // console.log(state.solutions);
     },
     addSolution: (state, payload) => {
       payload.in_work = false
@@ -128,7 +128,7 @@ export default {
         axios.get(URLSOLUTION + `/${problemId}/solution`)
         
           .then(response => {
-            console.log(response);
+            // console.log(response);
               commit('setError', '')
               commit('setError404', '')
               // commit('setOtherSolution', response.data)
@@ -299,7 +299,7 @@ export default {
       commit
     }) => {
       await axios.get(ALLUSERS).then(response => {
-        console.log(response);
+        // console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('setAllUsers', response.data)
@@ -333,20 +333,20 @@ export default {
     editPlan: async ({
       commit
     }, param) => {
-      console.log(param);
+      // console.log(param);
 
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
       axios.put(BASEURL + `/${param.id}/set-plan`, {
         plan: param.plan
       }).then(response => {
-        console.log(response);
+        // console.log(response);
         commit('setError', '')
         commit('setError404', '')
         commit('editPlan', response.data)
         resolve(response.data)
       }).catch((error) => {
-        console.log(error.response);
+        // console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
           reject(error.response.data.message)
@@ -360,13 +360,13 @@ export default {
     editTeam: async ({
       commit
     }, param) => {
-      console.log(param);
+      // console.log(param);
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
       axios.put(BASEURL + `/${param.id}/set-team`, {
         team: param.team
       }).then(response => {
-        console.log(response);
+        // console.log(response);
         commit('setError', '')
         commit('setError404', '')
         commit('editTeam', response.data)

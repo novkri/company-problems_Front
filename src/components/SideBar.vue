@@ -103,7 +103,7 @@
         // this.$store.commit('sortProblems', 'На рассмотрении')
         // this.problems = this.problemsUnderСonsideration
         // this.$emit('filteredProblems', 'На рассмотрении')
-        console.log(this.problemsUnderСonsideration);
+        // console.log(this.problemsUnderСonsideration);
       },
       async onСhecking() {
         // await this.$store.dispatch('getProblems')
@@ -112,7 +112,7 @@
       async allProblems() {
         // await this.$store.dispatch('getProblems')
         // this.$store.commit('sortProblems', '')
-        console.log(this.problems);
+        // console.log(this.problems);
       },
     }
   }

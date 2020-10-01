@@ -79,7 +79,7 @@ export default {
     },
     editGroup: (state, payload) => {
       state.groups.find(group => group.id == payload.id).name = payload.name
-      console.log(state.groups.find(group => group.id == payload.id).name);
+      // console.log(state.groups.find(group => group.id == payload.id).name);
       state.groups = state.groups.sort(function (a, b) {
         return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1
       })
@@ -104,7 +104,7 @@ export default {
     }) => {
       await axios.get(BASEURL)
         .then(response => {
-          console.log(response);
+          // console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('setGroups', response.data)
@@ -161,7 +161,7 @@ export default {
       return new Promise((resolve, reject) => {
         axios.post(BASEURL, param)
           .then(response => {
-            console.log(response);
+            // console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('addGroup', response.data)
@@ -215,7 +215,7 @@ export default {
     editGroup: async ({
       commit
     }, param) => {
-      console.log(param);
+      // console.log(param);
       return new Promise((resolve, reject) => {
         axios.put(BASEURL + `/${param.id}`, {
           name: param.name
@@ -240,7 +240,7 @@ export default {
     editGroupShort: async ({
       commit
     }, param) => {
-      console.log(param);
+      // console.log(param);
       return new Promise((resolve, reject) => {
         axios.put(BASEURL + `/${param.id}/change-short-name`, {
           short_name: param.short_name

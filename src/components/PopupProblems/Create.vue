@@ -169,7 +169,7 @@
       //   // this.name = ''
       // },
       async addProblem() {
-        console.log(this.formData);
+        // console.log(this.formData);
         this.$store.commit('setError404', '')
         await this.$store.dispatch('postProblem', {
           // params: {...this.formData}
@@ -179,7 +179,7 @@
           // group: this.group
         }).then((r) => {
           if (!this.error) {
-            console.log(r);
+            // console.log(r);
             this.$store.dispatch('getThisProblem', r.id)
             this.formData = []
             document.getElementById('close').click()

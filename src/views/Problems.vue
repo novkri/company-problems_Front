@@ -50,12 +50,12 @@
 
             <div class="middle-icons col-7">
               <div>
-                <v-popover offset="16" >
+                <v-popover offset="16">
                   <file-text-icon size="1.5x" class="custom-class details tooltip-target b3">
                   </file-text-icon>
 
                   <template slot="popover">
-                    <TooltipProblem char="=" :val="problem"  />
+                    <TooltipProblem char="=" :val="problem" />
                     <a v-close-popover
                       style="display: flex;justify-content: flex-end; font-size: 28px; font-family: 'GothamPro'">&times;</a>
                   </template>
@@ -496,7 +496,7 @@
         })
       },
       async changeImportance(id, importance) {
-        console.log(importance);
+        // console.log(importance);
         importance === 'Обычная' ? await this.$store.dispatch('changeImportance', {
           id,
           importance: "Важная"
@@ -508,7 +508,7 @@
 
       clickProgress(id, event) {
         console.log(event);
-     
+
         this.currentProgress = this.$refs['progress-bar' + id][0].value
         this.$refs['legend-value' + id][0].style.display = 'none'
         this.$nextTick(() => {
@@ -519,21 +519,21 @@
       },
 
       async editProgress(id, progress) {
-        console.log(progress);
+        // console.log(progress);
         // this.progressClicked = false
         this.$refs['progress-bar' + id][0].style.display = 'none'
         this.$refs['legend-value' + id][0].style.display = 'flex'
-        
-        console.log(id);
+
+        // console.log(id);
 
         await this.$store.dispatch('editProgress', {
           id,
           progress
         }).catch(() => {
           this.$store.commit('editProgress', {
-          id,
-          progress: this.currentProgress
-        })
+            id,
+            progress: this.currentProgress
+          })
         })
       },
 
@@ -570,16 +570,14 @@
       },
 
       async onClickShow(problem) {
-this.$refs['collapsed-header'].forEach(element => {
-  console.log(element.classList.contains('collapsed-header'));
-  element.classList.contains('collapsed-header') ? element.classList.remove('collapsed-header') : ''
-});
+        this.$refs['collapsed-header'].forEach(element => {
+          element.classList.contains('collapsed-header') && element.id !== 'heading' + problem.id ? element
+            .classList.remove('collapsed-header') : ''
+        });
 
         document.getElementById('heading' + problem.id).classList.contains('collapsed-header') ? document
           .getElementById('heading' + problem.id).classList.remove('collapsed-header') : document.getElementById(
             'heading' + problem.id).classList.add('collapsed-header')
-// this.$refs['collapsed-header'].click()
-// console.log(this.$refs['collapsed-header']);
 
         if (this.paramsModal !== problem) {
           this.openDelete = false
@@ -602,7 +600,7 @@ this.$refs['collapsed-header'].forEach(element => {
       },
 
       async sendToGroup(id, groupsArray) {
-        console.log(id, groupsArray);
+        // console.log(id, groupsArray);
         await this.$store.dispatch('sendToGroup', {
           id,
           groupsArray
@@ -613,7 +611,7 @@ this.$refs['collapsed-header'].forEach(element => {
       onClickInput(id, event) {
         event.target.style.display = 'none'
         this.$nextTick(() => {
-          console.log(this.$refs['problem-name' + id][0]);
+          // console.log(this.$refs['problem-name' + id][0]);
           this.$refs['problem-name' + id][0].style.display = 'flex'
           this.$refs['problem-name' + id][0].focus()
         })
@@ -622,7 +620,7 @@ this.$refs['collapsed-header'].forEach(element => {
       async onBlurInput(name, id, event) {
         // this.editableProblem = false
         console.log(event);
-        console.log(name, id);
+        // console.log(name, id);
         // event.path[0].nextElementSibling.classList.remove('flex')
         await this.$store.commit('setError404', '')
         if (name !== this.currentProblemName) {
@@ -649,7 +647,7 @@ this.$refs['collapsed-header'].forEach(element => {
       },
       onFocusInput(event) {
         this.currentProblemName = event.target.value
-        console.log(this.currentProblemName);
+        // console.log(this.currentProblemName);
         // event.path[0].nextElementSibling.classList.add('flex')
       },
 
@@ -666,33 +664,33 @@ this.$refs['collapsed-header'].forEach(element => {
 
       onFocusTextarea(event) {
         this.currentTextarea = event.target.value
-        console.log(this.currentTextarea);
+        // console.log(this.currentTextarea);
         event.path[0].nextElementSibling.classList.add('flex')
-        console.log(this.solutions);
+        // console.log(this.solutions);
       },
 
       // name, 
       onBlurTextarea(event, type) {
-        console.log(event);
+        // console.log(event);
         event.path[0].nextElementSibling.classList.remove('flex')
 
         switch (type) {
           case 'exp':
-            console.log('blur');
-            console.log(this.currentSolutionName);
+            // console.log('blur');
+            // console.log(this.currentSolutionName);
             // this.$store.commit('editSolutionOther', {
             //   name: this.currentSolutionName,
             //   id
             // })
             break;
           case 'plan':
-            console.log(this.currentTextarea);
+            // console.log(this.currentTextarea);
             break;
           case 'team':
-            console.log(this.currentTextarea);
+            // console.log(this.currentTextarea);
             break;
           case 'result':
-            console.log(this.currentTextarea);
+            // console.log(this.currentTextarea);
             break;
           default:
             alert("Нет таких значений");
@@ -726,8 +724,8 @@ this.$refs['collapsed-header'].forEach(element => {
       },
       async editPlan(id, plan, event) {
         event.target.blur()
-        console.log(id);
-        console.log(plan);
+        // console.log(id);
+        // console.log(plan);
         // console.log(this.currentTextarea);
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('editPlan', {
@@ -742,7 +740,7 @@ this.$refs['collapsed-header'].forEach(element => {
           })
       },
       async editTeam(id, team, event) {
-        console.log(id, team);
+        // console.log(id, team);
         console.log(event);
         // console.log(this.currentTextarea);
         await this.$store.commit('setError404', '')
@@ -759,7 +757,7 @@ this.$refs['collapsed-header'].forEach(element => {
       },
       async editExp(id, experience, event) {
         console.log(event);
-        console.log(this.currentTextarea);
+        // console.log(this.currentTextarea);
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('editExp', {
             experience,
@@ -774,7 +772,7 @@ this.$refs['collapsed-header'].forEach(element => {
       },
       async editResult(id, result, event) {
         console.log(event);
-        console.log(this.currentTextarea);
+        // console.log(this.currentTextarea);
         // send v-model
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('editResult', {

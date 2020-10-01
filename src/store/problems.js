@@ -45,14 +45,14 @@ export default {
   mutations: {
     setProblems: (state, payload) => {
       state.problems = payload.filter(p => p.status !== "Удалена" && p.status !== "Решена")
-      // console.log(state.problems);
+      // // console.log(state.problems);
       // state.problems
     },
     // sortProblems: (state, payload) => {
-    //   console.log(state.problems);
+    //   // console.log(state.problems);
     // //  state.problems = 
     //  return state.problems.filter(p => p.status == payload)
-    // //  console.log(state.problems);
+    // //  // console.log(state.problems);
     // },
     setThisProblem: (state, payload) => {
       let problemIdx = state.problems.findIndex(p => p.id == payload.id)
@@ -111,7 +111,7 @@ export default {
             commit('setProblems', response.data)
         })
         .catch(error => {
-          // console.log(error.response);
+          // // console.log(error.response);
           if (error.response.status == 401) {
             commit('setError404', error.response.data.errors)
           } else {
@@ -130,7 +130,7 @@ export default {
             commit('setThisProblem', response.data)
         })
         .catch(error => {
-          // console.log(error.response);
+          // // console.log(error.response);
           if (error.response.status == 401) {
             commit('setError404', error.response.data.errors)
           } else {
@@ -153,7 +153,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error.response);
+          // // console.log(error.response);
           if (error.response.status !== 422) {
             commit('setError404', error.response.data.message)
             reject()
@@ -167,14 +167,14 @@ export default {
     deleteProblem: async ({
       commit
     }, param) => {
-      console.log(param);
+      // // console.log(param);
       await axios.delete(BASEURL + `/${param.id}`).then(() => {
             commit('setError', '')
             commit('setError404', '')
             commit('deleteProblem', param.id)
         })
         .catch(error => {
-          console.log(error.response);
+          // // console.log(error.response);
           if (error.response.status !== 422) {
             commit('setError404', error.response.data.message)
           } else {
@@ -227,7 +227,7 @@ export default {
     },
 
     sendToGroup: async ({commit}, param) => {
-      console.log(param);
+      // // console.log(param);
       axios.post(BASEURL + `/${param.id}/send-to-group`, {group_id: param.groupsArray})
         .then(() => {
           commit('setError', '')
@@ -242,19 +242,19 @@ export default {
     editExp: async ({
       commit
     }, param) => {
-      console.log(param);
+      // // console.log(param);
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
       axios.put(BASEURL + `/${param.id}/set-experience`, {
         experience: param.experience
       }).then(response => {
-        console.log(response);
+        // // console.log(response);
         commit('setError', '')
         commit('setError404', '')
         commit('editExp', response.data)
         resolve(response.data)
       }).catch((error) => {
-        console.log(error.response);
+        // // console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
           reject(error.response.data.message)
@@ -268,19 +268,19 @@ export default {
     editResult: async ({
       commit
     }, param) => {
-      console.log(param);
+      // // console.log(param);
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
       axios.put(BASEURL + `/${param.id}/set-result`, {
         result: param.result
       }).then(response => {
-        console.log(response);
+        // // console.log(response);
         commit('setError', '')
         commit('setError404', '')
         commit('editResult', response.data)
         resolve(response.data)
       }).catch((error) => {
-        console.log(error.response);
+        // // console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
           reject(error.response.data.message)
@@ -295,19 +295,19 @@ export default {
     editProblemName: async ({
       commit
     }, param) => {
-      console.log(param);
+      // // console.log(param);
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
       axios.put(BASEURL + `/${param.id}`, {
         name: param.name
       }).then(response => {
-        console.log(response);
+        // // console.log(response);
         commit('setError', '')
         commit('setError404', '')
         commit('editProblemName', response.data)
         resolve(response.data)
       }).catch((error) => {
-        console.log(error.response);
+        // // console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
           reject(error.response.data.message)
@@ -323,20 +323,20 @@ export default {
     changeImportance: async ({
       commit
     }, param) => {
-      console.log(param);
-      console.log(param.id);
+      // // console.log(param);
+      // // console.log(param.id);
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
       axios.put(BASEURL + `/${param.id}/set-importance`, {
         importance: param.importance
       }).then(response => {
-        console.log(response);
+        // // console.log(response);
         commit('setError', '')
         commit('setError404', '')
         commit('changeImportance', response.data)
         resolve(response.data)
       }).catch((error) => {
-        console.log(error.response);
+        // // console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
           reject(error.response.data.message)
@@ -351,19 +351,19 @@ export default {
     changeUrgency: async ({
       commit
     }, param) => {
-      console.log(param);
+      // // console.log(param);
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
       axios.put(BASEURL + `/${param.id}/set-urgency`, {
         urgency: param.urgency
       }).then(response => {
-        console.log(response);
+        // // console.log(response);
         commit('setError', '')
         commit('setError404', '')
         commit('changeUrgency', response.data)
         resolve(response.data)
       }).catch((error) => {
-        console.log(error.response);
+        // // console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
           reject(error.response.data.message)
@@ -378,19 +378,19 @@ export default {
     editProgress: async ({
       commit
     }, param) => {
-      console.log(param);
+      // // console.log(param);
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
       axios.put(BASEURL + `/${param.id}/set-progress`, {
         progress: param.progress
       }).then(response => {
-        console.log(response);
+        // // console.log(response);
         commit('setError', '')
         commit('setError404', '')
         commit('editProgress', response.data)
         resolve(response.data)
       }).catch((error) => {
-        console.log(error.response);
+        // // console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
           reject(error.response.data.message)
@@ -405,11 +405,11 @@ export default {
     problemSolved: async ({
       commit
     }, id) => {
-      console.log(id);
+      // console.log(id);
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
       axios.put(BASEURL + `/${id}/send-for-confirmation`).then(response => {
-        console.log(response);
+        // console.log(response);
         commit('setError', '')
         commit('setError404', '')
         // ????/
@@ -418,7 +418,7 @@ export default {
         resolve(response.data)
         // ??????????
       }).catch((error) => {
-        console.log(error.response);
+        // console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
           reject(error.response.data.message)
@@ -432,11 +432,11 @@ export default {
     problemReject: async ({
       commit
     }, id) => {
-      console.log(id);
+      // console.log(id);
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
       axios.put(BASEURL + `/${id}/reject-solution	`).then(response => {
-        console.log(response);
+        // console.log(response);
         commit('setError', '')
         commit('setError404', '')
         // ????/
@@ -445,7 +445,7 @@ export default {
         resolve(response.data)
         // ??????????
       }).catch((error) => {
-        console.log(error.response);
+        // console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
           reject(error.response.data.message)
@@ -459,11 +459,11 @@ export default {
     problemConfirm: async ({
       commit
     }, id) => {
-      console.log(id);
+      // console.log(id);
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
       axios.put(BASEURL + `/${id}/confirm-solution`).then(response => {
-        console.log(response);
+        // console.log(response);
         commit('setError', '')
         commit('setError404', '')
         // ????/
@@ -472,7 +472,7 @@ export default {
         resolve(response.data)
         // ??????????
       }).catch((error) => {
-        console.log(error.response);
+        // console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
           reject(error.response.data.message)

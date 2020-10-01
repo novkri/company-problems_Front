@@ -242,7 +242,7 @@
         this.addNotClicked = false
         this.formInput = []
         this.$store.commit('setError', '')
-        console.log(this.$refs['addTaskInput']);
+        // console.log(this.$refs['addTaskInput']);
         this.$nextTick(() => {
           this.$refs['addTaskInput'].focus()
         })
@@ -355,7 +355,7 @@
         this.currentTaskName = event.target.value
         this.currentTaskInput = event.target
 
-        console.log(this.currentTaskName, this.currentTaskInput);
+        // console.log(this.currentTaskName, this.currentTaskInput);
         event.path[0].nextElementSibling.classList.add('flex')
       },
 

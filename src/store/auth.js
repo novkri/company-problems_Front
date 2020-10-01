@@ -53,8 +53,8 @@ export default {
   mutations: {
     addUser: (state, payload) => {
       state.user = payload
-      console.log(payload);
-      console.log(typeof payload);
+      // console.log(payload);
+      // console.log(typeof payload);
       state.currentUid = payload.id
     },
     // removeUser: (state) => {
