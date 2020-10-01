@@ -512,7 +512,7 @@
 
         this.currentProgress = this.$refs['progress-bar' + id][0].value
         this.$refs['legend-value' + id][0].style.display = 'none'
-        // this.$refs['legend-value' + id][1].style.display = 'none'
+        this.$refs['legend-value' + id][1].style.display = 'none'
         this.$nextTick(() => {
           this.$refs['progress-bar' + id][0].style.display = 'flex'
           this.$refs['progress-bar' + id][1].style.display = 'flex'
