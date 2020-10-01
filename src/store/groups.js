@@ -59,6 +59,7 @@ export default {
       state.leaderReduced = payload[0]
     },
     changeLeader: (state, payload) => {
+      console.log(state.members);
       state.leaderReduced = state.members.filter(u => u.id == payload)[0]
       state.leaderReduced.name = state.leaderReduced.name[0]+'.'
       state.leaderReduced.father_name ? state.leaderReduced.father_name = state.leaderReduced.father_name[0]+'.' : ' '
@@ -266,6 +267,7 @@ export default {
       commit
     }, param) => {
       // param.id = 10000000000
+      console.log(param);
       return new Promise((resolve, reject) => {
       axios.put(BASEURL + `/${param.id}/change-leader/${param.uid}`).then(response => {
         commit('setError', '')
@@ -274,7 +276,6 @@ export default {
       }).catch((error) => {
         if (error.response.status == 404) {
           error.response.data.message ? commit('setError404', error.response.data.message) : commit('setError404', error.response.data.errors)
-          // commit('setError404', error.response.data.message)
           reject( error.response)
         } else if (error.response.status == 422) {
           if (error.response.data.errors.leader_id) {

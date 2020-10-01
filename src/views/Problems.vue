@@ -37,9 +37,10 @@
                 <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
               </button>
 
-              <h5 class="mb-0" style="display: flex;">
+              <h5 class="mb-0" style="display: flex; width: 92%;">
                 <!-- {{problem.status}}  -->
-                <div :ref="'name-div'+problem.id" @click="event => {onClickInput(problem.id, event)}"> {{ problem.name}}
+                <div style="width: inherit;" :ref="'name-div'+problem.id"
+                  @click="event => {onClickInput(problem.id, event)}"> {{ problem.name}}
                 </div>
                 <input class="form-control" style="display: none;" :id="'problem-name'+problem.id"
                   v-model="problem.name" :ref="'problem-name' + problem.id"
@@ -62,12 +63,11 @@
                 </v-popover>
               </div>
               <div>
-                <clock-icon size="1.5x" class="custom-class" @click="changeUrgency(problem.id, problem.urgency)"
-                  :style="[problem.urgency == `Срочная` ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]"></clock-icon>
+                <clock-icon size="1.5x" class="custom-class details" :ref="'urgency'+problem.id"
+                  @click="changeUrgency(problem.id, problem.urgency)"></clock-icon>
               </div>
               <div>
-                <alert-circle-icon size="1.5x" class="custom-class"
-                  :style="[problem.importance == `Важная` ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]"
+                <alert-circle-icon size="1.5x" class="custom-class details" :ref="'importance'+problem.id"
                   @click="changeImportance(problem.id, problem.importance)"></alert-circle-icon>
               </div>
 
@@ -105,21 +105,18 @@
                       style="display: flex;justify-content: flex-end; font-size: 28px; font-family: 'GothamPro'">&times;</a>
                   </template>
                 </v-popover>
-                <!-- <file-text-icon size="1.5x" class="custom-class"></file-text-icon> -->
               </div>
               <div>
                 <span :style="[problem.urgency == `Срочная` ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]">
                   {{problem.urgency}}:
-
                 </span>
-                <clock-icon size="1.5x" class="custom-class" @click="changeUrgency(problem.id, problem.urgency)"
-                  :style="[problem.urgency == `Срочная` ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]"></clock-icon>
+                <clock-icon size="1.5x" class="custom-class details" :ref="'urgency'+problem.id"
+                  @click="changeUrgency(problem.id, problem.urgency)"></clock-icon>
               </div>
               <div>
                 <span
                   :style="[problem.importance == `Важная` ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]">{{problem.importance}}:</span>
-                <alert-circle-icon size="1.5x" class="custom-class"
-                  :style="[problem.importance == `Важная` ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]"
+                <alert-circle-icon size="1.5x" class="custom-class details" :ref="'importance'+problem.id"
                   @click="changeImportance(problem.id, problem.importance)"></alert-circle-icon>
               </div>
               <div>
@@ -199,7 +196,7 @@
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                           </button>
                           <h5 class="mb-0">
-                            План решения 
+                            План решения
                           </h5>
                         </div>
                       </div>
@@ -208,7 +205,8 @@
                         style="width: 100%;">
                         <div class="card-body">
                           <!-- plan,  -->
-                          <textarea cols="35" rows="10" :ref="'textarea_plan'+problem.id" v-model="solutions[0].plan"
+                          <textarea placeholder="Опишите ваш план решения..."  rows="8"
+                            :ref="'textarea_plan'+problem.id" v-model="solutions[0].plan"
                             @keydown.enter.prevent.exact="event => {editPlan(solutions[0].id,solutions[0].plan, event)}"
                             @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                             @blur="event => {onBlurTextarea(event, 'plan')}"></textarea>
@@ -252,7 +250,8 @@
                         <div class="card-body row" style="flex-direction: row;">
                           <div class="col-4" style="flex-direction: column;">
                             <label style="width: 100%;">Команда</label>
-                            <textarea cols="35" rows="10" :ref="'textarea_team'+problem.id" v-model="solutions[0].team"
+                            <textarea placeholder="Опишите ваш план решения..."  rows="8"
+                              :ref="'textarea_team'+problem.id" v-model="solutions[0].team"
                               @keydown.enter.prevent.exact="event => {editTeam(solutions[0].id, solutions[0].team, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea(event, 'team')}"></textarea>
@@ -271,7 +270,8 @@
 
                           <div class="col-4" style="flex-direction: column;">
                             <label style="width: 100%;">Опыт</label>
-                            <textarea cols="35" rows="10" :ref="'textarea_exp'+problem.id" v-model="problem.experience"
+                            <textarea placeholder="Опишите ваш план решения..."  rows="8"
+                              :ref="'textarea_exp'+problem.id" v-model="problem.experience"
                               @keydown.enter.prevent.exact="event => {editExp(problem.id, problem.experience, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea( event, 'exp')}"></textarea>
@@ -289,7 +289,8 @@
                           </div>
                           <div class="col-4" style="flex-direction: column;">
                             <label style="width: 100%;">Результат</label>
-                            <textarea cols="35" rows="10" :ref="'textarea_result'+problem.id" v-model="problem.result"
+                            <textarea placeholder="Опишите ваш план решения..."  rows="8"
+                              :ref="'textarea_result'+problem.id" v-model="problem.result"
                               @keydown.enter.prevent.exact="event => {editResult(problem.id, problem.result, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea(event, 'result')}"></textarea>
@@ -329,7 +330,7 @@
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                           </button>
                           <h5 class="mb-0">
-                            Направить проблему в подразделения
+                            Направить в подразделение
                           </h5>
                         </div>
                       </div>
@@ -486,24 +487,43 @@
       async problemSolved(id) {
         await this.$store.dispatch('problemSolved', id)
       },
+
       async changeUrgency(id, urgency) {
-        urgency === 'Обычная' ? await this.$store.dispatch('changeUrgency', {
-          id,
-          urgency: "Срочная"
-        }) : await this.$store.dispatch('changeUrgency', {
-          id,
-          urgency: "Обычная"
-        })
+        if (urgency === 'Обычная') {
+          await this.$store.dispatch('changeUrgency', {
+            id,
+            urgency: "Срочная"
+          })
+          this.$refs['urgency' + id][0].classList.add('icon-clicked')
+          this.$refs['urgency' + id][1].classList.add('icon-clicked')
+
+        } else {
+          await this.$store.dispatch('changeUrgency', {
+            id,
+            urgency: "Обычная"
+          })
+          this.$refs['urgency' + id][0].classList.remove('icon-clicked')
+          this.$refs['urgency' + id][1].classList.remove('icon-clicked')
+        }
       },
+
       async changeImportance(id, importance) {
-        // console.log(importance);
-        importance === 'Обычная' ? await this.$store.dispatch('changeImportance', {
-          id,
-          importance: "Важная"
-        }) : await this.$store.dispatch('changeImportance', {
-          id,
-          importance: "Обычная"
-        })
+        if (importance === 'Обычная') {
+          await this.$store.dispatch('changeImportance', {
+            id,
+            importance: "Важная"
+          })
+          this.$refs['importance' + id][0].classList.add('icon-clicked')
+          this.$refs['importance' + id][1].classList.add('icon-clicked')
+
+        } else {
+          await this.$store.dispatch('changeImportance', {
+            id,
+            importance: "Обычная"
+          })
+          this.$refs['importance' + id][0].classList.remove('icon-clicked')
+          this.$refs['importance' + id][1].classList.remove('icon-clicked')
+        }
       },
 
       clickProgress(id, event) {
@@ -526,7 +546,8 @@
         // this.progressClicked = false
         this.$refs['progress-bar' + id][0].style.display = 'none'
         this.$refs['legend-value' + id][0].style.display = 'flex'
-
+        this.$refs['progress-bar' + id][1].style.display = 'none'
+        this.$refs['legend-value' + id][1].style.display = 'flex'
         // console.log(id);
 
         await this.$store.dispatch('editProgress', {
@@ -593,9 +614,9 @@
             this.$store.dispatch('getTasks', response.id)
             this.$store.dispatch('getCurrentSolution', '')
             this.$store.dispatch('getCurrentSolution', response.id)
-            setTimeout(function () {
-              document.getElementById('heading' + problem.id).scrollIntoView();
-            }, 200);
+            // setTimeout(function () {
+            //   document.getElementById('heading' + problem.id).scrollIntoView();
+            // }, 200);
           }).catch(() => {
             this.$store.dispatch('clearTasks')
           })
@@ -603,11 +624,11 @@
       },
 
       async sendToGroup(id, groupsArray) {
-        // console.log(id, groupsArray);
         await this.$store.dispatch('sendToGroup', {
           id,
           groupsArray
         })
+        this.checkedGroups = null
       },
 
 
@@ -615,7 +636,7 @@
         event.target.style.display = 'none'
         this.$nextTick(() => {
           // console.log(this.$refs['problem-name' + id][0]);
-          this.$refs['problem-name' + id][0].style.display = 'flex'
+          this.$refs['problem-name' + id][0].style.display = 'initial'
           this.$refs['problem-name' + id][0].focus()
         })
       },
@@ -637,14 +658,14 @@
             })
           })
           event.target.style.display = 'none'
-          this.$refs['name-div' + id][0].style.display = 'flex'
+          this.$refs['name-div' + id][0].style.display = 'initial'
         } else {
           this.$store.commit('editProblemName', {
             name: this.currentProblemName,
             id
           })
           event.target.style.display = 'none'
-          this.$refs['name-div' + id][0].style.display = 'flex'
+          this.$refs['name-div' + id][0].style.display = 'initial'
         }
 
       },
@@ -795,6 +816,7 @@
 </script>
 
 <style scoped lang="scss">
+
   .form-control {
     border: none;
     border-radius: 6px;
@@ -886,12 +908,23 @@
     transform: rotate(45deg);
   }
 
+  label {
+    text-align: center;
+  }
+
   textarea {
+    width: auto;
     outline: none;
     border: none;
     resize: none;
     background-color: #EBEBEB;
     border-radius: 9px;
+    padding: 26px 24px;
+
+    font-family: 'GothamPro';
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
   }
 
   .spinner-border {
@@ -906,8 +939,10 @@
 
   .accordion.col-9,
   .accordion.col-3 {
+    padding-left: 0;
+    padding-right: 8px;
     .card {
-      border: 1px solid rgba(0, 0, 0, 0.36);
+      background-color: #fff;
       border-radius: 9px;
       padding: 16px 13px;
 
@@ -918,15 +953,15 @@
 
   }
 
+
+
   #collapseResults,
   #collapsePlan,
   #collapseGroups {
     padding-top: 7px;
-
   }
 
   h5 {
-
     font-family: 'GothamPro';
     font-size: 18px;
     line-height: 24px;
@@ -954,13 +989,15 @@
   }
 
   .card-header {
+    align-items: center;
     border: none;
     border-radius: 9px;
     background-color: #fff;
     width: 100%;
     display: flex;
-    min-height: 60px;
+    // min-height: 60px;
     height: fit-content;
+
     justify-content: space-between;
     margin-left: 0px;
     background-color: #F6F7F9;
@@ -972,6 +1009,7 @@
     padding: 0;
     flex-wrap: wrap;
     height: fit-content;
+    align-items: center;
 
     div {
       display: flex;
@@ -1017,7 +1055,7 @@
       background-color: transparent;
       padding-bottom: 30px;
       padding-top: 30px;
-      border-bottom: 1px solid #DEDEDE;
+      // border-bottom: 1px solid #DEDEDE;
       padding-left: 18px;
       height: fit-content;
       margin: 0;
@@ -1175,6 +1213,26 @@
   svg {
     color: #AFAFAF;
     cursor: pointer;
+  }
+
+  .ep-legend--value {
+    span {
+      cursor: pointer;
+    }
+
+  }
+
+  .middle-icons,
+  .middle-icons_text {
+    align-items: center;
+
+    .custom-class:hover {
+      color: #92D2C3;
+    }
+
+    .icon-clicked {
+      color: #4EAD96;
+    }
   }
 
   .middle-icons {

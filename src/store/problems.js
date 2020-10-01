@@ -229,8 +229,9 @@ export default {
 
     sendToGroup: async ({commit}, param) => {
       // // console.log(param);
-      axios.post(BASEURL + `/${param.id}/send-to-group`, {group_id: param.groupsArray})
-        .then(() => {
+      axios.post(BASEURL + `/${param.id}/send-to-group`, {group_ids: param.groupsArray})
+        .then((r) => {
+          console.log(r);
           commit('setError', '')
           commit('setError404', '')
           // ?????

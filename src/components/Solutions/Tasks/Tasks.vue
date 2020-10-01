@@ -393,6 +393,8 @@
 </script>
 
 <style scoped lang="scss">
+
+
   ::-webkit-scrollbar {
     width: 10px;
   }
@@ -459,6 +461,7 @@
   .header {
     margin: 0;
     // padding-top: 30px;
+    align-items: center;
     max-width: inherit;
     width: -webkit-fill-available;
     padding-left: 26px;
@@ -492,7 +495,7 @@
 
     ol {
       max-height: 300px;
-      min-height: 240px;
+      min-height: 189px;
       overflow-y: scroll;
       overflow-x: hidden;
     }

@@ -1,19 +1,24 @@
 <template>
   <div class="container_tooltip">
     <div class="main-tooltip">
-      <div>
-        <span>Предложил проблему: </span>
-        {{allUsers.find(u => u.id === val.creator_id).surname}}
-        {{allUsers.find(u => u.id === val.creator_id).name}} {{allUsers.find(u => u.id === val.creator_id).father_name}}
-      </div>
-      <div>
-        <span>Описание: </span>{{val.description}}
-      </div>
-      <div>
-        <span>Возможное решение: </span>{{val.possible_solution}}
-      </div>
-    </div>
 
+      <div>
+        <p><span>Предложил проблему: </span>
+          {{allUsers.find(u => u.id === val.creator_id).surname}}
+          {{allUsers.find(u => u.id === val.creator_id).name}}
+          {{allUsers.find(u => u.id === val.creator_id).father_name}}</p>
+      </div>
+
+      <div>
+        <p><span>Описание: </span>{{val.description}}</p>
+      </div>
+
+      <div>
+        <p><span>Возможное решение: </span>
+          {{val.possible_solution}}</p>
+      </div>
+
+    </div>
   </div>
 </template>
 
@@ -32,7 +37,7 @@
     }),
     computed: {
       ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', ]),
-    
+
     },
     mounted() {
       // console.log('d');
@@ -44,12 +49,16 @@
 </script>
 
 <style scoped lang="scss">
+  p {
+    word-break: break-word;
+  }
+
   .container_tooltip {
     width: 100%;
   }
 
   .main-tooltip {
-    margin-top: 30px;
+    // margin-top: 30px;
     width: 100%;
     flex-direction: column;
 
@@ -60,8 +69,11 @@
     letter-spacing: 0.15px;
     color: #4F4F4F;
 
-    span {
+    div {
       margin-bottom: 31px;
+    }
+
+    span {
       font-family: 'GothamPro-Medium';
       margin-right: 5px;
     }

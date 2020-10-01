@@ -29,7 +29,8 @@
                 <div class="desc" ref="desc">
                   <span>Решение: </span>
 
-                  <div :ref="'sol-div'+val.id" @click="onClickInput(val.id)" v-show="!editable" :style="[solution.name ? {} : 
+                  <div style="width: 68%;" :ref="'sol-div'+val.id" @click="onClickInput(val.id)" v-show="!editable"
+                    :style="[solution.name ? {} : 
                   {'background-color': '#ebebeb', 'font-size': '16px', 'border-radius': '10px', 'padding': '10px 14px',
                     'margin-right': '-43px'}]">
                     {{solution.name ? solution.name : "Введите описание решения..."}}</div>
@@ -302,7 +303,7 @@
 
         // this.$refs['textarea' + id][0].style.display = 'none'
         // this.$refs['sol-div' + id][0].style.display = 'flex'
-        this.$refs['sol-div-no-solution' + id][0].style.display = 'flex'
+        this.$refs['sol-div-no-solution' + id][0].style.display = 'initial'
         this.$refs['hidden' + id][0].classList.remove('flex')
 
 
@@ -328,7 +329,7 @@
 
 
         this.$refs['textarea' + id][0].style.display = 'none'
-        this.$refs['sol-div' + id][0].style.display = 'flex'
+        this.$refs['sol-div' + id][0].style.display = 'initial'
         this.$refs['hidden' + id][0].classList.remove('flex')
       },
       onFocusInput(event, id) {
@@ -508,12 +509,12 @@
     margin-left: 10px;
 
     li {
-      // padding: 15px 49px 12px;
+      align-items: center;
       padding: 0;
       border-radius: 9px;
       background-color: #F6F7F9;
       margin: 0 24px 16px 0;
-      align-items: flex-start;
+      // align-items: flex-start;
     }
   }
 
@@ -537,16 +538,21 @@
 
   .desc {
     display: flex;
+    // flex-wrap: wrap;
     flex-direction: row;
     align-items: center;
-    width: fit-content;
+    // width: fit-content;
     // font-family: 'GothamPro-Medium';
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #4F4F4F;
-    width: 95%;
+    width: 100%;
+    padding-right: 8px;
 
+    // div {
+    //   width: 100%;
+    // }
     span {
       font-family: "GothamPro";
       cursor: default;
@@ -979,6 +985,7 @@
 
     #list {
       padding: 15px;
+
     }
 
     #select-toggle {

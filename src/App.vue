@@ -35,6 +35,11 @@
     display: block !important;
     z-index: 10000;
 
+    width: 460px;
+    height: 270px;
+    max-width: 460px;
+    max-height: 270px;
+
     .tooltip-inner {
       background: black;
       color: white;
@@ -82,6 +87,8 @@
       outline: none;
 
       .popover-inner {
+        overflow-x: hidden;
+        overflow-y: scroll;
         border: none;
         background: $color;
         color: black;
@@ -118,6 +125,23 @@
       visibility: visible;
       opacity: 1;
       transition: opacity .15s;
+    }
+  }
+
+  @media (max-width: 1500px) {
+    *, span, textarea, input {
+      font-size: 13px !important;
+    }
+
+    span, textarea, input {
+      font-size: 13px !important;
+    }
+
+    .close {
+      font-size: 20px !important;
+      span {
+        font-size: 20px !important;
+      }
     }
   }
 </style>

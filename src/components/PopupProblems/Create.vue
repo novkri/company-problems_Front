@@ -56,7 +56,7 @@
                     Выберите подразделение
                   </label>
                   <ss-select v-model="formData.group" :options="groups" track-by="name" search-by="name"
-                    class="form-control" @change="selectGroup($event)" disable-by="disabled"
+                    class="form-control" @change="selectGroup($event.id)" disable-by="disabled"
                     id="ss-select"
                    >
                   <div @click="spacer = !spacer"
@@ -164,22 +164,17 @@
         
         event.target.nextElementSibling.style.display = 'flex'
       },
-      // onClear() {
 
-      //   // this.name = ''
-      // },
       async addProblem() {
-        // console.log(this.formData);
+        console.log(this.formData);
         this.$store.commit('setError404', '')
         await this.$store.dispatch('postProblem', {
-          // params: {...this.formData}
           name: this.formData.name,
           description: this.formData.description,
           possible_solution: this.formData.solution,
-          // group: this.group
         }).then((r) => {
           if (!this.error) {
-            // console.log(r);
+            console.log(r);
             this.$store.dispatch('getThisProblem', r.id)
             this.formData = []
             document.getElementById('close').click()

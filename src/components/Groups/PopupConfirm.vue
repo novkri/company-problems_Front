@@ -11,7 +11,7 @@
           </div>
           <div class="modal-body">
             <button type="submit" class="btn btn-secondary" data-dismiss="modal" @click="setNewLeader()">Да</button>
-            <button type="reset" class="btn btn-secondary" data-dismiss="modal">Нет</button>
+            <button type="reset" class="btn btn-secondary" data-dismiss="modal" @click="undoChanges()">Нет</button>
           </div>
         </div>
       </div>
@@ -20,36 +20,25 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
+  import {
+    mapGetters
+  } from 'vuex'
 
   export default {
     name: 'popup',
     props: ['val'],
-    data: () => ({
-    }),
+    data: () => ({}),
     computed: {
       ...mapGetters(['error', 'error404']),
     },
     methods: {
       async setNewLeader() {
-          this.$emit('setNewLeader', this.val)
-                  // await this.$store.dispatch('checkIfOk', {
-        //   description: group.description,
-        //   leader_id: group.leader_id,
-        //   id: group.id
-        // }).then(() => {
-            
-        // this.$store.dispatch('changeExecutorGroup', {
-        //   id: this.val.groupId,
-        //   uid: this.val.leader_id
-        //   // })
-        // })
-        // .catch(() => {
-        //   this.$store.commit('changeExecutorGroup', {
-        //     id: group.id,
-        //     leader_id: this.currentExecutor
-        //   })
-        // })
+        this.$emit('setNewLeader', this.val)
+      },
+
+      async undoChanges() {
+
+        this.$emit('undoChanges', this.val)
       }
     }
   }
@@ -71,7 +60,7 @@
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #2D453F;
-        width: 100%;
+    width: 100%;
     text-align: center;
   }
 

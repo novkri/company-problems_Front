@@ -1,10 +1,10 @@
 <template>
   <div style="height: 50vh;padding-top: 77px;">
     <h2>Список подразделений</h2>
-    <div class="subtitle row" style="width: 79%;">
-      <span class="col-3">Название подразделения</span>
+    <div class="subtitle row" style="width: 89%;">
+      <span class="col-4">Название подразделения</span>
       <span class="col-4">Название подразделения (сокращенно)</span>
-      <span class="col-3" style="display: flex; justify-content: center;">Руководитель</span>
+      <span class="col-2">Руководитель</span>
       <div class="pagination col-2">
         <nav>
           <ul class="pagination">
@@ -31,16 +31,17 @@
       <div id="accordion">
         <div class="card" id="card" v-for="(group, idx) in paginatedDataGroups" :key="idx">
           <div class="card-header row" id="heading">
-            <div class="name col-4">
+            <div class="name col-5">
               <h5 class="mb-0" style="height: 100%;">
                 <button class="btn btn-link collapsed" data-toggle="collapse" :data-target="'#collapseOne'+group.id"
                   @click="showOnClickUsers(group.id)" aria-expanded="false" :aria-controls="'collapseOne'+group.id">
                   <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                 </button>
-                <div class="name_div" :ref="'name-div'+group.id"
-                  @click="event => {onClickInput(group.id, 'name',event)}">{{group.name}}
-                </div>
-                <input class="form-control input-name" :id="'groupname'+group.id" style="display: none;"
+                <div class="name_div" 
+                  @click="event => {onClickInput(group.id, 'name',event)}">
+                  <span :ref="'name-div'+group.id">{{group.name}}</span>
+
+                             <input class="form-control input-name" :id="'groupname'+group.id" style="display: none;"
                   :ref="'group-name' + group.id" @keyup.enter="event => {editGroupName(group.name, group.id, event)}"
                   v-model="group.name" @focus="event => onFocusInput(event, group.id, 'name')"
                   @blur="event => {onBlurInput(group.name, group.id, event, 'name')}">
@@ -55,13 +56,30 @@
                     </button>
                   </div>
                 </div>
+                </div>
+                <!-- <input class="form-control input-name" :id="'groupname'+group.id" style="display: none;"
+                  :ref="'group-name' + group.id" @keyup.enter="event => {editGroupName(group.name, group.id, event)}"
+                  v-model="group.name" @focus="event => onFocusInput(event, group.id, 'name')"
+                  @blur="event => {onBlurInput(group.name, group.id, event, 'name')}">
+
+                <div class="hidden" :ref="'hidden'+group.id">
+                  <button class="input-btn" @mousedown="event => {editGroupName(group.name, group.id, event)}">
+                    <check-icon size="1x" class="custom-class"></check-icon>
+                  </button>
+                  <div @mousedown="event => onClear(event, group.id, 'name')">
+                    <button class="input-btn">
+                      <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
+                    </button>
+                  </div>
+                </div> -->
               </h5>
             </div>
-            <div class="short-name col-4">
-              <div class="short-name_div" :ref="'short-name-div'+group.id"
+            <div class="short-name col-3">
+              <div class="short-name_div"
                 @click="event => {onClickInput(group.id, 'short', event)}">
-                {{group.short_name}}</div>
-              <input class="form-control input-name" :id="'groupshort'+group.id" style="display: none;"
+                <span :ref="'short-name-div'+group.id">{{group.short_name}}</span>
+
+                              <input class="form-control input-name" :id="'groupshort'+group.id" style="display: none;"
                 :ref="'group-name-short' + group.id"
                 @keyup.enter="event => {editGroupShort(group.short_name, group.id, event)}" v-model="group.short_name"
                 @focus="event => onFocusInput(event, group.id, 'short')"
@@ -76,6 +94,22 @@
                   </button>
                 </div>
               </div>
+              </div>
+              <!-- <input class="form-control input-name" :id="'groupshort'+group.id" style="display: none;"
+                :ref="'group-name-short' + group.id"
+                @keyup.enter="event => {editGroupShort(group.short_name, group.id, event)}" v-model="group.short_name"
+                @focus="event => onFocusInput(event, group.id, 'short')"
+                @blur="event => {onBlurInput(group.short_name, group.id, event, 'short')}">
+              <div class="hidden" :ref="'hidden-short' + group.id">
+                <button class="input-btn" @mousedown="event => {editGroupShort(group.short_name, group.id, event)}">
+                  <check-icon size="1x" class="custom-class"></check-icon>
+                </button>
+                <div @mousedown="event => onClear(event, group.id, 'short')">
+                  <button class="input-btn">
+                    <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
+                  </button>
+                </div>
+              </div> -->
             </div>
 
             <div class="selectResponsible col-3">
@@ -173,7 +207,8 @@
     <GroupCreate v-if="openCreateGroup" @createGroup="createGroup(param = $event)" />
     <GroupDelete v-if="openDeleteGroup" :val="paramsModal" @deleteGroup="deleteGroup(param = $event)" />
 
-    <PopupConfirm v-if="openConfirm" :val="newLeader" @setNewLeader="setNewLeader(param = $event)" />
+    <PopupConfirm v-if="openConfirm" :val="newLeader" @setNewLeader="setNewLeader(param = $event)"
+      @undoChanges="undoChanges(param = $event)" />
   </div>
 </template>
 
@@ -310,28 +345,28 @@
             id,
             name
           }).catch(() => {
-            this.$store.commit('editGroup',{
-            id,
-            name: this.currentGroupName
-          })
+            this.$store.commit('editGroup', {
+              id,
+              name: this.currentGroupName
+            })
           }) : this.$store.dispatch('editGroupShort', {
             id,
             short_name: name
           }).catch(() => {
-            this.$store.commit('editGroupShort',{
-            id,
-            short_name: this.currentGroupName
-          })
+            this.$store.commit('editGroupShort', {
+              id,
+              short_name: this.currentGroupName
+            })
           })
         }
 
         if (type == 'name') {
           this.$refs['group-name' + id][0].style.display = 'none'
-          this.$refs['name-div' + id][0].style.display = 'flex'
+          this.$refs['name-div' + id][0].style.display = 'initial'
           this.$refs['hidden' + id][0].classList.remove('flex')
         } else {
           this.$refs['group-name-short' + id][0].style.display = 'none'
-          this.$refs['short-name-div' + id][0].style.display = 'flex'
+          this.$refs['short-name-div' + id][0].style.display = 'initial'
           this.$refs['hidden-short' + id][0].classList.remove('flex')
         }
       },
@@ -405,20 +440,40 @@
       },
       async setNewLeader(param) {
         await this.$store.commit('setError404', '')
+        // this.$store.dispatch('getMembers', param.groupId)
         this.$store.dispatch('changeExecutorGroup', {
             id: param.groupId,
             uid: param.leader_id
           })
-          .then(() => {
+          .then((r) => {
+            console.log(r);
+            // this.$store.dispatch('getMembers', param.groupId)
+            // this.$store.commit('changeLeader', param.leader_id)
+            this.$store.commit('editExecutorGroup', {
+              id: param.groupId,
+              leader_id: param.leader_id
+            })
             this.$store.commit('changeLeader', param.leader_id)
-            this.$store.dispatch('getMembers', param.groupId)
+            this.currentExecutor = param.leader_id
           })
-          .catch(() => {
+          .catch((e) => {
+            console.log(e);
             this.$store.commit('editExecutorGroup', {
               id: param.groupId,
               leader_id: this.currentExecutor
             })
           })
+      },
+
+      async undoChanges(param) {
+        console.log('undoChanges');
+        console.log(param)
+        console.log(this.currentExecutor)
+        await this.$store.commit('setError404', '')
+        await this.$store.commit('editExecutorGroup', {
+          id: param.groupId,
+          leader_id: this.currentExecutor
+        })
       },
 
 
@@ -480,6 +535,18 @@
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #000000;
+    display: flex;
+    height: fit-content;
+    flex: 0 0 auto;
+    width: 100%;
+
+    span {
+      flex: 0 0 auto;
+      width: 100%;
+    }
+  }
+  .short-name_div {
+    justify-content: center;
   }
 
   .name {
@@ -507,6 +574,8 @@
 
   .hidden {
     visibility: hidden;
+    display: flex;
+    height: fit-content;
   }
 
   .flex {
@@ -556,7 +625,8 @@
     width: 100%;
     display: flex;
     min-height: 60px;
-    height: auto;
+    height: fit-content;
+    // height: 60px;
   }
 
   .card-body {
@@ -670,7 +740,7 @@
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #828282;
-
+    justify-content: center;
 
     #ss-select {
       align-items: center;
@@ -923,9 +993,9 @@
   }
 
   @media (min-width: 500px) {
-    .container {
-      width: 85% !important;
-    }
+    // .container {
+    //   width: 85% !important;
+    // }
 
     h2 {
       width: 64%;
