@@ -342,7 +342,7 @@
                               :value="group.id" v-model="checkedGroups">
                             <label class="custom-control-label" :for="'groupCheck'+group.id">{{group.name}}</label>
                           </div>
-                          {{checkedGroups}}
+                          <!-- {{checkedGroups}} -->
                           <button class="btn btnMain btn-to-groups"
                             @click="sendToGroup(problem.id, checkedGroups)">Направить</button>
                         </div>
