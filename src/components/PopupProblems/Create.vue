@@ -16,32 +16,39 @@
                   <label for="new-problem-title">Название *</label>
                   <input type="text" ref="input" v-model="formData.name" class="form-control" id="new-problem-title"
                     placeholder="Название проблемы..." @blur="onBlur($event)" @focus="onFocus($event)"
-                    :class="{ 'form-control--error': $v.name.$invalid, 'form-control--valid': name && !$v.name.$invalid}">
-                  <div class="form-group-append" @mousedown="onClear">
+                    :class="{ 'form-control--error': $v.formData.name.$invalid, 'form-control--valid': formData.name && !$v.formData.name.$invalid}"
+                    >
+                    <!-- :class="{ 'form-control--error': $v.name.$invalid, 'form-control--valid': name && !$v.name.$invalid}" -->
+                  <!-- <div class="form-group-append" style="top: 59%;" @mousedown="onClear">
                     <span class="form-group-text">&times;</span>
-                  </div>
-                  <div class="error" v-if="error">{{error}}</div>
+                  </div> -->
+                  <div class="error" v-if="error.name">{{error.name[0]}}</div>
                 </div>
                 <div class="form-group">
                   <label for="description">Описание</label>
                   <textarea cols="20" rows="3" type="text" ref="input" v-model="formData.description"
                     class="form-control" id="description" placeholder="Описание проблемы..." @blur="onBlur($event)"
-                    @focus="onFocus($event)"
-                    :class="{ 'form-control--error': $v.description.$invalid, 'form-control--valid': !$v.description.$invalid}" />
-                  <div class="form-group-append" id="textarea-append" @mousedown="onClear">
-                  <span class="form-group-text">&times;</span>
-                  <div class="error" v-if="error">{{error}}</div>
-                </div>
+                    @focus="onFocus($event)" :class="{ 'form-control--error': $v.formData.description.$invalid, 'form-control--valid': !$v.formData.description.$invalid}"
+                     />
+                     <!-- :class="{ 'form-control--error': $v.description.$invalid, 'form-control--valid': !$v.description.$invalid}" -->
+                  <!-- <div class="form-group-append" id="textarea-append" @mousedown="onClear">
+                  <span class="form-group-text">&times;</span> -->
+                <!-- </div> -->
+                <div class="error" v-if="error.description">{{error.description[0]}}</div>
+
+
               </div> 
                 <div class="form-group">
                 <label for="solution">Знаете как решить эту проблему? </label>
                 <input type="text" ref="input" v-model="formData.solution" class="form-control"
                   id="solution" placeholder="Предложите ваше решение..." @blur="onBlur($event)" @focus="onFocus($event)"
-                  :class="{ 'form-control--error': $v.solution.$invalid, 'form-control--valid': !$v.solution.$invalid}">
-                  <div class="form-group-append" @mousedown="onClear">
+                  :class="{ 'form-control--error': $v.formData.solution.$invalid, 'form-control--valid': !$v.formData.solution.$invalid}"
+                  >
+                  <!-- :class="{ 'form-control--error': $v.solution.$invalid, 'form-control--valid': !$v.solution.$invalid}" -->
+                  <!-- <div class="form-group-append" style="top: 59%;" @mousedown="onClear">
                     <span class="form-group-text">&times;</span>
-                  </div>
-                  <div class="error" v-if="error">{{error}}</div>
+                  </div> -->
+                  <div class="error" v-if="error.possible_solution">{{error.possible_solution[0]}}</div>
               </div>  
               <div class="form-group">
                 <div class="form-check">
@@ -71,7 +78,7 @@
                   </div>
                 </ss-select>
                 </div>
-                <div class="error" v-if="error">{{error}}</div>
+                <!-- <div class="error" v-if="error">{{error}}</div> -->
                 <div v-show="spacer" class="spacer"></div>
               </div>
             </form>
@@ -110,7 +117,8 @@
     data: () => ({
       formData: [],
       showClear: false,
-      spacer: false
+      spacer: false,
+      currentForm: []
     }),
     components: {
       ChevronDownIcon,
@@ -121,7 +129,8 @@
       // SsSelectSearchInput
     },
     validations: {
-      name: {
+      formData: {
+        name: {
         minLength: minLength(6),
         maxLength: maxLength(150)
       },
@@ -133,6 +142,8 @@
         minLength: minLength(6),
         maxLength: maxLength(250)
       },
+      }
+      
       ////////
     },
     watch: {
@@ -149,30 +160,35 @@
         event.target.nextElementSibling.style.display = 'none'
       },
       onFocus(event) {
-        console.log(event);
+        // console.log(event);
+        
         event.target.nextElementSibling.style.display = 'flex'
       },
-      onClear() {
-        // this.name = ''
-      },
+      // onClear() {
+
+      //   // this.name = ''
+      // },
       async addProblem() {
         console.log(this.formData);
+        this.$store.commit('setError404', '')
         await this.$store.dispatch('postProblem', {
           // params: {...this.formData}
           name: this.formData.name,
           description: this.formData.description,
           possible_solution: this.formData.solution,
           // group: this.group
-        }).then(() => {
+        }).then((r) => {
           if (!this.error) {
-            this.name = ''
+            console.log(r);
+            this.$store.dispatch('getThisProblem', r.id)
+            this.formData = []
             document.getElementById('close').click()
           } 
         })
       },
 
       close() {
-        this.name = ''
+        this.formData = []
         this.$store.commit('setError', '')
       },
 

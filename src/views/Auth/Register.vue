@@ -22,6 +22,14 @@
         </div>
 
         <div class="form-group-div">
+          <label for="father_name">Отчество<span
+              v-if="father_name.length >= 20 && father_name.length <= 25">{{$v.father_name.$params.maxLength.max - father_name.length}}</span></label>
+          <input type="father_name" class="form-control" id="father_name" v-model="father_name"
+            :class="{ 'form-control--error': $v.father_name.$invalid, 'form-control--valid': father_name && !$v.father_name.$invalid}">
+          <div class="errorAuth" v-if="errorUReg.father_name">{{errorUReg.father_name[0]}} </div>
+        </div>
+
+        <div class="form-group-div">
           <label for="email">Электронная почта *<span
               v-if="email.length >= 250 && email.length <= 255">{{$v.email.$params.maxLength.max - email.length}}</span></label>
           <input type="email" class="form-control" id="email" v-model="email"

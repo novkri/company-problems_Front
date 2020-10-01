@@ -18,7 +18,7 @@
 
           </div>
           <div class="col-2" style="justify-content: center;display: flex;">
-            <span>Статус выполнения</span>
+            <span style="text-align: center;">Статус выполнения</span>
           </div>
           <div class="col-2" style="justify-content: center;display: flex;">
             <span>Срок исполнения</span>
@@ -34,15 +34,15 @@
 
           <ol>
             <li v-for="(solution, idx) in solutions" :key="idx" id="list" class="row">
-              <!-- {{solution}} -->
+
               <div class="list-item col-5">
                 <div class="desc" ref="desc">
                   <span>Решение: </span>
-                  <!-- {{val.possible_solution}} -->
-                  <div @click="onClickInput(val.id)" v-show="!editable && !solution.name">{{val.possible_solution}}
-                  </div>
-                  <div :ref="'sol-div'+val.id" @click="onClickInput(val.id)" v-show="!editable && solution.name">
-                    {{solution.name}}</div>
+
+                  <div :ref="'sol-div'+val.id" @click="onClickInput(val.id)" v-show="!editable" :style="[solution.name ? {} : 
+                  {'background-color': '#ebebeb', 'font-size': '16px', 'border-radius': '10px', 'padding': '10px 14px',
+                    'margin-right': '-43px'}]">
+                    {{solution.name ? solution.name : "Введите описание решения..."}}</div>
                   <input v-show="editable" class="form-control" :id="'textarea'+val.id" v-model="solution.name"
                     :ref="'textarea' + val.id" @keyup.enter="event => {editSolClick(solution.name, solution.id, event)}"
                     @focus="event => onFocusInput(event, val.id)"
@@ -178,6 +178,7 @@
       openRemoveFromWork: false,
       openDeleteTask: false,
       editable: false,
+      noSolutionInWork: true,
 
       solutionName: '',
       solutionIdRemove: '',
@@ -288,12 +289,41 @@
         })
       },
 
-      onBlurInput(name, id, event) {
-        this.editable = false
+      async onBlurInputPossible(name, id, event) {
+        this.noSolutionInWork = false
         console.log(event);
-
+        this.$store.commit('setError404', '')
         if (name !== this.currentSolutionName) {
-          this.$store.dispatch('editSolution', {
+          await this.$store.dispatch('editSolution', {
+              id,
+              name
+            }).then(() => {
+              this.$refs['textarea-no-solution' + id][0].style.display = 'none'
+              // this.$refs['hidden' + id][0].classList.remove('flex')
+              this.noSolutionInWork = true
+            })
+            .catch(() => {
+              this.$store.commit('editSolutionOther', {
+                name: this.currentSolutionName,
+                id
+              })
+            })
+        }
+
+        // this.$refs['textarea' + id][0].style.display = 'none'
+        // this.$refs['sol-div' + id][0].style.display = 'flex'
+        this.$refs['sol-div-no-solution' + id][0].style.display = 'flex'
+        this.$refs['hidden' + id][0].classList.remove('flex')
+
+
+      },
+      async onBlurInput(name, id, event) {
+        this.editable = false
+        this.noSolutionInWork = false
+        console.log(event);
+        this.$store.commit('setError404', '')
+        if (name !== this.currentSolutionName) {
+          await this.$store.dispatch('editSolution', {
             id,
             name
           }).catch(() => {
@@ -304,13 +334,15 @@
           })
         }
 
+        // sol-div-no-solution
+
+
         this.$refs['textarea' + id][0].style.display = 'none'
         this.$refs['sol-div' + id][0].style.display = 'flex'
         this.$refs['hidden' + id][0].classList.remove('flex')
-
-
       },
       onFocusInput(event, id) {
+        this.noSolutionInWork = true
         this.currentSolutionName = event.target.value
         this.currentSolutionInput = event.target
 
@@ -516,8 +548,9 @@
   .desc {
     display: flex;
     flex-direction: row;
+    align-items: center;
     width: fit-content;
-    font-family: 'GothamPro-Medium';
+    // font-family: 'GothamPro-Medium';
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;

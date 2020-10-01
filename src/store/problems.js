@@ -40,8 +40,13 @@ export default {
   },
   mutations: {
     setProblems: (state, payload) => {
-      state.problems = payload
+      state.problems = payload.filter(p => p.status !== "Удалена")
       // console.log(state.problems);
+      // state.problems
+    },
+    setThisProblem: (state, payload) => {
+      let problemIdx = state.problems.findIndex(p => p.id == payload.id)
+      state.problems.splice(problemIdx, 1, payload)
     },
     addProblem: (state, payload) => {
       state.problems.push(payload)
@@ -104,41 +109,66 @@ export default {
           }
         })
     },
+
+    getThisProblem: async ({
+      commit
+    }, id) => {
+      await axios.get(BASEURL+`/${id}`)
+        .then(response => {
+            commit('setError', '')
+            commit('setError404', '')
+            commit('setThisProblem', response.data)
+        })
+        .catch(error => {
+          // console.log(error.response);
+          if (error.response.status == 401) {
+            commit('setError404', error.response.data.errors)
+          } else {
+            commit('setError', error.response.data.message)
+          }
+        })
+    },
+
     postProblem: async ({
       commit
     }, param) => {
-      console.log(param);
-      await axios.post(BASEURL, param)
+      return new Promise((resolve, reject) => {
+       axios.post(BASEURL, param)
         .then(response => {
           if (response.status == 201) {
             commit('setError', '')
             commit('setError404', '')
             commit('addProblem', response.data)
+            resolve(response.data)
           }
         })
         .catch(error => {
           console.log(error.response);
           if (error.response.status !== 422) {
             commit('setError404', error.response.data.message)
+            reject()
           } else {
-            commit('setError', error.response.data.errors.name[0])
+            error.response.data.errors ? commit('setError', error.response.data.errors) : commit('setError404', error.response.data.error)
+            reject()
           }
         })
-
+      })
     },
     deleteProblem: async ({
       commit
     }, param) => {
+      console.log(param);
       await axios.delete(BASEURL + `/${param.id}`).then(() => {
             commit('setError', '')
             commit('setError404', '')
             commit('deleteProblem', param.id)
         })
         .catch(error => {
+          console.log(error.response);
           if (error.response.status !== 422) {
             commit('setError404', error.response.data.message)
           } else {
-            commit('setError', error.response.data.errors.name[0])
+            commit('setError404', error.response.data.error)
           }
         })
 

@@ -1,5 +1,5 @@
 <template>
-  <div id="nav">
+  <!-- <div id="nav">
     <div class="dropdown">
       <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown"
         aria-haspopup="true" aria-expanded="false">
@@ -41,95 +41,96 @@
           </div>
         </div>
       </div>
-    </div>
-    <nav class="navbar navbar-light">
-      <!-- <div class="user">
+    </div> -->
+  <nav class="navbar navbar-light">
+    <!-- <div class="user">
         <span>Вы вошли как: {{userLoggedIn.surname}} {{userLoggedIn.name}}
           {{userLoggedIn.father_name}}</span>
       </div>
       <div class="logout" @click="logout">
         <log-out-icon size="1.5x" class="custom-class"></log-out-icon>
       </div> -->
-      <div class="logo">
-        logo
-      </div>
-      <div v-if="$route.matched.some(({ name }) => name === 'Problems')">
-        Список проблем: (отдел)
-      </div>
-      <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')">
-        <span>Срочность/важность:</span>
-        <div class="select" style="position: relative;" ref="select">
-          <ss-select v-model="importance" :options="statusesImportance" track-by="name" class="form-control"
-            @change="filterImportance(importance)" disable-by="disabled" id="ss-select" style="width: fit-content;">
-            <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-              style="cursor: pointer; width: 100%;">
-              <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
-                {{ $get(selectedOption, 'name') || `${importance ? importance : 'Выбрать'}`}}
-                <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
-              </ss-select-toggle>
+    <div class="logo">
+      PSS Software
+    </div>
+    <div class="group_selected" v-if="$route.matched.some(({ name }) => name === 'Problems')">
+      Список проблем: Все
+      <!-- {{$route.name}} -->
+    </div>
+    <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')">
+      <span>Срочность/важность:</span>
+      <div class="select" style="position: relative;" ref="select">
+        <ss-select v-model="importance" :options="statusesImportance" track-by="name" class="form-control"
+          @change="filterImportance(importance)" disable-by="disabled" id="ss-select" style="width: fit-content;">
+          <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+            style="cursor: pointer; width: 100%;">
+            <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
+              {{ $get(selectedOption, 'name') || `${importance ? importance : 'Выбрать'}`}}
+              <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
+            </ss-select-toggle>
 
-              <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;">
-                <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index" :key="index"
-                  class="px-4 py-2 border-b cursor-pointer" :class="[
+            <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;">
+              <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index" :key="index"
+                class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
                                 $selected(option) ? 'bg-light text-dark' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
                               ]">{{ option.name }}</ss-select-option>
-              </section>
-            </div>
-          </ss-select>
+            </section>
+          </div>
+        </ss-select>
+      </div>
+    </div>
+    <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')">
+      <span>Срок исполнения:</span>
+      <div class="select" style="position: relative;" ref="select">
+        <ss-select v-model="time" :options="statusesTime" track-by="name" class="form-control"
+          @change="filterTime(time)" disable-by="disabled" :class="[importance == 'Выполнено' ? 'green' : 'gray']"
+          id="ss-select" style="width: fit-content;">
+          <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+            style="cursor: pointer; width: 100%;">
+            <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
+              {{ $get(selectedOption, 'name') || `${time ? time : 'Выбрать'}`}}
+              <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
+            </ss-select-toggle>
+
+            <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;">
+              <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index" :key="index"
+                class="px-4 py-2 border-b cursor-pointer" :class="[
+                                pointerIndex == index ? 'bg-light text-dark' : '',
+                                $selected(option) ? 'bg-light text-dark' : '',
+                                $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
+                              ]">{{ option.name }}</ss-select-option>
+            </section>
+          </div>
+        </ss-select>
+      </div>
+    </div>
+    <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')">
+      <span>Статус:</span>
+      <ss-select v-model="statusProblem" :options="statusesProblem" track-by="name" class="form-control"
+        @change="filterProblemStatus(statusProblem)" disable-by="disabled"
+        :class="[importance == 'Выполнено' ? 'green' : 'gray']" id="ss-select" style="width: fit-content;">
+        <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+          style="cursor: pointer; width: 100%;">
+          <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
+            {{ $get(selectedOption, 'name') || `${statusProblem ? statusProblem : 'Выбрать'}`}}
+            <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
+          </ss-select-toggle>
+
+          <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;">
+            <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index" :key="index"
+              class="px-4 py-2 border-b cursor-pointer" :class="[
+                                pointerIndex == index ? 'bg-light text-dark' : '',
+                                $selected(option) ? 'bg-light text-dark' : '',
+                                $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
+                              ]">{{ option.name }}</ss-select-option>
+          </section>
         </div>
-      </div>
-      <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')">
-        <span>Срок исполнения:</span>
-        <div class="select" style="position: relative;" ref="select">
-          <ss-select v-model="time" :options="statusesTime" track-by="name" class="form-control"
-            @change="filterTime(time)" disable-by="disabled" :class="[importance == 'Выполнено' ? 'green' : 'gray']"
-            id="ss-select" style="width: fit-content;">
-            <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-              style="cursor: pointer; width: 100%;">
-              <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
-                {{ $get(selectedOption, 'name') || `${time ? time : 'Выбрать'}`}}
-                <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
-              </ss-select-toggle>
-
-              <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;">
-                <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index" :key="index"
-                  class="px-4 py-2 border-b cursor-pointer" :class="[
-                                pointerIndex == index ? 'bg-light text-dark' : '',
-                                $selected(option) ? 'bg-light text-dark' : '',
-                                $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
-                              ]">{{ option.name }}</ss-select-option>
-              </section>
-            </div>
-          </ss-select>
-        </div>
-      </div>
-      <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')">
-        <span>Статус:</span>
-                  <ss-select v-model="statusProblem" :options="statusesProblem" track-by="name" class="form-control"
-            @change="filterProblemStatus(statusProblem)" disable-by="disabled" :class="[importance == 'Выполнено' ? 'green' : 'gray']"
-            id="ss-select" style="width: fit-content;">
-            <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-              style="cursor: pointer; width: 100%;">
-              <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
-                {{ $get(selectedOption, 'name') || `${statusProblem ? statusProblem : 'Выбрать'}`}}
-                <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
-              </ss-select-toggle>
-
-              <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;">
-                <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index" :key="index"
-                  class="px-4 py-2 border-b cursor-pointer" :class="[
-                                pointerIndex == index ? 'bg-light text-dark' : '',
-                                $selected(option) ? 'bg-light text-dark' : '',
-                                $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
-                              ]">{{ option.name }}</ss-select-option>
-              </section>
-            </div>
-          </ss-select>
-      </div>
-    </nav>
-  </div>
+      </ss-select>
+    </div>
+  </nav>
+  <!-- </div> -->
 </template>
 
 <script>
@@ -176,7 +177,7 @@
           name: "Все"
         },
       ],
-            statusesProblem: [{
+      statusesProblem: [{
           name: "на рассмотрении"
         },
         {
@@ -222,6 +223,23 @@
 </script>
 
 <style lang="scss">
+
+.group_selected {
+  font-family: 'GothamPro-Medium';
+font-style: normal;
+font-weight: normal;
+font-size: 18px;
+line-height: 24px;
+text-align: justify;
+letter-spacing: 0.15px;
+color: #4F4F4F;
+}
+.logo {
+  font-size: 24px;
+line-height: 24px;
+letter-spacing: 0.15px;
+color: #60749F;
+}
   .body {
     display: flex;
   }
@@ -235,7 +253,7 @@
     }
   }
 
-  #nav {
+  nav {
     background-color: #fff;
     display: flex;
     flex-direction: row;
@@ -244,6 +262,15 @@
     position: relative !important;
     padding: 21px 26px 22px 25px;
     z-index: 2;
+
+    div {
+      font-family: 'GothamPro';
+      font-size: 14px;
+      line-height: 24px;
+      text-align: center;
+      letter-spacing: 0.15px;
+      color: #4F4F4F;
+    }
   }
 
   .navbar {

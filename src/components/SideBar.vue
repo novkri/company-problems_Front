@@ -11,6 +11,12 @@
         </div>
       </div>
       <!-- </nav> -->
+      <div class="addProblem">
+        <button type="button" class="btn btnMainAdd" @click="create" data-toggle="modal" data-target="#popupCreate">
+          <span>Предложить проблему</span>
+        </button>
+      </div>
+
 
       <div class="main">
         <a href="#">Списки проблем:</a>
@@ -19,18 +25,16 @@
         <a href="#">-Для исполнения</a>
         <a>-По подразделениям <chevron-down-icon ref="linkIcon" @click="showLinks" size="1.5x" class="custom-class">
           </chevron-down-icon></a>
-        <a href="#" v-show="showGroups">
+          <div class="links_groups">
+            <a href="#" v-show="showGroups">
           <router-link to="/" exact>Все</router-link>
         </a>
         <a href="#" v-show="showGroups" v-for="(group, idx) in groups" :key="idx">{{group.name}}</a>
+          </div>
+        
       </div>
 
-      <div class="addProblem">
-        <button type="button" class="btn btnMain" @click="create" data-toggle="modal" data-target="#popupCreate">
 
-          <span>Предложить проблему</span>
-        </button>
-      </div>
 
 
       <div class="info">
@@ -98,24 +102,51 @@
 </script>
 
 <style lang="scss">
-  .btnMain {
-    padding: 13px 9px;
+  
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #92D2C3;
+      border-radius: 3px;
+      height: 73px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #F2F2F2;
+      border-left: 4px solid #F6F7F9;
+      border-right: 4px solid #F6F7F9;
+    }
+
+.links_groups {
+  max-height: 166px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  margin-bottom: 37px;
+
+}
+  .btnMainAdd {
+    padding: 13px 8px;
     border-radius: 12px;
     width: 213px;
-    height: 58px;
-    background: #92D2C3;
-    color: #fff;
+    // height: 58px;
+    background-color: transparent;
+    color: #4EAD96;
     font-size: 16px;
     line-height: 17px;
+    border: 2px solid #4EAD96;
 
     display: flex;
     justify-content: center;
     align-items: center;
     font-family: 'GothamPro-Medium';
+    margin-bottom: 30px;
   }
 
-  .btnMain:hover {
+  .btnMainAdd:hover {
     color: #fff;
+    background-color: #4EAD96;
   }
 
   .body {
@@ -126,7 +157,7 @@
     max-width: 280px;
     background-color: #F6F7F9;
     padding: 0;
-    height: 100vh;
+    // height: 100vh;
 
     // padding-left: 20px;
     // padding-right: 16px;
@@ -151,11 +182,11 @@
     .links {
       display: flex;
       flex-direction: column;
-      height: 80vh;
+      // height: 80vh;
       justify-content: space-between;
       // padding-top: 60px;
       // padding-left: 30px;
-      padding: 60px 48px 0;
+      padding: 60px 26px 0;
 
       .user {
         position: relative;
@@ -166,6 +197,7 @@
         background-color: #fff;
         border-radius: 5px;
         margin-bottom: 65px;
+        margin-left: -26px;
 
         span {
           font-family: 'GothamPro';
@@ -174,6 +206,7 @@
           letter-spacing: 0.15px;
           color: #4F4F4F;
           padding: 4px 13px;
+          margin: auto;
         }
       }
 
@@ -187,7 +220,7 @@
         display: flex;
         cursor: pointer;
         z-index: 3;
-        right: -13%;
+        right: -2%;
 
         svg {
           margin: auto;
@@ -195,7 +228,6 @@
           color: white;
         }
       }
-
     }
 
     .info,

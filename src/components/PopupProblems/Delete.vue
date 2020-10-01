@@ -4,6 +4,7 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
+ 
             <h5 class="modal-title" id="exampleModalLabel">Вы точно хотите удалить проблему?</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
@@ -33,6 +34,7 @@
     },
     methods: {
       async deleteProblem() {
+        await this.$store.commit('setError404', '')
           await this.$store.dispatch('checkIfExists', {id: this.val.id})
           .then(async () => {
               await this.$store.dispatch('deleteProblem', {id: this.val.id})

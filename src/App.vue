@@ -110,6 +110,7 @@ import NoneLayout from '@/layouts/NoLayout'
     visibility: visible;
     opacity: 1;
     transition: opacity .15s;
+    outline: none;
   }
 }
 </style>

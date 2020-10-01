@@ -333,6 +333,8 @@ export default {
     editPlan: async ({
       commit
     }, param) => {
+      console.log(param);
+
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
       axios.put(BASEURL + `/${param.id}/set-plan`, {

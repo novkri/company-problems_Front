@@ -38,7 +38,7 @@
               </button>
 
               <h5 class="mb-0" style="display: flex;">
-                <p>{{idx+1}}.</p>
+                <!-- {{problem.status}} -->
                 <div :ref="'name-div'+problem.id" @click="event => {onClickInput(problem.id, event)}"> {{ problem.name}}
                 </div>
                 <input class="form-control" style="display: none;" :id="'problem-name'+problem.id"
@@ -82,9 +82,9 @@
                 </div>
               </div>
               <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=45 :thickness="4">
-                <span v-show="!progressClicked" slot="legend-value"
-                  @click="clickProgress(problem.id)">{{problem.progress}}%</span>
-                <input v-show="progressClicked" :ref="'progress-bar'+problem.id" class="progress-input" type="text"
+                <span slot="legend-value" :ref="'legend-value'+problem.id"
+                  @click="event => clickProgress(problem.id, event)">{{problem.progress}}%</span>
+                <input :ref="'progress-bar'+problem.id" class="progress-input" type="text" style="display: none;"
                   v-model="problem.progress" @blur="editProgress(problem.id, problem.progress)"
                   @keyup.enter="editProgress(problem.id, problem.progress)">
               </vue-ellipse-progress>
@@ -138,9 +138,9 @@
                   Прогресс решения:
                 </span>
                 <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=45 :thickness="4">
-                  <span v-show="!progressClicked" slot="legend-value" style="padding: 0;"
-                    @click="clickProgress(problem.id)">{{problem.progress}}%</span>
-                  <input v-show="progressClicked" :ref="'progress-bar'+problem.id" class="progress-input" type="text"
+                  <span :ref="'legend-value'+problem.id" slot="legend-value" style="padding: 0;"
+                    @click="event => clickProgress(problem.id, event)">{{problem.progress}}%</span>
+                  <input :ref="'progress-bar'+problem.id" class="progress-input" type="text" style="display: none;"
                     v-model="problem.progress" @blur="editProgress(problem.id, problem.progress)"
                     @keyup.enter="editProgress(problem.id, problem.progress)">
                 </vue-ellipse-progress>
@@ -199,7 +199,7 @@
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                           </button>
                           <h5 class="mb-0">
-                            План решения
+                            План решения {{solutions[0].plan}}
                           </h5>
                         </div>
                       </div>
@@ -414,7 +414,8 @@
       // pageNumber: 0,
       // size: 25,
       // progress: 35,
-      progressClicked: false,
+      // progressClicked: false,
+      currentProgress: '',
 
       checkedGroups: [],
 
@@ -500,9 +501,13 @@
         })
       },
 
-      clickProgress(id) {
-        this.progressClicked = true
+      clickProgress(id, event) {
+        console.log(event);
+     
+        this.currentProgress = this.$refs['progress-bar' + id][0].value
+        this.$refs['legend-value' + id][0].style.display = 'none'
         this.$nextTick(() => {
+          this.$refs['progress-bar' + id][0].style.display = 'flex'
           this.$refs['progress-bar' + id][0].focus()
           this.$refs['progress-bar' + id][1].focus()
         })
@@ -510,12 +515,20 @@
 
       async editProgress(id, progress) {
         console.log(progress);
-        this.progressClicked = false
+        // this.progressClicked = false
+        this.$refs['progress-bar' + id][0].style.display = 'none'
+        this.$refs['legend-value' + id][0].style.display = 'flex'
+        
         console.log(id);
 
         await this.$store.dispatch('editProgress', {
           id,
           progress
+        }).catch(() => {
+          this.$store.commit('editProgress', {
+          id,
+          progress: this.currentProgress
+        })
         })
       },
 
@@ -1028,11 +1041,11 @@
     // width: 1370px;
     max-width: 97%;
     width: auto !important;
-    max-height: 82vh;
+    max-height: 85vh;
     overflow-y: scroll;
     padding-right: 20px;
     margin-top: 18px;
-    margin-bottom: 36px;
+    // margin-bottom: 36px;
   }
 
   ::-webkit-scrollbar {
