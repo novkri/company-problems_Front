@@ -45,6 +45,7 @@ export default {
   mutations: {
     setProblems: (state, payload) => {
       state.problems = payload.filter(p => p.status !== "Удалена" && p.status !== "Решена")
+      
       // // console.log(state.problems);
       // state.problems
     },

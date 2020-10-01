@@ -199,7 +199,7 @@
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                           </button>
                           <h5 class="mb-0">
-                            План решения {{solutions[0].plan}}
+                            План решения 
                           </h5>
                         </div>
                       </div>
@@ -508,11 +508,14 @@
 
       clickProgress(id, event) {
         console.log(event);
+        console.log(this.$refs['progress-bar' + id][0]);
 
         this.currentProgress = this.$refs['progress-bar' + id][0].value
         this.$refs['legend-value' + id][0].style.display = 'none'
+        // this.$refs['legend-value' + id][1].style.display = 'none'
         this.$nextTick(() => {
           this.$refs['progress-bar' + id][0].style.display = 'flex'
+          this.$refs['progress-bar' + id][1].style.display = 'flex'
           this.$refs['progress-bar' + id][0].focus()
           this.$refs['progress-bar' + id][1].focus()
         })

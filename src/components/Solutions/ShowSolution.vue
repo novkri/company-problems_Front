@@ -1,15 +1,5 @@
 <template>
   <div class="row">
-    <!-- <div class="modal-header" >
-              <div class="subtitle subtitle1">
-                <h5 class="modal-title" @click="showEdit = !showEdit" v-if="!showEdit">{{val.name}}</h5>
-                <div class="form-group" v-else>
-                  <input autofocus @blur="editProblem()" @keyup.enter="onKey($event)" @focus="onFocusInput($event)"
-                    ref="input" class="form-control" id="new-problem-title" v-model="val.name">
-                  <div class="error" v-if="error">{{error}}</div>
-                </div>
-              </div>
-            </div> -->
 
     <div class="modal-body col-9">
       <div>

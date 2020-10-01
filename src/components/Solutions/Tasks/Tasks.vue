@@ -242,7 +242,6 @@
         this.addNotClicked = false
         this.formInput = []
         this.$store.commit('setError', '')
-        // console.log(this.$refs['addTaskInput']);
         this.$nextTick(() => {
           this.$refs['addTaskInput'].focus()
         })
