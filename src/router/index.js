@@ -9,6 +9,7 @@ const routes = [
     path: "/",
     name: "Problems",
     component: () =>  import("../views/Problems.vue"),
+    props: true,
     meta: { 
       requiresAuth: true,
       layout: 'main'

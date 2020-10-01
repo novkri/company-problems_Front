@@ -411,6 +411,7 @@
           })
           .then(() => {
             this.$store.commit('changeLeader', param.leader_id)
+            this.$store.dispatch('getMembers', param.groupId)
           })
           .catch(() => {
             this.$store.commit('editExecutorGroup', {

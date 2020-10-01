@@ -151,6 +151,10 @@
 
   export default {
     data: () => ({
+      importance: '',
+      time: '',
+      statusProblem: '',
+      
       statusesImportance: [{
           name: "Только важные"
         },
@@ -222,7 +226,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 .group_selected {
   font-family: 'GothamPro-Medium';

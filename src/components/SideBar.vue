@@ -19,9 +19,9 @@
 
 
       <div class="main">
-        <a href="#">Списки проблем:</a>
-        <a href="#">-Предложенные мной</a>
-        <a href="#">-На рассмотрении</a>
+        <a @click="allProblems()">Списки проблем:</a>
+        <a @click="onСhecking()">-Предложенные мной</a>
+        <a @click="underСonsideration()">-На рассмотрении</a>
         <a href="#">-Для исполнения</a>
         <a>-По подразделениям <chevron-down-icon ref="linkIcon" @click="showLinks" size="1.5x" class="custom-class">
           </chevron-down-icon></a>
@@ -72,7 +72,7 @@
       PopupCreate
     },
     computed: {
-      ...mapGetters(['groups', 'user']),
+      ...mapGetters(['groups', 'user', 'problems', 'problemsUnderСonsideration']),
       isLoggedIn: function () {
         return this.$store.getters.isLoggedIn
       },
@@ -91,12 +91,29 @@
         this.$store.commit('setError', '')
       },
 
-      logout: function () {
+      logout() {
         this.$store.dispatch('logout')
           .then(() => {
             this.$router.push('/login')
           })
-      }
+      },
+
+      async underСonsideration() {
+        // await this.$store.dispatch('getProblems')
+        // this.$store.commit('sortProblems', 'На рассмотрении')
+        // this.problems = this.problemsUnderСonsideration
+        // this.$emit('filteredProblems', 'На рассмотрении')
+        console.log(this.problemsUnderСonsideration);
+      },
+      async onСhecking() {
+        // await this.$store.dispatch('getProblems')
+        // this.$store.commit('sortProblems', 'На проверке заказчика')
+      },
+      async allProblems() {
+        // await this.$store.dispatch('getProblems')
+        // this.$store.commit('sortProblems', '')
+        console.log(this.problems);
+      },
     }
   }
 </script>

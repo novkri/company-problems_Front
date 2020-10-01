@@ -38,7 +38,7 @@
               </button>
 
               <h5 class="mb-0" style="display: flex;">
-                <!-- {{problem.status}} -->
+                <!-- {{problem.status}}  -->
                 <div :ref="'name-div'+problem.id" @click="event => {onClickInput(problem.id, event)}"> {{ problem.name}}
                 </div>
                 <input class="form-control" style="display: none;" :id="'problem-name'+problem.id"
@@ -50,12 +50,12 @@
 
             <div class="middle-icons col-7">
               <div>
-                <v-popover offset="16">
+                <v-popover offset="16" >
                   <file-text-icon size="1.5x" class="custom-class details tooltip-target b3">
                   </file-text-icon>
 
                   <template slot="popover">
-                    <TooltipProblem char="=" :val="problem" />
+                    <TooltipProblem char="=" :val="problem"  />
                     <a v-close-popover
                       style="display: flex;justify-content: flex-end; font-size: 28px; font-family: 'GothamPro'">&times;</a>
                   </template>
@@ -446,6 +446,7 @@
       await this.$store.dispatch('getProblems')
       await this.$store.dispatch('getGroups')
       await this.$store.dispatch('getAllUsers')
+      this.mounted = true
     },
     watch: {
       error404() {
@@ -469,9 +470,13 @@
       //     end = start + this.size;
       //   return this.problems.slice(start, end);
       // }
+      // filteredProblems() {
+      //   return this.$store.getters.filterProblemssBy('на рассмотрении');
+      // }
     },
 
     methods: {
+
       async problemReject(id) {
         await this.$store.dispatch('problemReject', id)
       },

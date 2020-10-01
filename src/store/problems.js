@@ -31,6 +31,10 @@ export default {
         return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1
       })
     },
+    // filterProblemssBy: state => status => state.problems.filter(p => p.status === status),
+    // // state => {
+    // //   return state.problems.filter(p => p.status == "На рассмотрении")
+    // // },
     error: state => {
       return state.error
     },
@@ -40,10 +44,16 @@ export default {
   },
   mutations: {
     setProblems: (state, payload) => {
-      state.problems = payload.filter(p => p.status !== "Удалена")
+      state.problems = payload.filter(p => p.status !== "Удалена" && p.status !== "Решена")
       // console.log(state.problems);
       // state.problems
     },
+    // sortProblems: (state, payload) => {
+    //   console.log(state.problems);
+    // //  state.problems = 
+    //  return state.problems.filter(p => p.status == payload)
+    // //  console.log(state.problems);
+    // },
     setThisProblem: (state, payload) => {
       let problemIdx = state.problems.findIndex(p => p.id == payload.id)
       state.problems.splice(problemIdx, 1, payload)

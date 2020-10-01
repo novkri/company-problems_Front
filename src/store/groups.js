@@ -85,13 +85,11 @@ export default {
       })
     },
     editGroupShort: (state, payload) => {
-      console.log(payload.short_name, '444');
-      
       state.groups.find(group => group.id == payload.id).short_name = payload.short_name
-      console.log(state.groups.find(group => group.id == payload.id).short_name);
     },
     editExecutorGroup: (state, payload) => {
       state.groups.find(group => group.id == payload.id).leader_id = payload.leader_id
+      // state.members.filter(m => m.id !== payload.id)
     },
     setUserToGroup: (state, payload) => {
       state.members.push(payload)

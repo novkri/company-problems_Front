@@ -9,7 +9,7 @@
       <div>
         <span>Описание: </span>{{val.description}}</div>
       <div>
-        <span>Возможное решение: </span>{{possible_solution}}</div>
+        <span>Возможное решение: </span>{{val.possible_solution}}</div>
 
       <!-- {{problem_creator}} -->
     </div>
@@ -26,26 +26,18 @@
     name: 'tooltip',
     props: ['val'],
     data: () => ({
-      problem_creator: ''
+      problem_creator: '',
+
+      mounted: false
     }),
     computed: {
       ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', ]),
-      // creator: function () {
-      // this.problem_creator = this.allUser.find(u => u.id == this.val.creator_id)
-      // // return this.message.split('').reverse().join('')
-      // return this.problem_creator
-      // }
-
-      // },
-      // watch: {
-      //   problem_creator: function (value) {
-      //     console.log(value);
-      //     this.problem_creator = this.allUser.find(u => u.id == this.val.creator_id)
-      //   },
-      // }
+    
     },
     mounted() {
       // console.log('d');
+      // this.mounted = true
+      // console.log(this.mounted);
       // this.problem_creator = this.allUser.find(u => u.id == this.val.creator_id)
     }
   }
