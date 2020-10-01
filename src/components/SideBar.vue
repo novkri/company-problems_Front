@@ -19,19 +19,19 @@
 
 
       <div class="main">
-        <a @click="allProblems()">Списки проблем:</a>
-        <a @click="onСhecking()">-Предложенные мной</a>
-        <a @click="underСonsideration()">-На рассмотрении</a>
-        <a href="#">-Для исполнения</a>
+        <a>Списки проблем:</a>
+        <a>-Предложенные мной</a>
+        <a>-На рассмотрении</a>
+        <a>-Для исполнения</a>
         <a>-По подразделениям <chevron-down-icon ref="linkIcon" @click="showLinks" size="1.5x" class="custom-class">
           </chevron-down-icon></a>
-          <div class="links_groups">
-            <a href="#" v-show="showGroups">
-          <router-link to="/" exact>Все</router-link>
-        </a>
-        <a href="#" v-show="showGroups" v-for="(group, idx) in groups" :key="idx">{{group.name}}</a>
-          </div>
-        
+        <div class="links_groups">
+          <a href="#" v-show="showGroups">
+            <router-link to="/" exact>Все</router-link>
+          </a>
+          <a href="#" v-show="showGroups" v-for="(group, idx) in groups" :key="idx">{{group.name}}</a>
+        </div>
+
       </div>
 
 
@@ -119,30 +119,34 @@
 </script>
 
 <style lang="scss">
-  
-    ::-webkit-scrollbar {
-      width: 10px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #92D2C3;
-      border-radius: 3px;
-      height: 73px;
-    }
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
 
-    ::-webkit-scrollbar-track {
-      background: #F2F2F2;
-      border-left: 4px solid #F6F7F9;
-      border-right: 4px solid #F6F7F9;
-    }
+  ::-webkit-scrollbar-thumb {
+    background: #92D2C3;
+    border-radius: 3px;
+    height: 73px;
+  }
 
-.links_groups {
-  max-height: 166px;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  ::-webkit-scrollbar-track {
+    background: #F2F2F2;
+    border-left: 4px solid #F6F7F9;
+    border-right: 4px solid #F6F7F9;
+  }
 
-  margin-bottom: 37px;
+  .links_groups {
+    max-height: 166px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 37px;
+    direction: rtl;
+    padding-left: 25px;
 
-}
+  }
+
   .btnMainAdd {
     padding: 13px 8px;
     border-radius: 12px;
@@ -274,7 +278,7 @@
 
 
 
- 
+
 
   .container {
     width: 436px;

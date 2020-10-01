@@ -67,7 +67,7 @@
 
           <div class="selectResponsible col-2">
             <ss-select v-model="task.executor_id" :options="allUsersReduced" track-by="name" search-by="surname"
-              @change="selectExecutorTask(task)" disable-by="disabled" id="ss-select" style="width: fit-content;">
+              @change="selectExecutorTask(task)" disable-by="disabled" id="ss-select" style="width: 100%;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                 @click="onClickExecutor(selectedOption)" style="cursor: pointer; width: 100%;">
                 <ss-select-toggle class="flex items-center justify-between"
@@ -628,6 +628,7 @@
 
   .date {
     width: 200px;
+    margin-left: -17px;
     border: none;
     position: relative;
     height: 81%;
@@ -836,7 +837,7 @@
     padding: 10px 0 10px 50px;
     color: #4F4F4F;
     caret-color: #4EAD96;
-    width: 43%;
+    width: 42%;
     border-right: 1px solid #EEEEEE;
   }
 
@@ -847,8 +848,8 @@
     justify-content: space-evenly;
     box-shadow: 9px 4px 16px rgba(0, 0, 0, 0.1);
     border-radius: 0 9px 9px 0;
-    padding: 10px 0 10px 153px;
-    width: 57%;
+    padding: 10px 0 10px 76px;
+    width: 58%;
     align-items: flex-start;
   }
 

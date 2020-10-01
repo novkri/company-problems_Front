@@ -29,7 +29,7 @@
       <div id="accordion">
         <!-- in paginatedData -->
         <div class="card" id="card" v-for="(problem, idx) in problems" :key="idx">
-          <div class="card-header row" :id="'heading'+problem.id">
+          <div class="card-header row" :id="'heading'+problem.id" ref="collapsed-header">
             <div class="name col-4">
               <button class="btn btn-link collapsed" @click="onClickShow(problem)" data-toggle="collapse"
                 :data-target="'#collapseOne'+problem.id" aria-expanded="false"
@@ -446,7 +446,7 @@
       await this.$store.dispatch('getProblems')
       await this.$store.dispatch('getGroups')
       await this.$store.dispatch('getAllUsers')
-      this.mounted = true
+      // this.mounted = true
     },
     watch: {
       error404() {
@@ -570,10 +570,17 @@
       },
 
       async onClickShow(problem) {
+this.$refs['collapsed-header'].forEach(element => {
+  console.log(element.classList.contains('collapsed-header'));
+  element.classList.contains('collapsed-header') ? element.classList.remove('collapsed-header') : ''
+});
+
         document.getElementById('heading' + problem.id).classList.contains('collapsed-header') ? document
           .getElementById('heading' + problem.id).classList.remove('collapsed-header') : document.getElementById(
-            'heading' + problem.id)
-          .classList.add('collapsed-header')
+            'heading' + problem.id).classList.add('collapsed-header')
+// this.$refs['collapsed-header'].click()
+// console.log(this.$refs['collapsed-header']);
+
         if (this.paramsModal !== problem) {
           this.openDelete = false
           this.openShow = true

@@ -7,11 +7,11 @@
         {{allUsers.find(u => u.id === val.creator_id).name}} {{allUsers.find(u => u.id === val.creator_id).father_name}}
       </div>
       <div>
-        <span>Описание: </span>{{val.description}}</div>
+        <span>Описание: </span>{{val.description}}
+      </div>
       <div>
-        <span>Возможное решение: </span>{{val.possible_solution}}</div>
-
-      <!-- {{problem_creator}} -->
+        <span>Возможное решение: </span>{{val.possible_solution}}
+      </div>
     </div>
 
   </div>
