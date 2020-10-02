@@ -10,12 +10,22 @@
       </div>
 
       <div>
-        <p><span>Описание: </span>{{val.description}}</p>
+        <p><span>Описание: </span>
+        </p>
+        <p @click="event => changeProblemDesc(val.id, event)" class="desc" v-show="!isEditDesc">{{val.description}}</p>
+        <input v-show="isEditDesc" v-model="val.description" @blur="event => onBlurDesc(event, val.id)" @keyup.enter="onEnterDesc($event)" class="form-control desc" :ref="'descInput'+val.id" />
+        <!-- <input v-show="isEditDesc" v-model="val.description" @blur="event => onBlurDesc(event, val.id)" @keyup.enter="onEnterDesc($event)" class="form-control desc" :ref="'descInput'+val.id" /> -->
       </div>
 
-      <div>
+      <!-- <div>
         <p><span>Возможное решение: </span>
           {{val.possible_solution}}</p>
+      </div> -->
+      <div>
+        <p><span>Возможное решение: </span>
+        </p>
+        <p @click="event => changePossible(val.id, event)" class="possible" v-show="!isEditPossible">{{val.possible_solution}}</p>
+        <input v-show="isEditPossible" v-model="val.possible_solution" @blur="event => onBlurPossible(event, val.id)" @keyup.enter="onEnterPossible($event)" class="form-control possible" :ref="'possibleInput'+val.id" />
       </div>
 
     </div>
@@ -32,23 +42,74 @@
     props: ['val'],
     data: () => ({
       problem_creator: '',
+      mounted: false,
 
-      mounted: false
+      isEditDesc: false,
+      isEditPossible: false,
+
+      // newInput: '',
+      newInput: ''
     }),
     computed: {
       ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', ]),
 
     },
-    mounted() {
-      // console.log('d');
-      // this.mounted = true
-      // console.log(this.mounted);
-      // this.problem_creator = this.allUser.find(u => u.id == this.val.creator_id)
+    methods: {
+      changeProblemDesc(id, event) {
+        this.isEditDesc = true
+        this.newInput = event.target.textContent
+        this.$nextTick(() => {
+          this.$refs['descInput' + id].focus()
+        })
+      },
+
+      onEnterDesc(event) {
+        event.target.blur()
+      },
+
+      async onBlurDesc(event, id) {
+        this.isEditDesc = false
+
+        await this.$store.commit('setError404', '')
+        await this.$store.dispatch('changeProblemDescription', {id, description: this.val.description })
+          .catch(() => {
+            this.$store.commit('changeProblemDescription', {id, description: this.newInput} )
+          })
+      },
+
+      changePossible(id, event) {
+        this.isEditPossible = true
+        this.newInput = event.target.textContent
+
+        this.$nextTick(() => {
+          this.$refs['possibleInput' + id].focus()
+        })
+      },
+
+      onEnterPossible(event) {
+        event.target.blur()
+      },
+
+      async onBlurPossible(event, id) {
+        this.isEditPossible = false
+
+        await this.$store.commit('setError404', '')
+        await this.$store.dispatch('changePossible', {id, possible_solution: this.val.possible_solution})
+          .catch(() => {
+            this.$store.commit('changePossible', {id, possible_solution: this.newInput} )
+          })
+      }
     }
+
   }
 </script>
 
 <style scoped lang="scss">
+
+  .form-control.desc, .form-control.possible {
+    background-color: #F6F6F6;
+    width: auto;
+  }
   p {
     word-break: break-word;
   }

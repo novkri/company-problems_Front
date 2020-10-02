@@ -13,7 +13,7 @@
       <!-- </nav> -->
       <div class="addProblem">
         <button type="button" class="btn btnMainAdd" @click="create" data-toggle="modal" data-target="#popupCreate">
-          <span>Предложить проблему</span>
+          <plus-icon size="1.4x" class="custom-class"></plus-icon> <span>Предложить проблему</span>
         </button>
       </div>
 
@@ -24,7 +24,7 @@
         <a>-Предложенные мной</a>
         <a>-На рассмотрении</a>
         <a>-Для исполнения</a>
-        <a>-По подразделениям <chevron-down-icon ref="linkIcon" @click="showLinks" size="1.5x" class="custom-class">
+        <a @click="showLinks">-По подразделениям <chevron-down-icon ref="linkIcon" size="1.5x" class="custom-class">
           </chevron-down-icon></a>
         <div class="links_groups">
           <a href="#" v-show="showGroups">
@@ -53,7 +53,8 @@
 <script>
   import {
     ChevronDownIcon,
-    LogOutIcon
+    LogOutIcon,
+    PlusIcon
   } from 'vue-feather-icons'
   import {
     mapGetters
@@ -69,6 +70,7 @@
     components: {
       ChevronDownIcon,
       LogOutIcon,
+      PlusIcon,
 
       PopupCreate
     },
@@ -149,7 +151,7 @@
   }
 
   .btnMainAdd {
-    padding: 13px 8px;
+    padding: 8px 7px;
     border-radius: 12px;
     width: 213px;
     // height: 58px;
@@ -452,7 +454,11 @@
 
 
 
-
+@media (max-width: 1500px) {
+  * {
+    font-size: 14px !important;
+  }
+}
 
   @media (max-width: 1300px) {
     .sidebar {

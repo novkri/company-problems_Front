@@ -216,16 +216,18 @@ export default {
     editGroup: async ({
       commit
     }, param) => {
-      // console.log(param);
+      console.log(param);
       return new Promise((resolve, reject) => {
         axios.put(BASEURL + `/${param.id}`, {
           name: param.name
         }).then(response => {
+          console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('editGroup', response.data)
             resolve(response)
         }).catch((error) => {
+          console.log(error.response);
           if (error.response.status !== 422) {
             error.response.data.message ? commit('setError404', error.response.data.message) : commit('setError404', error.response.data.errors)
             // commit('setError404', error.response.data.message)

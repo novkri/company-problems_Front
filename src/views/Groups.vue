@@ -37,79 +37,47 @@
                   @click="showOnClickUsers(group.id)" aria-expanded="false" :aria-controls="'collapseOne'+group.id">
                   <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                 </button>
-                <div class="name_div" 
-                  @click="event => {onClickInput(group.id, 'name',event)}">
+                <div class="name_div" @click="event => {onClickInput(group.id, 'name',event)}">
                   <span :ref="'name-div'+group.id">{{group.name}}</span>
 
-                             <input class="form-control input-name" :id="'groupname'+group.id" style="display: none;"
-                  :ref="'group-name' + group.id" @keyup.enter="event => {editGroupName(group.name, group.id, event)}"
-                  v-model="group.name" @focus="event => onFocusInput(event, group.id, 'name')"
-                  @blur="event => {onBlurInput(group.name, group.id, event, 'name')}">
+                  <input class="form-control input-name" :id="'groupname'+group.id" style="display: none;"
+                    :ref="'group-name' + group.id" @keyup.enter="event => {editGroupName(group.name, group.id, event)}"
+                    v-model="group.name" @focus="event => onFocusInput(event, group.id, 'name')"
+                    @blur="event => {onBlurInput(group.name, group.id, event, 'name')}">
 
-                <div class="hidden" :ref="'hidden'+group.id">
-                  <button class="input-btn" @mousedown="event => {editGroupName(group.name, group.id, event)}">
-                    <check-icon size="1x" class="custom-class"></check-icon>
-                  </button>
-                  <div @mousedown="event => onClear(event, group.id, 'name')">
-                    <button class="input-btn">
-                      <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
+                  <div class="hidden" :ref="'hidden'+group.id">
+                    <button class="input-btn" @mousedown="event => {editGroupName(group.name, group.id, event)}">
+                      <check-icon size="1x" class="custom-class"></check-icon>
                     </button>
+                    <div @mousedown="event => onClear(event, group.id, 'name')">
+                      <button class="input-btn">
+                        <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
+                      </button>
+                    </div>
                   </div>
                 </div>
-                </div>
-                <!-- <input class="form-control input-name" :id="'groupname'+group.id" style="display: none;"
-                  :ref="'group-name' + group.id" @keyup.enter="event => {editGroupName(group.name, group.id, event)}"
-                  v-model="group.name" @focus="event => onFocusInput(event, group.id, 'name')"
-                  @blur="event => {onBlurInput(group.name, group.id, event, 'name')}">
-
-                <div class="hidden" :ref="'hidden'+group.id">
-                  <button class="input-btn" @mousedown="event => {editGroupName(group.name, group.id, event)}">
-                    <check-icon size="1x" class="custom-class"></check-icon>
-                  </button>
-                  <div @mousedown="event => onClear(event, group.id, 'name')">
-                    <button class="input-btn">
-                      <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
-                    </button>
-                  </div>
-                </div> -->
               </h5>
             </div>
             <div class="short-name col-3">
-              <div class="short-name_div"
-                @click="event => {onClickInput(group.id, 'short', event)}">
+              <div class="short-name_div" @click="event => {onClickInput(group.id, 'short', event)}">
                 <span :ref="'short-name-div'+group.id">{{group.short_name}}</span>
 
-                              <input class="form-control input-name" :id="'groupshort'+group.id" style="display: none;"
-                :ref="'group-name-short' + group.id"
-                @keyup.enter="event => {editGroupShort(group.short_name, group.id, event)}" v-model="group.short_name"
-                @focus="event => onFocusInput(event, group.id, 'short')"
-                @blur="event => {onBlurInput(group.short_name, group.id, event, 'short')}">
-              <div class="hidden" :ref="'hidden-short' + group.id">
-                <button class="input-btn" @mousedown="event => {editGroupShort(group.short_name, group.id, event)}">
-                  <check-icon size="1x" class="custom-class"></check-icon>
-                </button>
-                <div @mousedown="event => onClear(event, group.id, 'short')">
-                  <button class="input-btn">
-                    <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
+                <input class="form-control input-name" :id="'groupshort'+group.id" style="display: none;"
+                  :ref="'group-name-short' + group.id"
+                  @keyup.enter="event => {editGroupShort(group.short_name, group.id, event)}" v-model="group.short_name"
+                  @focus="event => onFocusInput(event, group.id, 'short')"
+                  @blur="event => {onBlurInput(group.short_name, group.id, event, 'short')}">
+                <div class="hidden" :ref="'hidden-short' + group.id">
+                  <button class="input-btn" @mousedown="event => {editGroupShort(group.short_name, group.id, event)}">
+                    <check-icon size="1x" class="custom-class"></check-icon>
                   </button>
+                  <div @mousedown="event => onClear(event, group.id, 'short')">
+                    <button class="input-btn">
+                      <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
+                    </button>
+                  </div>
                 </div>
               </div>
-              </div>
-              <!-- <input class="form-control input-name" :id="'groupshort'+group.id" style="display: none;"
-                :ref="'group-name-short' + group.id"
-                @keyup.enter="event => {editGroupShort(group.short_name, group.id, event)}" v-model="group.short_name"
-                @focus="event => onFocusInput(event, group.id, 'short')"
-                @blur="event => {onBlurInput(group.short_name, group.id, event, 'short')}">
-              <div class="hidden" :ref="'hidden-short' + group.id">
-                <button class="input-btn" @mousedown="event => {editGroupShort(group.short_name, group.id, event)}">
-                  <check-icon size="1x" class="custom-class"></check-icon>
-                </button>
-                <div @mousedown="event => onClear(event, group.id, 'short')">
-                  <button class="input-btn">
-                    <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
-                  </button>
-                </div>
-              </div> -->
             </div>
 
             <div class="selectResponsible col-3">
@@ -340,11 +308,13 @@
 
 
       async onBlurInput(name, id, event, type) {
+        console.log(name, this.currentGroupName, id);
         if (name !== this.currentGroupName) {
           type === 'name' ? this.$store.dispatch('editGroup', {
             id,
             name
-          }).catch(() => {
+          }).catch((e) => {
+            console.log(e);
             this.$store.commit('editGroup', {
               id,
               name: this.currentGroupName
@@ -372,6 +342,7 @@
       },
 
       onFocusInput(event, id, type) {
+        console.log(event.target.value);
         this.currentGroupName = event.target.value
         this.currentGroupInput = event.target
 
@@ -545,6 +516,7 @@
       width: 100%;
     }
   }
+
   .short-name_div {
     justify-content: center;
   }

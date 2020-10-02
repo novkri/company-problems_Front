@@ -128,13 +128,17 @@
     }
   }
 
+  * {
+    letter-spacing: 0.15px;
+  }
+
   @media (max-width: 1500px) {
     *, span, textarea, input {
-      font-size: 13px !important;
+      font-size: 13px;
     }
 
     span, textarea, input {
-      font-size: 13px !important;
+      font-size: 13px ;
     }
 
     .close {

@@ -480,7 +480,11 @@ color: #60749F;
 
 
 
-
+@media (max-width: 1500px) {
+  * {
+    font-size: 14px !important;
+  }
+}
 
 
   @media (max-width: 1300px) {

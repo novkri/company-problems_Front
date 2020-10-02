@@ -96,7 +96,7 @@
                   Подробнее:
                 </span>
                 <v-popover offset="16">
-                  <file-text-icon size="1.5x" class="custom-class details tooltip-target b3">
+                  <file-text-icon size="1.3x" class="custom-class details tooltip-target b3">
                   </file-text-icon>
 
                   <template slot="popover">
@@ -108,15 +108,15 @@
               </div>
               <div>
                 <span :style="[problem.urgency == `Срочная` ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]">
-                  {{problem.urgency}}:
+                  Срочная:
                 </span>
-                <clock-icon size="1.5x" class="custom-class details" :ref="'urgency'+problem.id"
+                <clock-icon size="1.3x" class="custom-class details" :ref="'urgency'+problem.id"
                   @click="changeUrgency(problem.id, problem.urgency)"></clock-icon>
               </div>
               <div>
                 <span
-                  :style="[problem.importance == `Важная` ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]">{{problem.importance}}:</span>
-                <alert-circle-icon size="1.5x" class="custom-class details" :ref="'importance'+problem.id"
+                  :style="[problem.importance == `Важная` ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]">Важная:</span>
+                <alert-circle-icon size="1.3x" class="custom-class details" :ref="'importance'+problem.id"
                   @click="changeImportance(problem.id, problem.importance)"></alert-circle-icon>
               </div>
               <div>
@@ -134,7 +134,7 @@
                 <span style="color: #828282;">
                   Прогресс решения:
                 </span>
-                <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=45 :thickness="4">
+                <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=35 :thickness="3">
                   <span :ref="'legend-value'+problem.id" slot="legend-value" style="padding: 0;"
                     @click="event => clickProgress(problem.id, event)">{{problem.progress}}%</span>
                   <input :ref="'progress-bar'+problem.id" class="progress-input" type="text" style="display: none;"
@@ -203,10 +203,10 @@
 
                       <div id="collapsePlan" class="collapse show" aria-labelledby="headingPlan" data-parent="#plan"
                         style="width: 100%;">
-                        <div class="card-body">
+                        <div class="card-body p-0">
                           <!-- plan,  -->
-                          <textarea placeholder="Опишите ваш план решения..."  rows="8"
-                            :ref="'textarea_plan'+problem.id" v-model="solutions[0].plan"
+                          <textarea placeholder="Опишите ваш план решения..." rows="6" :ref="'textarea_plan'+problem.id"
+                            v-model="solutions[0].plan"
                             @keydown.enter.prevent.exact="event => {editPlan(solutions[0].id,solutions[0].plan, event)}"
                             @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                             @blur="event => {onBlurTextarea(event, 'plan')}"></textarea>
@@ -247,11 +247,11 @@
 
                       <div id="collapseResults" class="collapse" aria-labelledby="headingResults" style="width: 100%;"
                         data-parent="#results">
-                        <div class="card-body row" style="flex-direction: row;">
-                          <div class="col-4" style="flex-direction: column;">
+                        <div class="card-body row p-0" style="flex-direction: row;">
+
+                          <div class="col-4 p-2" style="flex-direction: column;">
                             <label style="width: 100%;">Команда</label>
-                            <textarea placeholder="Опишите ваш план решения..."  rows="8"
-                              :ref="'textarea_team'+problem.id" v-model="solutions[0].team"
+                            <textarea rows="6" :ref="'textarea_team'+problem.id" v-model="solutions[0].team"
                               @keydown.enter.prevent.exact="event => {editTeam(solutions[0].id, solutions[0].team, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea(event, 'team')}"></textarea>
@@ -268,10 +268,9 @@
                             </div>
                           </div>
 
-                          <div class="col-4" style="flex-direction: column;">
+                          <div class="col-4 p-2" style="flex-direction: column;">
                             <label style="width: 100%;">Опыт</label>
-                            <textarea placeholder="Опишите ваш план решения..."  rows="8"
-                              :ref="'textarea_exp'+problem.id" v-model="problem.experience"
+                            <textarea rows="6" :ref="'textarea_exp'+problem.id" v-model="problem.experience"
                               @keydown.enter.prevent.exact="event => {editExp(problem.id, problem.experience, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea( event, 'exp')}"></textarea>
@@ -287,10 +286,10 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-4" style="flex-direction: column;">
+
+                          <div class="col-4 p-2" style="flex-direction: column;">
                             <label style="width: 100%;">Результат</label>
-                            <textarea placeholder="Опишите ваш план решения..."  rows="8"
-                              :ref="'textarea_result'+problem.id" v-model="problem.result"
+                            <textarea rows="6" :ref="'textarea_result'+problem.id" v-model="problem.result"
                               @keydown.enter.prevent.exact="event => {editResult(problem.id, problem.result, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea(event, 'result')}"></textarea>
@@ -307,7 +306,7 @@
                             </div>
                             <button v-show="solutions[0].executor_id == currentUid" class="btn btnMain problem-solved"
                               @click="problemSolved(problem.id)">Проблема решена</button>
-                            <div style="display: flex;margin: 0 -20px; justify-content: space-between;">
+                            <div style="display: flex; justify-content: space-between; flex-direction: column; align-items: center;">
                               <button v-show="problem.creator_id == currentUid" class="btn btnMain problem-confirm"
                                 @click="problemConfirm(problem.id)">Подтвердить решение</button>
                               <button v-show="problem.creator_id == currentUid" class="btn btnMain problem-confirm"
@@ -337,13 +336,15 @@
 
                       <div id="collapseGroups" class="collapse" aria-labelledby="headingGroups" style="width: 100%;"
                         data-parent="#groups">
-                        <div class="card-body">
-                          <div class="custom-control custom-checkbox" v-for="(group, idx) in groups" :key="idx">
+                        <div class="card-body p-0">
+                          <div class="check-inputs">
+                                                      <div class="custom-control custom-checkbox" v-for="(group, idx) in groups" :key="idx">
                             <input type="checkbox" class="custom-control-input" :id="'groupCheck'+group.id"
                               :value="group.id" v-model="checkedGroups">
                             <label class="custom-control-label" :for="'groupCheck'+group.id">{{group.name}}</label>
                           </div>
-                          <!-- {{checkedGroups}} -->
+                          </div>
+
                           <button class="btn btnMain btn-to-groups"
                             @click="sendToGroup(problem.id, checkedGroups)">Направить</button>
                         </div>
@@ -816,7 +817,6 @@
 </script>
 
 <style scoped lang="scss">
-
   .form-control {
     border: none;
     border-radius: 6px;
@@ -860,6 +860,7 @@
 
       span {
         height: 27px;
+        padding: 0 !important;
         align-items: center;
         height: 100%;
         display: flex;
@@ -872,6 +873,20 @@
         padding-left: 8px;
         height: 100%;
       }
+    }
+  }
+
+  .like:hover {
+
+    background-color: #4EAD96;
+
+    span {
+      color: #fff;
+    }
+
+    svg,
+    svg:hover {
+      color: #fff;
     }
   }
 
@@ -910,14 +925,18 @@
 
   label {
     text-align: center;
+    font-family: 'GothamPro';
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    color: #4F4F4F;
   }
 
   textarea {
-    width: auto;
+    width: 100%;
     outline: none;
     border: none;
     resize: none;
-    background-color: #EBEBEB;
+    background-color: #F7F7F7;
     border-radius: 9px;
     padding: 26px 24px;
 
@@ -941,6 +960,7 @@
   .accordion.col-3 {
     padding-left: 0;
     padding-right: 8px;
+
     .card {
       background-color: #fff;
       border-radius: 9px;
@@ -959,6 +979,21 @@
   #collapsePlan,
   #collapseGroups {
     padding-top: 7px;
+
+    .card-body {
+      background-color: #fff;
+    }
+  }
+
+  #collapseResults {
+    .card-body {
+      margin-top: 28px;
+    }
+  }
+  #collapseGroups {
+    .card-body {
+      margin-top: 27px;
+    }
   }
 
   h5 {
@@ -1046,6 +1081,7 @@
     flex-direction: column;
     border-radius: 0 0 9px 9px;
     background: #F6F7F9;
+    // background-color: #fff;
     margin: auto;
     padding-top: 0;
     margin-bottom: 10px;
@@ -1067,7 +1103,7 @@
 
 
       h5 {
-        font-family: 'GothamPro-Medium';
+        font-family: 'GothamPro';
         font-size: 16px;
         line-height: 24px;
         letter-spacing: 0.15px;
@@ -1164,12 +1200,19 @@
     height: fit-content;
     font-size: 16px;
     line-height: 15px;
+    margin-bottom: 6px;
+  }
+
+  .check-inputs {
+    max-height: 269px;
+    min-height: 269px;
+    overflow-y: scroll;
   }
 
   .btn-to-groups {
     padding-left: 36px;
     padding-right: 36px;
-    margin-top: 15px;
+    margin-top: 34px;
   }
 
   .btn-link {
@@ -1182,6 +1225,14 @@
   .plus {
     margin-left: 0;
     margin-right: 9px;
+  }
+
+  #plan {
+    height: 400px;
+
+    .card {
+      height: inherit;
+    }
   }
 
   .list-group-item {
@@ -1239,6 +1290,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    padding-left: 120px;
 
     div {
       display: flex;

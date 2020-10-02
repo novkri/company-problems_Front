@@ -249,7 +249,7 @@
     align-items: center;
     // height: 100vh;
     height: auto;
-    padding-top: 83px;
+    padding-top: 63px;
     padding-bottom: 130px;
     font-family: 'Roboto';
     font-style: normal;
@@ -395,11 +395,18 @@
   }
 
 
+@media (max-width: 1500px) {
+  * {
+    font-size: 14px;
+  }
+  .to-login {
+    font-size: 16px;
+  }
+}
 
   @media (max-width: 780px) {
     form {
       flex-direction: column;
     }
-
   }
 </style>

@@ -921,12 +921,12 @@
 
   @media (max-width: 1300px) {
     * {
-      font-size: 13px;
+      font-size: 13px !important;
     }
 
     .header {
       div {
-        font-size: 12px;
+        font-size: 12px !important;
       }
 
     }

@@ -31,9 +31,9 @@
 
                   <div style="width: 68%;" :ref="'sol-div'+val.id" @click="onClickInput(val.id)" v-show="!editable"
                     :style="[solution.name ? {} : 
-                  {'background-color': '#ebebeb', 'font-size': '16px', 'border-radius': '10px', 'padding': '10px 14px',
-                    'margin-right': '-43px'}]">
-                    {{solution.name ? solution.name : "Введите описание решения..."}}</div>
+                  {'background-color': '#ebebeb', 'font-size': '16px', 'border-radius': '10px', 'padding': '6px 14px',
+                    'margin-right': '-43px'}, {'color': 'rgb(122 122 122)'}]">
+                    {{solution.name ? solution.name : "Введите решение..."}}</div>
                   <input v-show="editable" class="form-control" :id="'textarea'+val.id" v-model="solution.name"
                     :ref="'textarea' + val.id" @keyup.enter="event => {editSolClick(solution.name, solution.id, event)}"
                     @focus="event => onFocusInput(event, val.id)"
@@ -86,7 +86,7 @@
                   @change="selectExecutor(solution.id, solution.executor_id)" disable-by="disabled" id="ss-select">
                   <div
                     slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                    style="cursor: pointer;">
+                    style="cursor: pointer; width: 100%;">
                     <ss-select-toggle class="flex items-center justify-between" id="select-toggle">
                       <award-icon size="1.5x" class="custom-class"></award-icon>
                       {{ $get(selectedOption, 'id') || `${allUsers.find(u => u.id == solution.executor_id) ? allUsers.find(u => u.id == solution.executor_id).surname + ' ' + allUsers.find(u => u.id == solution.executor_id).name[0] + '.' : 'Выбрать'}`}}
@@ -748,8 +748,6 @@
     position: absolute;
     top: 20%;
     left: -5%;
-    // width: 100%;
-
   }
 
   input[class="date"]:focus::-webkit-calendar-picker-indicator {
@@ -758,9 +756,7 @@
     cursor: pointer;
     position: absolute;
     left: -5%;
-    // width: 100%;
     top: 20%;
-    // width: auto;
   }
 
   select {
