@@ -1,4 +1,5 @@
 import Vue from "vue";
+
 import VueRouter from "vue-router";
 import store from '../store'
 
@@ -15,6 +16,67 @@ const routes = [
       layout: 'main'
     }
   },
+  {
+    path: "/my-problems",
+    name: "Problems",
+    component: () =>  import("../views/Problems.vue"),
+    props: true,
+    meta: { 
+      requiresAuth: true,
+      layout: 'main'
+    }
+  },
+  {
+    path: "/problems-for-execution",
+    name: "Problems",
+    component: () =>  import("../views/Problems.vue"),
+    props: true,
+    meta: { 
+      requiresAuth: true,
+      layout: 'main'
+    }
+  },
+  {
+    path: "/problems-for-confirmation",
+    name: "Problems",
+    component: () =>  import("../views/Problems.vue"),
+    props: true,
+    meta: { 
+      requiresAuth: true,
+      layout: 'main'
+    }
+  },
+  {
+    path: "/archive",
+    name: "Problems",
+    component: () =>  import("../views/Problems.vue"),
+    props: true,
+    meta: { 
+      requiresAuth: true,
+      layout: 'main'
+    }
+  },
+  {
+    path: "/all-groups",
+    name: "Problems",
+    component: () =>  import("../views/Problems.vue"),
+    props: true,
+    meta: { 
+      requiresAuth: true,
+      layout: 'main'
+    }
+  },
+  {
+    path: "/problems-group/:id",
+    name: "Problems",
+    component: () =>  import("../views/Problems.vue"),
+    props: true,
+    meta: { 
+      requiresAuth: true,
+      layout: 'main'
+    }
+  },
+
   {
     path: "/login",
     name: "Login",

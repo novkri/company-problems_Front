@@ -22,9 +22,6 @@
         </nav>
       </div> -->
     </div>
-    <!-- <h2>Список всех проблем в компании</h2> -->
-
-
     <div class="container">
       <div id="accordion">
         <!-- in paginatedData -->
@@ -38,7 +35,6 @@
               </button>
 
               <h5 class="mb-0" style="display: flex; width: 92%;">
-                <!-- {{problem.status}}  -->
                 <div style="width: inherit;" :ref="'name-div'+problem.id"
                   @click="event => {onClickInput(problem.id, event)}"> {{ problem.name}}
                 </div>
@@ -63,11 +59,11 @@
                 </v-popover>
               </div>
               <div>
-                <clock-icon size="1.5x" class="custom-class details" :ref="'urgency'+problem.id"
+                <clock-icon size="1.5x" class="custom-class details" :ref="'urgency'+problem.id" :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
                   @click="changeUrgency(problem.id, problem.urgency)"></clock-icon>
               </div>
               <div>
-                <alert-circle-icon size="1.5x" class="custom-class details" :ref="'importance'+problem.id"
+                <alert-circle-icon size="1.5x" class="custom-class details" :ref="'importance'+problem.id" :style="[problem.importance == isImportnant ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
                   @click="changeImportance(problem.id, problem.importance)"></alert-circle-icon>
               </div>
 
@@ -107,16 +103,16 @@
                 </v-popover>
               </div>
               <div>
-                <span :style="[problem.urgency == `Срочная` ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]">
+                <span :style="[problem.urgency == isUrgent ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]">
                   Срочная:
                 </span>
-                <clock-icon size="1.3x" class="custom-class details" :ref="'urgency'+problem.id"
+                <clock-icon size="1.3x" class="custom-class details" :ref="'urgency'+problem.id" :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
                   @click="changeUrgency(problem.id, problem.urgency)"></clock-icon>
               </div>
               <div>
                 <span
                   :style="[problem.importance == `Важная` ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]">Важная:</span>
-                <alert-circle-icon size="1.3x" class="custom-class details" :ref="'importance'+problem.id"
+                <alert-circle-icon size="1.3x" class="custom-class details" :ref="'importance'+problem.id" :style="[problem.importance == isImportnant ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
                   @click="changeImportance(problem.id, problem.importance)"></alert-circle-icon>
               </div>
               <div>
@@ -156,11 +152,7 @@
 
           <div :id="'collapseOne'+problem.id" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
             <div class="card-body">
-              <!-- {{problem.possible_solution}}
-              {{solutions}} -->
               <div class="card" style="padding-top: 34px;" v-if="mounted">
-                <PopupShow v-if="openShow" :val="paramsModal" />
-                <!-- + 4 accordions -->
                 <div class="row" style="display: flex; flex-direction: row; margin-bottom: 8px;">
                   <!-- Задачи -->
                   <div class="accordion col-9" id="tasks">
@@ -172,15 +164,16 @@
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                           </button>
                           <h5 class="mb-0">
-                            Задачи
+                            Решение
                           </h5>
                         </div>
                       </div>
 
                       <div id="collapseTasks" class="collapse show" aria-labelledby="headingTasks" data-parent="#tasks"
                         style="width: 100%;">
-                        <div class="card-body" v-if="solutions[0]">
-                          <Tasks :val="solutions" />
+                        <div class="card-body" :val="solutions">
+                          <PopupShow v-if="openShow" :val="paramsModal" />
+                          <Tasks v-if="solutions[0]" />
                         </div>
                       </div>
                     </div>
@@ -211,16 +204,18 @@
                             @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                             @blur="event => {onBlurTextarea(event, 'plan')}"></textarea>
                           <div class="hidden" style="bottom: 13%; right: 11%;">
-                            <!-- plan, -->
-                            <button class="input-btn"
+                            <div>
+                              <button class="input-btn confirm"
                               @mousedown="event => {editPlan(solutions[0].id,solutions[0].plan, event)}">
-                              <check-icon size="1x" class="custom-class"></check-icon>
+                              <check-icon size="1.4x" class="custom-class"></check-icon>
                             </button>
                             <div @mousedown="event => onClear(event, problem.id, 'plan')">
-                              <button class="input-btn">
-                                <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
+                              <button class="input-btn cancel">
+                                <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
                               </button>
                             </div>
+                            </div>
+                            
                           </div>
 
                         </div>
@@ -249,64 +244,74 @@
                         data-parent="#results">
                         <div class="card-body row p-0" style="flex-direction: row;">
 
-                          <div class="col-4 p-2" style="flex-direction: column;">
+                          <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Команда</label>
                             <textarea rows="6" :ref="'textarea_team'+problem.id" v-model="solutions[0].team"
                               @keydown.enter.prevent.exact="event => {editTeam(solutions[0].id, solutions[0].team, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea(event, 'team')}"></textarea>
                             <div class="hidden">
-                              <button class="input-btn"
+                              <div>
+                                <button class="input-btn confirm"
                                 @mousedown="event => {editTeam(solutions[0].id, solutions[0].team, event)}">
-                                <check-icon size="1x" class="custom-class"></check-icon>
+                                <check-icon size="1.4x" class="custom-class"></check-icon>
                               </button>
                               <div @mousedown="event => onClear(event, problem.id, 'team')">
-                                <button class="input-btn">
-                                  <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
+                                <button class="input-btn cancel">
+                                  <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
                                 </button>
                               </div>
+                              </div>
+                              
                             </div>
                           </div>
 
-                          <div class="col-4 p-2" style="flex-direction: column;">
+                          <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Опыт</label>
                             <textarea rows="6" :ref="'textarea_exp'+problem.id" v-model="problem.experience"
                               @keydown.enter.prevent.exact="event => {editExp(problem.id, problem.experience, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea( event, 'exp')}"></textarea>
                             <div class="hidden">
-                              <button class="input-btn"
+                              <div>
+                                <button class="input-btn confirm"
                                 @mousedown="event => {editExp(problem.id, problem.experience, event)}">
-                                <check-icon size="1x" class="custom-class"></check-icon>
+                                <check-icon size="1.4x" class="custom-class"></check-icon>
                               </button>
                               <div @mousedown="event => onClear(event, problem.id, 'exp')">
-                                <button class="input-btn">
-                                  <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
+                                <button class="input-btn cancel">
+                                  <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
                                 </button>
                               </div>
+                              </div>
+                              
                             </div>
                           </div>
-
-                          <div class="col-4 p-2" style="flex-direction: column;">
+                  
+                          <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Результат</label>
                             <textarea rows="6" :ref="'textarea_result'+problem.id" v-model="problem.result"
                               @keydown.enter.prevent.exact="event => {editResult(problem.id, problem.result, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea(event, 'result')}"></textarea>
                             <div class="hidden">
-                              <button class="input-btn"
+                              <div>
+                                <button class="input-btn confirm"
                                 @mousedown="event => {editResult(problem.id, problem.result, event)}">
-                                <check-icon size="1x" class="custom-class"></check-icon>
+                                <check-icon size="1.4x" class="custom-class"></check-icon>
                               </button>
                               <div @mousedown="event => onClear(event, problem.id, 'result')">
-                                <button class="input-btn">
-                                  <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
+                                <button class="input-btn cancel">
+                                  <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
                                 </button>
                               </div>
+                              </div>
+                              
                             </div>
                             <button v-show="solutions[0].executor_id == currentUid" class="btn btnMain problem-solved"
                               @click="problemSolved(problem.id)">Проблема решена</button>
-                            <div style="display: flex; justify-content: space-between; flex-direction: column; align-items: center;">
+                            <div
+                              style="margin-top: 19px; display: flex; justify-content: space-evenly; flex-direction: row;flex-wrap:wrap; align-items: center;">
                               <button v-show="problem.creator_id == currentUid" class="btn btnMain problem-confirm"
                                 @click="problemConfirm(problem.id)">Подтвердить решение</button>
                               <button v-show="problem.creator_id == currentUid" class="btn btnMain problem-confirm"
@@ -338,11 +343,11 @@
                         data-parent="#groups">
                         <div class="card-body p-0">
                           <div class="check-inputs">
-                                                      <div class="custom-control custom-checkbox" v-for="(group, idx) in groups" :key="idx">
-                            <input type="checkbox" class="custom-control-input" :id="'groupCheck'+group.id"
-                              :value="group.id" v-model="checkedGroups">
-                            <label class="custom-control-label" :for="'groupCheck'+group.id">{{group.name}}</label>
-                          </div>
+                            <div class="custom-control custom-checkbox" v-for="(group, idx) in groups" :key="idx">
+                              <input type="checkbox" class="custom-control-input" :id="'groupCheck'+group.id"
+                                :value="group.id" v-model="checkedGroups">
+                              <label class="custom-control-label" :for="'groupCheck'+group.id">{{group.name}}</label>
+                            </div>
                           </div>
 
                           <button class="btn btnMain btn-to-groups"
@@ -383,11 +388,6 @@
   import Tasks from '@/components/Solutions/Tasks/Tasks'
 
 
-  //////
-  // import {
-  //   HalfCircleSpinner
-  // } from 'epic-spinners'
-
   import {
     mapGetters
   } from 'vuex'
@@ -395,8 +395,6 @@
     TrashIcon,
     PlusIcon,
     ChevronUpIcon,
-    // ChevronRightIcon,
-    // ChevronLeftIcon,
     FileTextIcon,
     ClockIcon,
     CheckIcon,
@@ -413,16 +411,15 @@
       editableProblem: false,
 
       paramsModal: {},
-      // pageNumber: 0,
-      // size: 25,
-      // progress: 35,
-      // progressClicked: false,
       currentProgress: '',
 
       checkedGroups: [],
 
       currentTextarea: '',
-      currentProblemName: ''
+      currentProblemName: '',
+
+      isUrgent: 'Срочная',
+      isImportnant: 'Важная'
     }),
     components: {
       TooltipProblem,
@@ -432,23 +429,19 @@
 
       TrashIcon,
       PlusIcon,
-      // ChevronRightIcon,
-      // ChevronLeftIcon,
       ChevronUpIcon,
       FileTextIcon,
       ClockIcon,
       CheckIcon,
       ThumbsUpIcon,
       AlertCircleIcon,
-
-      // HalfCircleSpinner,
     },
 
     async mounted() {
-      await this.$store.dispatch('getProblems')
+      console.log(this.$store.getters.problems);
       await this.$store.dispatch('getGroups')
       await this.$store.dispatch('getAllUsers')
-      // this.mounted = true
+      console.log('m');
     },
     watch: {
       error404() {
@@ -495,16 +488,16 @@
             id,
             urgency: "Срочная"
           })
-          this.$refs['urgency' + id][0].classList.add('icon-clicked')
-          this.$refs['urgency' + id][1].classList.add('icon-clicked')
+          // <!-- this.$refs['urgency' + id][0].classList.add('icon-clicked')
+          // this.$refs['urgency' + id][1].classList.add('icon-clicked') -->
 
         } else {
           await this.$store.dispatch('changeUrgency', {
             id,
             urgency: "Обычная"
           })
-          this.$refs['urgency' + id][0].classList.remove('icon-clicked')
-          this.$refs['urgency' + id][1].classList.remove('icon-clicked')
+          // <!-- this.$refs['urgency' + id][0].classList.remove('icon-clicked')
+          // this.$refs['urgency' + id][1].classList.remove('icon-clicked') -->
         }
       },
 
@@ -514,16 +507,16 @@
             id,
             importance: "Важная"
           })
-          this.$refs['importance' + id][0].classList.add('icon-clicked')
-          this.$refs['importance' + id][1].classList.add('icon-clicked')
+          // this.$refs['importance' + id][0].classList.add('icon-clicked')
+          // this.$refs['importance' + id][1].classList.add('icon-clicked')
 
         } else {
           await this.$store.dispatch('changeImportance', {
             id,
             importance: "Обычная"
           })
-          this.$refs['importance' + id][0].classList.remove('icon-clicked')
-          this.$refs['importance' + id][1].classList.remove('icon-clicked')
+          // this.$refs['importance' + id][0].classList.remove('icon-clicked')
+          // this.$refs['importance' + id][1].classList.remove('icon-clicked')
         }
       },
 
@@ -543,13 +536,10 @@
       },
 
       async editProgress(id, progress) {
-        // console.log(progress);
-        // this.progressClicked = false
         this.$refs['progress-bar' + id][0].style.display = 'none'
         this.$refs['legend-value' + id][0].style.display = 'flex'
         this.$refs['progress-bar' + id][1].style.display = 'none'
         this.$refs['legend-value' + id][1].style.display = 'flex'
-        // console.log(id);
 
         await this.$store.dispatch('editProgress', {
           id,
@@ -643,10 +633,8 @@
       },
 
       async onBlurInput(name, id, event) {
-        // this.editableProblem = false
         console.log(event);
-        // console.log(name, id);
-        // event.path[0].nextElementSibling.classList.remove('flex')
+
         await this.$store.commit('setError404', '')
         if (name !== this.currentProblemName) {
           await this.$store.dispatch('editProblemName', {
@@ -672,33 +660,19 @@
       },
       onFocusInput(event) {
         this.currentProblemName = event.target.value
-        // console.log(this.currentProblemName);
-        // event.path[0].nextElementSibling.classList.add('flex')
       },
 
-
       async editProblemName(name, id, event) {
-        // event.preventDefault();
-        console.log(name, id, event);
         await this.$store.commit('setError404', '')
         event.target.blur()
       },
 
 
-
-
       onFocusTextarea(event) {
         this.currentTextarea = event.target.value
-        // console.log(this.currentTextarea);
-        event.path[0].nextElementSibling.classList.add('flex')
-        // console.log(this.solutions);
       },
 
-      // name, 
       onBlurTextarea(event, type) {
-        // console.log(event);
-        event.path[0].nextElementSibling.classList.remove('flex')
-
         switch (type) {
           case 'exp':
             // console.log('blur');
@@ -749,9 +723,6 @@
       },
       async editPlan(id, plan, event) {
         event.target.blur()
-        // console.log(id);
-        // console.log(plan);
-        // console.log(this.currentTextarea);
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('editPlan', {
             plan,
@@ -765,9 +736,7 @@
           })
       },
       async editTeam(id, team, event) {
-        // console.log(id, team);
         console.log(event);
-        // console.log(this.currentTextarea);
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('editTeam', {
             team,
@@ -817,6 +786,29 @@
 </script>
 
 <style scoped lang="scss">
+  .custom-control-label {
+    word-break: break-all;
+    text-align: inherit;
+  }
+  .custom-control-label::before {
+    border: #4EAD96 solid 1px;
+  }
+  .custom-control-input {
+    border: 0.92px solid #4EAD96;
+    color: #4EAD96;
+  }
+  .custom-control-input:focus {
+    outline: none;
+    outline-offset: 0;
+  }
+  .custom-control-input:checked~.custom-control-label::before {
+        border-color: #4EAD96;
+    // color: #4EAD96;
+    background-color: #4EAD96;
+  }
+  .custom-control-input:focus~.custom-control-label::before {
+    box-shadow: none;
+  }
   .form-control {
     border: none;
     border-radius: 6px;
@@ -893,25 +885,45 @@
   .input-btn {
     border: none;
     width: auto;
-    height: 32px;
+    height: 36px;
+    width: 36px;
     margin-left: 8px;
     background-color: #F4F4F4;
     border-radius: 8px;
+    
 
     svg {
-      color: #4F4F4F;
-      vertical-align: text-top;
+      color: #fff;
+      vertical-align: middle;
     }
   }
+     .confirm {
+      background-color: #92D2C3;
+    }
+    
+    .cancel {
+      background-color: #FFD3D3;
+    }
 
   .hidden {
-    display: flex;
-    visibility: hidden;
-    flex-direction: row;
+    visibility: visible;
     justify-content: flex-end;
-    // position: absolute;
-    // bottom: 17%;
-    // right: 18%;
+    border-radius: 0 0 9px 9px;
+    background-color: #F7F7F7;
+    & > div {
+      border-top: 2px solid #E7E5F1;
+      padding: 14px 0px 17px;
+      margin: 0 6px;
+      display: flex;
+      justify-content: flex-end;
+      flex-direction: row;
+
+      div {
+        padding-right: 3px;
+      }
+    }
+    
+
   }
 
   .flex {
@@ -932,12 +944,12 @@
   }
 
   textarea {
-    width: 100%;
+    width: 100%; 
     outline: none;
     border: none;
     resize: none;
     background-color: #F7F7F7;
-    border-radius: 9px;
+    border-radius: 9px 9px 0 0;
     padding: 26px 24px;
 
     font-family: 'GothamPro';
@@ -977,9 +989,24 @@
 
   #collapseResults,
   #collapsePlan,
-  #collapseGroups {
+  #collapseGroups,
+  #collapseTeam {
     padding-top: 7px;
+    height: 100%;
 
+    .card-body {
+      background-color: #fff;
+      height: 100%;
+      height: -moz-available;
+      height: -webkit-fill-available;
+    }
+
+    textarea {
+      height: 65% !important;
+    }
+  }
+
+  #collapseTasks {
     .card-body {
       background-color: #fff;
     }
@@ -990,6 +1017,7 @@
       margin-top: 28px;
     }
   }
+
   #collapseGroups {
     .card-body {
       margin-top: 27px;
@@ -1128,7 +1156,7 @@
     // width: 1370px;
     max-width: 97%;
     width: auto !important;
-    max-height: 85vh;
+    max-height: 100vh;
     overflow-y: scroll;
     padding-right: 20px;
     margin-top: 18px;
@@ -1182,6 +1210,9 @@
     font-family: 'GothamPro-Medium';
   }
 
+  .problem-solved {
+    margin-top: 19px;
+  }
   .problem-solved,
   .btn-to-groups {
     margin: auto;
@@ -1207,6 +1238,7 @@
     max-height: 269px;
     min-height: 269px;
     overflow-y: scroll;
+    padding-right: 10px;
   }
 
   .btn-to-groups {
@@ -1227,187 +1259,194 @@
     margin-right: 9px;
   }
 
-  #plan {
-    height: 400px;
 
-    .card {
-      height: inherit;
+  #plan,
+  #tasks,
+  #results {
+
+    .collapse.show {
+      height: 447px;
     }
   }
 
-  .list-group-item {
-    border-radius: 7px;
-    width: 100%;
-    height: fit-content;
-    background-color: #F0F0F0;
-    color: #717171;
-    font-size: 18px;
-    border: none;
-    margin: 6.5px 0;
-    justify-content: space-between;
-    display: flex;
-    align-items: center;
-    padding: 0;
+  #groups {
+
+    .collapse.show {
+      height: 422px;
+    }
   }
 
-  #list:hover .borderline {
-    margin: initial;
-    padding: 10px 26px;
-  }
+    .list-group-item {
+      border-radius: 7px;
+      width: 100%;
+      height: fit-content;
+      background-color: #F0F0F0;
+      color: #717171;
+      font-size: 18px;
+      border: none;
+      margin: 6.5px 0;
+      justify-content: space-between;
+      display: flex;
+      align-items: center;
+      padding: 0;
+    }
 
-  .toggle-area {
-    width: 100%;
-    cursor: pointer;
-    padding: 23px 0 23px 23px;
-  }
+    #list:hover .borderline {
+      margin: initial;
+      padding: 10px 26px;
+    }
 
-  svg {
-    color: #AFAFAF;
-    cursor: pointer;
-  }
+    .toggle-area {
+      width: 100%;
+      cursor: pointer;
+      padding: 23px 0 23px 23px;
+    }
 
-  .ep-legend--value {
-    span {
+    svg {
+      color: #AFAFAF;
       cursor: pointer;
     }
 
-  }
+    .ep-legend--value {
 
-  .middle-icons,
-  .middle-icons_text {
-    align-items: center;
+      span {
+        cursor: pointer;
+        font-size: 13px;
+      }
 
-    .custom-class:hover {
-      color: #92D2C3;
     }
 
-    .icon-clicked {
-      color: #4EAD96;
+    .middle-icons,
+    .middle-icons_text {
+      align-items: center;
+
+      svg:hover {
+        color: #92D2C3 !important;
+      }
     }
-  }
 
-  .middle-icons {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding-left: 120px;
-
-    div {
+    .middle-icons {
       display: flex;
       flex-direction: row;
+      justify-content: space-between;
+      padding-left: 120px;
+
+      div {
+        display: flex;
+        flex-direction: row;
+      }
     }
-  }
 
-  .icons {
-    display: flex;
-    justify-content: flex-end;
-
-    .trash-icon {
-      width: 50px;
-      align-items: center;
+    .icons {
       display: flex;
-    }
-  }
+      justify-content: flex-end;
 
-  // .pagination {
-  //   align-items: center;
-  //   justify-content: flex-end;
-  //   margin-bottom: 0;
-  // }
-
-  // .page-link {
-  //   background: none;
-  //   border: none;
-  //   color: #5F5F5F;
-  //   font-size: 18px;
-  //   margin: 0;
-
-  //   svg {
-  //     color: #5F5F5F;
-  //   }
-  // }
-
-  // .block {
-  //   color: #D3D3D3;
-  //   opacity: 0.5;
-  //   pointer-events: none;
-  //   cursor: default;
-  // }
-
-  // .page-link img {
-  //   margin: 0;
-  // }
-
-  // .page-item {
-  //   font-style: normal;
-  //   font-weight: normal;
-  //   font-size: 18px;
-  //   line-height: 17px;
-  //   color: #5F5F5F;
-  // }
-
-  // .page-item a {
-  //   padding: 0;
-  //   margin: 15px;
-  // }
-
-  .borderline {
-    margin: -2px 0;
-    padding: 10px 26px;
-    border-right: 1px solid #e0e0e0;
-    border-left: 1px solid #e0e0e0;
-  }
-
-  .footer {
-    display: flex;
-    justify-content: space-between;
-    width: 85%;
-    margin: auto;
-    max-width: 1350px;
-
-    .btn {
-      margin-top: 25px;
-
-      svg {
-        color: white;
-        margin-right: 5px;
-      }
-    }
-  }
-
-
-
-  @media (max-width: 1300px) {
-    * {
-      font-size: 12px;
-
-      .middle-icons_text span {
-        font-size: 11px !important;
+      .trash-icon {
+        width: 50px;
+        align-items: center;
+        display: flex;
       }
     }
 
-    // .modal-body {
-    //   max-width: 95% !important;
-    // }
-  }
-
-  @media (min-width: 1430px) {
-    // .container {
-    //   max-width: 1370px;
+    // .pagination {
+    //   align-items: center;
+    //   justify-content: flex-end;
+    //   margin-bottom: 0;
     // }
 
-    h2 {
-      max-width: 1270px;
+    // .page-link {
+    //   background: none;
+    //   border: none;
+    //   color: #5F5F5F;
+    //   font-size: 18px;
+    //   margin: 0;
+
+    //   svg {
+    //     color: #5F5F5F;
+    //   }
+    // }
+
+    // .block {
+    //   color: #D3D3D3;
+    //   opacity: 0.5;
+    //   pointer-events: none;
+    //   cursor: default;
+    // }
+
+    // .page-link img {
+    //   margin: 0;
+    // }
+
+    // .page-item {
+    //   font-style: normal;
+    //   font-weight: normal;
+    //   font-size: 18px;
+    //   line-height: 17px;
+    //   color: #5F5F5F;
+    // }
+
+    // .page-item a {
+    //   padding: 0;
+    //   margin: 15px;
+    // }
+
+    .borderline {
+      margin: -2px 0;
+      padding: 10px 26px;
+      border-right: 1px solid #e0e0e0;
+      border-left: 1px solid #e0e0e0;
     }
-  }
 
-  @media (min-width: 500px) {
-    // .container {
-    //   width: 85% !important;
-    // }
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      width: 85%;
+      margin: auto;
+      max-width: 1350px;
 
-    h2 {
-      width: 75%;
+      .btn {
+        margin-top: 25px;
+
+        svg {
+          color: white;
+          margin-right: 5px;
+        }
+      }
     }
-  }
+
+
+
+    @media (max-width: 1300px) {
+      * {
+        font-size: 12px;
+
+        .middle-icons_text span {
+          font-size: 11px !important;
+        }
+      }
+
+      // .modal-body {
+      //   max-width: 95% !important;
+      // }
+    }
+
+    @media (min-width: 1430px) {
+      // .container {
+      //   max-width: 1370px;
+      // }
+
+      h2 {
+        max-width: 1270px;
+      }
+    }
+
+    @media (min-width: 500px) {
+      // .container {
+      //   width: 85% !important;
+      // }
+
+      h2 {
+        width: 75%;
+      }
+    }
 </style>

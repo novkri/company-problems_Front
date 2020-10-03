@@ -43,19 +43,11 @@
       </div>
     </div> -->
   <nav class="navbar navbar-light">
-    <!-- <div class="user">
-        <span>Вы вошли как: {{userLoggedIn.surname}} {{userLoggedIn.name}}
-          {{userLoggedIn.father_name}}</span>
-      </div>
-      <div class="logout" @click="logout">
-        <log-out-icon size="1.5x" class="custom-class"></log-out-icon>
-      </div> -->
     <div class="logo">
-      PSS Software
+      <img src="@/assets/logo.png" alt="PSS Software">
     </div>
     <div class="group_selected" v-if="$route.matched.some(({ name }) => name === 'Problems')">
-      Список проблем: Все
-      <!-- {{$route.name}} -->
+      Список проблем: {{currentGroupName ? currentGroupName : 'Все'}}
     </div>
     <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')">
       <span>Срочность/важность:</span>
@@ -64,7 +56,7 @@
           @change="filterImportance(importance)" disable-by="disabled" id="ss-select" style="width: fit-content;">
           <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
             style="cursor: pointer; width: 100%;">
-            <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
+            <ss-select-toggle style="width: 100%;" id="select-toggle">
               {{ $get(selectedOption, 'name') || `${importance ? importance : 'Выбрать'}`}}
               <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
             </ss-select-toggle>
@@ -89,7 +81,7 @@
           id="ss-select" style="width: fit-content;">
           <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
             style="cursor: pointer; width: 100%;">
-            <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
+            <ss-select-toggle style="width: 100%;" id="select-toggle">
               {{ $get(selectedOption, 'name') || `${time ? time : 'Выбрать'}`}}
               <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
             </ss-select-toggle>
@@ -113,12 +105,13 @@
         :class="[importance == 'Выполнено' ? 'green' : 'gray']" id="ss-select" style="width: fit-content;">
         <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
           style="cursor: pointer; width: 100%;">
-          <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
+          <ss-select-toggle style="width: 100%;" id="select-toggle">
             {{ $get(selectedOption, 'name') || `${statusProblem ? statusProblem : 'Выбрать'}`}}
             <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
           </ss-select-toggle>
 
-          <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;">
+          <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;"
+            id="filterStatus">
             <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index" :key="index"
               class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
@@ -154,7 +147,9 @@
       importance: '',
       time: '',
       statusProblem: '',
-      
+
+      currentGroupName: '',
+
       statusesImportance: [{
           name: "Только важные"
         },
@@ -182,7 +177,7 @@
         },
       ],
       statusesProblem: [{
-          name: "на рассмотрении"
+          name: "На рассмотрении"
         },
         {
           name: "В работе"
@@ -211,39 +206,169 @@
       //     return JSON.parse(localStorage.getItem('user'))
       //   }
     },
-    // mounted() {
-    //   console.log(this.$route);
-    // }
+    watch: {
+      $route(to, from) {
+        // this.show = false;
+        console.log(to, from);
+        this.currentGroupName = this.groups.find(g => g.id == to.params.id).name
+      }
+    },
 
-    // methods: {
-    //   logout: function () {
-    //     this.$store.dispatch('logout')
-    //       .then(() => {
-    //         this.$router.push('/login')
-    //       })
-    //   }
-    // },
+    methods: {
+      async filterImportance(imp) {
+        console.log(this.$route.path);
+        switch (imp.name) {
+          case "Только важные":
+            this.$store.dispatch('filterImportance', {
+              path: this.$route.path,
+              urgency: '',
+              importance: 'Важная',
+              deadline: '',
+              status: ''
+            })
+            break;
+          case "Только срочные":
+            this.$store.dispatch('filterImportance', {
+              path: this.$route.path,
+              urgency: 'Срочная',
+              importance: '',
+              deadline: '',
+              status: ''
+            })
+            break;
+          case "Важные и срочные":
+            this.$store.dispatch('filterImportance', {
+              path: this.$route.path,
+              urgency: 'Срочная',
+              importance: 'Важная',
+              deadline: '',
+              status: ''
+            })
+            break;
+          case "Остальные":
+            this.$store.dispatch('filterImportance', {
+              path: this.$route.path,
+              urgency: '',
+              importance: '',
+              deadline: '',
+              status: ''
+            })
+            break;
+          case "Все":
+            this.$store.dispatch('filterImportance', {
+              path: this.$route.path,
+              urgency: '',
+              importance: '',
+              deadline: '',
+              status: ''
+            })
+            break;
+        }
+      },
+
+      async filterTime(time) {
+        switch (time.name) {
+          case "Текущий квартал":
+            this.$store.dispatch('filterTime', {
+              path: this.$route.path,
+              urgency: '',
+              importance: '',
+              deadline: 'Текущий квартал',
+              status: ''
+            })
+            break;
+
+          case "Остальные":
+            this.$store.dispatch('filterTime', {
+              path: this.$route.path,
+              urgency: '',
+              importance: '',
+              deadline: 'Остальные',
+              status: ''
+            })
+            break;
+          case "Все":
+            this.$store.dispatch('filterTime', {
+              path: this.$route.path,
+              urgency: '',
+              importance: '',
+              deadline: '',
+              status: ''
+            })
+            break;
+        }
+      },
+
+      async filterProblemStatus(status) {
+        switch (status.name) {
+          case "На рассмотрении":
+            this.$store.dispatch('filterProblemStatus', {
+              path: this.$route.path,
+              urgency: '',
+              importance: '',
+              deadline: '',
+              status: 'На рассмотрении'
+            })
+            break;
+          case "В работе":
+            this.$store.dispatch('filterProblemStatus', {
+              path: this.$route.path,
+              urgency: '',
+              importance: '',
+              deadline: '',
+              status: 'В работе'
+            })
+            break;
+          case "На проверке заказчика":
+            this.$store.dispatch('filterProblemStatus', {
+              path: this.$route.path,
+              urgency: '',
+              importance: '',
+              deadline: '',
+              status: 'На проверке заказчика'
+            })
+            break;
+          case "Все":
+            this.$store.dispatch('filterProblemStatus', {
+              path: this.$route.path,
+              urgency: '',
+              importance: '',
+              deadline: '',
+              status: ''
+            })
+            break;
+        }
+      }
+    },
   }
 </script>
 
 <style lang="scss" scoped>
+  #filterStatus {
+    // section {
+    top: 69%;
+    left: 80%;
+    // }
+  }
 
-.group_selected {
-  font-family: 'GothamPro-Medium';
-font-style: normal;
-font-weight: normal;
-font-size: 18px;
-line-height: 24px;
-text-align: justify;
-letter-spacing: 0.15px;
-color: #4F4F4F;
-}
-.logo {
-  font-size: 24px;
-line-height: 24px;
-letter-spacing: 0.15px;
-color: #60749F;
-}
+  .group_selected {
+    font-family: 'GothamPro-Medium';
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 24px;
+    text-align: justify;
+    letter-spacing: 0.15px;
+    color: #4F4F4F;
+  }
+
+  .logo {
+    font-size: 24px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    color: #60749F;
+  }
+
   .body {
     display: flex;
   }
@@ -281,50 +406,9 @@ color: #60749F;
     width: 100%;
     display: flex;
     justify-content: space-between !important;
+    align-items: flex-end;
   }
 
-  //   justify-content: flex-end;
-  //   padding: 0rem 3rem;
-  //   position: relative;
-  //   height: 70px;
-
-  //   .user {
-  //     position: relative;
-  //     top: 50%;
-  //     padding: 6px 25px;
-  //     background-color: #fff;
-  //     border-radius: 5px;
-  //     height: 36px;
-  //     margin-right: -10px;
-
-  //     span {
-  //       font-family: 'GothamPro';
-  //       font-size: 18px;
-  //       line-height: 24px;
-  //       letter-spacing: 0.15px;
-  //       color: #4F4F4F;
-  //     }
-  //   }
-
-  //   .logout {
-  //     position: relative;
-  //     top: 50%;
-  //     width: 59px;
-  //     height: 59px;
-  //     background: #B3C3E4;
-  //     border-radius: 50%;
-  //     text-align: center;
-  //     display: flex;
-  //     cursor: pointer;
-  //     z-index: 3;
-
-  //     svg {
-  //       margin: auto;
-  //       justify-content: center;
-  //       color: white;
-  //     }
-  //   }
-  // }
 
   .dropdown {
     display: none;
@@ -370,9 +454,7 @@ color: #60749F;
     }
   }
 
-  // option {
-  //   width: max-content;
-  // }
+
 
   .container {
     width: 436px;
@@ -437,11 +519,16 @@ color: #60749F;
   #ss-select {
     align-items: center;
     display: flex;
-    height: 36px;
+    height: fit-content;
     border-radius: 10px;
     display: flex;
     padding: 0;
     width: fit-content;
+    background-color: #F2F5FA;
+
+    #select-toggle {
+      padding: 1px 16px 2px 24px;
+    }
 
     ::-webkit-scrollbar {
       width: 10px;
@@ -480,11 +567,11 @@ color: #60749F;
 
 
 
-@media (max-width: 1500px) {
-  * {
-    font-size: 14px !important;
+  @media (max-width: 1500px) {
+    * {
+      font-size: 14px !important;
+    }
   }
-}
 
 
   @media (max-width: 1300px) {

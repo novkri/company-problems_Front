@@ -1,17 +1,16 @@
 <template>
   <div class="row">
 
-    <div class="modal-body col-9">
+    <div class="modal-body">
       <div>
         <div class="subtitle row subt">
-          <div class="col-5">
-
+          <div class="col-4">
           </div>
-          <div class="col-2" style="justify-content: center;display: flex;">
+          <div class="col-3" style="justify-content: center;display: flex;">
             <span style="text-align: center;">Статус выполнения</span>
           </div>
           <div class="col-2" style="justify-content: center;display: flex;">
-            <span>Срок исполнения</span>
+            <span style="text-align: center;">Срок исполнения</span>
           </div>
           <div class="col-2" style="justify-content: center;display: flex;">
             <span>Ответственный</span>
@@ -25,13 +24,11 @@
           <ol>
             <li v-for="(solution, idx) in solutions" :key="idx" id="list" class="row">
 
-              <div class="list-item col-5">
+              <div class="list-item col-4">
                 <div class="desc" ref="desc">
-                  <span>Решение: </span>
-
-                  <div style="width: 68%;" :ref="'sol-div'+val.id" @click="onClickInput(val.id)" v-show="!editable"
+                  <div style="width: 90%;" :ref="'sol-div'+val.id" @click="onClickInput(val.id)" v-show="!editable"
                     :style="[solution.name ? {} : 
-                  {'background-color': '#ebebeb', 'font-size': '16px', 'border-radius': '10px', 'padding': '6px 14px',
+                  { 'font-size': '16px', 'border-radius': '10px', 'padding': '6px 14px',
                     'margin-right': '-43px'}, {'color': 'rgb(122 122 122)'}]">
                     {{solution.name ? solution.name : "Введите решение..."}}</div>
                   <input v-show="editable" class="form-control" :id="'textarea'+val.id" v-model="solution.name"
@@ -51,10 +48,10 @@
                 </div>
               </div>
 
-              <div class="select col-2" style="position: relative;" ref="select">
+              <div class="select col-3" style="position: relative;" ref="select">
                 <ss-select v-model="solution.status" :options="statuses" track-by="name" class="form-control"
                   @change="changeStatus(solution.id, solution.status)" disable-by="disabled"
-                  :class="[solution.status == 'Выполнено' ? 'green' : 'gray']" id="ss-select" style="width: auto;">
+                  :class="[solution.status == 'Выполнено' ? 'green' : 'blue']" id="ss-select" style="width: 87%; margin: auto;">
                   <div
                     slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                     style="cursor: pointer; width: 100%;">
@@ -120,7 +117,7 @@
         </div>
       </div>
     </div>
-    <div class="col-3"></div>
+    
 
 
     <RemoveFromWork v-if="openRemoveFromWork" :openRemoveFromWork="openRemoveFromWork"
@@ -366,9 +363,16 @@
 </script>
 
 <style scoped lang="scss">
-  div {
-    padding: 0;
+
+  .row {
+    margin-right: 0;
+    margin-left: 0;
+    width: 100%;
+    div {
+    padding: 0 2px;
   }
+  }
+  
 
   svg {
     color: #AFAFAF;
@@ -506,13 +510,13 @@
     font-family: 'GothamPro';
     letter-spacing: 0.15px;
     color: #828282;
-    margin-left: 10px;
+    // margin-left: 10px;
 
     li {
       align-items: center;
       padding: 0;
       border-radius: 9px;
-      background-color: #F6F7F9;
+      background-color: #fff;
       margin: 0 24px 16px 0;
       // align-items: flex-start;
     }
@@ -534,6 +538,7 @@
   .list-item {
     display: flex;
     flex-direction: column;
+    margin-right: 10px;
   }
 
   .desc {
@@ -576,7 +581,7 @@
 
   .selectResponsible {
     display: flex;
-    margin-left: 10px;
+    // margin-left: 10px;
 
     #ss-select {
       // padding-left: 8px;
@@ -703,16 +708,17 @@
 
   .date {
     outline: none;
-    width: 200px;
+    // width: 200px;
+    width: 100%;
     border: none;
     position: relative;
     color: #828282;
-    padding-left: 48px;
+    padding-left: 28px;
     padding-bottom: 5px;
     padding-top: 5px;
     border-radius: 10px;
-    width: 168px;
-    background-color: #F6F7F9;
+    // width: 168px;
+    background-color: #fff;
   }
 
   .date:hover {
@@ -741,21 +747,23 @@
   }
 
   input[type="date"]::-webkit-calendar-picker-indicator {
-    background: url('~@/assets/calendar.png') 100%;
+    background: url('~@/assets/calendar.png');
+    background-size: 80%;
     background-repeat: no-repeat;
     cursor: pointer;
     color: #828282;
     position: absolute;
     top: 20%;
-    left: -5%;
+    left: -12%;
   }
 
   input[class="date"]:focus::-webkit-calendar-picker-indicator {
-    background: url('~@/assets/calendarW.png') 100%;
+    background: url('~@/assets/calendarW.png');
+    background-size: 80%;
     background-repeat: no-repeat;
     cursor: pointer;
     position: absolute;
-    left: -5%;
+    left: -12%;
     top: 20%;
   }
 
@@ -804,8 +812,8 @@
     }
   }
 
-  .gray {
-    background-color: #E0E0E0 !important;
+  .blue {
+    background-color: #AEDAF2 !important;
     width: 180px;
     color: #2D453F;
 

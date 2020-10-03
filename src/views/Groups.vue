@@ -37,9 +37,8 @@
                   @click="showOnClickUsers(group.id)" aria-expanded="false" :aria-controls="'collapseOne'+group.id">
                   <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                 </button>
-                <div class="name_div" @click="event => {onClickInput(group.id, 'name',event)}">
-                  <span :ref="'name-div'+group.id">{{group.name}}</span>
-
+                <div class="name_div" style="width: 83%;">
+                  <span :ref="'name-div'+group.id" @click="event => {onClickInput(group.id, 'name',event)}">{{group.name}}</span>
                   <input class="form-control input-name" :id="'groupname'+group.id" style="display: none;"
                     :ref="'group-name' + group.id" @keyup.enter="event => {editGroupName(group.name, group.id, event)}"
                     v-model="group.name" @focus="event => onFocusInput(event, group.id, 'name')"
@@ -59,9 +58,8 @@
               </h5>
             </div>
             <div class="short-name col-3">
-              <div class="short-name_div" @click="event => {onClickInput(group.id, 'short', event)}">
-                <span :ref="'short-name-div'+group.id">{{group.short_name}}</span>
-
+              <div class="short-name_div">
+                <span :ref="'short-name-div'+group.id" @click="event => {onClickInput(group.id, 'short', event)}">{{group.short_name}}</span>
                 <input class="form-control input-name" :id="'groupshort'+group.id" style="display: none;"
                   :ref="'group-name-short' + group.id"
                   @keyup.enter="event => {editGroupShort(group.short_name, group.id, event)}" v-model="group.short_name"
@@ -83,10 +81,10 @@
             <div class="selectResponsible col-3">
               <ss-select v-model="group.leader_id" :options="allUsersReduced.filter(u => u.group_id == group.id)"
                 track-by="name" search-by="name" @change="selectExecutorGroup(group, $event)" disable-by="disabled"
-                id="ss-select" style="width: fit-content;">
+                id="ss-select" style="width: fit-content;height: fit-content;">
                 <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                   @click.once="onClickExecutor(group.leader_id)" style="cursor: pointer; width: 100%;">
-                  <ss-select-toggle class="flex items-center justify-between" style="width: 100%; padding: 0px;">
+                  <ss-select-toggle class="flex justify-between" style="width: 100%; padding: 2px 5px; align-items: center;">
                     <award-icon size="1.5x" class="custom-class"></award-icon>
                     {{ $get(selectedOption, 'name') || 
                   `${allUsersReduced.find(u => u.id == group.leader_id) ? allUsersReduced.find(u => u.id == group.leader_id).surname + ' ' 
@@ -291,6 +289,8 @@
             this.$refs['group-name-short' + id][0].focus()
           }
         })
+
+        console.log('onClickInput');
       },
 
       showOnClickUsers(id) {
@@ -309,6 +309,7 @@
 
       async onBlurInput(name, id, event, type) {
         console.log(name, this.currentGroupName, id);
+        console.log('here');
         if (name !== this.currentGroupName) {
           type === 'name' ? this.$store.dispatch('editGroup', {
             id,
@@ -342,13 +343,14 @@
       },
 
       onFocusInput(event, id, type) {
-        console.log(event.target.value);
+        console.log(event.target);
+        console.log(id);
+        console.log('onFocusInput');
         this.currentGroupName = event.target.value
         this.currentGroupInput = event.target
 
         type == 'name' ? this.$refs['hidden' + id][0].classList.add('flex') : this.$refs['hidden-short' + id][0]
           .classList.add('flex')
-
       },
 
       onClear(event, id, type) {
@@ -360,32 +362,19 @@
           short_name: this.currentGroupName,
           id
         })
+        console.log('onClear');
       },
 
       async editGroupShort(short_name, id, event) {
         await this.$store.commit('setError404', '')
-        console.log(short_name, 'short_name');
-        if (short_name !== this.currentGroupName) {
-          await this.$store.commit('editGroupShort', {
-            short_name,
-            id
-          })
-        }
-
         event.target.blur()
       },
 
       async editGroupName(name, id, event) {
+        // event.preventDefault()
         await this.$store.commit('setError404', '')
-
-        if (name !== this.currentGroupName) {
-          await this.$store.commit('editGroup', {
-            name,
-            id
-          })
-        }
-
         event.target.blur()
+        console.log('editGroupName');
       },
 
       deleteGroup(group) {
@@ -509,7 +498,8 @@
     display: flex;
     height: fit-content;
     flex: 0 0 auto;
-    width: 100%;
+    // width: 100%;
+    width: auto;
 
     span {
       flex: 0 0 auto;
@@ -598,7 +588,7 @@
     display: flex;
     min-height: 60px;
     height: fit-content;
-    // height: 60px;
+    align-items: center;
   }
 
   .card-body {
@@ -902,9 +892,9 @@
 
 
   @media (max-width: 1500px) {
-    svg {
-      font-size: 20px !important;
-    }
+    // svg {
+    //   font-size: 20px !important;
+    // }
 
     .page-item a {
       margin: 0 9px;

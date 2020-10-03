@@ -28,8 +28,9 @@ export default {
   },
   getters: {
     tasks: state => {
-      // console.log(state.tasks);
-      return state.tasks
+      return state.tasks = state.tasks.sort(function (a, b) {
+        return (a.description.toLowerCase() > b.description.toLowerCase()) ? 1 : -1
+      })
     },
     currentSolution: state => {
       return state.currentSolution

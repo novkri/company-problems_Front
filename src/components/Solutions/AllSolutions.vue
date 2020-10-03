@@ -660,9 +660,9 @@
       font-size: 16px;
 
       //  }
-      .form-control {
-        font-size: 14px !important;
-      }
+      // .form-control {
+      //   font-size: 14px !important;
+      // }
 
     }
   }

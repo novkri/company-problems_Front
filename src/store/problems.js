@@ -31,10 +31,7 @@ export default {
         return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1
       })
     },
-    // filterProblemssBy: state => status => state.problems.filter(p => p.status === status),
-    // // state => {
-    // //   return state.problems.filter(p => p.status == "На рассмотрении")
-    // // },
+
     error: state => {
       return state.error
     },
@@ -45,16 +42,9 @@ export default {
   mutations: {
     setProblems: (state, payload) => {
       state.problems = payload
-      state.problems = state.problems.filter(p => p.status !== "Удалена" && p.status !== "Решена")
-      // // console.log(state.problems);
-      // state.problems
+      // state.problems = state.problems.filter(p => p.status !== "Удалена" && p.status !== "Решена")
     },
-    // sortProblems: (state, payload) => {
-    //   // console.log(state.problems);
-    // //  state.problems = 
-    //  return state.problems.filter(p => p.status == payload)
-    // //  // console.log(state.problems);
-    // },
+
     setThisProblem: (state, payload) => {
       let problemIdx = state.problems.findIndex(p => p.id == payload.id)
       state.problems.splice(problemIdx, 1, payload)
@@ -109,14 +99,254 @@ export default {
   },
 
   actions: {
+    filterImportance: async ({
+      commit
+    }, param) => {
+      
+      return new Promise((resolve, reject) => {
+      axios.get(BASEURL+`${param.path}`, {params: {
+        // ...param
+        urgency: param.urgency,
+        importance: param.importance,
+        deadline: param.deadline,
+        status: param.status
+      }})
+        .then(response => {
+          console.log(response);
+            commit('setError', '')
+            commit('setError404', '')
+            commit('setProblems', response.data)
+            resolve(response.data)
+        })
+        .catch(error => {
+          console.log(error.response);
+          if (error.response.status == 401) {
+            commit('setError404', error.response.data.errors)
+            reject(error.response.data.errors)
+          } else {
+            commit('setError', error.response.data.message)
+            reject(error.response.data.message)
+          }
+        })
+      })
+    },
+    filterTime: async ({
+      commit
+    }, param) => {
+      console.log(param);
+      return new Promise((resolve, reject) => {
+      axios.get(BASEURL+`${param.path}`, {params: {
+        // ...param
+        urgency: param.urgency,
+        importance: param.importance,
+        deadline: param.deadline,
+        status: param.status
+      }})
+        .then(response => {
+          console.log(response);
+            commit('setError', '')
+            commit('setError404', '')
+            commit('setProblems', response.data)
+            resolve(response.data)
+        })
+        .catch(error => {
+          console.log(error.response);
+          if (error.response.status == 401) {
+            commit('setError404', error.response.data.errors)
+            reject(error.response.data.errors)
+          } else {
+            commit('setError', error.response.data.message)
+            reject(error.response.data.message)
+          }
+        })
+      })
+    },
+
+    filterProblemStatus: async ({
+      commit
+    }, param) => {
+      console.log(param);
+      return new Promise((resolve, reject) => {
+      axios.get(BASEURL+`${param.path}`, {params: {
+        // ...param
+        urgency: param.urgency,
+        importance: param.importance,
+        deadline: param.deadline,
+        status: param.status
+      }})
+        .then(response => {
+          console.log(response);
+            commit('setError', '')
+            commit('setError404', '')
+            commit('setProblems', response.data)
+            resolve(response.data)
+        })
+        .catch(error => {
+          console.log(error.response);
+          if (error.response.status == 401) {
+            commit('setError404', error.response.data.errors)
+            reject(error.response.data.errors)
+          } else {
+            commit('setError', error.response.data.message)
+            reject(error.response.data.message)
+          }
+        })
+      })
+    },
+
+    getMyProblems: async ({
+      commit
+    }) => {
+      return new Promise((resolve, reject) => {
+      axios.get(BASEURL+'/my-problems')
+        .then(response => {
+          console.log(response);
+            commit('setError', '')
+            commit('setError404', '')
+            commit('setProblems', response.data)
+            resolve(response.data)
+        })
+        .catch(error => {
+          if (error.response.status == 401) {
+            commit('setError404', error.response.data.errors)
+            reject(error.response.data.errors)
+          } else {
+            commit('setError', error.response.data.message)
+            reject(error.response.data.message)
+          }
+        })
+      })
+    },
+
+    getProblemsForExecution: async ({
+      commit
+    }) => {
+      return new Promise((resolve, reject) => {
+      axios.get(BASEURL+'/problems-for-execution')
+        .then(response => {
+          console.log(response);
+            commit('setError', '')
+            commit('setError404', '')
+            commit('setProblems', response.data)
+            resolve(response.data)
+        })
+        .catch(error => {
+          if (error.response.status == 401) {
+            commit('setError404', error.response.data.errors)
+            reject(error.response.data.errors)
+          } else {
+            commit('setError', error.response.data.message)
+            reject(error.response.data.message)
+          }
+        })
+      })
+    },
+    problemsForConfirmation: async ({
+      commit
+    }) => {
+      return new Promise((resolve, reject) => {
+      axios.get(BASEURL+'/group-problems')
+        .then(response => {
+          console.log(response);
+            commit('setError', '')
+            commit('setError404', '')
+            commit('setProblems', response.data)
+            resolve(response.data)
+        })
+        .catch(error => {
+          console.log(error.response);
+          if (error.response.status == 401) {
+            commit('setError404', error.response.data.errors)
+            reject(error.response.data.errors)
+          } else {
+            commit('setError', error.response.data.message)
+            reject(error.response.data.message)
+          }
+        })
+      })
+    },
+    archive: async ({
+      commit
+    }) => {
+      return new Promise((resolve, reject) => {
+      axios.get(BASEURL+'/problems-user-archive')
+      // axios.get(BASEURL+'/problems-group-archive')
+        .then(response => {
+          console.log(response);
+            commit('setError', '')
+            commit('setError404', '')
+            commit('setProblems', response.data)
+            resolve(response.data)
+        })
+        .catch(error => {
+          if (error.response.status == 401) {
+            commit('setError404', error.response.data.errors)
+            reject(error.response.data.errors)
+          } else {
+            commit('setError', error.response.data.message)
+            reject(error.response.data.message)
+          }
+        })
+      })
+    },
+    getAllGroupsProblems: async ({
+      commit
+    }) => {
+      return new Promise((resolve, reject) => {
+      axios.get(BASEURL+'/problems-of-all-groups')
+      // axios.get(BASEURL+'/problems-archive')
+        .then(response => {
+          console.log(response);
+            commit('setError', '')
+            commit('setError404', '')
+            commit('setProblems', response.data)
+            resolve(response.data)
+        })
+        .catch(error => {
+          if (error.response.status == 401) {
+            commit('setError404', error.response.data.errors)
+            reject(error.response.data.errors)
+          } else {
+            commit('setError', error.response.data.message)
+            reject(error.response.data.message)
+          }
+        })
+      })
+    },
+    getProblemsByGroups: async ({
+      commit
+    }, param) => {
+      return new Promise((resolve, reject) => {
+      axios.get(BASEURL+'/problems-by-groups')
+      // axios.get(BASEURL+'/problems-archive')
+        .then(response => {
+          console.log(response);
+            commit('setError', '')
+            commit('setError404', '')
+            commit('setProblems', response.data.find(group => group.name == param).problems)
+            resolve(response.data)
+        })
+        .catch(error => {
+          if (error.response.status == 401) {
+            commit('setError404', error.response.data.errors)
+            reject(error.response.data.errors)
+          } else {
+            commit('setError', error.response.data.message)
+            reject(error.response.data.message)
+          }
+        })
+      })
+    },
+
     getProblems: async ({
       commit
     }) => {
       await axios.get(BASEURL)
+      // await axios.get(BASEURL+'/problems-of-all-groups')
         .then(response => {
             commit('setError', '')
             commit('setError404', '')
-            commit('setProblems', response.data)
+            commit('setProblems', response.data.filter(p => p.status !== "Удалена" && p.status !== "Решена"))
         })
         .catch(error => {
           if (error.response.status == 401) {

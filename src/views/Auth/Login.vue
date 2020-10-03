@@ -24,7 +24,7 @@
         <button type="submit" class="btn" @click.prevent="login">Войти</button>
         <router-link to="/register">Регистрация</router-link>
       </div>
-      
+
     </form>
   </div>
 </template>
@@ -76,7 +76,8 @@
         }
         await this.$store.dispatch('login', formData).then(() => {
           if (!this.errorU) {
-            this.$router.push('/')
+            this.$store.dispatch('getAllGroupsProblems')
+            this.$router.push('/all-groups')
           }
         })
       },
@@ -200,5 +201,11 @@
     line-height: 17px;
     font-family: 'GothamPro-Medium';
     color: #92D2C3;
+  }
+
+  @media (max-width: 1500px) {
+    .btn {
+      height: 41px;
+    }
   }
 </style>

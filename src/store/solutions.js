@@ -35,11 +35,6 @@ export default {
       return state.solutions
     },
 
-    // solutionsOther: state => {
-    //   return state.solutionsOther = state.solutionsOther.sort(function (a, b) {
-    //     return (new Date(a.created_at).toISOString() > new Date(b.created_at).toISOString()) ? 1 : -1
-    //   })
-    // },
     allUsers: state => {
       return state.allUsers
     },
@@ -50,15 +45,11 @@ export default {
   mutations: {
     setSolution: (state, payload) => {
       state.solutions = payload
-      // console.log(state.solutions);
     },
     addSolution: (state, payload) => {
       payload.in_work = false
       state.solutionsOther.push(payload)
     },
-    // setOtherSolution: (state, payload) => {
-    //   state.solutionsOther = payload.filter(sol => !sol.in_work)
-    // },
     deleteSolution: (state, payload) => {
       state.solutions = state.solutions.filter(s => s.id !== payload)
       state.solutionsOther = state.solutionsOther.filter(s => s.id !== payload)

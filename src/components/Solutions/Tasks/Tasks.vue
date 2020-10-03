@@ -1,12 +1,13 @@
 <template>
   <div>
     <div class="header row">
-      <div class="col-4" style="margin: 0 20px 0 -15px;">
-        <img src="@/assets/tasks.png">
+      <div class="col-4">
+        <!-- <img src="@/assets/tasks.png"> -->
         <span>Задачи:</span>
       </div>
       <div class="subt col-3" style="justify-content: center;display: flex;"><span>Статус выполнения</span></div>
-      <div class="subt col-2"><span>Срок исполнения</span></div>
+      <div class="subt col-2" style="display: flex;"><span style="text-align: center;">Срок
+          исполнения</span></div>
       <div class="subt col-2" style="justify-content: center;display: flex;"><span>Исполнитель</span></div>
       <div style="width: 54px" class="col">
       </div>
@@ -17,8 +18,6 @@
         <li id="list" v-for="(task, idx) in tasks" :key="idx">
           <div class="task-title col-4"
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">
-            <!-- <input class="form-control" @focus="onFocusInput($event)" @keyup.enter="event => onKey(event)"
-              @blur="editTask(task)" v-model="task.description"> -->
             <div @click="onClickInput(task.id)" v-show="!editable">{{task.description}}</div>
             <input v-show="editable" class="form-control" v-model="task.description" :ref="'textarea_task' + task.id"
               @keyup.enter.prevent="event => {editTask(task.description, task.id, event)}" @focus="onFocusInput($event)"
@@ -40,7 +39,7 @@
             <ss-select v-model="task.status" :options="statusesT" track-by="name" class="form-control"
               @change="changeStatusTask(task.id, task.status)" disable-by="disabled"
               :class="[task.status == 'Выполнено' ? 'green' : task.status == 'В процессе' ? 'blue' : 'gray']"
-              id="ss-select" style="width: fit-content; margin:auto;">
+              id="ss-select" style="margin:auto; width: 87%;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                 style="cursor: pointer; width: 100%;">
                 <ss-select-toggle style="width: 100%; padding: 6px;" id="select-toggle">
@@ -70,8 +69,7 @@
               @change="selectExecutorTask(task)" disable-by="disabled" id="ss-select" style="width: 100%;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                 @click="onClickExecutor(selectedOption)" style="cursor: pointer; width: 100%;">
-                <ss-select-toggle class="flex items-center justify-between"
-                  >
+                <ss-select-toggle class="flex items-center justify-between" style="margin: auto;">
                   <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                   {{ $get(selectedOption, 'name') ||  `${allUsersReduced.find(u => u.id == task.executor_id) ? allUsersReduced.find(u => u.id == task.executor_id).surname + ' ' 
                     + allUsersReduced.find(u => u.id == task.executor_id).name + ' ' 
@@ -111,8 +109,8 @@
         <span style="margin-left: 16px; cursor: pointer;">Добавить задачу</span>
       </div>
 
-      <div v-else class="inputAdd">
-        <div style="display: flex;">
+      <div v-else class="inputAdd" style="padding: 0 14px;">
+        <div style="display: flex; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);">
           <input type="text" placeholder="Добавить задачу" ref="addTaskInput" class="addTask" @input="enableAddBtn"
             @keyup.enter="addTask" v-model="formInput.taskName">
 
@@ -348,7 +346,7 @@
             })
           })
         }
-        
+
       },
       onFocusInput(event) {
         this.currentTaskName = event.target.value
@@ -393,8 +391,6 @@
 </script>
 
 <style scoped lang="scss">
-
-
   ::-webkit-scrollbar {
     width: 10px;
   }
@@ -407,8 +403,8 @@
 
   ::-webkit-scrollbar-track {
     background: #F2F2F2;
-    border-left: 4px solid #F6F7F9;
-    border-right: 4px solid #F6F7F9;
+    border-left: 4px solid #fff;
+    border-right: 4px solid #fff;
   }
 
   .input-btn {
@@ -467,7 +463,7 @@
     padding-left: 26px;
     font-style: normal;
     font-weight: normal;
-    background-color: #F6F7F9;
+    background-color: #fff;
 
     div {
       font-family: 'GothamPro';
@@ -491,11 +487,12 @@
     color: #4F4F4F;
     font-style: normal;
     font-weight: normal;
-    background-color: #F6F7F9;
+    background-color: #fff;
 
     ol {
-      max-height: 300px;
-      min-height: 189px;
+      // max-height: 300px;
+      max-height: 182px;
+      // min-height: 189px;
       overflow-y: scroll;
       overflow-x: hidden;
     }
@@ -503,7 +500,7 @@
 
   ol {
     padding: 0;
-    padding-left: 60px;
+    padding-left: 26px;
     width: 100%;
     // padding-right: 42px;
     margin-bottom: 0;
@@ -512,9 +509,11 @@
   li {
     display: flex;
     align-items: center;
-    padding-bottom: 18px;
+    padding-bottom: 8px;
     padding-top: 18px;
+    padding-left: 10px;
     border-bottom: 1px solid #DEDEDE;
+    border-left: 2px solid #DEDEDE;
   }
 
   li:last-child {
@@ -522,7 +521,7 @@
   }
 
   div {
-    padding: 0;
+    padding: 0 2px;
   }
 
   svg {
@@ -544,32 +543,16 @@
   }
 
 
-
-  // option {
-  //   background-color: #F6F6F6;
-  //   color: #2D453F;
-  //   font-size: 18px;
-  //   line-height: 24px;
-  //   letter-spacing: 0.15px;
-  //   border-radius: 10px;
-  //   font-size: 18px;
-  //   line-height: 24px;
-  //   letter-spacing: 0.15px;
-  // }
-
-
   .selectResponsible {
     display: flex;
-    background-color: #F6F6F6;
     padding-left: 10px;
-
 
     #ss-select {
       padding-left: 8px;
       align-items: center;
       display: flex;
       height: 36px;
-      background-color: #F6F7F9;
+      // background-color: #F6F7F9;
       border-radius: 10px;
       text-align: center;
       padding-right: 0;
@@ -598,11 +581,6 @@
     border-radius: 8px;
   }
 
-  .selectResponsible:hover {
-    #ss-select {
-      background-color: #e5e9f1;
-    }
-  }
 
   .selectResponsible:focus,
   .selectResponsible:active {
@@ -629,18 +607,19 @@
   }
 
   .date {
-    width: 200px;
-    margin-left: -17px;
+    // width: 200px;
+    // margin-left: -17px;
     border: none;
     position: relative;
     height: 81%;
     color: #828282;
-    padding-left: 48px;
+    padding-left: 28px;
     padding-bottom: 5px;
     padding-top: 5px;
     border-radius: 10px;
-    width: 168px;
-    background-color: #F6F7F9;
+    // width: 168px;
+    width: 100%;
+    background-color: #fff;
   }
 
   .date:hover {
@@ -671,23 +650,23 @@
   }
 
   input[class="date"]::-webkit-calendar-picker-indicator {
-    background: url('~@/assets/calendar.png') 100%;
+    background: url('~@/assets/calendar.png');
+    background-size: 80%;
     background-repeat: no-repeat;
     cursor: pointer;
     position: absolute;
-    left: -95%;
-    width: 100%;
-    top: 20%;
+    left: -15%;
+    top: 25%;
   }
 
   input[class="date"]:focus::-webkit-calendar-picker-indicator {
-    background: url('~@/assets/calendarW.png') 100%;
+    background: url('~@/assets/calendarW.png');
+    background-size: 80%;
     background-repeat: no-repeat;
     cursor: pointer;
     position: absolute;
-    left: -95%;
-    width: 100%;
-    top: 20%;
+    left: -15%;
+    top: 25%;
   }
 
   select {
@@ -797,30 +776,6 @@
     }
   }
 
-
-  .task-title::before {
-    content: '';
-    position: absolute;
-    top: 29%;
-    left: -4%;
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    -moz-border-radius: 7.5px;
-    -webkit-border-radius: 7.5px;
-    border-radius: 7.5px;
-    background-color: #BDBDBD;
-
-  }
-
-  .greenTitle::before {
-    background-color: #4EAD96;
-  }
-
-  .blueTitle::before {
-    background-color: #AEDAF2;
-  }
-
   .inputAdd {
     display: flex;
     flex-direction: column;
@@ -831,10 +786,10 @@
     border: none;
     background-color: #fff;
     color: #828282;
-    margin-left: -16px;
+    // margin-left: -16px;
     outline: none;
 
-    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
+
     border-radius: 9px 0 0 9px;
     padding: 10px 0 10px 50px;
     color: #4F4F4F;
@@ -848,9 +803,9 @@
     outline: none;
     display: flex;
     justify-content: space-evenly;
-    box-shadow: 9px 4px 16px rgba(0, 0, 0, 0.1);
+
     border-radius: 0 9px 9px 0;
-    padding: 10px 0 10px 76px;
+    padding: 10px 0 10px 56px;
     width: 58%;
     align-items: flex-start;
   }
@@ -858,7 +813,7 @@
 
   .btnsAddTask {
     padding-left: 50px;
-    background-color: #F6F7F9;
+    // background-color: #F6F7F9;
     width: 100%;
     padding-top: 19px;
     cursor: default;
@@ -905,18 +860,21 @@
     justify-content: center;
   }
 
+  #select-toggle {
+    font-family: 'GothamPro-Medium';
+    margin: auto;
+    text-align: center;
+  }
 
 
 
 
-  @media (max-width: 1400px) {
-    #select-toggle {
-      font-size: 14px;
-    }
+  @media (max-width: 1500px) {
 
-    .selectsInputAdd {
-      padding-left: 60px;
-    }
+
+    // .selectsInputAdd {
+    //   padding-left: 60px;
+    // }
   }
 
   @media (max-width: 1300px) {
@@ -989,25 +947,27 @@
     }
 
     input[type="date"]::-webkit-calendar-picker-indicator {
-      background: url('~@/assets/calendar.png') 100%;
+      background: url('~@/assets/calendar.png');
+      background-size: 80%;
       background-repeat: no-repeat;
       cursor: pointer;
       color: #828282;
       position: absolute;
       top: -5%;
       left: -95%;
-      width: 100%;
-      height: 100%;
+      // width: 100%;
+      // height: 100%;
     }
 
     input[class="date"]:focus::-webkit-calendar-picker-indicator {
-      background: url('~@/assets/calendarW.png') 100%;
+      background: url('~@/assets/calendarW.png');
+      background-size: 80%;
       background-repeat: no-repeat;
       cursor: pointer;
       position: absolute;
       left: -95%;
-      width: 100%;
-      height: 100%;
+      // width: 100%;
+      // height: 100%;
       top: -5%;
     }
 

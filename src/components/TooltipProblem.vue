@@ -3,29 +3,36 @@
     <div class="main-tooltip">
 
       <div>
-        <p><span>Предложил проблему: </span>
+        <p style="align-self: baseline;"><span>Предложил проблему: </span>
           {{allUsers.find(u => u.id === val.creator_id).surname}}
           {{allUsers.find(u => u.id === val.creator_id).name}}
           {{allUsers.find(u => u.id === val.creator_id).father_name}}</p>
       </div>
 
       <div>
-        <p><span>Описание: </span>
+        <p style="align-self: baseline;"><span>Описание: </span>
         </p>
         <p @click="event => changeProblemDesc(val.id, event)" class="desc" v-show="!isEditDesc">{{val.description}}</p>
-        <input v-show="isEditDesc" v-model="val.description" @blur="event => onBlurDesc(event, val.id)" @keyup.enter="onEnterDesc($event)" class="form-control desc" :ref="'descInput'+val.id" />
-        <!-- <input v-show="isEditDesc" v-model="val.description" @blur="event => onBlurDesc(event, val.id)" @keyup.enter="onEnterDesc($event)" class="form-control desc" :ref="'descInput'+val.id" /> -->
+        <p @click="event => changeProblemDesc(val.id, event)" class="desc" v-show="!val.description">
+          <input class="form-control desc" v-show="!emptyInputIsClicked" @click="emptyInputIsClicked = true"
+            placeholder="Введите описание...">
+        </p>
+        <input v-show="isEditDesc" v-model="val.description" @blur="event => onBlurDesc(event, val.id)"
+          @keyup.enter="onEnterDesc($event)" class="form-control desc" :ref="'descInput'+val.id" />
       </div>
 
-      <!-- <div>
-        <p><span>Возможное решение: </span>
-          {{val.possible_solution}}</p>
-      </div> -->
       <div>
-        <p><span>Возможное решение: </span>
+        <p style="align-self: baseline;"><span>Возможное решение: </span>
         </p>
-        <p @click="event => changePossible(val.id, event)" class="possible" v-show="!isEditPossible">{{val.possible_solution}}</p>
-        <input v-show="isEditPossible" v-model="val.possible_solution" @blur="event => onBlurPossible(event, val.id)" @keyup.enter="onEnterPossible($event)" class="form-control possible" :ref="'possibleInput'+val.id" />
+        <p @click="event => changePossible(val.id, event)" class="possible" v-show="!isEditPossible">
+          {{val.possible_solution}}</p>
+        <p @click="event => changePossible(val.id, event)" class="possible" v-show="!val.possible_solution">
+          <input class="form-control possible" v-show="!emptyInputPossibleIsClicked"
+            @click="emptyInputPossibleIsClicked = true" placeholder="Введите решение...">
+        </p>
+
+        <input v-show="isEditPossible" v-model="val.possible_solution" @blur="event => onBlurPossible(event, val.id)"
+          @keyup.enter="onEnterPossible($event)" class="form-control possible" :ref="'possibleInput'+val.id" />
       </div>
 
     </div>
@@ -43,6 +50,8 @@
     data: () => ({
       problem_creator: '',
       mounted: false,
+      emptyInputIsClicked: false,
+      emptyInputPossibleIsClicked: false,
 
       isEditDesc: false,
       isEditPossible: false,
@@ -71,9 +80,15 @@
         this.isEditDesc = false
 
         await this.$store.commit('setError404', '')
-        await this.$store.dispatch('changeProblemDescription', {id, description: this.val.description })
+        await this.$store.dispatch('changeProblemDescription', {
+            id,
+            description: this.val.description
+          })
           .catch(() => {
-            this.$store.commit('changeProblemDescription', {id, description: this.newInput} )
+            this.$store.commit('changeProblemDescription', {
+              id,
+              description: this.newInput
+            })
           })
       },
 
@@ -94,9 +109,15 @@
         this.isEditPossible = false
 
         await this.$store.commit('setError404', '')
-        await this.$store.dispatch('changePossible', {id, possible_solution: this.val.possible_solution})
+        await this.$store.dispatch('changePossible', {
+            id,
+            possible_solution: this.val.possible_solution
+          })
           .catch(() => {
-            this.$store.commit('changePossible', {id, possible_solution: this.newInput} )
+            this.$store.commit('changePossible', {
+              id,
+              possible_solution: this.newInput
+            })
           })
       }
     }
@@ -105,11 +126,12 @@
 </script>
 
 <style scoped lang="scss">
-
-  .form-control.desc, .form-control.possible {
+  .form-control.desc,
+  .form-control.possible {
     background-color: #F6F6F6;
     width: auto;
   }
+
   p {
     word-break: break-word;
   }
@@ -132,11 +154,13 @@
 
     div {
       margin-bottom: 31px;
+      align-items: center;
     }
 
     span {
       font-family: 'GothamPro-Medium';
       margin-right: 5px;
+      word-break: keep-all;
     }
   }
 </style>

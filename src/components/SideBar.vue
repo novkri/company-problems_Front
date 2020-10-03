@@ -19,29 +19,37 @@
 
 
       <div class="main">
-        <router-link to="/" exact>Списки проблем:</router-link>
-        <!-- <a>Списки проблем:</a> -->
-        <a>-Предложенные мной</a>
-        <a>-На рассмотрении</a>
-        <a>-Для исполнения</a>
+        <a @click="allProblems">
+          <router-link to="/" exact>Списки проблем:</router-link>
+        </a>
+        <a @click="myProblems">
+          <router-link to="/my-problems" exact>-Предложенные мной</router-link>
+        </a>
+        <a @click="problemsForExecution">
+          <router-link to="/problems-for-execution" exact>-На рассмотрении</router-link>
+        </a>
+        <a @click="problemsForConfirmation">
+          <router-link to="/problems-for-confirmation" exact>-Для исполнения</router-link>
+        </a>
         <a @click="showLinks">-По подразделениям <chevron-down-icon ref="linkIcon" size="1.5x" class="custom-class">
           </chevron-down-icon></a>
         <div class="links_groups">
-          <a href="#" v-show="showGroups">
-            <router-link to="/" exact>Все</router-link>
+          <a @click="allGroupsProblems">
+            <router-link to="/all-groups" exact>Все</router-link>
           </a>
-          <a href="#" v-show="showGroups" v-for="(group, idx) in groups" :key="idx">{{group.name}}</a>
+          <a @click="getProblemsByGroups(group.name)" v-for="(group, idx) in groups" :key="idx">
+            <router-link :to="'/problems-group/'+group.id">{{group.name}}</router-link>
+          </a>
         </div>
-
       </div>
-
-
 
 
       <div class="info">
         <router-link to="/groups">Состав подразделений</router-link>
         <a href="#">Статистика</a>
-        <a href="#">Архив проблем</a>
+        <a @click="archive">
+          <router-link to="/archive" exact>Архив проблем</router-link>
+        </a>
       </div>
     </div>
 
@@ -101,22 +109,30 @@
           })
       },
 
-      async underСonsideration() {
-        // await this.$store.dispatch('getProblems')
-        // this.$store.commit('sortProblems', 'На рассмотрении')
-        // this.problems = this.problemsUnderСonsideration
-        // this.$emit('filteredProblems', 'На рассмотрении')
-        // console.log(this.problemsUnderСonsideration);
-      },
-      async onСhecking() {
-        // await this.$store.dispatch('getProblems')
-        // this.$store.commit('sortProblems', 'На проверке заказчика')
-      },
       async allProblems() {
-        // await this.$store.dispatch('getProblems')
-        // this.$store.commit('sortProblems', '')
-        // console.log(this.problems);
+        await this.$store.dispatch('getProblems')
       },
+
+      async myProblems() {
+        await this.$store.dispatch('getMyProblems')
+      },
+
+      async problemsForExecution() {
+        await this.$store.dispatch('getProblemsForExecution')
+      },
+
+      async problemsForConfirmation() {
+        await this.$store.dispatch('problemsForConfirmation')
+      },
+      async archive() {
+        await this.$store.dispatch('archive')
+      },
+      async allGroupsProblems() {
+        await this.$store.dispatch('getAllGroupsProblems')
+      },
+      async getProblemsByGroups(groupName) {
+        await this.$store.dispatch('getProblemsByGroups', groupName)
+      }
     }
   }
 </script>
@@ -181,10 +197,6 @@
     max-width: 280px;
     background-color: #F6F7F9;
     padding: 0;
-    // height: 100vh;
-
-    // padding-left: 20px;
-    // padding-right: 16px;
 
     a {
       margin-bottom: 17px;
@@ -193,6 +205,7 @@
       line-height: 24px;
       letter-spacing: 0.15px;
       color: #4F4F4F;
+      word-break: break-all;
     }
 
     a:hover {
@@ -454,11 +467,11 @@
 
 
 
-@media (max-width: 1500px) {
-  * {
-    font-size: 14px !important;
+  @media (max-width: 1500px) {
+    * {
+      font-size: 14px !important;
+    }
   }
-}
 
   @media (max-width: 1300px) {
     .sidebar {
@@ -466,7 +479,7 @@
     }
 
     * {
-      font-size: 13px;
+      font-size: 14px;
     }
 
 
