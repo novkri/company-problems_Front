@@ -71,6 +71,7 @@
 
               <div>
                 <div class="like">
+           
                   <button class="likeBtn" @click="likeProblem(problem.id)">
                     <span>
                       {{ problem.likes_count }}
