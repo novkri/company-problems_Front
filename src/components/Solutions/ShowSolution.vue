@@ -51,7 +51,8 @@
               <div class="select col-3" style="position: relative;" ref="select">
                 <ss-select v-model="solution.status" :options="statuses" track-by="name" class="form-control"
                   @change="changeStatus(solution.id, solution.status)" disable-by="disabled"
-                  :class="[solution.status == 'Выполнено' ? 'green' : 'blue']" id="ss-select" style="width: 87%; margin: auto;">
+                  :class="[solution.status == 'Выполнено' ? 'green' : 'blue']" id="ss-select"
+                  style="width: 87%; margin: auto;">
                   <div
                     slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                     style="cursor: pointer; width: 100%;">
@@ -107,17 +108,17 @@
               </div>
 
               <div style="width: 20px" class="col">
-                <button type="button" class="close" id="remove" @click="removeFromWork(solution)" data-toggle="modal"
+                <!-- <button type="button" class="close" id="remove" @click="removeFromWork(solution)" data-toggle="modal"
                   data-target="#popupRemoveFromWOrk">
                   <span aria-hidden="true">&times;</span>
-                </button>
+                </button> -->
               </div>
             </li>
           </ol>
         </div>
       </div>
     </div>
-    
+
 
 
     <RemoveFromWork v-if="openRemoveFromWork" :openRemoveFromWork="openRemoveFromWork"
@@ -142,9 +143,7 @@
     mapGetters
   } from 'vuex'
 
-  // import Solutions from './AllSolutions'
   import RemoveFromWork from './RemoveFromWork'
-  // import Tasks from './Tasks/Tasks'
   import DeleteTask from './Tasks/DeleteTask'
 
   import {
@@ -363,16 +362,16 @@
 </script>
 
 <style scoped lang="scss">
-
   .row {
     margin-right: 0;
     margin-left: 0;
     width: 100%;
+
     div {
-    padding: 0 2px;
+      padding: 0 2px;
+    }
   }
-  }
-  
+
 
   svg {
     color: #AFAFAF;
@@ -579,18 +578,32 @@
     border-radius: 9px;
   }
 
+  #list .selectResponsible:hover~#close {
+    display: none !important;
+  }
+
   .selectResponsible {
     display: flex;
-    // margin-left: 10px;
 
     #ss-select {
-      // padding-left: 8px;
       align-items: center;
       display: flex;
-      height: 36px;
+      // height: 36px;
       border-radius: 10px;
       padding-right: 0;
       width: fit-content;
+      height: 26px;
+      overflow: hidden;
+    }
+
+    #ss-select:hover {
+      overflow: visible;
+      width: max-content !important;
+
+      >div {
+        max-height: 27px;
+        min-width: max-content;
+      }
     }
 
     #select-toggle {
@@ -625,10 +638,15 @@
   .selectResponsible:active {
     color: #fff;
     outline: none;
+    max-height: 27px;
+    min-width: max-content;
 
     #ss-select {
       background-color: #4EAD96;
+      overflow: visible;
+      width: fit-content;
     }
+
 
     svg {
       color: #fff !important;

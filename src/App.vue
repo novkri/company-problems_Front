@@ -25,11 +25,15 @@
   }
 </script>
 <style lang="scss">
+  .yes {
+    background-color: #4EAD96 !important;
+    color: #fff !important;
+  }
+
   .form-control.input {
     border-radius: 0 10px 10px 0 !important;
     background-color: transparent;
   }
-
 
   .tooltip {
     display: block !important;

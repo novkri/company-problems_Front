@@ -172,9 +172,12 @@
           name: this.formData.name,
           description: this.formData.description,
           possible_solution: this.formData.solution,
+          // group: this.formData.group
         }).then((r) => {
           if (!this.error) {
             console.log(r);
+            console.log(this.formData.group.id);
+            this.formData.group ? this.$store.dispatch('sendToGroup', {id: r.id, groupsArray: [this.formData.group.id]}) : ''
             this.$store.dispatch('getThisProblem', r.id)
             this.formData = []
             document.getElementById('close').click()
@@ -195,6 +198,9 @@
 </script>
 
 <style scoped lang="scss">
+* {
+  font-family: 'GothamPro';
+}
 .modal-dialog {
   max-width: 600px;
 }
@@ -335,11 +341,23 @@
   }
 
   #ss-select {
-    max-width: 180px;
+    max-width: 255px;
     background-color: #F6F7F9;
     font-family: 'GothamPro-Medium';
     color: #92D2C3;
     width: 100%;
+    height: auto;
+
+    #select-toggle {
+      font-family: 'GothamPro-Medium';
+      word-break: break-all;
+    height: fit-content;
+    svg {
+      width: inherit;
+    }
+    // }
+    }
+    
 
       ::-webkit-scrollbar {
         width: 10px;

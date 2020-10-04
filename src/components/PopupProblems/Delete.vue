@@ -11,7 +11,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <button type="submit" class="btn btn-secondary" data-dismiss="modal" @click="deleteProblem()">Да</button>
+            <button type="submit" class="btn btn-secondary yes" data-dismiss="modal" @click="deleteProblem()">Да</button>
             <button type="reset" class="btn btn-secondary" data-dismiss="modal">Нет</button>
           </div>
         </div>

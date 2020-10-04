@@ -38,7 +38,8 @@
                   <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                 </button>
                 <div class="name_div" style="width: 83%;">
-                  <span :ref="'name-div'+group.id" @click="event => {onClickInput(group.id, 'name',event)}">{{group.name}}</span>
+                  <span :ref="'name-div'+group.id"
+                    @click="event => {onClickInput(group.id, 'name',event)}">{{group.name}}</span>
                   <input class="form-control input-name" :id="'groupname'+group.id" style="display: none;"
                     :ref="'group-name' + group.id" @keyup.enter="event => {editGroupName(group.name, group.id, event)}"
                     v-model="group.name" @focus="event => onFocusInput(event, group.id, 'name')"
@@ -59,7 +60,8 @@
             </div>
             <div class="short-name col-3">
               <div class="short-name_div">
-                <span :ref="'short-name-div'+group.id" @click="event => {onClickInput(group.id, 'short', event)}">{{group.short_name}}</span>
+                <span :ref="'short-name-div'+group.id"
+                  @click="event => {onClickInput(group.id, 'short', event)}">{{group.short_name}}</span>
                 <input class="form-control input-name" :id="'groupshort'+group.id" style="display: none;"
                   :ref="'group-name-short' + group.id"
                   @keyup.enter="event => {editGroupShort(group.short_name, group.id, event)}" v-model="group.short_name"
@@ -84,7 +86,8 @@
                 id="ss-select" style="width: fit-content;height: fit-content;">
                 <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                   @click.once="onClickExecutor(group.leader_id)" style="cursor: pointer; width: 100%;">
-                  <ss-select-toggle class="flex justify-between" style="width: 100%; padding: 2px 5px; align-items: center;">
+                  <ss-select-toggle class="flex justify-between"
+                    style="width: 100%; padding: 2px 5px; align-items: center;">
                     <award-icon size="1.5x" class="custom-class"></award-icon>
                     {{ $get(selectedOption, 'name') || 
                   `${allUsersReduced.find(u => u.id == group.leader_id) ? allUsersReduced.find(u => u.id == group.leader_id).surname + ' ' 
@@ -94,6 +97,10 @@
                   </ss-select-toggle>
 
                   <section v-show="isOpen" class="absolute border-l border-r min-w-full">
+                    <div class="px-px">
+                      <ss-select-search-input class="w-full px-3 py-2 search" placeholder="Впишите фамилию">
+                      </ss-select-search-input>
+                    </div>
                     <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
                       data-toggle="modal" data-target="#groupConfirm" :key="index"
                       class="px-4 py-2 border-b cursor-pointer" :class="[
@@ -136,6 +143,10 @@
 
                           <section v-show="isOpen" class="absolute border-l border-r min-w-full"
                             style="top: 66%;left: 6%;">
+                            <div class="px-px">
+                              <ss-select-search-input class="w-full px-3 py-2 search" placeholder="Впишите фамилию">
+                              </ss-select-search-input>
+                            </div>
                             <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id"
                               :index="index" :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
@@ -191,8 +202,8 @@
     SsSelect,
     SsSelectToggle,
     SsSelectOption,
+    SsSelectSearchInput
   } from 'ss-select'
-  // // SsSelectSearchInput
   import {
     TrashIcon,
     PlusIcon,
@@ -249,7 +260,7 @@
       SsSelect,
       SsSelectToggle,
       SsSelectOption,
-      // // SsSelectSearchInput
+      SsSelectSearchInput
 
     },
     async mounted() {
@@ -638,6 +649,13 @@
         }
       }
     }
+  }
+
+  .search {
+    outline: none;
+    border: none;
+    background-color: #F7F7F7;
+    border-radius: 8px;
   }
 
   section {

@@ -100,7 +100,7 @@
     </div>
     <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')"
       v-show="this.$route.path !== '/group-problems' && this.$route.path !== '/'">
-      <span>Статус:</span>
+      <span>Статус:</span> 
       <ss-select v-model="statusProblem" :options="statusesProblem" track-by="name" class="form-control" :class="[this.$route.path == '/problems-user-archive' ? 'archive' : '' ]"
         @change="filterProblemStatus(statusProblem)" disable-by="disabled"
         id="ss-select" style="width: fit-content;">
@@ -113,7 +113,7 @@
 
           <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;" 
             id="filterStatus">
-            <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index" :key="index"
+            <ss-select-option v-for="(option, index) in filteredOptions"  :value="option" :index="index" :key="index"
               class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
                                 $selected(option) ? 'bg-light text-dark' : '',
@@ -189,6 +189,9 @@
     watch: {
       $route(to, from) {
         console.log(to, from);
+        this.statusProblem = ''
+        this.time = ''
+        this.importance = ''
         switch (this.$route.path) {
           case '/':
             this.$store.dispatch('changeStatusesProblem', [])
@@ -211,6 +214,7 @@
             this.$store.dispatch('changeCurrentGroupName', "Предложенные мной")
             break;
           case "/problems-for-execution":
+
             this.$store.dispatch('changeStatusesProblem', [
               {
                 name: "В работе"

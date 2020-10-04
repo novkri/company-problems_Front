@@ -542,9 +542,9 @@
     padding: 0;
   }
 
-      #list .selectResponsible:hover ~  #close {
-      display: none !important;
-    }
+  #list .selectResponsible:hover~#close {
+    display: none !important;
+  }
 
   .selectResponsible {
     display: flex;
@@ -554,25 +554,24 @@
       padding-left: 8px;
       align-items: center;
       display: flex;
-      height: 36px;
-      // background-color: #F6F7F9;
+      // height: 36px;
       border-radius: 10px;
       text-align: center;
       padding-right: 0;
       width: fit-content;
 
-
-          overflow: hidden;
-    height: 26px;
+      overflow: hidden;
+      height: 26px;
     }
+
     #ss-select:hover {
       overflow: visible;
       width: fit-content;
-      div {
-            max-height: 27px;
-    min-width: max-content;
-      }
 
+      >div {
+        max-height: 27px;
+        min-width: max-content;
+      }
     }
 
     select {
@@ -585,8 +584,6 @@
       right: -32%;
     }
   }
-
-
 
 
   .search {
@@ -604,9 +601,14 @@
   .selectResponsible:focus,
   .selectResponsible:active {
     color: #fff;
+    outline: none;
+    max-height: 27px;
+    min-width: max-content;
 
     #ss-select {
       background-color: #4EAD96;
+      overflow: visible;
+      width: fit-content;
     }
 
     svg {

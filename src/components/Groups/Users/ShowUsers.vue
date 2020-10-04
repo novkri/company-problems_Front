@@ -10,9 +10,9 @@
             1. {{leaderReduced.surname}} {{leaderReduced.name}} {{leaderReduced.father_name}}
           </div>
           <div class="close">
-            <button type="button" id="close" class="close" data-dismiss="modal" 
+            <button type="button" id="close" class="close" data-dismiss="modal"
               @click="removeLeader(leaderReduced.id, val)">
-              <span aria-hidden="true"  style="font-size: 20px;">&times;</span>
+              <span aria-hidden="true" style="font-size: 20px;">&times;</span>
             </button>
           </div>
         </li>
@@ -35,21 +35,20 @@
         </div>
       </ul>
     </div>
-    
+
     <div v-else>
-      <half-circle-spinner
-      :animation-duration="1500"
-        :size="50"
-        color="#92D2C3"
-      />
+      <half-circle-spinner :animation-duration="1500" :size="50" color="#92D2C3" />
     </div>
-    <GroupDeleteUser v-if="openDeleteGroup" :val="paramsModal" @removeUserFromGroup="removeUserFromGroup(param = $event)" />
+    <GroupDeleteUser v-if="openDeleteGroup" :val="paramsModal"
+      @removeUserFromGroup="removeUserFromGroup(param = $event)" />
   </div>
 
 </template>
 
 <script>
- import { HalfCircleSpinner } from 'epic-spinners'
+  import {
+    HalfCircleSpinner
+  } from 'epic-spinners'
   import GroupDeleteUser from '@/components/Groups/Users/DeleteUser'
   import {
     mapGetters
@@ -99,15 +98,16 @@
           id: groupId,
           uid
         })
-    }
+      }
     }
   }
 </script>
 
 <style lang="scss" scoped>
-.half-circle-spinner {
-  margin: 10px auto;
-}
+  .half-circle-spinner {
+    margin: 10px auto;
+  }
+
   .containerUsers {
     display: flex;
     flex-direction: column;
@@ -148,6 +148,7 @@
       padding-right: 10px;
     }
   }
+
   // @media (max-width: 1500px) {
   //   #headingOneAdd {
   //     height: auto;

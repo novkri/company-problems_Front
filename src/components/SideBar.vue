@@ -2,15 +2,6 @@
   <div class="sidebar col">
 
     <div class="links">
-      <!-- <nav class="navbar navbar-light" v-if="isLoggedIn"> -->
-      <div class="user">
-        <span>{{userLoggedIn.surname}} {{userLoggedIn.name[0]+'.'}}
-          {{userLoggedIn.father_name ? userLoggedIn.father_name[0]+'.' : ''}}</span>
-        <div class="logout" @click="logout">
-          <log-out-icon size="1.5x" class="custom-class"></log-out-icon>
-        </div>
-      </div>
-      <!-- </nav> -->
       <div class="addProblem">
         <button type="button" class="btn btnMainAdd" @click="create" data-toggle="modal" data-target="#popupCreate">
           <plus-icon size="1.4x" class="custom-class"></plus-icon> <span>Предложить проблему</span>
@@ -19,39 +10,66 @@
 
 
       <div class="main">
-        <!-- <span>Списки проблем: </span> -->
         <a @click="allProblems">
-          <router-link to="/" exact>Списки проблем:</router-link>
+          <router-link to="/" exact style="font-family: 'GothamPro-Medium';font-size: 16px;">Списки проблем:</router-link>
         </a>
         <a @click="myProblems">
-          <router-link to="/my-problems" exact>-Предложенные мной</router-link>
+          <router-link to="/my-problems" exact>
+            <user-plus-icon size="1.5x" class="custom-class"></user-plus-icon>Предложенные мной
+          </router-link>
         </a>
         <a @click="problemsForConfirmation">
-          <router-link to="/group-problems" exact>-На рассмотрении</router-link>
+          <router-link to="/group-problems" exact>
+            <eye-icon size="1.5x" class="custom-class"></eye-icon>На рассмотрении
+          </router-link>
         </a>
         <a @click="problemsForExecution">
-          <router-link to="/problems-for-execution" exact>-Для исполнения</router-link>
+          <router-link to="/problems-for-execution" exact>
+            <flag-icon size="1.5x" class="custom-class"></flag-icon>Для исполнения
+          </router-link>
         </a>
-        <a @click="showLinks">-По подразделениям <chevron-down-icon ref="linkIcon" size="1.5x" class="custom-class">
-          </chevron-down-icon></a>
-        <div class="links_groups">
-          <a @click="allGroupsProblems">
-            <router-link to="/problems-of-all-groups" exact>Все</router-link>
-          </a>
-          <a @click="getProblemsByGroups(group.name)" v-for="(group, idx) in groups" :key="idx">
-            <router-link :to="'/problems-group/'+group.id">{{group.name}}</router-link>
-          </a>
-        </div>
+        <a @click="showLinks" style="cursor: pointer;">
+          <layers-icon size="1.5x" class="custom-class" :style="[showGroups ? {'color': '#4EAD96'} : {} ]"></layers-icon>По подразделениям <chevron-down-icon
+            ref="linkIcon" size="1.5x" class="custom-class">
+          </chevron-down-icon>
+        </a>
+
+        <transition name="fade">
+          <div class="links_groups" v-show="showGroups">
+            <a @click="allGroupsProblems">
+              <router-link to="/problems-of-all-groups" exact>Все</router-link>
+            </a>
+            <a @click="getProblemsByGroups(group.name)" v-for="(group, idx) in groups" :key="idx">
+              <router-link :to="'/problems-group/'+group.id">{{group.name}}</router-link>
+            </a>
+          </div>
+        </transition>
       </div>
 
 
       <div class="info">
-        <router-link to="/groups">Состав подразделений</router-link>
-        <a href="#">Статистика</a>
+        <router-link to="/groups">
+          <list-icon size="1.5x" class="custom-class"></list-icon>Состав подразделений
+        </router-link>
+        <a href="#">
+          <bar-chart-2-icon size="1.5x" class="custom-class"></bar-chart-2-icon>Статистика
+        </a>
         <a @click="archive">
+          <archive-icon size="1.5x" class="custom-class"></archive-icon>
           <router-link to="/problems-user-archive" exact>Архив проблем</router-link>
         </a>
       </div>
+
+      <div class="user">
+        <span>{{userLoggedIn.surname}} {{userLoggedIn.name[0]+'.'}}
+          {{userLoggedIn.father_name ? userLoggedIn.father_name[0]+'.' : ''}}</span>
+        <div class="logout" @click="logout">
+          <log-out-icon size="1.5x" class="custom-class"></log-out-icon>
+        </div>
+      </div>
+{{amountOfProblemsForConfirmation}} {{amountOfProblemsForExecution}} {{amountOfMyProblems}}
+<span>'amountOfProblemsForConfirmation', 'amountOfProblemsForExecution', 'amountOfMyProblems'</span>
+{{amountOfProblemsForConfirmation}}
     </div>
 
     <PopupCreate v-if="openCreate" @createProblem="createProblem(param = $event)" />
@@ -63,7 +81,15 @@
   import {
     ChevronDownIcon,
     LogOutIcon,
-    PlusIcon
+    PlusIcon,
+
+    UserPlusIcon,
+    EyeIcon,
+    FlagIcon,
+    LayersIcon,
+    ListIcon,
+    BarChart2Icon,
+    ArchiveIcon
   } from 'vue-feather-icons'
   import {
     mapGetters
@@ -81,10 +107,18 @@
       LogOutIcon,
       PlusIcon,
 
+      UserPlusIcon,
+      EyeIcon,
+      FlagIcon,
+      LayersIcon,
+      ListIcon,
+      BarChart2Icon,
+      ArchiveIcon,
+
       PopupCreate
     },
     computed: {
-      ...mapGetters(['groups', 'user']),
+      ...mapGetters(['groups', 'user', 'amountOfProblemsForConfirmation', 'amountOfProblemsForExecution', 'amountOfMyProblems']),
       isLoggedIn: function () {
         return this.$store.getters.isLoggedIn
       },
@@ -120,7 +154,10 @@
           importance: '',
           deadline: '',
           status: ''
+        }).then(() => {
+          console.log(this.amountOfMyProblems);
         })
+        
       },
 
       async problemsForExecution() {
@@ -170,6 +207,9 @@
 </script>
 
 <style lang="scss">
+.addProblem {
+  width: auto;
+}
   ::-webkit-scrollbar {
     width: 10px;
   }
@@ -187,7 +227,8 @@
   }
 
   .links_groups {
-    max-height: 166px;
+    min-height: 10px;
+    max-height: 215px;
     overflow-y: scroll;
     overflow-x: hidden;
     display: flex;
@@ -201,9 +242,10 @@
   .btnMainAdd {
     padding: 8px 7px;
     border-radius: 12px;
-    width: 213px;
+    // width: 213px;
+    width: auto;
     // height: 58px;
-    background-color: transparent;
+    background-color: #ffffff;
     color: #4EAD96;
     font-size: 16px;
     line-height: 17px;
@@ -213,7 +255,7 @@
     justify-content: center;
     align-items: center;
     font-family: 'GothamPro-Medium';
-    margin-bottom: 30px;
+    margin-bottom: 29px;
   }
 
   .btnMainAdd:hover {
@@ -225,37 +267,55 @@
     display: flex;
   }
 
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity .5s;
+  }
+
+  .fade-enter,
+  .fade-leave-to
+    {
+    opacity: 0;
+  }
+
   .sidebar {
-    max-width: 280px;
+    max-width: 287px;
+        // max-width: 15%;
     background-color: #F6F7F9;
     padding: 0;
 
     a {
       margin-bottom: 17px;
       font-family: 'GothamPro';
-      font-size: 18px;
+      font-size: 14px;
       line-height: 24px;
       letter-spacing: 0.15px;
       color: #4F4F4F;
       word-break: break-all;
+
+      svg {
+        margin-right: 12px;
+        color: #828282;
+      }
     }
 
-    a:hover {
-      color: #4F4F4F;
-    }
+     a:hover {
+    color: #92D2C3;
+  }
 
     .router-link-active {
-      font-family: 'GothamPro-Medium';
+      color: #4EAD96;
+
+      svg {
+        color: #4EAD96;
+      }
     }
 
     .links {
       display: flex;
       flex-direction: column;
-      // height: 80vh;
       justify-content: space-between;
-      // padding-top: 60px;
-      // padding-left: 30px;
-      padding: 60px 26px 0;
+      padding: 40px 26px 0;
 
       .user {
         position: relative;
@@ -267,7 +327,7 @@
         border-radius: 5px;
         margin-bottom: 65px;
         margin-left: -26px;
-
+        margin-top: 45px;
         span {
           font-family: 'GothamPro';
           font-size: 18px;
@@ -343,18 +403,18 @@
     margin-top: 100px;
   }
 
-  a {
-    margin: 0;
-    font-size: 18px;
-    line-height: 17px;
-    font-family: 'GothamPro-Medium';
-    color: #92D2C3;
-    cursor: pointer;
-  }
+  // a {
+  //   margin: 0;
+  //   font-size: 18px;
+  //   line-height: 17px;
+  //   font-family: 'GothamPro-Medium';
+  //   color: #92D2C3;
+  //   cursor: pointer;
+  // }
 
-  a:hover {
-    color: #92D2C3;
-  }
+  // a:hover {
+  //   color: #92D2C3;
+  // }
 
   button:focus,
   .btn:focus {

@@ -10,7 +10,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <button type="submit" class="btn btn-secondary" data-dismiss="modal" @click="removeUserFromGroup()">Да</button>
+            <button type="submit" class="btn btn-secondary yes" data-dismiss="modal" @click="removeUserFromGroup()">Да</button>
             <button type="reset" class="btn btn-secondary" data-dismiss="modal">Нет</button>
           </div>
         </div>
@@ -46,6 +46,7 @@
 </script>
 
 <style scoped>
+
   .modal-content {
     border-radius: 12px;
     border: none;

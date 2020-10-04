@@ -59,11 +59,13 @@
                 </v-popover>
               </div>
               <div>
-                <clock-icon size="1.5x" class="custom-class details" :ref="'urgency'+problem.id" :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
+                <clock-icon size="1.5x" class="custom-class details" :ref="'urgency'+problem.id"
+                  :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
                   @click="changeUrgency(problem.id, problem.urgency)"></clock-icon>
               </div>
               <div>
-                <alert-circle-icon size="1.5x" class="custom-class details" :ref="'importance'+problem.id" :style="[problem.importance == isImportnant ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
+                <alert-circle-icon size="1.5x" class="custom-class details" :ref="'importance'+problem.id"
+                  :style="[problem.importance == isImportnant ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
                   @click="changeImportance(problem.id, problem.importance)"></alert-circle-icon>
               </div>
 
@@ -106,13 +108,15 @@
                 <span :style="[problem.urgency == isUrgent ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]">
                   Срочная:
                 </span>
-                <clock-icon size="1.3x" class="custom-class details" :ref="'urgency'+problem.id" :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
+                <clock-icon size="1.3x" class="custom-class details" :ref="'urgency'+problem.id"
+                  :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
                   @click="changeUrgency(problem.id, problem.urgency)"></clock-icon>
               </div>
               <div>
                 <span
                   :style="[problem.importance == `Важная` ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]">Важная:</span>
-                <alert-circle-icon size="1.3x" class="custom-class details" :ref="'importance'+problem.id" :style="[problem.importance == isImportnant ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
+                <alert-circle-icon size="1.3x" class="custom-class details" :ref="'importance'+problem.id"
+                  :style="[problem.importance == isImportnant ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
                   @click="changeImportance(problem.id, problem.importance)"></alert-circle-icon>
               </div>
               <div>
@@ -206,16 +210,16 @@
                           <div class="hidden" style="bottom: 13%; right: 11%;">
                             <div>
                               <button class="input-btn confirm"
-                              @mousedown="event => {editPlan(solutions[0].id,solutions[0].plan, event)}">
-                              <check-icon size="1.4x" class="custom-class"></check-icon>
-                            </button>
-                            <div @mousedown="event => onClear(event, problem.id, 'plan')">
-                              <button class="input-btn cancel">
-                                <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
+                                @mousedown="event => {editPlan(solutions[0].id,solutions[0].plan, event)}">
+                                <check-icon size="1.4x" class="custom-class"></check-icon>
                               </button>
+                              <div @mousedown="event => onClear(event, problem.id, 'plan')">
+                                <button class="input-btn cancel">
+                                  <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
+                                </button>
+                              </div>
                             </div>
-                            </div>
-                            
+
                           </div>
 
                         </div>
@@ -253,16 +257,16 @@
                             <div class="hidden">
                               <div>
                                 <button class="input-btn confirm"
-                                @mousedown="event => {editTeam(solutions[0].id, solutions[0].team, event)}">
-                                <check-icon size="1.4x" class="custom-class"></check-icon>
-                              </button>
-                              <div @mousedown="event => onClear(event, problem.id, 'team')">
-                                <button class="input-btn cancel">
-                                  <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
+                                  @mousedown="event => {editTeam(solutions[0].id, solutions[0].team, event)}">
+                                  <check-icon size="1.4x" class="custom-class"></check-icon>
                                 </button>
+                                <div @mousedown="event => onClear(event, problem.id, 'team')">
+                                  <button class="input-btn cancel">
+                                    <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
+                                  </button>
+                                </div>
                               </div>
-                              </div>
-                              
+
                             </div>
                           </div>
 
@@ -275,19 +279,19 @@
                             <div class="hidden">
                               <div>
                                 <button class="input-btn confirm"
-                                @mousedown="event => {editExp(problem.id, problem.experience, event)}">
-                                <check-icon size="1.4x" class="custom-class"></check-icon>
-                              </button>
-                              <div @mousedown="event => onClear(event, problem.id, 'exp')">
-                                <button class="input-btn cancel">
-                                  <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
+                                  @mousedown="event => {editExp(problem.id, problem.experience, event)}">
+                                  <check-icon size="1.4x" class="custom-class"></check-icon>
                                 </button>
+                                <div @mousedown="event => onClear(event, problem.id, 'exp')">
+                                  <button class="input-btn cancel">
+                                    <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
+                                  </button>
+                                </div>
                               </div>
-                              </div>
-                              
+
                             </div>
                           </div>
-                  
+
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Результат</label>
                             <textarea rows="6" :ref="'textarea_result'+problem.id" v-model="problem.result"
@@ -297,25 +301,35 @@
                             <div class="hidden">
                               <div>
                                 <button class="input-btn confirm"
-                                @mousedown="event => {editResult(problem.id, problem.result, event)}">
-                                <check-icon size="1.4x" class="custom-class"></check-icon>
-                              </button>
-                              <div @mousedown="event => onClear(event, problem.id, 'result')">
-                                <button class="input-btn cancel">
-                                  <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
+                                  @mousedown="event => {editResult(problem.id, problem.result, event)}">
+                                  <check-icon size="1.4x" class="custom-class"></check-icon>
                                 </button>
+                                <div @mousedown="event => onClear(event, problem.id, 'result')">
+                                  <button class="input-btn cancel">
+                                    <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
+                                  </button>
+                                </div>
                               </div>
-                              </div>
-                              
+
                             </div>
-                            <button v-show="solutions[0].executor_id == currentUid" class="btn btnMain problem-solved"
-                              @click="problemSolved(problem.id)">Проблема решена</button>
+                            <!-- <button v-show="solutions[0].executor_id == currentUid" class="btn btnMain problem-solved"
+                              @click="problemSolved(problem.id)">Проблема решена</button> -->
                             <div
-                              style="margin-top: 19px; display: flex; justify-content: space-evenly; flex-direction: row;flex-wrap:wrap; align-items: center;">
-                              <button v-show="problem.creator_id == currentUid" class="btn btnMain problem-confirm"
-                                @click="problemConfirm(problem.id)">Подтвердить решение</button>
-                              <button v-show="problem.creator_id == currentUid" class="btn btnMain problem-confirm"
-                                @click="problemReject(problem.id)">Отклонить</button>
+                              style="margin-bottom: -37px; margin-top: 14px; display: flex; justify-content: space-evenly; flex-direction: row;flex-wrap:wrap; align-items: center;">
+                              <span v-show="problem.status == 'На рассмотрении'" class="problem-send">Проблема
+                                отправлена для подтверждения решения</span>
+
+                              <button v-show="solutions[0].executor_id == currentUid" class="btn btnMain problem-solved"
+                                @click="problemSolved(problem.id)">Проблема решена</button>
+                              <div style="display: flex; ">
+                                <button v-show="problem.creator_id == currentUid" class="btn btnMain problem-confirm y"
+                                  style="    margin-right: 11px;" @click="problemConfirm(problem.id)">Подтвердить
+                                  решение</button>
+                                <button v-show="problem.creator_id == currentUid" class="btn btnMain problem-confirm"
+                                  style="background-color: #EBEBEB;color: #4F4F4F;"
+                                  @click="problemReject(problem.id)">Отклонить</button>
+                              </div>
+
                             </div>
 
                           </div>
@@ -601,9 +615,6 @@
             this.$store.dispatch('getTasks', response.id)
             this.$store.dispatch('getCurrentSolution', '')
             this.$store.dispatch('getCurrentSolution', response.id)
-            // setTimeout(function () {
-            //   document.getElementById('heading' + problem.id).scrollIntoView();
-            // }, 200);
           }).catch(() => {
             this.$store.dispatch('clearTasks')
           })
@@ -786,25 +797,30 @@
     word-break: break-all;
     text-align: inherit;
   }
+
   .custom-control-label::before {
     border: #4EAD96 solid 1px;
   }
+
   .custom-control-input {
     border: 0.92px solid #4EAD96;
     color: #4EAD96;
   }
+
   .custom-control-input:focus {
     outline: none;
     outline-offset: 0;
   }
+
   .custom-control-input:checked~.custom-control-label::before {
-        border-color: #4EAD96;
-    // color: #4EAD96;
+    border-color: #4EAD96;
     background-color: #4EAD96;
   }
+
   .custom-control-input:focus~.custom-control-label::before {
     box-shadow: none;
   }
+
   .form-control {
     border: none;
     border-radius: 6px;
@@ -886,27 +902,29 @@
     margin-left: 8px;
     background-color: #F4F4F4;
     border-radius: 8px;
-    
+
 
     svg {
       color: #fff;
       vertical-align: middle;
     }
   }
-     .confirm {
-      background-color: #92D2C3;
-    }
-    
-    .cancel {
-      background-color: #FFD3D3;
-    }
+
+  .confirm {
+    background-color: #92D2C3;
+  }
+
+  .cancel {
+    background-color: #FFD3D3;
+  }
 
   .hidden {
     visibility: visible;
     justify-content: flex-end;
     border-radius: 0 0 9px 9px;
     background-color: #F7F7F7;
-    & > div {
+
+    &>div {
       border-top: 2px solid #E7E5F1;
       padding: 14px 0px 17px;
       margin: 0 6px;
@@ -918,7 +936,7 @@
         padding-right: 3px;
       }
     }
-    
+
 
   }
 
@@ -940,7 +958,7 @@
   }
 
   textarea {
-    width: 100%; 
+    width: 100%;
     outline: none;
     border: none;
     resize: none;
@@ -1206,9 +1224,21 @@
     font-family: 'GothamPro-Medium';
   }
 
+  .problem-send {
+    color: #92D2C3;
+    font-family: 'GothamPro-Medium';
+    text-align: center;
+    font-size: 16px;
+    line-height: 17px;
+    font-style: normal;
+    font-weight: normal;
+    letter-spacing: 0.15px;
+  }
+
   .problem-solved {
     margin-top: 19px;
   }
+
   .problem-solved,
   .btn-to-groups {
     margin: auto;
@@ -1272,177 +1302,177 @@
     }
   }
 
-    .list-group-item {
-      border-radius: 7px;
-      width: 100%;
-      height: fit-content;
-      background-color: #F0F0F0;
-      color: #717171;
-      font-size: 18px;
-      border: none;
-      margin: 6.5px 0;
-      justify-content: space-between;
-      display: flex;
-      align-items: center;
-      padding: 0;
-    }
+  .list-group-item {
+    border-radius: 7px;
+    width: 100%;
+    height: fit-content;
+    background-color: #F0F0F0;
+    color: #717171;
+    font-size: 18px;
+    border: none;
+    margin: 6.5px 0;
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+    padding: 0;
+  }
 
-    #list:hover .borderline {
-      margin: initial;
-      padding: 10px 26px;
-    }
+  #list:hover .borderline {
+    margin: initial;
+    padding: 10px 26px;
+  }
 
-    .toggle-area {
-      width: 100%;
+  .toggle-area {
+    width: 100%;
+    cursor: pointer;
+    padding: 23px 0 23px 23px;
+  }
+
+  svg {
+    color: #AFAFAF;
+    cursor: pointer;
+  }
+
+  .ep-legend--value {
+
+    span {
       cursor: pointer;
-      padding: 23px 0 23px 23px;
+      font-size: 13px;
     }
 
-    svg {
-      color: #AFAFAF;
-      cursor: pointer;
+  }
+
+  .middle-icons,
+  .middle-icons_text {
+    align-items: center;
+
+    svg:hover {
+      color: #92D2C3 !important;
     }
+  }
 
-    .ep-legend--value {
+  .middle-icons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-left: 120px;
 
-      span {
-        cursor: pointer;
-        font-size: 13px;
-      }
-
-    }
-
-    .middle-icons,
-    .middle-icons_text {
-      align-items: center;
-
-      svg:hover {
-        color: #92D2C3 !important;
-      }
-    }
-
-    .middle-icons {
+    div {
       display: flex;
       flex-direction: row;
-      justify-content: space-between;
-      padding-left: 120px;
-
-      div {
-        display: flex;
-        flex-direction: row;
-      }
     }
+  }
 
-    .icons {
+  .icons {
+    display: flex;
+    justify-content: flex-end;
+
+    .trash-icon {
+      width: 50px;
+      align-items: center;
       display: flex;
-      justify-content: flex-end;
+    }
+  }
 
-      .trash-icon {
-        width: 50px;
-        align-items: center;
-        display: flex;
+  // .pagination {
+  //   align-items: center;
+  //   justify-content: flex-end;
+  //   margin-bottom: 0;
+  // }
+
+  // .page-link {
+  //   background: none;
+  //   border: none;
+  //   color: #5F5F5F;
+  //   font-size: 18px;
+  //   margin: 0;
+
+  //   svg {
+  //     color: #5F5F5F;
+  //   }
+  // }
+
+  // .block {
+  //   color: #D3D3D3;
+  //   opacity: 0.5;
+  //   pointer-events: none;
+  //   cursor: default;
+  // }
+
+  // .page-link img {
+  //   margin: 0;
+  // }
+
+  // .page-item {
+  //   font-style: normal;
+  //   font-weight: normal;
+  //   font-size: 18px;
+  //   line-height: 17px;
+  //   color: #5F5F5F;
+  // }
+
+  // .page-item a {
+  //   padding: 0;
+  //   margin: 15px;
+  // }
+
+  .borderline {
+    margin: -2px 0;
+    padding: 10px 26px;
+    border-right: 1px solid #e0e0e0;
+    border-left: 1px solid #e0e0e0;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    width: 85%;
+    margin: auto;
+    max-width: 1350px;
+
+    .btn {
+      margin-top: 25px;
+
+      svg {
+        color: white;
+        margin-right: 5px;
+      }
+    }
+  }
+
+
+
+  @media (max-width: 1300px) {
+    * {
+      font-size: 12px;
+
+      .middle-icons_text span {
+        font-size: 11px !important;
       }
     }
 
-    // .pagination {
-    //   align-items: center;
-    //   justify-content: flex-end;
-    //   margin-bottom: 0;
+    // .modal-body {
+    //   max-width: 95% !important;
+    // }
+  }
+
+  @media (min-width: 1430px) {
+    // .container {
+    //   max-width: 1370px;
     // }
 
-    // .page-link {
-    //   background: none;
-    //   border: none;
-    //   color: #5F5F5F;
-    //   font-size: 18px;
-    //   margin: 0;
-
-    //   svg {
-    //     color: #5F5F5F;
-    //   }
-    // }
-
-    // .block {
-    //   color: #D3D3D3;
-    //   opacity: 0.5;
-    //   pointer-events: none;
-    //   cursor: default;
-    // }
-
-    // .page-link img {
-    //   margin: 0;
-    // }
-
-    // .page-item {
-    //   font-style: normal;
-    //   font-weight: normal;
-    //   font-size: 18px;
-    //   line-height: 17px;
-    //   color: #5F5F5F;
-    // }
-
-    // .page-item a {
-    //   padding: 0;
-    //   margin: 15px;
-    // }
-
-    .borderline {
-      margin: -2px 0;
-      padding: 10px 26px;
-      border-right: 1px solid #e0e0e0;
-      border-left: 1px solid #e0e0e0;
+    h2 {
+      max-width: 1270px;
     }
+  }
 
-    .footer {
-      display: flex;
-      justify-content: space-between;
-      width: 85%;
-      margin: auto;
-      max-width: 1350px;
+  @media (min-width: 500px) {
+    // .container {
+    //   width: 85% !important;
+    // }
 
-      .btn {
-        margin-top: 25px;
-
-        svg {
-          color: white;
-          margin-right: 5px;
-        }
-      }
+    h2 {
+      width: 75%;
     }
-
-
-
-    @media (max-width: 1300px) {
-      * {
-        font-size: 12px;
-
-        .middle-icons_text span {
-          font-size: 11px !important;
-        }
-      }
-
-      // .modal-body {
-      //   max-width: 95% !important;
-      // }
-    }
-
-    @media (min-width: 1430px) {
-      // .container {
-      //   max-width: 1370px;
-      // }
-
-      h2 {
-        max-width: 1270px;
-      }
-    }
-
-    @media (min-width: 500px) {
-      // .container {
-      //   width: 85% !important;
-      // }
-
-      h2 {
-        width: 75%;
-      }
-    }
+  }
 </style>

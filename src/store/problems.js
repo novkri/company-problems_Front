@@ -24,7 +24,10 @@ export default {
     error: '',
     error404: '',
     token: localStorage.getItem('user-token') || '',
-    statusesProblem: []
+    statusesProblem: [],
+    amountOfMyProblems: '',
+    amountOfProblemsForExecution: '',
+    amountOfProblemsForConfirmation: ''
   },
   getters: {
     statusesProblem: state => {
@@ -41,7 +44,18 @@ export default {
     },
     error404: state => {
       return state.error404
-    }
+    },
+
+    amountOfMyProblems: state => {
+      state.amountOfMyProblems
+      console.log(state.amountOfMyProblems);
+    },
+    amountOfProblemsForExecution: state => {
+      state.amountOfProblemsForExecution
+    },
+    amountOfProblemsForConfirmation: state => {
+      state.amountOfProblemsForConfirmation
+    },
   },
   mutations: {
     statusesProblem: (state, payload) => {
@@ -101,6 +115,16 @@ export default {
     },
     changePossible: (state, payload) => {
       state.problems.find(problem => problem.id == payload.id).possible_solution = payload.possible_solution
+    },
+
+    amountOfMyProblems: (state, payload) => {
+      state.amountOfMyProblems = payload
+    },
+    amountOfProblemsForExecution: (state, payload) => {
+      state.amountOfProblemsForExecution = payload
+    },
+    amountOfProblemsForConfirmation: (state, payload) => {
+      state.amountOfProblemsForConfirmation = payload
     },
 
   },
@@ -219,6 +243,7 @@ export default {
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
+            commit('amountOfMyProblems', response.data.length)
             resolve(response.data)
         })
         .catch(error => {
@@ -248,6 +273,7 @@ export default {
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
+            commit('amountOfProblemsForExecution', response.data.length)
             resolve(response.data)
         })
         .catch(error => {
@@ -275,6 +301,7 @@ export default {
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
+            commit('amountOfProblemsForConfirmation', response.data.length)
             resolve(response.data)
         })
         .catch(error => {
@@ -502,7 +529,7 @@ export default {
     },
 
     sendToGroup: async ({commit}, param) => {
-      // // console.log(param);
+      console.log(param);
       axios.post(BASEURL + `/${param.id}/send-to-group`, {group_ids: param.groupsArray})
         .then((r) => {
           console.log(r);

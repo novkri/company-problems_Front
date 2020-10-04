@@ -10,7 +10,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <button type="submit" class="btn btn-secondary" data-dismiss="modal" @click="deleteGroup()">Да</button>
+            <button type="submit" class="btn btn-secondary yes" data-dismiss="modal" @click="deleteGroup()">Да</button>
             <button type="reset" class="btn btn-secondary" data-dismiss="modal">Нет</button>
           </div>
         </div>
@@ -33,14 +33,11 @@
     },
     methods: {
       async deleteGroup() {
-          // await this.$store.dispatch('checkIfExists', {id: this.val.id})
-          // .then(async () => {
               await this.$store.dispatch('deleteGroup', {id: this.val.group.id}).then(() => {
                 this.$store.dispatch('getAllUsers')
 
                 this.allUsers.find(u => u.id == this.val.group.leader_id).group_id == null
               })
-          // })
           .catch(() => this.$store.commit('setError404', ''))
       },
     }

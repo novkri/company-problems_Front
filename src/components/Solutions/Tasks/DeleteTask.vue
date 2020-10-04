@@ -7,7 +7,7 @@
       </button>
     </div>
     <div class="modal-body">
-      <button type="submit" class="btn btn-secondary" @click="deleteTask(val)" data-dismiss="modal"
+      <button type="submit" class="btn btn-secondary yes" @click="deleteTask(val)" data-dismiss="modal"
         data-target="#popupDeleteTask">Да</button>
       <button type="reset" class="btn btn-secondary" data-dismiss="modal" data-target="#popupDeleteTask"
         @click="closeDeleteTask">Нет</button>
