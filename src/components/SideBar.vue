@@ -19,23 +19,24 @@
 
 
       <div class="main">
+        <!-- <span>Списки проблем: </span> -->
         <a @click="allProblems">
           <router-link to="/" exact>Списки проблем:</router-link>
         </a>
         <a @click="myProblems">
           <router-link to="/my-problems" exact>-Предложенные мной</router-link>
         </a>
-        <a @click="problemsForExecution">
-          <router-link to="/problems-for-execution" exact>-На рассмотрении</router-link>
-        </a>
         <a @click="problemsForConfirmation">
-          <router-link to="/problems-for-confirmation" exact>-Для исполнения</router-link>
+          <router-link to="/group-problems" exact>-На рассмотрении</router-link>
+        </a>
+        <a @click="problemsForExecution">
+          <router-link to="/problems-for-execution" exact>-Для исполнения</router-link>
         </a>
         <a @click="showLinks">-По подразделениям <chevron-down-icon ref="linkIcon" size="1.5x" class="custom-class">
           </chevron-down-icon></a>
         <div class="links_groups">
           <a @click="allGroupsProblems">
-            <router-link to="/all-groups" exact>Все</router-link>
+            <router-link to="/problems-of-all-groups" exact>Все</router-link>
           </a>
           <a @click="getProblemsByGroups(group.name)" v-for="(group, idx) in groups" :key="idx">
             <router-link :to="'/problems-group/'+group.id">{{group.name}}</router-link>
@@ -48,7 +49,7 @@
         <router-link to="/groups">Состав подразделений</router-link>
         <a href="#">Статистика</a>
         <a @click="archive">
-          <router-link to="/archive" exact>Архив проблем</router-link>
+          <router-link to="/problems-user-archive" exact>Архив проблем</router-link>
         </a>
       </div>
     </div>
@@ -83,7 +84,7 @@
       PopupCreate
     },
     computed: {
-      ...mapGetters(['groups', 'user', 'problems', 'problemsUnderСonsideration']),
+      ...mapGetters(['groups', 'user']),
       isLoggedIn: function () {
         return this.$store.getters.isLoggedIn
       },
@@ -114,24 +115,55 @@
       },
 
       async myProblems() {
-        await this.$store.dispatch('getMyProblems')
+        await this.$store.dispatch('getMyProblems', {
+          urgency: '',
+          importance: '',
+          deadline: '',
+          status: ''
+        })
       },
 
       async problemsForExecution() {
-        await this.$store.dispatch('getProblemsForExecution')
+        await this.$store.dispatch('getProblemsForExecution', {
+          urgency: '',
+          importance: '',
+          deadline: '',
+          status: ''
+        })
       },
 
       async problemsForConfirmation() {
-        await this.$store.dispatch('problemsForConfirmation')
+        await this.$store.dispatch('problemsForConfirmation', {
+          urgency: '',
+          importance: '',
+          deadline: '',
+          status: ''
+        })
       },
       async archive() {
-        await this.$store.dispatch('archive')
+        await this.$store.dispatch('archive', {
+          urgency: '',
+          importance: '',
+          deadline: '',
+          status: ''
+        })
       },
       async allGroupsProblems() {
-        await this.$store.dispatch('getAllGroupsProblems')
+        await this.$store.dispatch('getAllGroupsProblems', {
+          urgency: '',
+          importance: '',
+          deadline: '',
+          status: ''
+        })
       },
       async getProblemsByGroups(groupName) {
-        await this.$store.dispatch('getProblemsByGroups', groupName)
+        await this.$store.dispatch('getProblemsByGroups', {
+          groupName,
+          urgency: '',
+          importance: '',
+          deadline: '',
+          status: ''
+        })
       }
     }
   }

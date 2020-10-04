@@ -42,14 +42,14 @@
         </div>
       </div>
     </div> -->
-  <nav class="navbar navbar-light">
+  <nav class="navbar navbar-light" :class="[this.$route.path === '/' ? 'main' : '']">
     <div class="logo">
       <img src="@/assets/logo.png" alt="PSS Software">
     </div>
     <div class="group_selected" v-if="$route.matched.some(({ name }) => name === 'Problems')">
-      Список проблем: {{currentGroupName ? currentGroupName : 'Все'}}
+      Список проблем: {{currentGroupName}}
     </div>
-    <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')">
+    <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')" v-show="this.$route.path !== '/'">
       <span>Срочность/важность:</span>
       <div class="select" style="position: relative;" ref="select">
         <ss-select v-model="importance" :options="statusesImportance" track-by="name" class="form-control"
@@ -73,7 +73,7 @@
         </ss-select>
       </div>
     </div>
-    <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')">
+    <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')" v-show="this.$route.path !== '/'">
       <span>Срок исполнения:</span>
       <div class="select" style="position: relative;" ref="select">
         <ss-select v-model="time" :options="statusesTime" track-by="name" class="form-control"
@@ -98,11 +98,12 @@
         </ss-select>
       </div>
     </div>
-    <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')">
+    <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')"
+      v-show="this.$route.path !== '/group-problems' && this.$route.path !== '/'">
       <span>Статус:</span>
-      <ss-select v-model="statusProblem" :options="statusesProblem" track-by="name" class="form-control"
+      <ss-select v-model="statusProblem" :options="statusesProblem" track-by="name" class="form-control" :class="[this.$route.path == '/problems-user-archive' ? 'archive' : '' ]"
         @change="filterProblemStatus(statusProblem)" disable-by="disabled"
-        :class="[importance == 'Выполнено' ? 'green' : 'gray']" id="ss-select" style="width: fit-content;">
+        id="ss-select" style="width: fit-content;">
         <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
           style="cursor: pointer; width: 100%;">
           <ss-select-toggle style="width: 100%;" id="select-toggle">
@@ -110,7 +111,7 @@
             <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
           </ss-select-toggle>
 
-          <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;"
+          <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;" 
             id="filterStatus">
             <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index" :key="index"
               class="px-4 py-2 border-b cursor-pointer" :class="[
@@ -148,8 +149,6 @@
       time: '',
       statusProblem: '',
 
-      currentGroupName: '',
-
       statusesImportance: [{
           name: "Только важные"
         },
@@ -176,19 +175,6 @@
           name: "Все"
         },
       ],
-      statusesProblem: [{
-          name: "На рассмотрении"
-        },
-        {
-          name: "В работе"
-        },
-        {
-          name: "На проверке заказчика"
-        },
-        {
-          name: "Все"
-        },
-      ]
     }),
     components: {
       ChevronDownIcon,
@@ -198,19 +184,93 @@
       SsSelectOption
     },
     computed: {
-      ...mapGetters(['groups']),
-      //   isLoggedIn: function () {
-      //     return this.$store.getters.isLoggedIn
-      //   },
-      //   userLoggedIn: function () {
-      //     return JSON.parse(localStorage.getItem('user'))
-      //   }
+      ...mapGetters(['groups', 'currentGroupName', 'statusesProblem']),
     },
     watch: {
       $route(to, from) {
-        // this.show = false;
         console.log(to, from);
-        this.currentGroupName = this.groups.find(g => g.id == to.params.id).name
+        switch (this.$route.path) {
+          case '/':
+            this.$store.dispatch('changeStatusesProblem', [])
+            this.$store.dispatch('changeCurrentGroupName', "Все")
+            break;
+          case '/my-problems':
+            this.$store.dispatch('changeStatusesProblem', [{
+                name: "На рассмотрении"
+              },
+              {
+                name: "В работе"
+              },
+              {
+                name: "На проверке заказчика"
+              },
+              {
+                name: "Все"
+              },
+            ])
+            this.$store.dispatch('changeCurrentGroupName', "Предложенные мной")
+            break;
+          case "/problems-for-execution":
+            this.$store.dispatch('changeStatusesProblem', [
+              {
+                name: "В работе"
+              },
+              {
+                name: "На проверке заказчика"
+              },
+              {
+                name: "Все"
+              },
+            ])
+            this.$store.dispatch('changeCurrentGroupName', "Для исполнения")
+            break;
+          case "/group-problems":
+            this.$store.dispatch('changeStatusesProblem', [])
+            this.$store.dispatch('changeCurrentGroupName', "На рассмотрении")
+            break;
+          case "/problems-of-all-groups":
+            this.$store.dispatch('changeStatusesProblem', [
+              {
+                name: "В работе"
+              },
+              {
+                name: "На проверке заказчика"
+              },
+              {
+                name: "Все"
+              },
+            ])
+            this.$store.dispatch('changeCurrentGroupName', "Все")
+            break;
+          case "/problems-user-archive":
+            this.$store.dispatch('changeStatusesProblem', [{
+                name: "Решена"
+              },
+              {
+                name: "Удалена"
+              },
+
+              {
+                name: "Все"
+              },
+            ])
+            this.$store.dispatch('changeCurrentGroupName', "Архив")
+            break;
+          default:
+            this.$store.dispatch('changeStatusesProblem', [
+              {
+                name: "В работе"
+              },
+              {
+                name: "На проверке заказчика"
+              },
+              {
+                name: "Все"
+              },
+            ])
+            this.$store.dispatch('changeCurrentGroupName', this.groups.find(g => g.id == to.params.id).name)
+            break;
+        }
       }
     },
 
@@ -301,6 +361,24 @@
 
       async filterProblemStatus(status) {
         switch (status.name) {
+           case "Решена":
+            this.$store.dispatch('filterProblemStatus', {
+              path: this.$route.path,
+              urgency: '',
+              importance: '',
+              deadline: '',
+              status: 'Решена'
+            })
+            break;
+             case "Удалена":
+            this.$store.dispatch('filterProblemStatus', {
+              path: this.$route.path,
+              urgency: '',
+              importance: '',
+              deadline: '',
+              status: 'Удалена'
+            })
+            break;
           case "На рассмотрении":
             this.$store.dispatch('filterProblemStatus', {
               path: this.$route.path,
@@ -345,10 +423,14 @@
 
 <style lang="scss" scoped>
   #filterStatus {
-    // section {
     top: 69%;
     left: 80%;
-    // }
+  }
+  .archive {
+    #filterStatus {
+    top: 69%;
+    left: 87%;
+    }
   }
 
   .group_selected {
@@ -360,6 +442,22 @@
     text-align: justify;
     letter-spacing: 0.15px;
     color: #4F4F4F;
+
+    max-width: 340px;
+    word-break: break-all;
+    overflow-y: hidden;
+    max-height: 27px;
+  }
+
+  .group_selected:hover {
+    overflow: visible;
+    width: fit-content;
+    // background-color: #000;
+    height: fit-content;
+    //   max-height: 27px;
+    // min-width: max-content;
+    // z-index: 100;
+    // position: absolute;
   }
 
   .logo {
@@ -382,11 +480,18 @@
     }
   }
 
+  .filter:last-child {
+    margin-top: 10px;
+  }
+
   nav {
     background-color: #fff;
     display: flex;
     flex-direction: row;
-    height: 70px;
+    // height: 70px;
+    max-height: 96px;
+    min-height: 70px;
+    height: fit-content;
     box-shadow: 0px 4px 8px rgba(31, 23, 83, 0.15);
     position: relative !important;
     padding: 21px 26px 22px 25px;
@@ -407,6 +512,12 @@
     display: flex;
     justify-content: space-between !important;
     align-items: flex-end;
+  }
+  .main {
+    justify-content: flex-start !important;
+    .logo {
+      padding-right: 55px;
+    }
   }
 
 

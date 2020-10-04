@@ -21,11 +21,13 @@ export default {
     members: [],
     leader: '',
     leaderReduced: '',
-    usersNoGroup: []
-    // error: '',
-    // error404: '',
+    usersNoGroup: [],
+    currentGroupName: ''
   },
   getters: {
+    currentGroupName: state => {
+      return state.currentGroupName
+    },
     groups: state => {
       return state.groups
     },
@@ -44,9 +46,9 @@ export default {
     }
   },
   mutations: {
-    // usersNoGroup: (state) => {
-    //   state.usersNoGroup
-    // },
+    currentGroupName: (state, payload) => {
+      state.currentGroupName = payload
+    },
     setGroups: (state, payload) => {
       state.groups = Object.values(payload)
     },
@@ -100,6 +102,9 @@ export default {
     },
   },
   actions: {
+    changeCurrentGroupName: ({commit}, name) => {
+      commit('currentGroupName', name)
+    },
     getGroups: async ({
       commit
     }) => {

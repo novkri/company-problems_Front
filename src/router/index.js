@@ -37,7 +37,7 @@ const routes = [
     }
   },
   {
-    path: "/problems-for-confirmation",
+    path: "/group-problems",
     name: "Problems",
     component: () =>  import("../views/Problems.vue"),
     props: true,
@@ -47,7 +47,7 @@ const routes = [
     }
   },
   {
-    path: "/archive",
+    path: "/problems-user-archive",
     name: "Problems",
     component: () =>  import("../views/Problems.vue"),
     props: true,
@@ -57,7 +57,7 @@ const routes = [
     }
   },
   {
-    path: "/all-groups",
+    path: "/problems-of-all-groups",
     name: "Problems",
     component: () =>  import("../views/Problems.vue"),
     props: true,

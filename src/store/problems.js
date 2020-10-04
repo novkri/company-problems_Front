@@ -24,8 +24,12 @@ export default {
     error: '',
     error404: '',
     token: localStorage.getItem('user-token') || '',
+    statusesProblem: []
   },
   getters: {
+    statusesProblem: state => {
+      return state.statusesProblem
+    },
     problems: state => {
       return state.problems = state.problems.sort(function (a, b) {
         return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1
@@ -40,9 +44,12 @@ export default {
     }
   },
   mutations: {
+    statusesProblem: (state, payload) => {
+      state.statusesProblem = payload
+      console.log(state.statusesProblem);
+    },
     setProblems: (state, payload) => {
       state.problems = payload
-      // state.problems = state.problems.filter(p => p.status !== "Удалена" && p.status !== "Решена")
     },
 
     setThisProblem: (state, payload) => {
@@ -99,6 +106,10 @@ export default {
   },
 
   actions: {
+    changeStatusesProblem: ({commit}, arr) => {
+      console.log(arr);
+      commit('statusesProblem', arr)
+    },
     filterImportance: async ({
       commit
     }, param) => {
@@ -168,7 +179,6 @@ export default {
       console.log(param);
       return new Promise((resolve, reject) => {
       axios.get(BASEURL+`${param.path}`, {params: {
-        // ...param
         urgency: param.urgency,
         importance: param.importance,
         deadline: param.deadline,
@@ -196,9 +206,14 @@ export default {
 
     getMyProblems: async ({
       commit
-    }) => {
+    }, param) => {
       return new Promise((resolve, reject) => {
-      axios.get(BASEURL+'/my-problems')
+      axios.get(BASEURL+'/my-problems', {params: {
+        urgency: param.urgency,
+        importance: param.importance,
+        deadline: param.deadline,
+        status: param.status
+      }})
         .then(response => {
           console.log(response);
             commit('setError', '')
@@ -220,9 +235,14 @@ export default {
 
     getProblemsForExecution: async ({
       commit
-    }) => {
+    }, param) => {
       return new Promise((resolve, reject) => {
-      axios.get(BASEURL+'/problems-for-execution')
+      axios.get(BASEURL+'/problems-for-execution', {params: {
+        urgency: param.urgency,
+        importance: param.importance,
+        deadline: param.deadline,
+        status: param.status
+      }})
         .then(response => {
           console.log(response);
             commit('setError', '')
@@ -243,9 +263,13 @@ export default {
     },
     problemsForConfirmation: async ({
       commit
-    }) => {
+    }, param) => {
       return new Promise((resolve, reject) => {
-      axios.get(BASEURL+'/group-problems')
+      axios.get(BASEURL+'/group-problems', {params: {
+        urgency: param.urgency,
+        importance: param.importance,
+        deadline: param.deadline
+      }})
         .then(response => {
           console.log(response);
             commit('setError', '')
@@ -267,10 +291,18 @@ export default {
     },
     archive: async ({
       commit
-    }) => {
+    }, param) => {
+      console.log(param);
       return new Promise((resolve, reject) => {
-      axios.get(BASEURL+'/problems-user-archive')
+      // axios.get(BASEURL+'/problems-user-archive')
       // axios.get(BASEURL+'/problems-group-archive')
+      // 0:  axios.get(BASEURL+'/problems-archive'
+      axios.get(BASEURL+'/problems-user-archive', {params: { 
+        urgency: param.urgency,
+        importance: param.importance,
+        deadline: param.deadline,
+        status: param.status
+      }})
         .then(response => {
           console.log(response);
             commit('setError', '')
@@ -279,6 +311,7 @@ export default {
             resolve(response.data)
         })
         .catch(error => {
+          console.log(error.response);
           if (error.response.status == 401) {
             commit('setError404', error.response.data.errors)
             reject(error.response.data.errors)
@@ -291,10 +324,14 @@ export default {
     },
     getAllGroupsProblems: async ({
       commit
-    }) => {
+    }, param) => {
       return new Promise((resolve, reject) => {
-      axios.get(BASEURL+'/problems-of-all-groups')
-      // axios.get(BASEURL+'/problems-archive')
+      axios.get(BASEURL+'/problems-of-all-groups', {params: {
+        urgency: param.urgency,
+        importance: param.importance,
+        deadline: param.deadline,
+        status: param.status
+      }})
         .then(response => {
           console.log(response);
             commit('setError', '')
@@ -317,13 +354,18 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-      axios.get(BASEURL+'/problems-by-groups')
-      // axios.get(BASEURL+'/problems-archive')
+      axios.get(BASEURL+'/problems-by-groups', {params: {
+        urgency: param.urgency,
+        importance: param.importance,
+        deadline: param.deadline,
+        status: param.status
+      }})
         .then(response => {
           console.log(response);
             commit('setError', '')
             commit('setError404', '')
-            commit('setProblems', response.data.find(group => group.name == param).problems)
+            
+            commit('setProblems', response.data.find(group => group.name == param.groupName).problems)
             resolve(response.data)
         })
         .catch(error => {

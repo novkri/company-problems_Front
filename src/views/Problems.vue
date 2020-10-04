@@ -507,16 +507,12 @@
             id,
             importance: "Важная"
           })
-          // this.$refs['importance' + id][0].classList.add('icon-clicked')
-          // this.$refs['importance' + id][1].classList.add('icon-clicked')
 
         } else {
           await this.$store.dispatch('changeImportance', {
             id,
             importance: "Обычная"
           })
-          // this.$refs['importance' + id][0].classList.remove('icon-clicked')
-          // this.$refs['importance' + id][1].classList.remove('icon-clicked')
         }
       },
 

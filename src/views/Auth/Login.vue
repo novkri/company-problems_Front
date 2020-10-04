@@ -76,8 +76,10 @@
         }
         await this.$store.dispatch('login', formData).then(() => {
           if (!this.errorU) {
-            this.$store.dispatch('getAllGroupsProblems')
-            this.$router.push('/all-groups')
+            this.$store.dispatch('getProblems')
+            this.$router.push('/')
+            // this.$store.dispatch('getAllGroupsProblems')
+            // this.$router.push('/all-groups')
           }
         })
       },

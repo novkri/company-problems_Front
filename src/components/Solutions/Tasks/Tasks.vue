@@ -542,6 +542,9 @@
     padding: 0;
   }
 
+      #list .selectResponsible:hover ~  #close {
+      display: none !important;
+    }
 
   .selectResponsible {
     display: flex;
@@ -557,6 +560,19 @@
       text-align: center;
       padding-right: 0;
       width: fit-content;
+
+
+          overflow: hidden;
+    height: 26px;
+    }
+    #ss-select:hover {
+      overflow: visible;
+      width: fit-content;
+      div {
+            max-height: 27px;
+    min-width: max-content;
+      }
+
     }
 
     select {
@@ -569,6 +585,9 @@
       right: -32%;
     }
   }
+
+
+
 
   .search {
     outline: none;
