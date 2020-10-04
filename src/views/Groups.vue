@@ -268,7 +268,7 @@
       await this.$store.dispatch('getAllUsers')
     },
     computed: {
-      ...mapGetters(['groups', 'error', 'error404', 'allUsers', 'members', 'usersNoGroup', 'allUsersReduced']),
+      ...mapGetters(['groups', 'error', 'error404', 'allUsers', 'members', 'usersNoGroup',  'allUsersReduced']),
 
       pageCount() {
         let l = this.groups.length,
@@ -411,19 +411,17 @@
       },
       async setNewLeader(param) {
         await this.$store.commit('setError404', '')
-        // this.$store.dispatch('getMembers', param.groupId)
         this.$store.dispatch('changeExecutorGroup', {
             id: param.groupId,
             uid: param.leader_id
           })
           .then((r) => {
             console.log(r);
-            // this.$store.dispatch('getMembers', param.groupId)
-            // this.$store.commit('changeLeader', param.leader_id)
             this.$store.commit('editExecutorGroup', {
               id: param.groupId,
               leader_id: param.leader_id
             })
+            this.$store.dispatch('getLeader', param.groupId)
             this.$store.commit('changeLeader', param.leader_id)
             this.currentExecutor = param.leader_id
           })
