@@ -175,8 +175,6 @@
           // group: this.formData.group
         }).then((r) => {
           if (!this.error) {
-            console.log(r);
-            console.log(this.formData.group.id);
             this.formData.group ? this.$store.dispatch('sendToGroup', {id: r.id, groupsArray: [this.formData.group.id]}) : ''
             this.$store.dispatch('getThisProblem', r.id)
             this.formData = []

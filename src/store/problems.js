@@ -63,7 +63,8 @@ export default {
       console.log(state.statusesProblem);
     },
     setProblems: (state, payload) => {
-      state.problems = payload
+      payload ? state.problems = payload : state.problems = []
+      
     },
 
     setThisProblem: (state, payload) => {
@@ -306,6 +307,7 @@ export default {
         })
         .catch(error => {
           console.log(error.response);
+          commit('setProblems', '')
           if (error.response.status == 401) {
             commit('setError404', error.response.data.errors)
             reject(error.response.data.errors)
@@ -529,7 +531,6 @@ export default {
     },
 
     sendToGroup: async ({commit}, param) => {
-      console.log(param);
       axios.post(BASEURL + `/${param.id}/send-to-group`, {group_ids: param.groupsArray})
         .then((r) => {
           console.log(r);

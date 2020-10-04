@@ -67,9 +67,6 @@
           <log-out-icon size="1.5x" class="custom-class"></log-out-icon>
         </div>
       </div>
-{{amountOfProblemsForConfirmation}} {{amountOfProblemsForExecution}} {{amountOfMyProblems}}
-<span>'amountOfProblemsForConfirmation', 'amountOfProblemsForExecution', 'amountOfMyProblems'</span>
-{{amountOfProblemsForConfirmation}}
     </div>
 
     <PopupCreate v-if="openCreate" @createProblem="createProblem(param = $event)" />
