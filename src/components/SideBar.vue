@@ -11,29 +11,30 @@
 
       <div class="main">
         <a @click="allProblems">
-          <router-link to="/" exact style="font-family: 'GothamPro-Medium';font-size: 16px;">Списки проблем:</router-link>
+          <router-link to="/" exact style="font-family: 'GothamPro-Medium';font-size: 16px;">Списки проблем:
+          </router-link>
         </a>
         <a @click="myProblems">
           <router-link to="/my-problems" exact>
-            <user-plus-icon size="1.5x" class="custom-class"></user-plus-icon>Предложенные мной 
-            <!-- <span class="amount">{{amountOfMyProblems}}</span> -->
+            <user-plus-icon size="1.5x" class="custom-class"></user-plus-icon>Предложенные мной
+            <span class="amount">{{amountOfMyProblems ? amountOfMyProblems > 9999 ? '9999+' : amountOfMyProblems : 0}}</span>
           </router-link>
         </a>
         <a @click="problemsForConfirmation">
           <router-link to="/group-problems" exact>
-            <eye-icon size="1.5x" class="custom-class"></eye-icon>На рассмотрении 
-            <!-- <span class="amount">{{amountOfProblemsForConfirmation}}</span> -->
+            <eye-icon size="1.5x" class="custom-class"></eye-icon>На рассмотрении
+            <span class="amount">{{amountOfProblemsForConfirmation ? amountOfProblemsForExecution > 9999 ? '9999+' : amountOfMyProblems : 0}}</span>
           </router-link>
         </a>
         <a @click="problemsForExecution">
           <router-link to="/problems-for-execution" exact>
-            <flag-icon size="1.5x" class="custom-class"></flag-icon>Для исполнения 
-            <!-- <span class="amount">{{amountOfProblemsForExecution}}</span> -->
+            <flag-icon size="1.5x" class="custom-class"></flag-icon>Для исполнения
+            <span class="amount">{{amountOfProblemsForExecution ? amountOfProblemsForExecution > 9999 ? '9999+' : amountOfMyProblems : 0}}</span>
           </router-link>
         </a>
         <a @click="showLinks" style="cursor: pointer;">
-          <layers-icon size="1.5x" class="custom-class" :style="[showGroups ? {'color': '#4EAD96'} : {} ]"></layers-icon>По подразделениям <chevron-down-icon
-            ref="linkIcon" size="1.5x" class="custom-class">
+          <layers-icon size="1.5x" class="custom-class" :style="[showGroups ? {'color': '#4EAD96'} : {} ]">
+          </layers-icon>По подразделениям <chevron-down-icon ref="linkIcon" size="1.5x" class="custom-class">
           </chevron-down-icon>
         </a>
 
@@ -42,8 +43,8 @@
             <a @click="allGroupsProblems">
               <router-link to="/problems-of-all-groups" exact>Все</router-link>
             </a>
-            <a @click="getProblemsByGroups(group.name)" v-for="(group, idx) in groups" :key="idx">
-              <router-link :to="'/problems-group/'+group.id">{{group.name}}</router-link>
+            <a @click="getProblemsByGroups(group.id, group.name)" v-for="(group, idx) in groups" :key="idx">
+              <router-link :to="'/problems-by-groups/'+group.id">{{group.name}}</router-link>
             </a>
           </div>
         </transition>
@@ -102,6 +103,7 @@
       showGroups: false,
       openCreate: false,
 
+
     }),
     components: {
       ChevronDownIcon,
@@ -119,7 +121,9 @@
       PopupCreate
     },
     computed: {
-      ...mapGetters(['groups', 'user', 'amountOfProblemsForConfirmation', 'amountOfProblemsForExecution', 'amountOfMyProblems']),
+      ...mapGetters(['groups', 'user', 'amountOfProblemsForConfirmation', 'amountOfProblemsForExecution',
+        'amountOfMyProblems'
+      ]),
       isLoggedIn: function () {
         return this.$store.getters.isLoggedIn
       },
@@ -158,7 +162,7 @@
         }).then((r) => {
           this.$store.commit('amountOfMyProblems', r.length)
         })
-        
+
       },
 
       async problemsForExecution() {
@@ -198,8 +202,9 @@
           status: ''
         })
       },
-      async getProblemsByGroups(groupName) {
+      async getProblemsByGroups(group, groupName) {
         await this.$store.dispatch('getProblemsByGroups', {
+          group,
           groupName,
           urgency: '',
           importance: '',
@@ -212,9 +217,26 @@
 </script>
 
 <style lang="scss">
-.addProblem {
-  width: auto;
-}
+  .amount {
+    padding: 4px;
+    background-color: #92D2C3;
+    border-radius: 2px;
+    font-family: 'GothamPro-Medium';
+    font-size: 14px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    color: #FFFFFF;
+    width: fit-content;
+    display: inline-flex;
+    margin-right: -20px;
+    max-height: 23px;
+    align-items: center;
+  }
+
+  .addProblem {
+    width: auto;
+  }
+
   ::-webkit-scrollbar {
     width: 10px;
   }
@@ -278,14 +300,13 @@
   }
 
   .fade-enter,
-  .fade-leave-to
-    {
+  .fade-leave-to {
     opacity: 0;
   }
 
   .sidebar {
     max-width: 287px;
-        // max-width: 15%;
+    // max-width: 15%;
     background-color: #F6F7F9;
     padding: 0;
 
@@ -304,9 +325,9 @@
       }
     }
 
-     a:hover {
-    color: #92D2C3;
-  }
+    a:hover {
+      color: #92D2C3;
+    }
 
     .router-link-active {
       color: #4EAD96;
@@ -333,6 +354,7 @@
         margin-bottom: 65px;
         margin-left: -26px;
         margin-top: 45px;
+
         span {
           font-family: 'GothamPro';
           font-size: 18px;

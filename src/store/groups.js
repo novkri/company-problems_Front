@@ -61,7 +61,6 @@ export default {
       state.leaderReduced = payload[0]
     },
     changeLeader: (state, payload) => {
-      console.log(state.members);
       state.leaderReduced = state.members.filter(u => u.id == payload)[0]
       state.leaderReduced.name = state.leaderReduced.name[0]+'.'
       state.leaderReduced.father_name ? state.leaderReduced.father_name = state.leaderReduced.father_name[0]+'.' : ' '
@@ -82,7 +81,6 @@ export default {
     },
     editGroup: (state, payload) => {
       state.groups.find(group => group.id == payload.id).name = payload.name
-      // console.log(state.groups.find(group => group.id == payload.id).name);
       state.groups = state.groups.sort(function (a, b) {
         return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1
       })
@@ -110,7 +108,6 @@ export default {
     }) => {
       await axios.get(BASEURL)
         .then(response => {
-          // console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('setGroups', response.data)
@@ -167,7 +164,6 @@ export default {
       return new Promise((resolve, reject) => {
         axios.post(BASEURL, param)
           .then(response => {
-            // console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('addGroup', response.data)
@@ -210,29 +206,19 @@ export default {
       })
 
     },
-    // checkIfExists: async ({
-    //   commit
-    // }, param) => {
-    //   axios.get(BASEURL + `/${param.id}`).catch((error) => {
-    //     commit('setError404', error.response.data.message)
-    //   })
-    // },
 
     editGroup: async ({
       commit
     }, param) => {
-      console.log(param);
       return new Promise((resolve, reject) => {
         axios.put(BASEURL + `/${param.id}`, {
           name: param.name
         }).then(response => {
-          console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('editGroup', response.data)
             resolve(response)
         }).catch((error) => {
-          console.log(error.response);
           if (error.response.status !== 422) {
             error.response.data.message ? commit('setError404', error.response.data.message) : commit('setError404', error.response.data.errors)
             // commit('setError404', error.response.data.message)
@@ -248,7 +234,6 @@ export default {
     editGroupShort: async ({
       commit
     }, param) => {
-      // console.log(param);
       return new Promise((resolve, reject) => {
         axios.put(BASEURL + `/${param.id}/change-short-name`, {
           short_name: param.short_name
@@ -273,8 +258,6 @@ export default {
     changeExecutorGroup: async ({
       commit
     }, param) => {
-      // param.id = 10000000000
-      console.log(param);
       return new Promise((resolve, reject) => {
       axios.put(BASEURL + `/${param.id}/change-leader/${param.uid}`).then(response => {
         commit('setError', '')

@@ -300,8 +300,6 @@
             this.$refs['group-name-short' + id][0].focus()
           }
         })
-
-        console.log('onClickInput');
       },
 
       showOnClickUsers(id) {
@@ -319,14 +317,11 @@
 
 
       async onBlurInput(name, id, event, type) {
-        console.log(name, this.currentGroupName, id);
-        console.log('here');
         if (name !== this.currentGroupName) {
           type === 'name' ? this.$store.dispatch('editGroup', {
             id,
             name
-          }).catch((e) => {
-            console.log(e);
+          }).catch(() => {
             this.$store.commit('editGroup', {
               id,
               name: this.currentGroupName
@@ -354,7 +349,6 @@
       },
 
       onFocusInput(event, id, type) {
-        console.log(event.target);
         this.currentGroupName = event.target.value
         this.currentGroupInput = event.target
 
@@ -381,7 +375,6 @@
       async editGroupName(name, id, event) {
         await this.$store.commit('setError404', '')
         event.target.blur()
-        console.log('editGroupName');
       },
 
       deleteGroup(group) {
@@ -411,8 +404,7 @@
             id: param.groupId,
             uid: param.leader_id
           })
-          .then((r) => {
-            console.log(r);
+          .then(() => {
             this.$store.commit('editExecutorGroup', {
               id: param.groupId,
               leader_id: param.leader_id
@@ -421,8 +413,7 @@
             this.$store.commit('changeLeader', param.leader_id)
             this.currentExecutor = param.leader_id
           })
-          .catch((e) => {
-            console.log(e);
+          .catch(() => {
             this.$store.commit('editExecutorGroup', {
               id: param.groupId,
               leader_id: this.currentExecutor
@@ -431,9 +422,6 @@
       },
 
       async undoChanges(param) {
-        console.log('undoChanges');
-        console.log(param)
-        console.log(this.currentExecutor)
         await this.$store.commit('setError404', '')
         await this.$store.commit('editExecutorGroup', {
           id: param.groupId,

@@ -188,8 +188,8 @@
       ...mapGetters(['groups', 'currentGroupName', 'statusesProblem']),
     },
     watch: {
-      $route(to, from) {
-        console.log(to, from);
+      $route(to) {
+        // console.log(to, from);
         this.statusProblem = ''
         this.time = ''
         this.importance = ''
@@ -281,7 +281,7 @@
 
     methods: {
       async filterImportance(imp) {
-        console.log(this.$route.path);
+        // console.log(this.$route.path);
         switch (imp.name) {
           case "Только важные":
             this.$store.dispatch('filterImportance', {

@@ -56,9 +56,10 @@
                     Выберите подразделение
                   </label>
                   <ss-select v-model="formData.group" :options="groups" track-by="name" search-by="name"
-                    class="form-control" @change="selectGroup($event.id)" disable-by="disabled"
+                    class="form-control" disable-by="disabled"
                     id="ss-select"
                    >
+                   <!-- @change="selectGroup($event.id)"  -->
                   <div @click="spacer = !spacer"
                     slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                     style="cursor: pointer; width: 100%;">
@@ -143,8 +144,6 @@
         maxLength: maxLength(250)
       },
       }
-      
-      ////////
     },
     watch: {
       error() {
@@ -164,7 +163,6 @@
       },
 
       async addProblem() {
-        console.log(this.formData);
         this.$store.commit('setError404', '')
         await this.$store.dispatch('postProblem', {
           name: this.formData.name,
@@ -186,9 +184,9 @@
         this.$store.commit('setError', '')
       },
 
-      selectGroup(option) {
-        console.log(option);
-      },
+      // selectGroup(option) {
+      //   console.log(option);
+      // },
     }
   }
 </script>

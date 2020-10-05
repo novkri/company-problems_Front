@@ -17,11 +17,11 @@
         <li id="list" v-for="(task, idx) in tasks" :key="idx">
           <div class="task-title col-4"
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">
-            <div @click="onClickInput(task.id)" v-show="!editable">{{task.description}}</div>
+            <div @click="onClickInput(task.id, val.executor_id)" v-show="!editable">{{task.description}}</div>
             <input v-show="editable" class="form-control" v-model="task.description" :ref="'textarea_task' + task.id"
               @keyup.enter.prevent="event => {editTask(task.description, task.id, event)}" @focus="onFocusInput($event)"
               @blur="event => {onBlurInput(task.description, task.id, event)}" />
-            <div class="hidden">
+            <div class="hidden" v-show="val.executor_id == currentUid">
               <button class="input-btn" @mousedown="event => {editTask(task.description, task.id, event)}">
                 <check-icon size="1x" class="custom-class"></check-icon>
               </button>
@@ -31,12 +31,11 @@
                 </button>
               </div>
             </div>
-
           </div>
 
           <div class="select col-3" style="position: relative;" ref="select">
             <ss-select v-model="task.status" :options="statusesT" track-by="name" class="form-control"
-              @change="changeStatusTask(task.id, task.status)" disable-by="disabled"
+              @change="changeStatusTask(task.id, task.status, task.executor_id)" disable-by="disabled"
               :class="[task.status == 'Выполнено' ? 'green' : task.status == 'В процессе' ? 'blue' : 'gray']"
               id="ss-select" style="margin:auto; width: 87%;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
@@ -60,12 +59,15 @@
 
           <div class="dateDiv col-2">
             <input type="date" id="start" name="trip-start" class="date" onkeypress="return false"
-              @click="onClickDate($event)" @change="changeDeadlineTask(task.deadline, task.id)" v-model="task.deadline">
+              @click="onClickDate($event)" @change="changeDeadlineTask(task.deadline, task.id)"
+              :style="[val.executor_id != currentUid ? {'padding': '5px'} : {}]" v-model="task.deadline"
+              :disabled="val.executor_id != currentUid">
           </div>
 
           <div class="selectResponsible col-2">
             <ss-select v-model="task.executor_id" :options="allUsersReduced" track-by="name" search-by="surname"
-              @change="selectExecutorTask(task)" disable-by="disabled" id="ss-select" style="width: 100%;">
+              @change="selectExecutorTask(task, val.executor_id)" disable-by="disabled" id="ss-select"
+              style="width: 100%;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                 @click="onClickExecutor(selectedOption)" style="cursor: pointer; width: 100%;">
                 <ss-select-toggle class="flex items-center justify-between" style="margin: auto;">
@@ -92,8 +94,8 @@
           </div>
 
           <div style="width: 54px" id="close" class="col">
-            <button type="button" class="close" id="remove" style="margin: auto;" @click="showDelete(task.id)"
-              data-toggle="modal" data-target="#popupDeleteSolution">
+            <button type="button" v-show="task.executor_id == currentUid" class="close" id="remove"
+              style="margin: auto;" @click="showDelete(task.id)" data-toggle="modal" data-target="#popupDeleteSolution">
               <trash-icon size="1x" class="custom-class"></trash-icon>
             </button>
           </div>
@@ -105,8 +107,8 @@
         @click.prevent="displayInput">
         <!-- <plus-icon size="1.5x" class="custom-class" style="color: #92D2C3;">
         </plus-icon> -->
-        <span style="margin-left: 16px; cursor: pointer;color: #92D2C3;font-family: 'GothamPro-Medium';font-size: 14px;
-line-height: 24px;letter-spacing: 0.15px;">+ Добавить задачу</span>
+        <span v-show="val.executor_id == currentUid" style="margin-left: 16px; cursor: pointer;color: #92D2C3;font-family: 'GothamPro-Medium';font-size: 14px;
+          line-height: 24px;letter-spacing: 0.15px;">+ Добавить задачу</span>
       </div>
 
       <div v-else class="inputAdd" style="padding: 0 14px;">
@@ -232,7 +234,9 @@ line-height: 24px;letter-spacing: 0.15px;">+ Добавить задачу</span
     },
 
     computed: {
-      ...mapGetters(['tasks', 'error', 'error404', 'allUsers', 'allUsersReduced', 'currentSolution', 'solutions']),
+      ...mapGetters(['tasks', 'error', 'error404', 'allUsers', 'allUsersReduced', 'currentSolution', 'solutions',
+        'currentUid'
+      ]),
     },
 
     methods: {
@@ -265,12 +269,18 @@ line-height: 24px;letter-spacing: 0.15px;">+ Добавить задачу</span
         })
       },
 
-      async changeStatusTask(id, status) {
+      async changeStatusTask(id, status, executor_id) {
         await this.$store.commit('setError404', '')
-        await this.$store.dispatch('changeStatusTask', {
-          status: status.name,
-          id
-        })
+        if (executor_id == this.currentUid) {
+          await this.$store.dispatch('changeStatusTask', {
+            status: status.name,
+            id
+          })
+        } else {
+          this.$store.commit('setError404', 'Не достаточно прав')
+
+        }
+
       },
 
       onClickDate(event) {
@@ -293,47 +303,55 @@ line-height: 24px;letter-spacing: 0.15px;">+ Добавить задачу</span
       onClickExecutor(sol) {
         this.currentExecutor = sol
       },
-      async selectExecutorTask(task) {
+      async selectExecutorTask(task, executor_id) {
         await this.$store.commit('setError404', '')
-        await this.$store.dispatch('checkIfOk', {
-          description: task.description,
-          executor_id: task.executor_id,
-          id: task.id
-        }).then(() => {
-          this.$store.dispatch('changeExecutorTask', {
-            id: task.id,
-            uid: task.executor_id
+        if (executor_id == this.currentUid) {
+          await this.$store.dispatch('checkIfOk', {
+            description: task.description,
+            executor_id: task.executor_id,
+            id: task.id
+          }).then(() => {
+            this.$store.dispatch('changeExecutorTask', {
+              id: task.id,
+              uid: task.executor_id
+            })
+          }).catch(() => {
+            this.$store.commit('editExecutorTask', {
+              id: task.id,
+              executor_id: this.currentExecutor
+            })
           })
-        }).catch(() => {
+        } else {
+          this.$store.commit('setError404', 'Не достаточно прав')
           this.$store.commit('editExecutorTask', {
             id: task.id,
             executor_id: this.currentExecutor
           })
-        })
+        }
+
       },
 
 
-      // onFocusInput(event) {
-      //   this.currentTaskName = event.target.value
-      //   this.currentTaskInput = event.target
-      // },
-      // onKey(event) {
-      //   event.target.blur()
-      // },
-      onClickInput(id) {
-        this.editable = true
-        this.$nextTick(() => {
-          this.$refs['textarea_task' + id][0].focus()
-        })
+
+      onClickInput(id, executor_id) {
+        if (executor_id == this.currentUid) {
+          this.editable = true
+          this.$nextTick(() => {
+            console.log(this.$refs);
+            console.log(id);
+            this.$refs['textarea_task' + id][0].focus()
+          })
+        } else {
+          this.editable = false
+
+        }
+
       },
 
       async onBlurInput(name, id, event) {
         this.editable = false
         event.path[0].nextElementSibling.classList.remove('flex')
-        // this.$store.commit('editTask', {
-        //   description: this.currentTaskName,
-        //   id
-        // })
+
         if (name !== this.currentTaskName) {
           await this.$store.commit('setError404', '')
           await this.$store.dispatch('editTask', {
@@ -352,7 +370,6 @@ line-height: 24px;letter-spacing: 0.15px;">+ Добавить задачу</span
         this.currentTaskName = event.target.value
         this.currentTaskInput = event.target
 
-        // console.log(this.currentTaskName, this.currentTaskInput);
         event.path[0].nextElementSibling.classList.add('flex')
       },
 
@@ -361,20 +378,7 @@ line-height: 24px;letter-spacing: 0.15px;">+ Добавить задачу</span
         this.$refs['textarea_task' + id][0].value = this.currentTaskName
       },
 
-      editTask(task, id) {
-        console.log(task, id);
-        // if (task.description !== this.currentTaskName) {
-        //   await this.$store.commit('setError404', '')
-        //   await this.$store.dispatch('editTask', {
-        //     description: task,
-        //     id: id
-        //   }).catch(() => {
-        //     this.$store.commit('editTask', {
-        //       description: this.currentTaskName,
-        //       id: task.id
-        //     })
-        //   })
-        // }
+      editTask() {
         this.currentTaskInput.blur()
       },
 
@@ -790,7 +794,7 @@ line-height: 24px;letter-spacing: 0.15px;">+ Добавить задачу</span
       padding: 6px;
       border-radius: 10px;
       width: fit-content;
-      background-color: #F6F6F6;
+      background-color: #fff;
     }
 
     input:hover {
@@ -799,7 +803,8 @@ line-height: 24px;letter-spacing: 0.15px;">+ Добавить задачу</span
 
     input:focus,
     input:active {
-      background-color: #fff;
+      background-color: #F6F6F6;
+      width: 50%;
     }
   }
 

@@ -130,7 +130,6 @@ export default {
 
   actions: {
     changeStatusesProblem: ({commit}, arr) => {
-      console.log(arr);
       commit('statusesProblem', arr)
     },
     filterImportance: async ({
@@ -146,14 +145,12 @@ export default {
         status: param.status
       }})
         .then(response => {
-          console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
             resolve(response.data)
         })
         .catch(error => {
-          console.log(error.response);
           if (error.response.status == 401) {
             commit('setError404', error.response.data.errors)
             reject(error.response.data.errors)
@@ -167,7 +164,6 @@ export default {
     filterTime: async ({
       commit
     }, param) => {
-      console.log(param);
       return new Promise((resolve, reject) => {
       axios.get(BASEURL+`${param.path}`, {params: {
         // ...param
@@ -177,14 +173,12 @@ export default {
         status: param.status
       }})
         .then(response => {
-          console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
             resolve(response.data)
         })
         .catch(error => {
-          console.log(error.response);
           if (error.response.status == 401) {
             commit('setError404', error.response.data.errors)
             reject(error.response.data.errors)
@@ -199,7 +193,6 @@ export default {
     filterProblemStatus: async ({
       commit
     }, param) => {
-      console.log(param);
       return new Promise((resolve, reject) => {
       axios.get(BASEURL+`${param.path}`, {params: {
         urgency: param.urgency,
@@ -208,14 +201,12 @@ export default {
         status: param.status
       }})
         .then(response => {
-          console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
             resolve(response.data)
         })
         .catch(error => {
-          console.log(error.response);
           if (error.response.status == 401) {
             commit('setError404', error.response.data.errors)
             reject(error.response.data.errors)
@@ -238,7 +229,6 @@ export default {
         status: param.status
       }})
         .then(response => {
-          console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
@@ -268,7 +258,6 @@ export default {
         status: param.status
       }})
         .then(response => {
-          console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
@@ -296,14 +285,12 @@ export default {
         deadline: param.deadline
       }})
         .then(response => {
-          console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
             resolve(response.data)
         })
         .catch(error => {
-          console.log(error.response);
           commit('setProblems', '')
           if (error.response.status == 401) {
             commit('setError404', error.response.data.errors)
@@ -318,7 +305,7 @@ export default {
     archive: async ({
       commit
     }, param) => {
-      console.log(param);
+      // console.log(param);
       return new Promise((resolve, reject) => {
       // axios.get(BASEURL+'/problems-user-archive')
       // axios.get(BASEURL+'/problems-group-archive')
@@ -330,14 +317,12 @@ export default {
         status: param.status
       }})
         .then(response => {
-          console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
             resolve(response.data)
         })
         .catch(error => {
-          console.log(error.response);
           commit('setProblems', '')
           if (error.response.status == 401) {
             commit('setError404', error.response.data.errors)
@@ -360,7 +345,6 @@ export default {
         status: param.status
       }})
         .then(response => {
-          console.log(response);
           commit('setProblems', '')
             commit('setError', '')
             commit('setError404', '')
@@ -381,8 +365,9 @@ export default {
     getProblemsByGroups: async ({
       commit
     }, param) => {
+      console.log(param);
       return new Promise((resolve, reject) => {
-      axios.get(BASEURL+'/problems-by-groups', {params: {
+      axios.get(BASEURL+`/problems-by-groups/${param.group}`, {params: {
         urgency: param.urgency,
         importance: param.importance,
         deadline: param.deadline,
@@ -392,10 +377,12 @@ export default {
           console.log(response);
             commit('setError', '')
             commit('setError404', '')
-            commit('setProblems', response.data.find(group => group.name == param.groupName).problems)
+            commit('setProblems', response.data)
+            // commit('setProblems', response.data.find(group => group.name == param.groupName).problems)
             resolve(response.data)
         })
         .catch(error => {
+          console.log(error.response);
           commit('setProblems', '')
           if (error.response.status == 401) {
             commit('setError404', error.response.data.errors)
@@ -531,8 +518,7 @@ export default {
 
     sendToGroup: async ({commit}, param) => {
       axios.post(BASEURL + `/${param.id}/send-to-group`, {group_ids: param.groupsArray})
-        .then((r) => {
-          console.log(r);
+        .then(() => {
           commit('setError', '')
           commit('setError404', '')
           // ?????
@@ -554,7 +540,6 @@ export default {
         commit('editExp', response.data)
         resolve(response.data)
       }).catch((error) => {
-        // // console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
           reject(error.response.data.message)
@@ -693,7 +678,6 @@ export default {
         resolve(response.data)
         // ??????????
       }).catch((error) => {
-        // console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
           reject(error.response.data.message)
@@ -707,11 +691,8 @@ export default {
     problemReject: async ({
       commit
     }, id) => {
-      // console.log(id);
-      // param.id = 10000000000
       return new Promise((resolve, reject) => {
       axios.put(BASEURL + `/${id}/reject-solution	`).then(response => {
-        // console.log(response);
         commit('setError', '')
         commit('setError404', '')
         // ????/
@@ -720,7 +701,6 @@ export default {
         resolve(response.data)
         // ??????????
       }).catch((error) => {
-        // console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
           reject(error.response.data.message)
@@ -734,11 +714,8 @@ export default {
     problemConfirm: async ({
       commit
     }, id) => {
-      // console.log(id);
-      // param.id = 10000000000
       return new Promise((resolve, reject) => {
       axios.put(BASEURL + `/${id}/confirm-solution`).then(response => {
-        // console.log(response);
         commit('setError', '')
         commit('setError404', '')
         // ????/
@@ -747,7 +724,6 @@ export default {
         resolve(response.data)
         // ??????????
       }).catch((error) => {
-        // console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
           reject(error.response.data.message)
@@ -794,7 +770,6 @@ export default {
         commit('changePossible', response.data)
         resolve(response.data)
       }).catch((error) => {
-        console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.error)
           reject(error.response.data.error)

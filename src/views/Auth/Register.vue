@@ -158,7 +158,7 @@
     },
     watch: {
       errorUReg() {
-        // console.log(this.errorUReg)
+        
       }
     },
     methods: {

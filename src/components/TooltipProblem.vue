@@ -11,10 +11,10 @@
 
       <div>
         <p style="align-self: baseline;"><span>Описание: </span>
-        </p>
-        <p @click="event => changeProblemDesc(val.id, event)" class="desc" v-show="!isEditDesc">{{val.description}}</p>
-        <p @click="event => changeProblemDesc(val.id, event)" class="desc" v-show="!val.description">
-          <input class="form-control desc" v-show="!emptyInputIsClicked" @click="emptyInputIsClicked = true"
+        </p> 
+        <p @click="event => changeProblemDesc(val.id, val.creator_id, event)" class="desc" v-show="!isEditDesc" :style="[val.creator_id == currentUid ? {'cursor': 'pointer'} : {'cursor': 'default'}]">{{val.description}}</p>
+        <p @click="event => changeProblemDesc(val.id, val.creator_id, event)" class="desc" v-show="!val.description" :style="[val.creator_id == currentUid ? {'cursor': 'pointer'} : {'cursor': 'default'}]">
+          <input class="form-control desc"  v-show="!emptyInputIsClicked" @click="emptyInputIsClicked = true"
             placeholder="Введите описание...">
         </p>
         <input v-show="isEditDesc" v-model="val.description" @blur="event => onBlurDesc(event, val.id)"
@@ -24,10 +24,10 @@
       <div>
         <p style="align-self: baseline;"><span>Возможное решение: </span>
         </p>
-        <p @click="event => changePossible(val.id, event)" class="possible" v-show="!isEditPossible">
+        <p @click="event => changePossible(val.id, val.creator_id, event)" class="possible" v-show="!isEditPossible">
           {{val.possible_solution}}</p>
-        <p @click="event => changePossible(val.id, event)" class="possible" v-show="!val.possible_solution">
-          <input class="form-control possible" v-show="!emptyInputPossibleIsClicked"
+        <p @click="event => changePossible(val.id, val.creator_id, event)" class="possible" v-show="!val.possible_solution">
+          <input class="form-control possible" v-show="!emptyInputPossibleIsClicked" :disabled="val.creator_id !== currentUid"
             @click="emptyInputPossibleIsClicked = true" placeholder="Введите решение...">
         </p>
 
@@ -60,16 +60,22 @@
       newInput: ''
     }),
     computed: {
-      ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', ]),
+      ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', 'currentUid']),
 
     },
     methods: {
-      changeProblemDesc(id, event) {
-        this.isEditDesc = true
+      async changeProblemDesc(id,creator_id, event) {
+        await this.$store.commit('setError404', '')
+        if (creator_id == this.currentUid) {
+          this.isEditDesc = true
         this.newInput = event.target.textContent
         this.$nextTick(() => {
           this.$refs['descInput' + id].focus()
         })
+        } else {
+          // await this.$store.commit('setError404', 'не хватает прав')
+        }
+        
       },
 
       onEnterDesc(event) {
@@ -77,8 +83,6 @@
       },
 
       async onBlurDesc(event, id) {
-        // this.isEditDesc = false
-        
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('changeProblemDescription', {
             id,
@@ -94,13 +98,19 @@
           !this.val.description ? this.isEditDesc = true : this.isEditDesc = false
       },
 
-      changePossible(id, event) {
+      async changePossible(id, creator_id, event) {
+        await this.$store.commit('setError404', '')
+        if (creator_id == this.currentUid) {
+
         this.isEditPossible = true
         this.newInput = event.target.textContent
 
         this.$nextTick(() => {
           this.$refs['possibleInput' + id].focus()
         })
+        } else {
+          // await this.$store.commit('setError404', 'не хватает прав')
+        }
       },
 
       onEnterPossible(event) {
@@ -108,8 +118,6 @@
       },
 
       async onBlurPossible(event, id) {
-        // this.isEditPossible = false
-
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('changePossible', {
             id,

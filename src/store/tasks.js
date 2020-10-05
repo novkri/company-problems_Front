@@ -213,8 +213,6 @@ export default {
     changeStatusTask: async ({
       commit
     }, param) => {
-      // console.log(param);
-      // param.id = 10000000000
       axios.put(URLTASK + `/${param.id}/change-status`, {
         status: param.status
       }).then(response => {
@@ -225,7 +223,6 @@ export default {
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
         } else if (error.response.status == 422) {
-          // console.log(error.response);
           commit('setError404', error.response.data.errors)
         }
       })
@@ -234,7 +231,6 @@ export default {
     changeDeadlineTask: async ({
       commit
     }, param) => {
-      // param.id = 10000000000
       return new Promise((resolve, reject) => {
         axios.put(URLTASK + `/${param.id}/set-deadline`, {
           deadline: param.deadline
@@ -243,7 +239,6 @@ export default {
           commit('editDeadlineTask', response.data)
           resolve(response)
         }).catch((error) => {
-          // console.log(error.response);
           if (error.response.status == 404) {
             commit('setError404', error.response.data.message)
             reject(error.response.data.errors)

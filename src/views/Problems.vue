@@ -1,5 +1,6 @@
 <template>
   <div>
+    <span class="empty" v-show="problems.length == 0">Список проблем пуст...</span>
     <div class="filters">
       <!-- <div class="pagination">
         <nav>
@@ -34,10 +35,10 @@
               </button>
 
               <h5 class="mb-0" style="display: flex; width: 92%;">
-                <div style="width: inherit;" :ref="'name-div'+problem.id"
-                  @click="event => {onClickInput(problem.id, event)}"> {{ problem.name}}
+                <div style="width: inherit;" :style="[problem.creator_id == currentUid ? {'cursor': 'pointer'} : {'cursor': 'default'}]" :ref="'name-div'+problem.id"
+                  @click="event => {onClickInput(problem.id, problem.creator_id, event)}"> {{ problem.name}}
                 </div>
-                <input class="form-control" style="display: none;" :id="'problem-name'+problem.id"
+                <input class="form-control" style="display: none;" :id="'problem-name'+problem.id" :disabled="problem.creator_id !== currentUid"
                   v-model="problem.name" :ref="'problem-name' + problem.id"
                   @keyup.enter="event => {editProblemName(problem.name, problem.id, event)}"
                   @focus="onFocusInput($event)" @blur="event => {onBlurInput(problem.name, problem.id, event)}" />
@@ -53,12 +54,12 @@
                   <template slot="popover">
                     <TooltipProblem char="=" :val="problem" />
                     <a v-close-popover
-                      style="display: flex;justify-content: flex-end; font-size: 28px; font-family: 'GothamPro'">&times;</a>
+                      style="display: flex;justify-content: flex-end; font-size: 28px; font-family: 'GothamPro'; cursor: pointer;">&times;</a>
                   </template>
                 </v-popover>
               </div>
               <div>
-                <clock-icon size="1.5x" class="custom-class details" :ref="'urgency'+problem.id"
+                <clock-icon size="1.5x" class="custom-class details" :ref="'urgency'+problem.id" 
                   :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
                   @click="changeUrgency(problem.id, problem.urgency)"></clock-icon>
               </div>
@@ -145,7 +146,8 @@
 
             <div class="icons col-1">
               <div class="trash-icon">
-                <trash-icon size="1.3x" class="custom-class" style="margin: auto;"
+     <!-- ??? here or in method... -->
+                <trash-icon size="1.3x" class="custom-class" style="margin: auto;" v-show="problem.creator_id == currentUid"
                   @click="deleteP(problem.id, problem.name)" data-toggle="modal" data-target="#popupDelete">
                 </trash-icon>
               </div>
@@ -174,7 +176,7 @@
                         style="width: 100%;">
                         <div class="card-body" :val="solutions">
                           <PopupShow v-if="openShow" :val="paramsModal" />
-                          <Tasks v-if="solutions[0]" />
+                          <Tasks v-if="solutions[0]" :val="solutions[0]"/>
                         </div>
                       </div>
                     </div>
@@ -200,12 +202,12 @@
                         <div class="card-body p-0">
                           <!-- plan,  -->
                           <textarea placeholder="Опишите ваш план решения..." rows="6" :ref="'textarea_plan'+problem.id"
-                            v-model="solutions[0].plan"
-                            @keydown.enter.prevent.exact="event => {editPlan(solutions[0].id,solutions[0].plan, event)}"
+                            v-model="solutions[0].plan" :disabled="solutions[0].executor_id != currentUid"
+                            @keydown.enter.prevent.exact="event => {editPlan(solutions[0].id, solutions[0].plan, event)}"
                             @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                             @blur="event => {onBlurTextarea(event, 'plan')}"></textarea>
                           <div class="hidden" style="bottom: 13%; right: 11%;">
-                            <div>
+                            <div v-show="solutions[0].executor_id == currentUid">
                               <button class="input-btn confirm"
                                 @mousedown="event => {editPlan(solutions[0].id,solutions[0].plan, event)}">
                                 <check-icon size="1.4x" class="custom-class"></check-icon>
@@ -247,12 +249,12 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Команда</label>
-                            <textarea rows="6" :ref="'textarea_team'+problem.id" v-model="solutions[0].team"
+                            <textarea rows="6" :disabled="solutions[0].executor_id != currentUid" :ref="'textarea_team'+problem.id" v-model="solutions[0].team"
                               @keydown.enter.prevent.exact="event => {editTeam(solutions[0].id, solutions[0].team, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea(event, 'team')}"></textarea>
                             <div class="hidden">
-                              <div>
+                              <div v-show="solutions[0].executor_id == currentUid">
                                 <button class="input-btn confirm"
                                   @mousedown="event => {editTeam(solutions[0].id, solutions[0].team, event)}">
                                   <check-icon size="1.4x" class="custom-class"></check-icon>
@@ -269,12 +271,12 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Опыт</label>
-                            <textarea rows="6" :ref="'textarea_exp'+problem.id" v-model="problem.experience"
+                            <textarea rows="6" :disabled="solutions[0].executor_id != currentUid" :ref="'textarea_exp'+problem.id" v-model="problem.experience"
                               @keydown.enter.prevent.exact="event => {editExp(problem.id, problem.experience, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea( event, 'exp')}"></textarea>
                             <div class="hidden">
-                              <div>
+                              <div v-show="solutions[0].executor_id == currentUid">
                                 <button class="input-btn confirm"
                                   @mousedown="event => {editExp(problem.id, problem.experience, event)}">
                                   <check-icon size="1.4x" class="custom-class"></check-icon>
@@ -291,12 +293,12 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Результат</label>
-                            <textarea rows="6" :ref="'textarea_result'+problem.id" v-model="problem.result"
+                            <textarea rows="6" :disabled="solutions[0].executor_id != currentUid" :ref="'textarea_result'+problem.id" v-model="problem.result"
                               @keydown.enter.prevent.exact="event => {editResult(problem.id, problem.result, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea(event, 'result')}"></textarea>
-                            <div class="hidden">
-                              <div>
+                            <div class="hidden" >
+                              <div v-show="solutions[0].executor_id == currentUid">
                                 <button class="input-btn confirm"
                                   @mousedown="event => {editResult(problem.id, problem.result, event)}">
                                   <check-icon size="1.4x" class="custom-class"></check-icon>
@@ -430,7 +432,11 @@
       currentProblemName: '',
 
       isUrgent: 'Срочная',
-      isImportnant: 'Важная'
+      isImportnant: 'Важная',
+
+      fakeUserRole: 0,
+      fakeAdmin: 1,
+      fakeResponsible: 0
     }),
     components: {
       TooltipProblem,
@@ -449,10 +455,8 @@
     },
 
     async mounted() {
-      console.log(this.$store.getters.problems);
       await this.$store.dispatch('getGroups')
       await this.$store.dispatch('getAllUsers')
-      console.log('m');
     },
     watch: {
       error404() {
@@ -482,7 +486,6 @@
     },
 
     methods: {
-
       async problemReject(id) {
         await this.$store.dispatch('problemReject', id)
       },
@@ -494,7 +497,9 @@
       },
 
       async changeUrgency(id, urgency) {
-        if (urgency === 'Обычная') {
+        await this.$store.commit('setError404', '')
+        if (this.fakeResponsible) {
+          if (urgency === 'Обычная') {
           await this.$store.dispatch('changeUrgency', {
             id,
             urgency: "Срочная"
@@ -506,10 +511,16 @@
             urgency: "Обычная"
           })
         }
+        } else {
+          // await this.$store.commit('setError404', 'Не достаточно прав')
+        }
+        
       },
 
       async changeImportance(id, importance) {
-        if (importance === 'Обычная') {
+        await this.$store.commit('setError404', '')
+        if (this.fakeResponsible) {
+          if (importance === 'Обычная') {
           await this.$store.dispatch('changeImportance', {
             id,
             importance: "Важная"
@@ -521,12 +532,15 @@
             importance: "Обычная"
           })
         }
+        } else {
+          // await this.$store.commit('setError404', 'Не достаточно прав')
+        }
+        
       },
 
-      clickProgress(id, event) {
-        console.log(event);
-        console.log(this.$refs['progress-bar' + id][0]);
-
+      async clickProgress(id) {
+        await this.$store.commit('setError404', '')
+        if (this.fakeResponsible) {
         this.currentProgress = this.$refs['progress-bar' + id][0].value
         this.$refs['legend-value' + id][0].style.display = 'none'
         this.$refs['legend-value' + id][1].style.display = 'none'
@@ -536,6 +550,10 @@
           this.$refs['progress-bar' + id][0].focus()
           this.$refs['progress-bar' + id][1].focus()
         })
+        } else {
+          // await this.$store.commit('setError404', 'Не достаточно прав')
+        }
+          
       },
 
       async editProgress(id, progress) {
@@ -632,18 +650,21 @@
       },
 
 
-      onClickInput(id, event) {
-        event.target.style.display = 'none'
+      async onClickInput(id, creator_id, event) {
+        await this.$store.commit('setError404', '')
+        if (creator_id == this.currentUid) {
+          event.target.style.display = 'none'
         this.$nextTick(() => {
-          // console.log(this.$refs['problem-name' + id][0]);
           this.$refs['problem-name' + id][0].style.display = 'initial'
           this.$refs['problem-name' + id][0].focus()
         })
+        } else {
+          // await this.$store.commit('setError404', 'не хватает прав')
+        }
+        
       },
 
       async onBlurInput(name, id, event) {
-        console.log(event);
-
         await this.$store.commit('setError404', '')
         if (name !== this.currentProblemName) {
           await this.$store.dispatch('editProblemName', {
@@ -744,8 +765,7 @@
             })
           })
       },
-      async editTeam(id, team, event) {
-        console.log(event);
+      async editTeam(id, team) {
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('editTeam', {
             team,
@@ -758,9 +778,7 @@
             })
           })
       },
-      async editExp(id, experience, event) {
-        console.log(event);
-        // console.log(this.currentTextarea);
+      async editExp(id, experience) {
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('editExp', {
             experience,
@@ -773,10 +791,7 @@
             })
           })
       },
-      async editResult(id, result, event) {
-        console.log(event);
-        // console.log(this.currentTextarea);
-        // send v-model
+      async editResult(id, result) {
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('editResult', {
             result,
@@ -795,6 +810,16 @@
 </script>
 
 <style scoped lang="scss">
+  .empty {
+    font-family: 'GothamPro-Medium';
+    font-size: 16px;
+    line-height: 17px;
+    letter-spacing: 0.15px;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-top: 50px;
+  }
   .custom-control-label {
     word-break: break-all;
     text-align: inherit;
@@ -925,6 +950,7 @@
     justify-content: flex-end;
     border-radius: 0 0 9px 9px;
     background-color: #F7F7F7;
+    height: 69px;
 
     &>div {
       border-top: 2px solid #E7E5F1;

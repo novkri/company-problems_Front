@@ -67,7 +67,7 @@ const routes = [
     }
   },
   {
-    path: "/problems-group/:id",
+    path: "/problems-by-groups/:id",
     name: "ProblemsGroupId",
     component: () =>  import("../views/Problems.vue"),
     props: true,

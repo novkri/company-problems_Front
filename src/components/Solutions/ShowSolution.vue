@@ -26,13 +26,14 @@
 
               <div class="list-item col-4">
                 <div class="desc" ref="desc">
-                  <div style="width: 90%;" :ref="'sol-div'+val.id" @click="onClickInput(val.id)" v-show="!editable"
-                    :style="[solution.name ? {} : 
+                  <div style="width: 90%; cursor: pointer;" :ref="'sol-div'+val.id"
+                    @click="onClickInput(val.id, solution.executor_id)" v-show="!editable" :style="[solution.name ? {} : 
                   { 'font-size': '16px', 'border-radius': '10px', 'padding': '6px 14px',
                     'margin-right': '-43px'} ]">
                     {{solution.name ? solution.name : "Введите решение..."}}</div>
                   <input v-show="editable" class="form-control" :id="'textarea'+val.id" v-model="solution.name"
-                    :ref="'textarea' + val.id" @keyup.enter="event => {editSolClick(solution.name, solution.id, event)}"
+                    :disabled="solution.executor_id != currentUid" :ref="'textarea' + val.id"
+                    @keyup.enter="event => {editSolClick(solution.name, solution.id, event)}"
                     @focus="event => onFocusInput(event, val.id)"
                     @blur="event => {onBlurInput(solution.name, solution.id, event)}" />
                   <div class="hidden" :ref="'hidden'+val.id">
@@ -50,7 +51,7 @@
 
               <div class="select col-3" style="position: relative;" ref="select">
                 <ss-select v-model="solution.status" :options="statuses" track-by="name" class="form-control"
-                  @change="changeStatus(solution.id, solution.status)" disable-by="disabled"
+                  @change="changeStatus(solution.id, solution.status, solution.executor_id)" disable-by="disabled"
                   :class="[solution.status == 'Выполнено' ? 'green' : 'blue']" id="ss-select"
                   style="width: 87%; margin: auto;">
                   <div
@@ -75,8 +76,9 @@
 
               <div class="dateDiv col-2">
                 <input type="date" id="start" name="trip-start" class="date" v-model="solution.deadline"
-                  onkeypress="return false" @change="changeDeadline(solution.deadline, solution.id)"
-                  @click="onClickDate($event)">
+                  :disabled="solution.executor_id !== currentUid"
+                  :style="[solution.executor_id !== currentUid ? {'padding': '5px'} : {}]" onkeypress="return false"
+                  @change="changeDeadline(solution.deadline, solution.id)" @click="onClickDate($event)">
               </div>
 
               <div class="selectResponsible col-2">
@@ -212,28 +214,45 @@
       SsSelectSearchInput
     },
     computed: {
-      ...mapGetters(['solutions', 'error', 'error404', 'allUsers', 'currentSolution', 'tasks']),
+      ...mapGetters(['solutions', 'error', 'error404', 'allUsers', 'currentSolution', 'tasks', 'currentUid']),
     },
     methods: {
       async selectExecutor(id, uid) {
+        // this.$store.commit('setError404', '')
+        // if (uid == this.currentUid) {
         await this.$store.dispatch('changeExecutor', {
           id,
           uid
         })
+        // } else {
+        //   this.$store.commit('setError404', 'Не достаточно прав')
+        // }
+
       },
-      async changeStatus(id, status) {
+
+      async changeStatus(id, status, executor_id) {
         await this.$store.commit('setError404', '')
-        await this.$store.dispatch('changeStatus', {
-          status: status.name,
-          id
-        }).catch(() => {
+        if (executor_id == this.currentUid) {
+          await this.$store.dispatch('changeStatus', {
+            status: status.name,
+            id
+          }).catch(() => {
             this.$store.commit('editStatus', {
               id,
               status: 'В процессе'
             })
-          }
+          })
+        } else {
+          this.$store.commit('setError404', 'Не достаточно прав')
+          status.name == "В процессе" ? this.$store.commit('editStatus', {
+            id,
+            status: 'Выполнено'
+          }) : this.$store.commit('editStatus', {
+            id,
+            status: 'В процессе'
+          })
+        }
 
-        )
       },
 
       onClickDate(event) {
@@ -267,18 +286,23 @@
         this.openSolutions = false
       },
 
-      onClickInput(id) {
-        this.editable = true
+      onClickInput(id, executor_id) {
+        console.log(executor_id, this.currentUid);
+        if (executor_id == this.currentUid) {
+          this.editable = true
 
-        event.target.style.display = 'none'
-        this.$nextTick(() => {
-          this.$refs['textarea' + id][0].focus()
-        })
+          event.target.style.display = 'none'
+          this.$nextTick(() => {
+            this.$refs['textarea' + id][0].focus()
+          })
+        } else {
+          // 
+        }
+
       },
 
-      async onBlurInputPossible(name, id, event) {
+      async onBlurInputPossible(name, id) {
         this.noSolutionInWork = false
-        console.log(event);
         this.$store.commit('setError404', '')
         if (name !== this.currentSolutionName) {
           await this.$store.dispatch('editSolution', {
@@ -286,7 +310,6 @@
               name
             }).then(() => {
               this.$refs['textarea-no-solution' + id][0].style.display = 'none'
-              // this.$refs['hidden' + id][0].classList.remove('flex')
               this.noSolutionInWork = true
             })
             .catch(() => {
@@ -297,17 +320,14 @@
             })
         }
 
-        // this.$refs['textarea' + id][0].style.display = 'none'
-        // this.$refs['sol-div' + id][0].style.display = 'flex'
         this.$refs['sol-div-no-solution' + id][0].style.display = 'initial'
         this.$refs['hidden' + id][0].classList.remove('flex')
 
 
       },
-      async onBlurInput(name, id, event) {
+      async onBlurInput(name, id) {
         this.editable = false
         this.noSolutionInWork = false
-        console.log(event);
         this.$store.commit('setError404', '')
         if (name !== this.currentSolutionName) {
           await this.$store.dispatch('editSolution', {
