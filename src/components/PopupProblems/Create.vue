@@ -62,7 +62,7 @@
                   <div @click="spacer = !spacer"
                     slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                     style="cursor: pointer; width: 100%;">
-                    <ss-select-toggle style="width: 100%; padding: 13px;" id="select-toggle">
+                    <ss-select-toggle style="padding: 13px;" id="select-toggle">
                       {{ $get(selectedOption, 'name') || `${'Выбрать'}`}}
                       <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                     </ss-select-toggle>
