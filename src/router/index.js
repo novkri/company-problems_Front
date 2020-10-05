@@ -18,7 +18,7 @@ const routes = [
   },
   {
     path: "/my-problems",
-    name: "Problems",
+    name: "MyProblems",
     component: () =>  import("../views/Problems.vue"),
     props: true,
     meta: { 
@@ -28,7 +28,7 @@ const routes = [
   },
   {
     path: "/problems-for-execution",
-    name: "Problems",
+    name: "ProblemsForExecution",
     component: () =>  import("../views/Problems.vue"),
     props: true,
     meta: { 
@@ -38,7 +38,7 @@ const routes = [
   },
   {
     path: "/group-problems",
-    name: "Problems",
+    name: "ProblemsGroup",
     component: () =>  import("../views/Problems.vue"),
     props: true,
     meta: { 
@@ -48,7 +48,7 @@ const routes = [
   },
   {
     path: "/problems-user-archive",
-    name: "Problems",
+    name: "ProblemsArchive",
     component: () =>  import("../views/Problems.vue"),
     props: true,
     meta: { 
@@ -58,7 +58,7 @@ const routes = [
   },
   {
     path: "/problems-of-all-groups",
-    name: "Problems",
+    name: "ProblemsAllGroups",
     component: () =>  import("../views/Problems.vue"),
     props: true,
     meta: { 
@@ -68,7 +68,7 @@ const routes = [
   },
   {
     path: "/problems-group/:id",
-    name: "Problems",
+    name: "ProblemsGroupId",
     component: () =>  import("../views/Problems.vue"),
     props: true,
     meta: { 

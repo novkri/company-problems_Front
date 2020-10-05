@@ -4,7 +4,7 @@
     <div class="row">
       <Sidebar />
       <div class="content col">
-        <router-view />
+        <router-view :key="$route.path"/>
       </div>
 
     </div>
