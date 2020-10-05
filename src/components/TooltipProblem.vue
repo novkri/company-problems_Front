@@ -77,19 +77,21 @@
       },
 
       async onBlurDesc(event, id) {
-        this.isEditDesc = false
-
+        // this.isEditDesc = false
+        
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('changeProblemDescription', {
             id,
             description: this.val.description
           })
           .catch(() => {
+            this.isEditDesc = true
             this.$store.commit('changeProblemDescription', {
               id,
               description: this.newInput
             })
           })
+          !this.val.description ? this.isEditDesc = true : this.isEditDesc = false
       },
 
       changePossible(id, event) {
@@ -106,7 +108,7 @@
       },
 
       async onBlurPossible(event, id) {
-        this.isEditPossible = false
+        // this.isEditPossible = false
 
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('changePossible', {
@@ -114,11 +116,13 @@
             possible_solution: this.val.possible_solution
           })
           .catch(() => {
+            this.isEditPossible = false
             this.$store.commit('changePossible', {
               id,
               possible_solution: this.newInput
             })
           })
+          !this.val.possible_solution ? this.isEditPossible = true : this.isEditPossible = false
       }
     }
 
