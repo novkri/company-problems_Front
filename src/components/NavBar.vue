@@ -46,10 +46,10 @@
     <div class="logo">
       <img src="@/assets/logo.png" alt="PSS Software">
     </div>
-    <div class="group_selected" v-if="$route.matched.some(({ name }) => name === 'Problems')">
+    <div class="group_selected" v-if="$route.path.split('-').includes('problems') || $route.path.split('-').includes('/problems')">
       Список проблем: {{currentGroupName}}
     </div>
-    <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')" v-show="this.$route.path !== '/'">
+    <div class="filter" v-if="$route.path.split('-').includes('problems') || $route.path.split('-').includes('/problems')" v-show="this.$route.path !== '/'">
       <span>Срочность/важность:</span>
       <div class="select" style="position: relative;" ref="select">
         <ss-select v-model="importance" :options="statusesImportance" track-by="name" class="form-control"
@@ -65,7 +65,7 @@
               <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index" :key="index"
                 class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
-                                $selected(option) ? 'bg-light text-dark' : '',
+                                $selected(option) ? 'selected' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
                               ]">{{ option.name }}</ss-select-option>
             </section>
@@ -73,7 +73,8 @@
         </ss-select>
       </div>
     </div>
-    <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')" v-show="this.$route.path !== '/'">
+    <!-- {{this.$route.path.split('-')}} -->
+    <div class="filter" v-if="$route.path.split('-').includes('problems') || $route.path.split('-').includes('/problems')" v-show="this.$route.path !== '/'">
       <span>Срок исполнения:</span>
       <div class="select" style="position: relative;" ref="select">
         <ss-select v-model="time" :options="statusesTime" track-by="name" class="form-control"
@@ -90,7 +91,7 @@
               <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index" :key="index"
                 class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
-                                $selected(option) ? 'bg-light text-dark' : '',
+                                $selected(option) ? 'selected' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
                               ]">{{ option.name }}</ss-select-option>
             </section>
@@ -98,7 +99,7 @@
         </ss-select>
       </div>
     </div>
-    <div class="filter" v-if="$route.matched.some(({ name }) => name === 'Problems')"
+    <div class="filter" v-if="$route.path.split('-').includes('problems') || $route.path.split('-').includes('/problems')"
       v-show="this.$route.path !== '/group-problems' && this.$route.path !== '/'">
       <span>Статус:</span> 
       <ss-select v-model="statusProblem" :options="statusesProblem" track-by="name" class="form-control" :class="[this.$route.path == '/problems-user-archive' ? 'archive' : '' ]"
@@ -116,7 +117,7 @@
             <ss-select-option v-for="(option, index) in filteredOptions"  :value="option" :index="index" :key="index"
               class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
-                                $selected(option) ? 'bg-light text-dark' : '',
+                                $selected(option) ? 'selected' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
                               ]">{{ option.name }}</ss-select-option>
           </section>
@@ -426,6 +427,11 @@
 </script>
 
 <style lang="scss" scoped>
+.selected {
+  background-color: #92D2C3;
+  color: #fff;
+
+}
   #filterStatus {
     top: 69%;
     left: 80%;
@@ -433,7 +439,7 @@
   .archive {
     #filterStatus {
     top: 69%;
-    left: 87%;
+    left: 86%;
     }
   }
 
@@ -645,38 +651,39 @@
       padding: 1px 16px 2px 24px;
     }
 
-    ::-webkit-scrollbar {
-      width: 10px;
-    }
+    // ::-webkit-scrollbar {
+    //   width: 10px;
+    // }
 
-    ::-webkit-scrollbar-thumb {
-      background: #92D2C3;
-      border-radius: 3px;
-      height: 73px;
-    }
+    // ::-webkit-scrollbar-thumb {
+    //   background: #92D2C3;
+    //   border-radius: 3px;
+    //   height: 73px;
+    // }
 
-    ::-webkit-scrollbar-track {
-      background: #F2F2F2;
-      border-left: 4px solid white;
-      border-right: 4px solid white;
-    }
+    // ::-webkit-scrollbar-track {
+    //   background: #F2F2F2;
+    //   border-left: 4px solid white;
+    //   border-right: 4px solid white;
+    // }
 
   }
 
   section {
-    width: max-content;
-    padding: 22px;
+    // width: max-content;
+    // padding: 22px;
+    padding: 0;
     position: absolute;
     max-height: 257px;
     top: 102%;
+    width: 193px;
 
     border-radius: 10px;
     box-shadow: 0px 4px 16px rgba(54, 44, 117, 0.08);
     background-color: white;
     color: #828282;
     height: 400px;
-    overflow-y: scroll;
-    overflow-x: hidden;
+    overflow: hidden;
     z-index: 10000;
   }
 

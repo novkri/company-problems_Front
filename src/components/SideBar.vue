@@ -15,17 +15,20 @@
         </a>
         <a @click="myProblems">
           <router-link to="/my-problems" exact>
-            <user-plus-icon size="1.5x" class="custom-class"></user-plus-icon>Предложенные мной
+            <user-plus-icon size="1.5x" class="custom-class"></user-plus-icon>Предложенные мной 
+            <!-- <span class="amount">{{amountOfMyProblems}}</span> -->
           </router-link>
         </a>
         <a @click="problemsForConfirmation">
           <router-link to="/group-problems" exact>
-            <eye-icon size="1.5x" class="custom-class"></eye-icon>На рассмотрении
+            <eye-icon size="1.5x" class="custom-class"></eye-icon>На рассмотрении 
+            <!-- <span class="amount">{{amountOfProblemsForConfirmation}}</span> -->
           </router-link>
         </a>
         <a @click="problemsForExecution">
           <router-link to="/problems-for-execution" exact>
-            <flag-icon size="1.5x" class="custom-class"></flag-icon>Для исполнения
+            <flag-icon size="1.5x" class="custom-class"></flag-icon>Для исполнения 
+            <!-- <span class="amount">{{amountOfProblemsForExecution}}</span> -->
           </router-link>
         </a>
         <a @click="showLinks" style="cursor: pointer;">
@@ -97,7 +100,8 @@
     name: 'sidebar',
     data: () => ({
       showGroups: false,
-      openCreate: false
+      openCreate: false,
+
     }),
     components: {
       ChevronDownIcon,
@@ -151,8 +155,8 @@
           importance: '',
           deadline: '',
           status: ''
-        }).then(() => {
-          console.log(this.amountOfMyProblems);
+        }).then((r) => {
+          this.$store.commit('amountOfMyProblems', r.length)
         })
         
       },
@@ -163,6 +167,8 @@
           importance: '',
           deadline: '',
           status: ''
+        }).then((r) => {
+          this.$store.commit('amountOfProblemsForExecution', r.length)
         })
       },
 
@@ -172,6 +178,8 @@
           importance: '',
           deadline: '',
           status: ''
+        }).then((r) => {
+          this.$store.commit('amountOfProblemsForConfirmation', r.length)
         })
       },
       async archive() {

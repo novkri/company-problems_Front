@@ -160,8 +160,6 @@
         event.target.nextElementSibling.style.display = 'none'
       },
       onFocus(event) {
-        // console.log(event);
-        
         event.target.nextElementSibling.style.display = 'flex'
       },
 

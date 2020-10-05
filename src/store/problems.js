@@ -47,20 +47,18 @@ export default {
     },
 
     amountOfMyProblems: state => {
-      state.amountOfMyProblems
-      console.log(state.amountOfMyProblems);
+      return state.amountOfMyProblems
     },
     amountOfProblemsForExecution: state => {
-      state.amountOfProblemsForExecution
+      return state.amountOfProblemsForExecution
     },
     amountOfProblemsForConfirmation: state => {
-      state.amountOfProblemsForConfirmation
+      return state.amountOfProblemsForConfirmation
     },
   },
   mutations: {
     statusesProblem: (state, payload) => {
       state.statusesProblem = payload
-      console.log(state.statusesProblem);
     },
     setProblems: (state, payload) => {
       payload ? state.problems = payload : state.problems = []
@@ -72,6 +70,7 @@ export default {
     },
     addProblem: (state, payload) => {
       state.problems.push(payload)
+      // state.amountOfMyProblems++
     },
     deleteProblem: (state, payload) => {
       state.problems = state.problems.filter(problem => problem.id !== payload)
@@ -243,7 +242,6 @@ export default {
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
-            commit('amountOfMyProblems', response.data.length)
             resolve(response.data)
         })
         .catch(error => {
@@ -274,7 +272,6 @@ export default {
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
-            commit('amountOfProblemsForExecution', response.data.length)
             resolve(response.data)
         })
         .catch(error => {
@@ -303,7 +300,6 @@ export default {
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
-            commit('amountOfProblemsForConfirmation', response.data.length)
             resolve(response.data)
         })
         .catch(error => {
