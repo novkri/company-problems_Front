@@ -64,7 +64,6 @@ export default {
     },
     setProblems: (state, payload) => {
       payload ? state.problems = payload : state.problems = []
-      
     },
 
     setThisProblem: (state, payload) => {
@@ -248,6 +247,7 @@ export default {
             resolve(response.data)
         })
         .catch(error => {
+          commit('setProblems', '')
           if (error.response.status == 401) {
             commit('setError404', error.response.data.errors)
             reject(error.response.data.errors)
@@ -278,6 +278,7 @@ export default {
             resolve(response.data)
         })
         .catch(error => {
+          commit('setProblems', '')
           if (error.response.status == 401) {
             commit('setError404', error.response.data.errors)
             reject(error.response.data.errors)
@@ -341,6 +342,7 @@ export default {
         })
         .catch(error => {
           console.log(error.response);
+          commit('setProblems', '')
           if (error.response.status == 401) {
             commit('setError404', error.response.data.errors)
             reject(error.response.data.errors)
@@ -363,6 +365,7 @@ export default {
       }})
         .then(response => {
           console.log(response);
+          commit('setProblems', '')
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
@@ -393,11 +396,11 @@ export default {
           console.log(response);
             commit('setError', '')
             commit('setError404', '')
-            
             commit('setProblems', response.data.find(group => group.name == param.groupName).problems)
             resolve(response.data)
         })
         .catch(error => {
+          commit('setProblems', '')
           if (error.response.status == 401) {
             commit('setError404', error.response.data.errors)
             reject(error.response.data.errors)
