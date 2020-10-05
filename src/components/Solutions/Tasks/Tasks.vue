@@ -2,8 +2,7 @@
   <div>
     <div class="header row">
       <div class="col-4">
-        <!-- <img src="@/assets/tasks.png"> -->
-        <span>Задачи:</span>
+        <span style="font-family: 'GothamPro-Medium'; color: #4f4f4f;">Задачи:</span>
       </div>
       <div class="subt col-3" style="justify-content: center;display: flex;"><span>Статус выполнения</span></div>
       <div class="subt col-2" style="display: flex;"><span style="text-align: center;">Срок
@@ -104,9 +103,10 @@
     <div>
       <div style="padding: 20px; cursor: pointer; width: fit-content;" v-if="addNotClicked"
         @click.prevent="displayInput">
-        <plus-icon size="1.5x" class="custom-class" style="color: #92D2C3;">
-        </plus-icon>
-        <span style="margin-left: 16px; cursor: pointer;">Добавить задачу</span>
+        <!-- <plus-icon size="1.5x" class="custom-class" style="color: #92D2C3;">
+        </plus-icon> -->
+        <span style="margin-left: 16px; cursor: pointer;color: #92D2C3;font-family: 'GothamPro-Medium';font-size: 14px;
+line-height: 24px;letter-spacing: 0.15px;">+ Добавить задачу</span>
       </div>
 
       <div v-else class="inputAdd" style="padding: 0 14px;">
@@ -126,8 +126,8 @@
                 <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                   style="cursor: pointer; width: 100%;">
 
-                  <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between"
-                    style="width: 100%; padding: 13px;" id="select-toggle">
+                  <ss-select-toggle class="pl-1 pr-4 py-0 flex items-center justify-between"
+                    style="width: 100%; padding: 13px; font-family: 'GothamPro';" id="select-toggle">
                     <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                     {{ $get(selectedOption, 'name') ||  `${allUsersReduced.find(u => u.id == formInput.executor) ? allUsersReduced.find(u => u.id == formInput.executor).surname + ' ' 
                     + allUsersReduced.find(u => u.id == formInput.executor).name + ' ' 
@@ -467,11 +467,10 @@
 
     div {
       font-family: 'GothamPro';
-      font-style: normal;
-      font-size: 16px;
       line-height: 24px;
       letter-spacing: 0.15px;
       color: #828282;
+      font-size: 14px;
     }
   }
 
@@ -525,7 +524,7 @@
   }
 
   svg {
-    color: #AFAFAF;
+    color: #4F4F4F;
     cursor: pointer;
     margin: 0 -1px 0 0;
   }
@@ -561,12 +560,13 @@
       width: fit-content;
 
       overflow: hidden;
-      height: 26px;
+      height: 30px;
     }
 
     #ss-select:hover {
       overflow: visible;
       width: fit-content;
+      background-color: #e5e9f1;
 
       >div {
         max-height: 27px;
@@ -735,11 +735,14 @@
   .green {
     background-color: #4EAD96 !important;
     width: 180px;
-    color: #fff;
     font-size: 16px;
     line-height: 24px;
-    font-family: 'GothamPro-Medium' !important;
     letter-spacing: 0.15px;
+
+    #select-toggle {
+      color: #fff !important;
+      font-family: 'GothamPro-Medium' !important;
+    }
 
     svg {
       color: #fff;
@@ -760,11 +763,14 @@
   .blue {
     background-color: #AEDAF2 !important;
     width: 180px;
-    color: #fff;
     font-size: 16px;
     line-height: 24px;
-    font-family: 'GothamPro-Medium' !important;
     letter-spacing: 0.15px;
+
+    #select-toggle {
+      color: #fff !important;
+      font-family: 'GothamPro-Medium' !important;
+    }
 
     svg {
       color: #fff;
@@ -776,7 +782,7 @@
     display: flex;
     font-size: 16px;
     line-height: 24px;
-    font-family: 'GothamPro-Medium';
+    font-family: 'GothamPro';
     letter-spacing: 0.15px;
     position: relative;
 
@@ -882,9 +888,10 @@
   }
 
   #select-toggle {
-    font-family: 'GothamPro-Medium';
+    font-family: 'GothamPro';
     margin: auto;
     text-align: center;
+    color: #4F4F4F;
   }
 
 

@@ -46,8 +46,8 @@
     <div class="logo">
       <img src="@/assets/logo.png" alt="PSS Software">
     </div>
-    <div class="group_selected" v-if="$route.path.split('-').includes('problems') || $route.path.split('-').includes('/problems')">
-      Список проблем: {{currentGroupName}}
+    <div v-tooltip="currentGroupName" class="group_selected" v-if="$route.path.split('-').includes('problems') || $route.path.split('-').includes('/problems')">
+      Список проблем: {{currentGroupName}} <p></p>
     </div>
     <div class="filter" v-if="$route.path.split('-').includes('problems') || $route.path.split('-').includes('/problems')" v-show="this.$route.path !== '/'">
       <span>Срочность/важность:</span>
@@ -458,17 +458,16 @@
     overflow-y: hidden;
     max-height: 27px;
   }
+  // .v-tooltip-open {
+  //   color: #4F4F4F;
+  //   background-color: #fff;
+  // }
 
-  .group_selected:hover {
-    overflow: visible;
-    width: fit-content;
-    // background-color: #000;
-    height: fit-content;
-    //   max-height: 27px;
-    // min-width: max-content;
-    // z-index: 100;
-    // position: absolute;
-  }
+  // .group_selected:hover {
+  //   overflow: visible;
+  //   width: fit-content;
+  //   height: fit-content;
+  // }
 
   .logo {
     font-size: 24px;

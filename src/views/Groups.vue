@@ -355,8 +355,6 @@
 
       onFocusInput(event, id, type) {
         console.log(event.target);
-        console.log(id);
-        console.log('onFocusInput');
         this.currentGroupName = event.target.value
         this.currentGroupInput = event.target
 
@@ -373,7 +371,6 @@
           short_name: this.currentGroupName,
           id
         })
-        console.log('onClear');
       },
 
       async editGroupShort(short_name, id, event) {
@@ -382,7 +379,6 @@
       },
 
       async editGroupName(name, id, event) {
-        // event.preventDefault()
         await this.$store.commit('setError404', '')
         event.target.blur()
         console.log('editGroupName');

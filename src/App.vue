@@ -39,18 +39,17 @@
     display: block !important;
     z-index: 10000;
 
-    width: 460px;
+    width: 260px;
     height: 270px;
-    max-width: 460px;
+    max-width: 260px;
     max-height: 270px;
 
     .tooltip-inner {
-      background: black;
-      color: white;
+      background: #fff;
+      color: #4f4f4f;
       border-radius: 16px;
       padding: 5px 10px 4px;
-      //     max-width: 460px;
-      // max-height: 270px;
+      box-shadow: 0 5px 30px rgba(black, .1);
     }
 
 
@@ -83,7 +82,35 @@
         margin-bottom: 0;
       }
     }
+ &[x-placement^="right"] {
+    margin-left: 5px;
 
+    .tooltip-arrow {
+      border-width: 5px 5px 5px 0;
+      border-left-color: transparent !important;
+      border-top-color: transparent !important;
+      border-bottom-color: transparent !important;
+      left: -5px;
+      top: calc(50% - 5px);
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  &[x-placement^="left"] {
+    margin-right: 5px;
+
+    .tooltip-arrow {
+      border-width: 5px 0 5px 5px;
+      border-top-color: transparent !important;
+      border-right-color: transparent !important;
+      border-bottom-color: transparent !important;
+      right: -5px;
+      top: calc(50% - 5px);
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
 
     &.popover {
       $color: #f9f9f9;

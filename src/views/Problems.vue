@@ -24,9 +24,7 @@
     </div>
     <div class="container">
       <div id="accordion">
-        <!-- in paginatedData -->
         <div class="card" id="card" v-for="(problem, idx) in problems" :key="idx">
-     
           <div class="card-header row" :id="'heading'+problem.id" ref="collapsed-header">
             <div class="name col-4">
               <button class="btn btn-link collapsed" @click="onClickShow(problem)" data-toggle="collapse"
@@ -72,7 +70,6 @@
 
               <div>
                 <div class="like">
-           
                   <button class="likeBtn" @click="likeProblem(problem.id)">
                     <span>
                       {{ problem.likes_count }}
@@ -153,14 +150,12 @@
                 </trash-icon>
               </div>
             </div>
-
           </div>
 
           <div :id="'collapseOne'+problem.id" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
             <div class="card-body">
               <div class="card" style="padding-top: 34px;" v-if="mounted">
                 <div class="row" style="display: flex; flex-direction: row; margin-bottom: 8px;">
-                  <!-- Задачи -->
                   <div class="accordion col-9" id="tasks">
                     <div class="card">
                       <div class="card-header" id="headingTasks" style="width: 100%;">
@@ -247,7 +242,7 @@
                       </div>
 
                       <div id="collapseResults" class="collapse" aria-labelledby="headingResults" style="width: 100%;"
-                        data-parent="#results">
+                        data-parent="#results" ref="collapsed-results">
                         <div class="card-body row p-0" style="flex-direction: row;">
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
@@ -314,8 +309,8 @@
                               </div>
 
                             </div>
-                            <!-- <button v-show="solutions[0].executor_id == currentUid" class="btn btnMain problem-solved"
-                              @click="problemSolved(problem.id)">Проблема решена</button> -->
+
+
                             <div
                               style="margin-bottom: -37px; margin-top: 14px; display: flex; justify-content: space-evenly; flex-direction: row;flex-wrap:wrap; align-items: center;">
                               <span v-show="problem.status == 'На рассмотрении'" class="problem-send">Проблема
@@ -356,7 +351,7 @@
                       </div>
 
                       <div id="collapseGroups" class="collapse" aria-labelledby="headingGroups" style="width: 100%;"
-                        data-parent="#groups">
+                        data-parent="#groups" ref="collapsed-groups">
                         <div class="card-body p-0">
                           <div class="check-inputs">
                             <div class="custom-control custom-checkbox" v-for="(group, idx) in groups" :key="idx">
@@ -504,16 +499,12 @@
             id,
             urgency: "Срочная"
           })
-          // <!-- this.$refs['urgency' + id][0].classList.add('icon-clicked')
-          // this.$refs['urgency' + id][1].classList.add('icon-clicked') -->
 
         } else {
           await this.$store.dispatch('changeUrgency', {
             id,
             urgency: "Обычная"
           })
-          // <!-- this.$refs['urgency' + id][0].classList.remove('icon-clicked')
-          // this.$refs['urgency' + id][1].classList.remove('icon-clicked') -->
         }
       },
 
@@ -613,13 +604,22 @@
 
           this.$store.commit('setError', '')
           await this.$store.dispatch('getSolutions', problem.id).then(response => {
-            this.mounted = true
-            this.$store.dispatch('getTasks', response.id)
-            this.$store.dispatch('getCurrentSolution', '')
-            this.$store.dispatch('getCurrentSolution', response.id)
-          }).catch(() => {
-            this.$store.dispatch('clearTasks')
-          })
+              this.mounted = true
+              this.$store.dispatch('getTasks', response.id)
+              this.$store.dispatch('getCurrentSolution', '')
+              this.$store.dispatch('getCurrentSolution', response.id)
+            })
+            .then(() => {
+              this.$refs['collapsed-results'].forEach(element => {
+                element.classList.remove('show')
+              });
+              this.$refs['collapsed-groups'].forEach(element => {
+                element.classList.remove('show')
+              });
+            })
+            .catch(() => {
+              this.$store.dispatch('clearTasks')
+            })
         }
       },
 
@@ -1147,7 +1147,8 @@
 
 
       h5 {
-        font-family: 'GothamPro';
+        font-family: 'GothamPro-Medium';
+        color: #4f4f4f;
         font-size: 16px;
         line-height: 24px;
         letter-spacing: 0.15px;

@@ -29,7 +29,7 @@
                   <div style="width: 90%;" :ref="'sol-div'+val.id" @click="onClickInput(val.id)" v-show="!editable"
                     :style="[solution.name ? {} : 
                   { 'font-size': '16px', 'border-radius': '10px', 'padding': '6px 14px',
-                    'margin-right': '-43px'}, {'color': 'rgb(122 122 122)'}]">
+                    'margin-right': '-43px'} ]">
                     {{solution.name ? solution.name : "Введите решение..."}}</div>
                   <input v-show="editable" class="form-control" :id="'textarea'+val.id" v-model="solution.name"
                     :ref="'textarea' + val.id" @keyup.enter="event => {editSolClick(solution.name, solution.id, event)}"
@@ -374,7 +374,7 @@
 
 
   svg {
-    color: #AFAFAF;
+    color: #4f4f4f;
     cursor: pointer;
     margin: 0 -1px 0 0;
   }
@@ -554,11 +554,10 @@
     width: 100%;
     padding-right: 8px;
 
-    // div {
-    //   width: 100%;
-    // }
+
     span {
       font-family: "GothamPro";
+      color: #4F4F4F;
       cursor: default;
     }
 
@@ -592,7 +591,7 @@
       border-radius: 10px;
       padding-right: 0;
       width: fit-content;
-      height: 26px;
+      height: 30px;
       overflow: hidden;
     }
 
@@ -607,8 +606,10 @@
     }
 
     #select-toggle {
-      font-family: "GothamPro"
+      font-family: 'GothamPro';
+      color: #4F4F4F;
     }
+
 
     select {
       margin: 0;
@@ -730,13 +731,15 @@
     width: 100%;
     border: none;
     position: relative;
-    color: #828282;
+    color: #4f4f4f;
     padding-left: 28px;
     padding-bottom: 5px;
     padding-top: 5px;
     border-radius: 10px;
     // width: 168px;
     background-color: #fff;
+
+
   }
 
   .date:hover {
