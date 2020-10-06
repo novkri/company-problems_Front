@@ -337,8 +337,6 @@
         if (executor_id == this.currentUid) {
           this.editable = true
           this.$nextTick(() => {
-            console.log(this.$refs);
-            console.log(id);
             this.$refs['textarea_task' + id][0].focus()
           })
         } else {
@@ -569,12 +567,14 @@
 
     #ss-select:hover {
       overflow: visible;
-      width: fit-content;
-      background-color: #e5e9f1;
+      width: max-content !important;
+      background-color: #F6F7F9;
+      
 
       >div {
         max-height: 27px;
         min-width: max-content;
+        padding-right: 10px;
       }
     }
 

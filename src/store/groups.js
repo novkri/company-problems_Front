@@ -56,14 +56,14 @@ export default {
       state.leader = payload[0]
     },
     setLeaderReduced: (state, payload) => {
-      payload[0].name = payload[0].name[0]+'.'
-      payload[0].father_name ? payload[0].father_name = payload[0].father_name[0]+'.' : ' '
+      payload[0].name = payload[0].name[0] + '.'
+      payload[0].father_name ? payload[0].father_name = payload[0].father_name[0] + '.' : ' '
       state.leaderReduced = payload[0]
     },
     changeLeader: (state, payload) => {
       state.leaderReduced = state.members.filter(u => u.id == payload)[0]
-      state.leaderReduced.name = state.leaderReduced.name[0]+'.'
-      state.leaderReduced.father_name ? state.leaderReduced.father_name = state.leaderReduced.father_name[0]+'.' : ' '
+      state.leaderReduced.name = state.leaderReduced.name[0] + '.'
+      state.leaderReduced.father_name ? state.leaderReduced.father_name = state.leaderReduced.father_name[0] + '.' : ' '
     },
     setMembers: (state, payload) => {
       payload.length > 0 ? state.members = Object.values(payload) : state.members = []
@@ -100,35 +100,44 @@ export default {
     },
   },
   actions: {
-    changeCurrentGroupName: ({commit}, name) => {
+    changeCurrentGroupName: ({
+      commit
+    }, name) => {
       commit('currentGroupName', name)
     },
     getGroups: async ({
       commit
     }) => {
-      await axios.get(BASEURL)
+      return new Promise((resolve, reject) => {
+      axios.get(BASEURL)
         .then(response => {
-            commit('setError', '')
-            commit('setError404', '')
-            commit('setGroups', response.data)
+          commit('setError', '')
+          commit('setError404', '')
+          commit('setGroups', response.data)
+          resolve(response.data)
         })
         .catch(error => {
           if (error.response.status == 401) {
             commit('setError404', error.response.data.errors)
+            localStorage.removeItem('token')
+            localStorage.removeItem('user')
+            reject(error.response.data.errors)
           } else {
             commit('setError', error.response.data.message)
+            reject(error.response.data.message)
           }
         })
+      })
     },
     getLeader: async ({
       commit
     }, id) => {
       await axios.get(BASEURL + `/${id}/leader`)
         .then(response => {
-            commit('setError', '')
-            commit('setError404', '')
-            commit('setLeader', response.data)
-            commit('setLeaderReduced', response.data)
+          commit('setError', '')
+          commit('setError404', '')
+          commit('setLeader', response.data)
+          commit('setLeaderReduced', response.data)
         })
         .catch(error => {
           if (error.response.status == 401) {
@@ -143,9 +152,9 @@ export default {
     }, id) => {
       await axios.get(BASEURL + `/${id}/user`)
         .then(response => {
-            commit('setError', '')
-            commit('setError404', '')
-            commit('setMembers', response.data)
+          commit('setError', '')
+          commit('setError404', '')
+          commit('setMembers', response.data)
         })
         .catch(error => {
           if (error.response.status == 401) {
@@ -187,22 +196,22 @@ export default {
     }, param) => {
       // param.id = 10000000
       return new Promise((resolve, reject) => {
-     axios.delete(BASEURL + `/${param.id}`).then(response => {
+        axios.delete(BASEURL + `/${param.id}`).then(response => {
             commit('setError', '')
             commit('setError404', '')
             commit('deleteGroup', param.id)
             resolve(response.data)
-        })
-        .catch(error => {
-          if (error.response.status !== 422) {
-            error.response.data.message ? commit('setError404', error.response.data.message) : commit('setError404', error.response.data.errors)
-            // commit('setError404', error.response.data.message)
-            reject(error.response.data.message)
-          } else {
-            commit('setError', error.response.data.errors.name[0])
-            reject(error.response.data.errors.name[0])
-          }
-        })
+          })
+          .catch(error => {
+            if (error.response.status !== 422) {
+              error.response.data.message ? commit('setError404', error.response.data.message) : commit('setError404', error.response.data.errors)
+              // commit('setError404', error.response.data.message)
+              reject(error.response.data.message)
+            } else {
+              commit('setError', error.response.data.errors.name[0])
+              reject(error.response.data.errors.name[0])
+            }
+          })
       })
 
     },
@@ -214,10 +223,10 @@ export default {
         axios.put(BASEURL + `/${param.id}`, {
           name: param.name
         }).then(response => {
-            commit('setError', '')
-            commit('setError404', '')
-            commit('editGroup', response.data)
-            resolve(response)
+          commit('setError', '')
+          commit('setError404', '')
+          commit('editGroup', response.data)
+          resolve(response)
         }).catch((error) => {
           if (error.response.status !== 422) {
             error.response.data.message ? commit('setError404', error.response.data.message) : commit('setError404', error.response.data.errors)
@@ -238,10 +247,10 @@ export default {
         axios.put(BASEURL + `/${param.id}/change-short-name`, {
           short_name: param.short_name
         }).then(response => {
-            commit('setError', '')
-            commit('setError404', '')
-            commit('editGroupShort', response.data)
-            resolve(response)
+          commit('setError', '')
+          commit('setError404', '')
+          commit('editGroupShort', response.data)
+          resolve(response)
         }).catch((error) => {
           if (error.response.status !== 422) {
             error.response.data.message ? commit('setError404', error.response.data.message) : commit('setError404', error.response.data.errors)
@@ -259,49 +268,49 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-      axios.put(BASEURL + `/${param.id}/change-leader/${param.uid}`).then(response => {
-        commit('setError', '')
-        commit('editExecutorGroup', response.data)
-        resolve(response.data)
-      }).catch((error) => {
-        if (error.response.status == 404) {
-          error.response.data.message ? commit('setError404', error.response.data.message) : commit('setError404', error.response.data.errors)
-          reject( error.response)
-        } else if (error.response.status == 422) {
-          if (error.response.data.errors.leader_id) {
-            commit('setError404', error.response.data.errors.leader_id[0])
-            reject( error.response)
-          } else {
-            commit('setError404', error.response.data.errors)
-            reject( error.response)
+        axios.put(BASEURL + `/${param.id}/change-leader/${param.uid}`).then(response => {
+          commit('setError', '')
+          commit('editExecutorGroup', response.data)
+          resolve(response.data)
+        }).catch((error) => {
+          if (error.response.status == 404) {
+            error.response.data.message ? commit('setError404', error.response.data.message) : commit('setError404', error.response.data.errors)
+            reject(error.response)
+          } else if (error.response.status == 422) {
+            if (error.response.data.errors.leader_id) {
+              commit('setError404', error.response.data.errors.leader_id[0])
+              reject(error.response)
+            } else {
+              commit('setError404', error.response.data.errors)
+              reject(error.response)
+            }
           }
-        }
+        })
       })
-    })
     },
     putUserToGroup: async ({
       commit
     }, param) => {
       // param.uid = 10000000000
       return new Promise((resolve, reject) => {
-      axios.put(BASEURL + `/${param.id}/user/${param.uid}`).then(response => {
-        commit('setError', '')
-        commit('setUserToGroup', response.data)
-        resolve(response.data)
-      }).catch((error) => {
-        if (error.response.status == 404) {
-          commit('setError404', error.response.data.message)
-          reject(error.response.data.message)
-        } else if (error.response.status == 422) {
-          if (error.response.data.errors.leader_id) {
-            commit('setError404', error.response.data.errors.leader_id[0])
-          } else {
-            commit('setError404', error.response.data.errors)
+        axios.put(BASEURL + `/${param.id}/user/${param.uid}`).then(response => {
+          commit('setError', '')
+          commit('setUserToGroup', response.data)
+          resolve(response.data)
+        }).catch((error) => {
+          if (error.response.status == 404) {
+            commit('setError404', error.response.data.message)
+            reject(error.response.data.message)
+          } else if (error.response.status == 422) {
+            if (error.response.data.errors.leader_id) {
+              commit('setError404', error.response.data.errors.leader_id[0])
+            } else {
+              commit('setError404', error.response.data.errors)
+            }
+            reject(error.response.data.errors)
           }
-          reject(error.response.data.errors)
-        }
+        })
       })
-    })
     },
     removeUserFromGroup: async ({
       commit

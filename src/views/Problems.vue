@@ -234,7 +234,7 @@
                       <div class="card-header" id="headingResults" style="width: 100%;">
                         <div class="name">
                           <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseResults"
-                            aria-expanded="false" aria-controls="collapseResults">
+                            aria-expanded="false" aria-controls="collapseResults" ref="collapseResultsBtn">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                           </button>
                           <h5 class="mb-0">
@@ -309,7 +309,6 @@
                                   </button>
                                 </div>
                               </div>
-
                             </div>
 
 
@@ -321,10 +320,10 @@
                               <button v-show="solutions[0].executor_id == currentUid" class="btn btnMain problem-solved"
                                 @click="problemSolved(problem.id)">Проблема решена</button>
                               <div style="display: flex; ">
-                                <button v-show="problem.creator_id == currentUid" class="btn btnMain problem-confirm y"
+                                <button v-show="problem.creator_id == currentUid && problem.status != 'На рассмотрении'" class="btn btnMain problem-confirm y"
                                   style="    margin-right: 11px;" @click="problemConfirm(problem.id)">Подтвердить
                                   решение</button>
-                                <button v-show="problem.creator_id == currentUid" class="btn btnMain problem-confirm"
+                                <button v-show="problem.creator_id == currentUid && problem.status != 'На рассмотрении'" class="btn btnMain problem-confirm"
                                   style="background-color: #EBEBEB;color: #4F4F4F;"
                                   @click="problemReject(problem.id)">Отклонить</button>
                               </div>
@@ -343,7 +342,7 @@
                       <div class="card-header" id="headingGroups" style="width: 100%;">
                         <div class="name">
                           <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseGroups"
-                            aria-expanded="false" aria-controls="collapseGroups">
+                            aria-expanded="false" aria-controls="collapseGroups" ref="collapseGroupsBtn">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                           </button>
                           <h5 class="mb-0">
@@ -455,7 +454,7 @@
     },
 
     async mounted() {
-      await this.$store.dispatch('getGroups')
+      await this.$store.dispatch('getGroups').catch(() => this.$router.push('/login'))
       await this.$store.dispatch('getAllUsers')
     },
     watch: {
@@ -629,10 +628,14 @@
             })
             .then(() => {
               this.$refs['collapsed-results'].forEach(element => {
-                element.classList.remove('show')
+                element.classList.contains('show') ? this.$refs['collapseResultsBtn'].forEach(element => {
+                element.click()
+              }) : ''
               });
               this.$refs['collapsed-groups'].forEach(element => {
-                element.classList.remove('show')
+                element.classList.contains('show') ? this.$refs['collapseGroupsBtn'].forEach(element => {
+                element.click()
+              }) : ''
               });
             })
             .catch(() => {
@@ -1179,7 +1182,7 @@
         line-height: 24px;
         letter-spacing: 0.15px;
         display: flex;
-
+        cursor: default;
       }
 
       .card-header {

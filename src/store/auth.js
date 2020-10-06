@@ -121,12 +121,12 @@ export default {
         .catch(err => {
           if (err.response.status == 401) {
             commit('setError401', err.response.data.errors)
-          }
-          commit('setErrorU', '')
+          } else {
+            commit('setErrorU', '')
           commit('setErrorU', err.response.data.errors)
-
+          }
+          
           commit('auth_error')
-          // commit('removeUser')
           localStorage.removeItem('token')
           localStorage.removeItem('user')
         })

@@ -161,7 +161,7 @@
           status: ''
         }).then((r) => {
           this.$store.commit('amountOfMyProblems', r.length)
-        })
+        }).catch(() => {console.log('dddddddd')})
 
       },
 

@@ -62,7 +62,7 @@
                       <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                     </ss-select-toggle>
 
-                    <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;">
+                    <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;left: -52%;">
                       <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index"
                         :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
@@ -287,7 +287,6 @@
       },
 
       onClickInput(id, executor_id) {
-        console.log(executor_id, this.currentUid);
         if (executor_id == this.currentUid) {
           this.editable = true
 
@@ -618,10 +617,12 @@
     #ss-select:hover {
       overflow: visible;
       width: max-content !important;
+      background-color: #F6F7F9;
 
       >div {
         max-height: 27px;
         min-width: max-content;
+        padding-right: 10px;
       }
     }
 
@@ -666,6 +667,10 @@
       background-color: #4EAD96;
       overflow: visible;
       width: fit-content;
+    }
+
+    #select-toggle {
+      color: #fff;
     }
 
 

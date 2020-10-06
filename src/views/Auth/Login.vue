@@ -7,7 +7,7 @@
             v-if="email.length >= 250 && email.length <= 255">{{$v.email.$params.maxLength.max - email.length}}</span></label>
         <input type="text" class="form-control" id="email" v-model="email"
           :class="{ 'form-control--error': $v.email.$invalid, 'form-control--valid': email && !$v.email.$invalid}">
-        <div class="errorAuth" v-if="errorU.email">{{errorU.email[1]}} </div>
+        <div class="errorAuth" v-if="errorU.email">{{errorU.email[0]}} </div>
       </div>
       <div class="form-group">
         <label for="password">Пароль<span
@@ -33,7 +33,8 @@
   // import {mapGetters} from 'vuex'
   import {
     maxLength,
-    minLength
+    minLength,
+    email
   } from 'vuelidate/lib/validators'
   import {
     mapGetters
@@ -49,6 +50,7 @@
     }),
     validations: {
       email: {
+        email,
         minLength: minLength(3),
         maxLength: maxLength(255)
       },
@@ -83,7 +85,6 @@
               status: ''
             })
             this.$router.push('/my-problems')
-
           }
         })
       },
