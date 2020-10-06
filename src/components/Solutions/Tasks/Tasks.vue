@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div ref="mainTask">
     <div class="header row">
       <div class="col-4">
         <span style="font-family: 'GothamPro-Medium'; color: #4f4f4f;">Задачи:</span>
@@ -13,7 +13,7 @@
     </div>
 
     <div class="container row">
-      <ol>
+      <ol ref="olTask">
         <li id="list" v-for="(task, idx) in tasks" :key="idx">
           <div class="task-title col-4"
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">
@@ -39,7 +39,7 @@
               :class="[task.status == 'Выполнено' ? 'green' : task.status == 'В процессе' ? 'blue' : 'gray']"
               id="ss-select" style="margin:auto; width: 87%;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                style="cursor: pointer; width: 100%;">
+                style="cursor: pointer; width: 100%;" @click="onClickStatus(selectedOption)">
                 <ss-select-toggle style="width: 100%; padding: 6px;" id="select-toggle">
                   {{ $get(selectedOption, 'name') || `${task.status}`}}
                   <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
@@ -69,7 +69,8 @@
               @change="selectExecutorTask(task, val.executor_id)" disable-by="disabled" id="ss-select"
               style="width: 100%;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                @click="onClickExecutor(selectedOption)" style="cursor: pointer; width: 100%;">
+                @mouseout="selectMouseOut()" @click="onClickExecutor(selectedOption)"
+                style="cursor: pointer; width: 100%;">
                 <ss-select-toggle class="flex items-center justify-between" style="margin: auto;">
                   <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                   {{ $get(selectedOption, 'name') ||  `${allUsersReduced.find(u => u.id == task.executor_id) ? allUsersReduced.find(u => u.id == task.executor_id).surname + ' ' 
@@ -154,7 +155,6 @@
         <div class="error" v-if="error">{{error}}</div>
       </div>
 
-
       <div type="submit" class="btnsAddTask" v-if="!addNotClicked">
         <button id="addBtn" class="btn btnPink" @click.prevent="addTask" :disabled="!enableAddBtntn">Добавить
           задачу</button>
@@ -216,6 +216,7 @@
       currentTaskInput: '',
       currentDate: '',
       currentDateInput: '',
+      currentTaskStatus: '',
 
       formInput: []
     }),
@@ -278,9 +279,11 @@
           })
         } else {
           this.$store.commit('setError404', 'Не достаточно прав')
-
+          this.$store.commit('editStatusTask', {
+            status: this.currentTaskStatus,
+            id
+          })
         }
-
       },
 
       onClickDate(event) {
@@ -300,8 +303,19 @@
         })
       },
 
+      onClickStatus(status) {
+        this.currentTaskStatus = status
+      },
+
+      selectMouseOut() {
+        this.$refs['mainTask'].style.height = '200px'
+        this.$refs['olTask'].style.maxHeight = '200px'
+      },
       onClickExecutor(sol) {
         this.currentExecutor = sol
+        this.$refs['mainTask'].style.height = '650px'
+        this.$refs['olTask'].style.maxHeight = '650px'
+         console.log(this.currentExecutor);
       },
       async selectExecutorTask(task, executor_id) {
         await this.$store.commit('setError404', '')
@@ -322,6 +336,7 @@
             })
           })
         } else {
+          console.log(this.currentExecutor);
           this.$store.commit('setError404', 'Не достаточно прав')
           this.$store.commit('editExecutorTask', {
             id: task.id,
@@ -569,7 +584,7 @@
       overflow: visible;
       width: max-content !important;
       background-color: #F6F7F9;
-      
+
 
       >div {
         max-height: 27px;

@@ -90,7 +90,6 @@ export default {
     },
     editExecutorGroup: (state, payload) => {
       state.groups.find(group => group.id == payload.id).leader_id = payload.leader_id
-      // state.members.filter(m => m.id !== payload.id)
     },
     setUserToGroup: (state, payload) => {
       state.members.push(payload)

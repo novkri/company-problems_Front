@@ -96,7 +96,7 @@
     maxLength,
     minLength,
     sameAs,
-    
+
   } from 'vuelidate/lib/validators'
   import {
     mapGetters
@@ -158,7 +158,7 @@
     },
     watch: {
       errorUReg() {
-        
+
       }
     },
     methods: {
@@ -350,17 +350,21 @@
   }
 
   .successfully {
-    font-family: 'Roboto';
-    font-size: 18px;
-    line-height: 24px;
-    letter-spacing: 0.15px;
-    color: #2D453F;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
     text-align: center;
     margin: auto;
     align-items: center;
+
+    span {
+      font-family: 'GothamPro-Medium';
+      font-size: 24px;
+      line-height: 24px;
+      letter-spacing: 0.15px;
+      color: #2D453F;
+    }
 
     .btn {
       margin: 0;
@@ -395,14 +399,15 @@
   }
 
 
-@media (max-width: 1500px) {
-  * {
-    font-size: 14px;
+  @media (max-width: 1500px) {
+    * {
+      font-size: 14px;
+    }
+
+    .to-login {
+      font-size: 16px;
+    }
   }
-  .to-login {
-    font-size: 16px;
-  }
-}
 
   @media (max-width: 780px) {
     form {

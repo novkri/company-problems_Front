@@ -81,9 +81,6 @@ export default {
     editExecutorTask: (state, payload) => {
       state.tasks.find(task => task.id == payload.id).executor_id = payload.executor_id
     },
-    // editExecutorT: (state, payload) => {
-    //   state.tasks.find(task => task.id == payload.id).executor_id = payload.executor_id
-    // },
 
   },
   actions: {
@@ -167,7 +164,6 @@ export default {
       state,
       commit
     }, param) => {
-      // param.id = 10000000000
       return new Promise((resolve, reject) => {
         if (state.tasks.filter(t => t.description == param.description).length > 1 && state.tasks.filter(t => t.executor_id == param.executor_id).length > 1) {
           commit('setError404', 'Такая задача уже существует с таким ответственным')
@@ -254,7 +250,6 @@ export default {
     changeExecutorTask: async ({
       commit
     }, param) => {
-      // param.id = 10000000000
       axios.put(URLTASK + `/${param.id}/set-executor`, {
         executor_id: param.uid
       }).then(response => {

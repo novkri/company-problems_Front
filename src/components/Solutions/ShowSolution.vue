@@ -56,13 +56,13 @@
                   style="width: 87%; margin: auto;">
                   <div
                     slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                    style="cursor: pointer; width: 100%;">
+                    style="cursor: pointer; width: 100%;" @click="onClickStatus(selectedOption)">
                     <ss-select-toggle id="select-toggle">
                       {{ $get(selectedOption, 'name') || `${solution.status ? solution.status : 'Выбрать'}`}}
                       <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                     </ss-select-toggle>
 
-                    <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;left: -52%;">
+                    <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;left: 1%;">
                       <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index"
                         :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
@@ -86,7 +86,7 @@
                   @change="selectExecutor(solution.id, solution.executor_id)" disable-by="disabled" id="ss-select">
                   <div
                     slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                    style="cursor: pointer; width: 100%;">
+                    style="cursor: pointer; width: 100%;" @click="onClickExecutor(selectedOption)">
                     <ss-select-toggle class="flex items-center justify-between" id="select-toggle">
                       <award-icon size="1.5x" class="custom-class"></award-icon>
                       {{ $get(selectedOption, 'id') || `${allUsers.find(u => u.id == solution.executor_id) ? allUsers.find(u => u.id == solution.executor_id).surname + ' ' + allUsers.find(u => u.id == solution.executor_id).name[0] + '.' : 'Выбрать'}`}}
@@ -180,6 +180,7 @@
       currentSolutionName: '',
       currentSolStatus: '',
       currentSolInput: '',
+      currentExecutorSol: '',
 
       progress: '',
       btnRemove: false,
@@ -196,16 +197,12 @@
       ],
     }),
     components: {
-      // UserIcon,
-      // EyeIcon,
       AwardIcon,
       ChevronDownIcon,
       PlusIcon,
       CheckIcon,
 
-      // Solutions,
       RemoveFromWork,
-      // Tasks,
       DeleteTask,
 
       SsSelect,
@@ -217,17 +214,36 @@
       ...mapGetters(['solutions', 'error', 'error404', 'allUsers', 'currentSolution', 'tasks', 'currentUid']),
     },
     methods: {
+      onClickExecutor(sol) {
+        console.log(sol);
+        this.currentExecutorSol = sol
+        console.log(this.currentExecutorSol);
+        
+      },
       async selectExecutor(id, uid) {
-        // this.$store.commit('setError404', '')
-        // if (uid == this.currentUid) {
+        this.$store.commit('setError404', '')
+        if (uid == this.currentUid) {
         await this.$store.dispatch('changeExecutor', {
           id,
           uid
-        })
-        // } else {
-        //   this.$store.commit('setError404', 'Не достаточно прав')
-        // }
+        }).catch(() => {
+            this.$store.commit('editExecutor', {
+              id,
+              executor_id: this.currentExecutorSol
+            })
+            })
+        } else {
+          console.log(this.currentExecutorSol);
+          this.$store.commit('setError404', 'Не достаточно прав')
+          this.$store.commit('editExecutor', {
+          id,
+          executor_id: this.currentExecutorSol
+        })   
+        }
+      },
 
+      onClickStatus(status) {
+        this.currentSolStatus = status
       },
 
       async changeStatus(id, status, executor_id) {
@@ -239,18 +255,15 @@
           }).catch(() => {
             this.$store.commit('editStatus', {
               id,
-              status: 'В процессе'
+              status: this.currentSolStatus
             })
           })
         } else {
           this.$store.commit('setError404', 'Не достаточно прав')
-          status.name == "В процессе" ? this.$store.commit('editStatus', {
-            id,
-            status: 'Выполнено'
-          }) : this.$store.commit('editStatus', {
-            id,
-            status: 'В процессе'
-          })
+          this.$store.commit('editStatus', {
+              id,
+              status: this.currentSolStatus
+            })
         }
 
       },

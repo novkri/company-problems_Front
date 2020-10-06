@@ -64,8 +64,8 @@
             <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;">
               <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index" :key="index"
                 class="px-4 py-2 border-b cursor-pointer" :class="[
-                                pointerIndex == index ? 'bg-light text-dark' : '',
-                                $selected(option) ? 'selected' : '',
+                                pointerIndex == index ? 'selected' : '',
+                                $selected(option) ? 'bg-light text-dark' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
                               ]">{{ option.name }}</ss-select-option>
             </section>
@@ -90,8 +90,8 @@
             <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;">
               <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index" :key="index"
                 class="px-4 py-2 border-b cursor-pointer" :class="[
-                                pointerIndex == index ? 'bg-light text-dark' : '',
-                                $selected(option) ? 'selected' : '',
+                                pointerIndex == index ? 'selected' : '',
+                                $selected(option) ? 'bg-light text-dark' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
                               ]">{{ option.name }}</ss-select-option>
             </section>
@@ -116,8 +116,8 @@
             id="filterStatus">
             <ss-select-option v-for="(option, index) in filteredOptions"  :value="option" :index="index" :key="index"
               class="px-4 py-2 border-b cursor-pointer" :class="[
-                                pointerIndex == index ? 'bg-light text-dark' : '',
-                                $selected(option) ? 'selected' : '',
+                                pointerIndex == index ? 'selected' : '',
+                                $selected(option) ? 'bg-light text-dark' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
                               ]">{{ option.name }}</ss-select-option>
           </section>

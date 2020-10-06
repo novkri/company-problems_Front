@@ -99,7 +99,9 @@ export default {
       state.allUsersReduced = usersPayload
     },
     editExecutor: (state, payload) => {
+      console.log(payload.executor_id);
       state.solutions.find(solution => solution.id == payload.id).executor_id = payload.executor_id
+      console.log(state.solutions.find(solution => solution.id == payload.id).executor_id);
     },
 
     editPlan: (state, payload) => {
@@ -301,7 +303,6 @@ export default {
     changeExecutor: async ({
       commit
     }, param) => {
-      // param.id = 10000000000
       axios.put(BASEURL + `/${param.id}/set-executor`, {
         executor_id: param.uid
       }).then(response => {
