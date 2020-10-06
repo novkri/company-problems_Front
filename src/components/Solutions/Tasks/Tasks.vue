@@ -138,7 +138,7 @@
                   </ss-select-toggle>
 
                   <section v-show="isOpen" class="absolute border-l border-r min-w-full"
-                    style="top: 126%; right: -25%; width: fit-content;">
+                    style="top: -297%;; right: -25%; width: fit-content;">
                     <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
                       :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
@@ -308,12 +308,12 @@
       },
 
       selectMouseOut() {
-        this.$refs['mainTask'].style.height = '200px'
-        this.$refs['olTask'].style.maxHeight = '200px'
+        // this.$refs['mainTask'].style.maxHeight = '182px'
+        this.$refs['olTask'].style.maxHeight = '182px'
       },
       onClickExecutor(sol) {
         this.currentExecutor = sol
-        this.$refs['mainTask'].style.height = '650px'
+        // this.$refs['mainTask'].style.maxHeight = '650px'
         this.$refs['olTask'].style.maxHeight = '650px'
          console.log(this.currentExecutor);
       },
@@ -518,7 +518,6 @@
     padding: 0;
     padding-left: 26px;
     width: 100%;
-    // padding-right: 42px;
     margin-bottom: 0;
   }
 
@@ -570,11 +569,10 @@
       padding-left: 8px;
       align-items: center;
       display: flex;
-      // height: 36px;
       border-radius: 10px;
       text-align: center;
       padding-right: 0;
-      width: fit-content;
+      width: max-content !important;
 
       overflow: hidden;
       height: 30px;
@@ -583,7 +581,7 @@
     #ss-select:hover {
       overflow: visible;
       width: max-content !important;
-      background-color: #F6F7F9;
+      background-color: #F2F5FA;
 
 
       >div {
@@ -860,7 +858,7 @@
 
   .btnsAddTask {
     padding-left: 50px;
-    // background-color: #F6F7F9;
+    // background-color: #F2F5FA;
     width: 100%;
     padding-top: 19px;
     cursor: default;

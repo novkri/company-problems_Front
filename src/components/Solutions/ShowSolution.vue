@@ -82,14 +82,14 @@
               </div>
 
               <div class="selectResponsible col-2">
-                <ss-select v-model="solution.executor_id" :options="allUsers" track-by="id" search-by="surname"
+                <ss-select v-model="solution.executor_id" :options="allUsersReduced" track-by="id" search-by="surname"
                   @change="selectExecutor(solution.id, solution.executor_id)" disable-by="disabled" id="ss-select">
                   <div
                     slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                     style="cursor: pointer; width: 100%;" @click="onClickExecutor(selectedOption)">
                     <ss-select-toggle class="flex items-center justify-between" id="select-toggle">
                       <award-icon size="1.5x" class="custom-class"></award-icon>
-                      {{ $get(selectedOption, 'id') || `${allUsers.find(u => u.id == solution.executor_id) ? allUsers.find(u => u.id == solution.executor_id).surname + ' ' + allUsers.find(u => u.id == solution.executor_id).name[0] + '.' : 'Выбрать'}`}}
+                      {{ $get(selectedOption, 'id') || `${allUsersReduced.find(u => u.id == solution.executor_id) ? allUsersReduced.find(u => u.id == solution.executor_id).surname + ' ' + allUsersReduced.find(u => u.id == solution.executor_id).name + allUsersReduced.find(u => u.id == solution.executor_id).father_name : 'Выбрать'}`}}
                     </ss-select-toggle>
 
                     <section v-show="isOpen" class="absolute border-l border-r min-w-full">
@@ -103,7 +103,7 @@
                                 pointerIndex == index ? 'bg-light text-dark' : '',
                                 $selected(option) ? 'bg-light text-dark' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
-                              ]">{{ option.surname }} {{option.name[0]}}.</ss-select-option>
+                              ]">{{ option.surname }} {{option.name}} {{ option.father_name }}</ss-select-option>
                     </section>
                   </div>
                 </ss-select>
@@ -211,7 +211,7 @@
       SsSelectSearchInput
     },
     computed: {
-      ...mapGetters(['solutions', 'error', 'error404', 'allUsers', 'currentSolution', 'tasks', 'currentUid']),
+      ...mapGetters(['solutions', 'error', 'error404', 'allUsersReduced', 'currentSolution', 'tasks', 'currentUid']),
     },
     methods: {
       onClickExecutor(sol) {
@@ -353,9 +353,6 @@
           })
         }
 
-        // sol-div-no-solution
-
-
         this.$refs['textarea' + id][0].style.display = 'none'
         this.$refs['sol-div' + id][0].style.display = 'initial'
         this.$refs['hidden' + id][0].classList.remove('flex')
@@ -469,7 +466,6 @@
     font-style: normal;
     font-weight: normal;
     width: 97%;
-    // margin-left: 20px;
 
     h6 {
       font-family: 'GothamPro';
@@ -495,9 +491,6 @@
 
   .subt {
     margin-bottom: 35px;
-    // margin-top: 35px;
-    // margin-left: 29px !important;
-    // margin-left: 11px;
     width: 100%;
 
     div {
@@ -521,16 +514,6 @@
     padding: 0;
   }
 
-  // #ss-select {
-  //   align-items: center;
-  //   display: flex;
-  //   height: 36px;
-  //   border-radius: 10px;
-  //   display: flex;
-  //   padding: 0;
-  //       width: fit-content;
-  // }
-
   ol {
     margin-top: 30px;
     line-height: 24px;
@@ -541,7 +524,6 @@
     font-family: 'GothamPro';
     letter-spacing: 0.15px;
     color: #828282;
-    // margin-left: 10px;
 
     li {
       align-items: center;
@@ -594,7 +576,7 @@
     }
 
     input {
-      background-color: #F6F7F9;
+      background-color: #F2F5FA;
       padding-top: 0;
       padding-bottom: 0;
       cursor: pointer;
@@ -619,18 +601,18 @@
     #ss-select {
       align-items: center;
       display: flex;
-      // height: 36px;
       border-radius: 10px;
       padding-right: 0;
       width: fit-content;
       height: 30px;
       overflow: hidden;
+      width: max-content !important;
     }
 
     #ss-select:hover {
       overflow: visible;
       width: max-content !important;
-      background-color: #F6F7F9;
+      background-color: #F2F5FA;
 
       >div {
         max-height: 27px;
@@ -665,7 +647,7 @@
 
   .selectResponsible:hover {
     #ss-select {
-      background-color: #F6F7F9;
+      background-color: #F2F5FA;
     }
   }
 

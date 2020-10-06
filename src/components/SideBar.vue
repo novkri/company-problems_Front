@@ -17,19 +17,19 @@
         <a @click="myProblems">
           <router-link to="/my-problems" exact>
             <user-plus-icon size="1.5x" class="custom-class"></user-plus-icon>Предложенные мной
-            <span class="amount">{{amountOfMyProblems ? amountOfMyProblems > 9999 ? '9999+' : amountOfMyProblems : 0}}</span>
+            <span class="amount" v-show="amountOfMyProblems != 0">{{amountOfMyProblems ? amountOfMyProblems > 9999 ? '9999+' : amountOfMyProblems : 0}}</span>
           </router-link>
         </a>
         <a @click="problemsForConfirmation">
           <router-link to="/group-problems" exact>
             <eye-icon size="1.5x" class="custom-class"></eye-icon>На рассмотрении
-            <span class="amount">{{amountOfProblemsForConfirmation ? amountOfProblemsForExecution > 9999 ? '9999+' : amountOfMyProblems : 0}}</span>
+            <span class="amount" v-show="amountOfProblemsForConfirmation != 0">{{amountOfProblemsForConfirmation ? amountOfProblemsForExecution > 9999 ? '9999+' : amountOfMyProblems : ''}}</span>
           </router-link>
         </a>
         <a @click="problemsForExecution">
           <router-link to="/problems-for-execution" exact>
             <flag-icon size="1.5x" class="custom-class"></flag-icon>Для исполнения
-            <span class="amount">{{amountOfProblemsForExecution ? amountOfProblemsForExecution > 9999 ? '9999+' : amountOfMyProblems : 0}}</span>
+            <span class="amount" v-show="amountOfProblemsForExecution != 0">{{amountOfProblemsForExecution ? amountOfProblemsForExecution > 9999 ? '9999+' : amountOfMyProblems : ''}}</span>
           </router-link>
         </a>
         <a @click="showLinks" style="cursor: pointer;">
@@ -161,7 +161,7 @@
           status: ''
         }).then((r) => {
           this.$store.commit('amountOfMyProblems', r.length)
-        }).catch(() => {console.log('dddddddd')})
+        })
 
       },
 
@@ -249,8 +249,8 @@
 
   ::-webkit-scrollbar-track {
     background: #F2F2F2;
-    border-left: 4px solid #F6F7F9;
-    border-right: 4px solid #F6F7F9;
+    border-left: 4px solid #F2F5FA;
+    border-right: 4px solid #F2F5FA;
   }
 
   .links_groups {
@@ -307,7 +307,7 @@
   .sidebar {
     max-width: 287px;
     // max-width: 15%;
-    background-color: #F6F7F9;
+    background-color: #F2F5FA;
     padding: 0;
 
     a {

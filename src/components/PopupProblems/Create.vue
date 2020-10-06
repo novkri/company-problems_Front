@@ -16,72 +16,25 @@
                   <label for="new-problem-title">Название *</label>
                   <input type="text" ref="input" v-model="formData.name" class="form-control" id="new-problem-title"
                     placeholder="Название проблемы..." @blur="onBlur($event)" @focus="onFocus($event)"
-                    :class="{ 'form-control--error': $v.formData.name.$invalid, 'form-control--valid': formData.name && !$v.formData.name.$invalid}"
-                    >
-                    <!-- :class="{ 'form-control--error': $v.name.$invalid, 'form-control--valid': name && !$v.name.$invalid}" -->
-                  <!-- <div class="form-group-append" style="top: 59%;" @mousedown="onClear">
-                    <span class="form-group-text">&times;</span>
-                  </div> -->
+                    :class="{ 'form-control--error': $v.formData.name.$invalid, 'form-control--valid': formData.name && !$v.formData.name.$invalid}">
                   <div class="error" v-if="error.name">{{error.name[0]}}</div>
                 </div>
                 <div class="form-group">
                   <label for="description">Описание</label>
-                  <textarea cols="20" rows="3" type="text" ref="input" v-model="formData.description"
-                    class="form-control" id="description" placeholder="Описание проблемы..." @blur="onBlur($event)"
-                    @focus="onFocus($event)" :class="{ 'form-control--error': $v.formData.description.$invalid, 'form-control--valid': !$v.formData.description.$invalid}"
-                     />
-                     <!-- :class="{ 'form-control--error': $v.description.$invalid, 'form-control--valid': !$v.description.$invalid}" -->
-                  <!-- <div class="form-group-append" id="textarea-append" @mousedown="onClear">
-                  <span class="form-group-text">&times;</span> -->
-                <!-- </div> -->
-                <div class="error" v-if="error.description">{{error.description[0]}}</div>
-
+                  <textarea cols="20" rows="4" ref="input" v-model="formData.description" class="form-control"
+                    id="description" placeholder="Описание проблемы..." @keyup.shift.enter.prevent="newLine"
+                    @keydown.enter.prevent.exact="onEnter($event)" />
+                  <div class="error" v-if="error.description">{{error.description[0]}}</div>
 
               </div> 
                 <div class="form-group">
                 <label for="solution">Знаете как решить эту проблему? </label>
-                <input type="text" ref="input" v-model="formData.solution" class="form-control"
-                  id="solution" placeholder="Предложите ваше решение..." @blur="onBlur($event)" @focus="onFocus($event)"
-                  :class="{ 'form-control--error': $v.formData.solution.$invalid, 'form-control--valid': !$v.formData.solution.$invalid}"
-                  >
-                  <!-- :class="{ 'form-control--error': $v.solution.$invalid, 'form-control--valid': !$v.solution.$invalid}" -->
-                  <!-- <div class="form-group-append" style="top: 59%;" @mousedown="onClear">
-                    <span class="form-group-text">&times;</span>
-                  </div> -->
+                <textarea cols="20" rows="4" ref="input" v-model="formData.solution" class="form-control"
+                  id="solution" placeholder="Предложите ваше решение..." @keyup.shift.enter.prevent="newLine"  @keydown.enter.prevent.exact="onEnter($event)"
+                  />
                   <div class="error" v-if="error.possible_solution">{{error.possible_solution[0]}}</div>
               </div>  
-              <div class="form-group">
-                <div class="form-check">
-                  <label class="form-check-label" for="gridCheck">
-                    Выберите подразделение
-                  </label>
-                  <ss-select v-model="formData.group" :options="groups" track-by="name" search-by="name"
-                    class="form-control" disable-by="disabled"
-                    id="ss-select"
-                   >
-                   <!-- @change="selectGroup($event.id)"  -->
-                  <div @click="spacer = !spacer"
-                    slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                    style="cursor: pointer; width: 100%;">
-                    <ss-select-toggle style="padding: 13px;" id="select-toggle">
-                      {{ $get(selectedOption, 'name') || `${'Выбрать'}`}}
-                      <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
-                    </ss-select-toggle>
 
-                    <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;">
-                      <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index"
-                        :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
-                                pointerIndex == index ? 'bg-light text-dark' : '',
-                                $selected(option) ? 'bg-light text-dark' : '',
-                                $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
-                              ]">{{ option.name }}</ss-select-option>
-                    </section>
-                  </div>
-                </ss-select>
-                </div>
-                <!-- <div class="error" v-if="error">{{error}}</div> -->
-                <div v-show="spacer" class="spacer"></div>
-              </div>
             </form>
             <button type="submit" class="btn btnMain" @click="addProblem()">
               Предложить проблему
@@ -102,15 +55,6 @@
   import {
     mapGetters
   } from 'vuex'
-    import {
-    SsSelect,
-    SsSelectToggle,
-    SsSelectOption,
-  } from 'ss-select'
-  // SsSelectSearchInput
-    import {
-    ChevronDownIcon,
-  } from 'vue-feather-icons'
 
   export default {
     name: 'popup',
@@ -122,27 +66,14 @@
       currentForm: []
     }),
     components: {
-      ChevronDownIcon,
-
-      SsSelect,
-      SsSelectToggle,
-      SsSelectOption,
-      // SsSelectSearchInput
+     
     },
     validations: {
       formData: {
         name: {
         minLength: minLength(6),
         maxLength: maxLength(150)
-      },
-      description: {
-        minLength: minLength(6),
-        maxLength: maxLength(350)
-      },
-      solution: {
-        minLength: minLength(6),
-        maxLength: maxLength(250)
-      },
+      }
       }
     },
     watch: {
@@ -161,6 +92,14 @@
       onFocus(event) {
         event.target.nextElementSibling.style.display = 'flex'
       },
+      onEnter(event) {
+        event.target.blur()
+      },
+      newLine(e) {
+        let caret = e.target.selectionStart;
+        e.target.setRangeText("\n", caret, caret, "end");
+        this.text = e.target.value;
+      },
 
       async addProblem() {
         this.$store.commit('setError404', '')
@@ -168,10 +107,8 @@
           name: this.formData.name,
           description: this.formData.description,
           possible_solution: this.formData.solution,
-          // group: this.formData.group
         }).then((r) => {
           if (!this.error) {
-            this.formData.group ? this.$store.dispatch('sendToGroup', {id: r.id, groupsArray: [this.formData.group.id]}) : ''
             this.$store.dispatch('getThisProblem', r.id)
             this.formData = []
             document.getElementById('close').click()
@@ -299,7 +236,7 @@
     line-height: 17px;
     font-family: 'GothamPro-Medium';
     display: flex;
-    margin: 83px auto 0;
+    margin: 78px auto 0;
   }
 
   #description {

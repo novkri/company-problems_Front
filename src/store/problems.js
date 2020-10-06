@@ -127,9 +127,13 @@ export default {
       state.amountOfProblemsForConfirmation = payload
     },
 
+    problemSolved: (state, payload) => {
+      state.problems.find(p => p.id == payload.id).status = payload.status
+    },
   },
 
   actions: {
+    
     changeStatusesProblem: ({commit}, arr) => {
       commit('statusesProblem', arr)
     },
@@ -190,7 +194,6 @@ export default {
         })
       })
     },
-
     filterProblemStatus: async ({
       commit
     }, param) => {
@@ -259,6 +262,7 @@ export default {
         status: param.status
       }})
         .then(response => {
+          console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
@@ -673,11 +677,9 @@ export default {
       axios.put(BASEURL + `/${id}/send-for-confirmation`).then(response => {
         commit('setError', '')
         commit('setError404', '')
-        // ????/
-        // commit('problemSolved', response.data)
-        //????/
+        commit('problemSolved', response.data)
+        console.log(response.data);
         resolve(response.data)
-        // ??????????
       }).catch((error) => {
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)

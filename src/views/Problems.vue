@@ -26,6 +26,7 @@
     <div class="container">
       <div id="accordion">
         <div class="card" id="card" v-for="(problem, idx) in problems" :key="idx">
+          {{problem.status}}
           <div class="card-header row" :id="'heading'+problem.id" ref="collapsed-header">
             <div class="name col-4">
               <button class="btn btn-link collapsed" @click="onClickShow(problem)" data-toggle="collapse"
@@ -314,16 +315,16 @@
 
                             <div
                               style="margin-bottom: -37px; margin-top: 14px; display: flex; justify-content: space-evenly; flex-direction: row;flex-wrap:wrap; align-items: center;">
-                              <span v-show="problem.status == 'На рассмотрении'" class="problem-send">Проблема
+                              <span v-show="problem.status == 'На проверке заказчика' && solutions[0].executor_id == currentUid" class="problem-send">Проблема
                                 отправлена для подтверждения решения</span>
 
-                              <button v-show="solutions[0].executor_id == currentUid" class="btn btnMain problem-solved"
+                              <button v-show="problem.status != 'На проверке заказчика' && solutions[0].executor_id == currentUid" class="btn btnMain problem-solved"
                                 @click="problemSolved(problem.id)">Проблема решена</button>
                               <div style="display: flex; ">
-                                <button v-show="problem.creator_id == currentUid && problem.status != 'На рассмотрении'" class="btn btnMain problem-confirm y"
-                                  style="    margin-right: 11px;" @click="problemConfirm(problem.id)">Подтвердить
+                                <button v-show="problem.creator_id == currentUid && problem.status == 'На проверке заказчика'" class="btn btnMain problem-confirm y"
+                                  style="margin-right: 11px;" @click="problemConfirm(problem.id)">Подтвердить
                                   решение</button>
-                                <button v-show="problem.creator_id == currentUid && problem.status != 'На рассмотрении'" class="btn btnMain problem-confirm"
+                                <button v-show="problem.creator_id == currentUid && problem.status == 'На проверке заказчика'" class="btn btnMain problem-confirm"
                                   style="background-color: #EBEBEB;color: #4F4F4F;"
                                   @click="problemReject(problem.id)">Отклонить</button>
                               </div>
@@ -1022,6 +1023,7 @@
       background-color: #fff;
       border-radius: 9px;
       padding: 16px 13px;
+      padding-bottom: 30px;
 
       .card-header {
         height: fit-content;
@@ -1047,7 +1049,7 @@
     }
 
     textarea {
-      height: 65% !important;
+      height: 84% !important;
     }
   }
 
@@ -1108,7 +1110,7 @@
 
     justify-content: space-between;
     margin-left: 0px;
-    background-color: #F6F7F9;
+    background-color: #F2F5FA;
 
   }
 
@@ -1153,7 +1155,7 @@
     display: flex;
     flex-direction: column;
     border-radius: 0 0 9px 9px;
-    background: #F6F7F9;
+    background: #F2F5FA;
     // background-color: #fff;
     margin: auto;
     padding-top: 0;
@@ -1293,8 +1295,8 @@
   }
 
   .check-inputs {
-    max-height: 269px;
-    min-height: 269px;
+    max-height: 231px;
+    min-height: 231px;
     overflow-y: scroll;
     padding-right: 10px;
   }
@@ -1321,16 +1323,22 @@
   #plan,
   #tasks,
   #results {
+    .card-body {
+      height: fit-content;
+      // height: 459px !important;
+    }
+  }
 
-    .collapse.show {
-      height: 447px;
+  #plan {
+    .card, .card-body {
+      height: 100% !important;
     }
   }
 
   #groups {
-
-    .collapse.show {
-      height: 422px;
+    .card-body {
+      height: fit-content;
+      // height: 459px !important;
     }
   }
 
