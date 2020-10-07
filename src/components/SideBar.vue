@@ -534,6 +534,11 @@
           font-size: 20px !important;
         }
       }
+      .tooltip-inner.popover-inner {
+        a {
+          font-size: 22px !important;
+        }
+      }
     }
   }
 

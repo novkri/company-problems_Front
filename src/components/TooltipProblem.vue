@@ -10,26 +10,26 @@
       </div>
 
       <div>
-        <p style="align-self: baseline;"><span>Описание: </span>
+        <p><span>Описание: </span>
         </p> 
-        <p @click="event => changeProblemDesc(val.id, val.creator_id, event)" class="desc" v-show="!isEditDesc" :style="[val.creator_id == currentUid ? {'cursor': 'pointer'} : {'cursor': 'default'}]">{{val.description}}</p>
-        <p @click="event => changeProblemDesc(val.id, val.creator_id, event)" class="desc" v-show="!val.description" :style="[val.creator_id == currentUid ? {'cursor': 'pointer'} : {'cursor': 'default'}]">
+        <p @click="event => changeProblemDesc(val.id, val.creator_id, event)" class="desc" v-show="!isEditDesc" :style="[val.description ? {'background-color': '#f9f9f9'} : {}]">{{val.description}}</p>
+        <!-- <p @click="event => changeProblemDesc(val.id, val.creator_id, event)" class="desc" v-show="!val.description" :style="[val.creator_id == currentUid ? {'cursor': 'pointer'} : {'cursor': 'default'}]">
           <input class="form-control desc"  v-show="!emptyInputIsClicked" @click="emptyInputIsClicked = true"
             placeholder="Введите описание...">
-        </p>
+        </p> -->
         <input v-show="isEditDesc" v-model="val.description" @blur="event => onBlurDesc(event, val.id)"
           @keyup.enter="onEnterDesc($event)" class="form-control desc" :ref="'descInput'+val.id" />
       </div>
 
       <div>
-        <p style="align-self: baseline;"><span>Возможное решение: </span>
-        </p>
-        <p @click="event => changePossible(val.id, val.creator_id, event)" class="possible" v-show="!isEditPossible">
+        <p><span>Возможное решение: </span>
+        </p> 
+        <p @click="event => changePossible(val.id, val.creator_id, event)" class="possible" v-show="!isEditPossible" :style="[val.possible_solution ? {'background-color': '#f9f9f9'} : {}]">
           {{val.possible_solution}}</p>
-        <p @click="event => changePossible(val.id, val.creator_id, event)" class="possible" v-show="!val.possible_solution">
+        <!-- <p @click="event => changePossible(val.id, val.creator_id, event)" class="possible" v-show="!val.possible_solution">
           <input class="form-control possible" v-show="!emptyInputPossibleIsClicked" :disabled="val.creator_id !== currentUid"
             @click="emptyInputPossibleIsClicked = true" placeholder="Введите решение...">
-        </p>
+        </p> -->
 
         <input v-show="isEditPossible" v-model="val.possible_solution" @blur="event => onBlurPossible(event, val.id)"
           @keyup.enter="onEnterPossible($event)" class="form-control possible" :ref="'possibleInput'+val.id" />
@@ -56,7 +56,7 @@
       isEditDesc: false,
       isEditPossible: false,
 
-      // newInput: '',
+      newInputDesc: '',
       newInput: ''
     }),
     computed: {
@@ -67,10 +67,11 @@
       async changeProblemDesc(id,creator_id, event) {
         await this.$store.commit('setError404', '')
         if (creator_id == this.currentUid) {
-          this.isEditDesc = true
-        this.newInput = event.target.textContent
+        this.isEditDesc = true
+        this.newInputDesc = event.target.textContent
         this.$nextTick(() => {
           this.$refs['descInput' + id].focus()
+          event.target.style.display = 'none'
         })
         } else {
           // await this.$store.commit('setError404', 'не хватает прав')
@@ -92,7 +93,7 @@
             this.isEditDesc = true
             this.$store.commit('changeProblemDescription', {
               id,
-              description: this.newInput
+              description: this.newInputDesc
             })
           })
           !this.val.description ? this.isEditDesc = true : this.isEditDesc = false
@@ -106,6 +107,7 @@
         this.newInput = event.target.textContent
 
         this.$nextTick(() => {
+          event.target.style.display = 'none'
           this.$refs['possibleInput' + id].focus()
         })
         } else {
@@ -138,9 +140,18 @@
 </script>
 
 <style scoped lang="scss">
+.desc, .possible {
+  background-color: #ebebeb;
+  min-width: 189.8px;
+  min-height: 33.5px;
+  border-radius: 6px;
+  margin-bottom: 3px;
+  align-self: normal;
+  cursor: pointer;
+}
   .form-control.desc,
   .form-control.possible {
-    background-color: #F6F6F6;
+    background-color: #ebebeb;
     width: auto;
   }
 
@@ -150,10 +161,10 @@
 
   .container_tooltip {
     width: 100%;
+    margin-top: 30px;
   }
 
   .main-tooltip {
-    // margin-top: 30px;
     width: 100%;
     flex-direction: column;
 

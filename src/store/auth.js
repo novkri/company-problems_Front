@@ -108,7 +108,7 @@ export default {
           const token = resp.data.access_token
           const user = resp.data.user
           commit('addUser', user)
-
+console.log(resp);
           localStorage.setItem('token', token)
           localStorage.setItem('currentUid', resp.data.user.id)
           localStorage.setItem('user', JSON.stringify(user))

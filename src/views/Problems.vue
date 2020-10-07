@@ -2,26 +2,6 @@
   <div>
     <span class="empty" v-show="problems.length == 0">Список проблем пуст...</span>
     <div class="filters">
-      <!-- <div class="pagination">
-        <nav>
-          <ul class="pagination">
-            <li class="page-item">
-              <a class="page-link" @click="prevPage" aria-label="Previous" :class="{'block' : pageNumber==0}">
-                <chevron-left-icon size="1.5x" class="custom-class"></chevron-left-icon>
-              </a>
-            </li>
-            <li class="page-item">
-              <span v-if="pageNumber ==0">1-25</span>
-              <span v-else>{{(25 * pageNumber)+1}}-{{(25 * pageNumber)+26}}</span>
-            </li>
-            <li class="page-item">
-              <a class="page-link" @click="nextPage" aria-label="Next" :class="{'block' : pageNumber >= pageCount - 1}">
-                <chevron-right-icon size="1.5x" class="custom-class"></chevron-right-icon>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div> -->
     </div>
     <div class="container">
       <div id="accordion">
@@ -58,7 +38,7 @@
                   <template slot="popover">
                     <TooltipProblem char="=" :val="problem" />
                     <a v-close-popover
-                      style="display: flex;justify-content: flex-end; font-size: 28px; font-family: 'GothamPro'; cursor: pointer;">&times;</a>
+                      style="display: flex;justify-content: flex-end; font-family: 'GothamPro'; cursor: pointer;">&times;</a>
                   </template>
                 </v-popover>
               </div>
