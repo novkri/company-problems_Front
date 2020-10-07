@@ -518,7 +518,7 @@
 
     div {
       font-family: 'GothamPro';
-      font-size: 14px;
+      font-size: 16px;
       line-height: 24px;
       text-align: center;
       letter-spacing: 0.15px;
@@ -703,6 +703,7 @@
   @media (max-width: 1500px) {
     * {
       font-size: 14px !important;
+
     }
   }
 
@@ -719,10 +720,6 @@
     .navbar .user span,
     .sidebar a {
       font-size: 14px;
-    }
-
-    .form-control {
-      font-size: 14px !important;
     }
 
     .footer {

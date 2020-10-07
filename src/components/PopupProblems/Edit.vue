@@ -111,7 +111,7 @@
 
   .error {
     font-size: 12px;
-    color: #FF8585;
+    color: #EC7676;
   }
 
   #new-problem-desc {

@@ -3,22 +3,22 @@
     <div class="form" v-if="!success">
       <div class="header">Регистрация</div>
       <form>
-        <div class="form-group">
-          <div>
-            <label for="text">Фамилия *<span
-                v-if="surname.length >= 20 && surname.length <= 25">{{$v.surname.$params.maxLength.max - surname.length}}</span></label>
-            <input type="text" class="form-control" id="surname" v-model="surname"
-              :class="{ 'form-control--error': $v.surname.$invalid, 'form-control--valid': surname && !$v.surname.$invalid}">
-            <div class="errorAuth" v-if="errorUReg.surname">{{errorUReg.surname[0]}} </div>
-          </div>
+        <div class="form-group-div">
+          <label for="text">Фамилия *<span
+              v-if="surname.length >= 20 && surname.length <= 25">{{$v.surname.$params.maxLength.max - surname.length}}</span></label>
+          <input type="text" class="form-control" id="surname" v-model="surname"
+            :class="{ 'form-control--error': $v.surname.$invalid, 'form-control--valid': surname && !$v.surname.$invalid}">
+          <div class="error" v-if="!surname">Это поле обязательно для заполнения.</div>
+          <div class="errorAuth" v-if="errorUReg.surname">{{errorUReg.surname[0]}} </div>
+        </div>
 
-          <div class="form-group-div">
-            <label for="text">Имя *<span
-                v-if="name.length >= 20 && name.length <= 25">{{$v.name.$params.maxLength.max - name.length}}</span></label>
-            <input type="text" class="form-control" id="name" v-model="name"
-              :class="{ 'form-control--error': $v.name.$invalid, 'form-control--valid': name && !$v.name.$invalid}">
-            <div class="errorAuth" v-if="errorUReg.name">{{errorUReg.name[0]}} </div>
-          </div>
+        <div class="form-group-div">
+          <label for="text">Имя *<span
+              v-if="name.length >= 20 && name.length <= 25">{{$v.name.$params.maxLength.max - name.length}}</span></label>
+          <input type="text" class="form-control" id="name" v-model="name"
+            :class="{ 'form-control--error': $v.name.$invalid, 'form-control--valid': name && !$v.name.$invalid}">
+          <div class="error" v-if="!name">Это поле обязательно для заполнения.</div>
+          <div class="errorAuth" v-if="errorUReg.name">{{errorUReg.name[0]}} </div>
         </div>
 
         <div class="form-group-div">
@@ -34,6 +34,7 @@
               v-if="email.length >= 250 && email.length <= 255">{{$v.email.$params.maxLength.max - email.length}}</span></label>
           <input type="email" class="form-control" id="email" v-model="email"
             :class="{ 'form-control--error': $v.email.$invalid, 'form-control--valid': email && !$v.email.$invalid}">
+          <div class="error" v-if="!email">Это поле обязательно для заполнения.</div>
           <div class="errorAuth" v-if="errorUReg.email">{{errorUReg.email[0]}} </div>
         </div>
 
@@ -50,6 +51,7 @@
               <eye-off-icon size="1.5x" class="custom-class" v-else></eye-off-icon>
             </button>
           </div>
+          <div class="error" v-if="!password">Это поле обязательно для заполнения.</div>
           <div class="errorAuth" v-if="errorUReg.password">{{errorUReg.password[0]}} </div>
         </div>
 
@@ -68,6 +70,7 @@
               <eye-off-icon size="1.5x" class="custom-class" v-else></eye-off-icon>
             </button>
           </div>
+          <div class="error" v-if="!confirm">Это поле обязательно для заполнения.</div>
           <div class="errorAuth" v-if="errorUReg.password">{{errorUReg.password[1]}} </div>
         </div>
       </form>
@@ -78,7 +81,7 @@
 
     <div v-else class="successfully">
       <span>Вы успешно зарегистрированы</span>
-      <thumbs-up-icon size="3x" class="custom-class" style="color: #92D2C3; margin: 30px 0 35px 0;"></thumbs-up-icon>
+      <thumbs-up-icon size="3x" class="custom-class" style="color: #92D2C3; margin: 73px 0;"></thumbs-up-icon>
       <button type="button" class="btn" @click="goToLogin">
         На страницу авторизации
       </button>
@@ -240,14 +243,11 @@
   }
 
   .container {
-    // width: 409px;
-    // width: auto;
-    width: 703px;
+    width: 615px;
     display: flex;
     margin: auto;
     justify-content: center;
     align-items: center;
-    // height: 100vh;
     height: auto;
     padding-top: 63px;
     padding-bottom: 130px;
@@ -264,7 +264,12 @@
   label {
     display: flex;
     justify-content: space-between;
-    margin: 0 7px 9px 18px;
+    margin: 0 7px 12px 18px;
+    font-size: 14px;
+    font-family: 'GothamPro';
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    color: #828282;
   }
 
   .btn {
@@ -289,15 +294,22 @@
     margin-top: 40px;
   }
 
+  .error {
+    font-size: 12px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    color: #EC7676;
+  }
+
   input,
   input:active {
-    background-color: #F6F7F9;
-    // margin-bottom: 22px;
+    background-color: #F2F5FA;
     border-radius: 12px;
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #4F4F4F;
+    height: 42px;
   }
 
   .form-control:active,
@@ -306,15 +318,41 @@
     border-bottom: 2px solid #FF8585;
   }
 
-  label {
-    margin: 0 7px 12px 18px;
+ .form-control--valid {
+    border: transparent;
+    border-radius: 6px;
+    background-color: #FAFAFA;
+    color: #2D453F;
+    caret-color: #92D2C3;
+    border-bottom: 2px solid #92D2C3 !important;
+
+
+    &:focus {
+      box-shadow: none;
+      border-bottom: 2px solid #92D2C3;
+    }
+  }
+
+      .form-control--error {
+    border: transparent;
+    border-radius: 6px;
+    background-color: #FAFAFA;
+    color: #2D453F;
+    caret-color: #92D2C3;
+    border-bottom: 2px solid #EC7676 !important;
+
+
+    &:focus {
+      box-shadow: none;
+      border-bottom: 2px solid #EC7676;
+    }
   }
 
   .add-on {
-    background-color: #F6F7F9;
+    background-color: #F2F5FA;
     border-radius: 0 12px 12px 0;
     padding: 0;
-    border: none;
+    border: transparent;
 
     svg {
       margin: 7px 25px;

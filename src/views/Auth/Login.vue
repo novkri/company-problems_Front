@@ -174,10 +174,10 @@
 
   input,
   input:active {
-    background-color: #F6F7F9;
+    background-color: #F2F5FA;
     margin-bottom: 22px;
     border-radius: 12px;
-
+    height: 42px;
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;

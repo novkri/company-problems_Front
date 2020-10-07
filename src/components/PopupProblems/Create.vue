@@ -15,9 +15,10 @@
                 <div class="form-group">
                   <label for="new-problem-title">Название *</label>
                   <input type="text" ref="input" v-model="formData.name" class="form-control" id="new-problem-title"
-                    placeholder="Название проблемы..." @blur="onBlur($event)" @focus="onFocus($event)"
+                    placeholder="Название проблемы..." 
                     :class="{ 'form-control--error': $v.formData.name.$invalid, 'form-control--valid': formData.name && !$v.formData.name.$invalid}">
                   <div class="error" v-if="error.name">{{error.name[0]}}</div>
+                  <div class="error" v-if="!formData.name">Это поле обязательно для заполнения.</div>
                 </div>
                 <div class="form-group">
                   <label for="description">Описание</label>
@@ -86,12 +87,12 @@
     },
 
     methods: {
-      onBlur(event) {
-        event.target.nextElementSibling.style.display = 'none'
-      },
-      onFocus(event) {
-        event.target.nextElementSibling.style.display = 'flex'
-      },
+      // onBlur(event) {
+      //   event.target.nextElementSibling.style.display = 'none'
+      // },
+      // onFocus(event) {
+      //   event.target.nextElementSibling.style.display = 'flex'
+      // },
       onEnter(event) {
         event.target.blur()
       },
@@ -133,6 +134,12 @@
 * {
   font-family: 'GothamPro';
 }
+  .error {
+    font-size: 12px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    color: #EC7676;
+  }
 .modal-dialog {
   max-width: 600px;
 }
@@ -191,6 +198,37 @@
   .form-control:focus {
     background-color: #F0F0F0;
   }
+    .form-control--valid {
+    border: transparent;
+    border-radius: 6px;
+    background-color: #FAFAFA;
+    color: #2D453F;
+    caret-color: #92D2C3;
+    border-bottom: 2px solid #92D2C3 !important;
+
+
+    &:focus {
+      box-shadow: none;
+      border-bottom: 2px solid #92D2C3;
+    }
+  }
+
+      .form-control--error {
+    border: transparent;
+    border-radius: 6px;
+    background-color: #FAFAFA;
+    color: #2D453F;
+    caret-color: #92D2C3;
+    border-bottom: 2px solid #EC7676 !important;
+
+
+    &:focus {
+      box-shadow: none;
+      border-bottom: 2px solid #EC7676;
+    }
+  }
+
+
   .form-group {
     position: relative;
   }

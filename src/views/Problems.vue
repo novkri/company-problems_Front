@@ -140,7 +140,7 @@
                   Прогресс решения:
                 </span>
                 <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=35 :thickness="3">
-                  <span :ref="'legend-value'+problem.id" slot="legend-value" style="padding: 0;font-size: 11px !important;"
+                  <span :ref="'legend-value'+problem.id" slot="legend-value" style="padding: 0;font-size: 12px !important;display: flex;"
                     @click="event => clickProgress(problem.id, event)">{{problem.progress}}%</span>
                   <input :ref="'progress-bar'+problem.id" class="progress-input" type="text" style="display: none;"
                     v-model="problem.progress" @blur="editProgress(problem.id, problem.progress)"
@@ -1112,10 +1112,12 @@
 
   h5 {
     font-family: 'GothamPro';
+    font-style: normal;
+font-weight: normal;
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;
-    color: #000000;
+    color: #4F4F4F;
 
     input {
       height: fit-content;
@@ -1166,7 +1168,7 @@
     }
 
     span {
-      font-size: 16px;
+      font-size: 18px;
       padding-right: 9px;
     }
   }

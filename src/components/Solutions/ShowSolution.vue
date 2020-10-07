@@ -490,7 +490,6 @@
   }
 
   .subt {
-    margin-bottom: 35px;
     width: 100%;
 
     div {
@@ -515,7 +514,7 @@
   }
 
   ol {
-    margin-top: 30px;
+    margin-top: 10px;
     line-height: 24px;
     color: #2D453F;
     margin-bottom: 0;

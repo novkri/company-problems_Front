@@ -22,6 +22,7 @@
                   <div class="input-group-append" @mousedown="onClear('name')">
                     <span class="input-group-text">&times;</span>
                   </div>
+                  <div class="error" v-if="!name">Это поле обязательно для заполнения.</div>
                   <div class="error" v-if="error.name">{{error.name[0]}}</div>
                 </div>
 
@@ -38,7 +39,7 @@
                 </div>
 
                 <div class="input-group">
-                  <label>Выбрать руководителя*</label>
+                  <label>Выбрать руководителя *</label>
                   <div class="selectResponsible" style="background-color: transparent;" @click="clearError">
                     <ss-select v-model="leader_id" :options="usersNoGroup" track-by="name" search-by="name"
                       disable-by="disabled" id="ss-select" style="width: fit-content;">
@@ -63,6 +64,7 @@
                       </div>
                     </ss-select>
                   </div>
+                  <div class="error" v-if="!leader_id">Это поле обязательно для заполнения.</div>
                   <div class="error" v-if="error.leader_id">{{error.leader_id[0]}}</div>
                 </div>
               </form>
@@ -204,13 +206,11 @@
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #EC7676;
-    // padding-bottom: 49px;
   }
 
   .selectResponsible {
     display: flex;
     background-color: #F6F6F6;
-    // padding-left: 10px;
     padding-top: 10px;
     margin-bottom: 10px;
     height: 49px;

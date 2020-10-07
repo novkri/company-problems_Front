@@ -13,7 +13,7 @@
     </div>
 
     <div class="container row">
-      <ol ref="olTask" @mouseover="mouseOverList()">
+      <ol ref="olTask">
         <li id="list" v-for="(task, idx) in tasks" :key="idx">
           <div class="task-title col-4"
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">
@@ -37,16 +37,16 @@
             <ss-select v-model="task.status" :options="statusesT" track-by="name" class="form-control"
               @change="changeStatusTask(task.id, task.status, task.executor_id)" disable-by="disabled"
               :class="[task.status == 'Выполнено' ? 'green' : task.status == 'В процессе' ? 'blue' : 'gray']"
-              id="ss-select" style="margin:auto; width: 87%;">
+              id="ss-select" style="margin:auto; width: 87%;position: relative;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                style="cursor: pointer; width: 100%;" @click="onClickStatus(selectedOption)">
+                style="cursor: pointer; width: 100%;" @click="onClickStatus(selectedOption, task.id)">
                 <ss-select-toggle style="width: 100%; padding: 6px;" id="select-toggle">
                   {{ $get(selectedOption, 'name') || `${task.status}`}}
                   <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                 </ss-select-toggle>
 
                 <section v-show="isOpen" :ref="'slot-scope'+task.id" class="absolute border-l border-r min-w-full"
-                  style="height: 187px;;top:41%;">
+                  style="height: 187px;" >
                   <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index"
                     :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                     pointerIndex == index ? 'bg-light text-dark' : '',
@@ -70,7 +70,7 @@
               @change="selectExecutorTask(task, val.executor_id)" disable-by="disabled" id="ss-select"
               style="width: 100%;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                @click="onClickExecutor(selectedOption)" style="cursor: pointer; width: 100%;">
+                @click="onClickExecutor(selectedOption, task.id)" style="cursor: pointer; width: 100%;">
                 <ss-select-toggle class="flex items-center justify-between" style="margin: auto;">
                   <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                   {{ $get(selectedOption, 'name') ||  `${allUsersReduced.find(u => u.id == task.executor_id) ? allUsersReduced.find(u => u.id == task.executor_id).surname + ' ' 
@@ -104,8 +104,9 @@
         </li>
       </ol>
     </div>
+
     <div>
-      <div style="padding: 20px; cursor: pointer; width: fit-content;" v-if="addNotClicked"
+      <div style="padding: 20px; cursor: pointer; width: fit-content;min-height: 62px;" v-if="addNotClicked"
         @click.prevent="displayInput">
         <!-- <plus-icon size="1.5x" class="custom-class" style="color: #92D2C3;">
         </plus-icon> -->
@@ -304,24 +305,18 @@
         })
       },
 
-      // onClickStatus(status) {
-      //   this.currentTaskStatus = status
+      onClickStatus(status, id) {
+        this.currentTaskStatus = status
+        this.$refs['slot-scope'+id][0].style.display == 'none' ? this.$refs['olTask'].style.maxHeight = '182px' : this.$refs['olTask'].style.maxHeight = '650px'
+      },
 
-      //   this.$refs['olTask'].style.maxHeight = '650px'
+      // selectMouseOut(id) {
+      //   this.$refs['slot-scope'+id][0].style.display != 'none' ? this.$refs['olTask'].style.maxHeight = '182px' : this.$refs['olTask'].style.maxHeight = '650px'
       // },
-
-      // selectMouseOver() {
-      //  this.$refs['olTask'].style.maxHeight = '650px'
-      // },
-
-      // selectMouseOut() {
-      //   this.$refs['olTask'].style.maxHeight = '182px'
-      // },
-      onClickExecutor(sol) {
+      onClickExecutor(sol, id) {
         this.currentExecutor = sol
 
-        // this.$refs['olTask'].style.maxHeight = '650px'
-        console.log(this.currentExecutor);
+        this.$refs['slot-scope'+id][0].style.display == 'none' ? this.$refs['olTask'].style.maxHeight = '182px' : this.$refs['olTask'].style.maxHeight = '650px'
       },
       async selectExecutorTask(task, executor_id) {
         await this.$store.commit('setError404', '')
@@ -484,6 +479,7 @@
 
   .header {
     margin: 0;
+    margin-top: 22px;
     // padding-top: 30px;
     align-items: center;
     max-width: inherit;
@@ -498,7 +494,7 @@
       line-height: 24px;
       letter-spacing: 0.15px;
       color: #828282;
-      font-size: 14px;
+      font-size: 16px;
     }
   }
 
@@ -530,6 +526,10 @@
     padding-left: 26px;
     width: 100%;
     margin-bottom: 0;
+  }
+
+  li:first-child {
+    padding-top: 0;
   }
 
   li {
