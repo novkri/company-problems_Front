@@ -242,6 +242,7 @@
     
   #new-problem-title {
     border-radius: 6px;
+    height: 42px;
   }
   .form-group-append {
     display: none;

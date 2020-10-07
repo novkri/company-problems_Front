@@ -889,8 +889,7 @@
   }
 
   .progress-input {
-    width: 22px;
-    // background-color: transparent;
+    width: 29px;
     background-color: #F7F7F7;
     border-radius: 9px;
     border: none;
