@@ -108,6 +108,7 @@
           description: this.formData.description,
           possible_solution: this.formData.solution,
         }).then((r) => {
+          this.$router.push('/my-problems')
           if (!this.error) {
             this.$store.dispatch('getThisProblem', r.id)
             this.formData = []

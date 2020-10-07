@@ -1,6 +1,6 @@
 <template>
   <div ref="mainTask">
-    <div class="header row">
+    <div class="header row" style="position: relative;">
       <div class="col-4">
         <span style="font-family: 'GothamPro-Medium'; color: #4f4f4f;">Задачи:</span>
       </div>
@@ -13,7 +13,7 @@
     </div>
 
     <div class="container row">
-      <ol ref="olTask">
+      <ol ref="olTask" @mouseover="mouseOverList()">
         <li id="list" v-for="(task, idx) in tasks" :key="idx">
           <div class="task-title col-4"
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">
@@ -33,7 +33,7 @@
             </div>
           </div>
 
-          <div class="select col-3" style="position: relative;" ref="select">
+          <div class="select col-3" ref="select">
             <ss-select v-model="task.status" :options="statusesT" track-by="name" class="form-control"
               @change="changeStatusTask(task.id, task.status, task.executor_id)" disable-by="disabled"
               :class="[task.status == 'Выполнено' ? 'green' : task.status == 'В процессе' ? 'blue' : 'gray']"
@@ -45,7 +45,8 @@
                   <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                 </ss-select-toggle>
 
-                <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;">
+                <section v-show="isOpen" :ref="'slot-scope'+task.id" class="absolute border-l border-r min-w-full"
+                  style="height: 187px;;top:41%;">
                   <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index"
                     :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                     pointerIndex == index ? 'bg-light text-dark' : '',
@@ -69,8 +70,7 @@
               @change="selectExecutorTask(task, val.executor_id)" disable-by="disabled" id="ss-select"
               style="width: 100%;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                @mouseout="selectMouseOut()" @click="onClickExecutor(selectedOption)"
-                style="cursor: pointer; width: 100%;">
+                @click="onClickExecutor(selectedOption)" style="cursor: pointer; width: 100%;">
                 <ss-select-toggle class="flex items-center justify-between" style="margin: auto;">
                   <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                   {{ $get(selectedOption, 'name') ||  `${allUsersReduced.find(u => u.id == task.executor_id) ? allUsersReduced.find(u => u.id == task.executor_id).surname + ' ' 
@@ -78,7 +78,8 @@
                     + allUsersReduced.find(u => u.id == task.executor_id).father_name : 'Выбрать'}`}}
                 </ss-select-toggle>
 
-                <section v-show="isOpen" class="absolute border-l border-r min-w-full">
+                <section v-show="isOpen" class="absolute border-l border-r min-w-full"
+                  style="height: 187px;top:41%;right: 9%;">
                   <div class="px-px">
                     <ss-select-search-input class="w-full px-3 py-2 search" placeholder="Впишите фамилию">
                     </ss-select-search-input>
@@ -303,19 +304,24 @@
         })
       },
 
-      onClickStatus(status) {
-        this.currentTaskStatus = status
-      },
+      // onClickStatus(status) {
+      //   this.currentTaskStatus = status
 
-      selectMouseOut() {
-        // this.$refs['mainTask'].style.maxHeight = '182px'
-        this.$refs['olTask'].style.maxHeight = '182px'
-      },
+      //   this.$refs['olTask'].style.maxHeight = '650px'
+      // },
+
+      // selectMouseOver() {
+      //  this.$refs['olTask'].style.maxHeight = '650px'
+      // },
+
+      // selectMouseOut() {
+      //   this.$refs['olTask'].style.maxHeight = '182px'
+      // },
       onClickExecutor(sol) {
         this.currentExecutor = sol
-        // this.$refs['mainTask'].style.maxHeight = '650px'
-        this.$refs['olTask'].style.maxHeight = '650px'
-         console.log(this.currentExecutor);
+
+        // this.$refs['olTask'].style.maxHeight = '650px'
+        console.log(this.currentExecutor);
       },
       async selectExecutorTask(task, executor_id) {
         await this.$store.commit('setError404', '')
@@ -408,6 +414,11 @@
 </script>
 
 <style scoped lang="scss">
+  .col-3,
+  .col-2 {
+    position: initial !important;
+  }
+
   ::-webkit-scrollbar {
     width: 10px;
   }

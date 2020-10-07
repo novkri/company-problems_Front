@@ -20,6 +20,7 @@
         return (this.$route.meta.layout) + '-layout';
       }
     },
+
   }
 </script>
 <style lang="scss">

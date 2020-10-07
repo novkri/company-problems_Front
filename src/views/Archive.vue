@@ -63,13 +63,15 @@
                 </v-popover>
               </div>
               <div style="width: 21px;">
-                <clock-icon size="1.5x" class="custom-class details" :ref="'urgency'+problem.id" v-show="problem.urgency === 'Срочная'"
+                <clock-icon size="1.5x" class="custom-class details" :ref="'urgency'+problem.id"
+                  v-show="problem.urgency === 'Срочная'"
                   :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
                   @click="changeUrgency(problem.id, problem.urgency)"></clock-icon>
               </div>
               <div style="width: 21px;">
-                
-                <alert-circle-icon size="1.5x" class="custom-class details" :ref="'importance'+problem.id" v-show="problem.importance === 'Важная'"
+
+                <alert-circle-icon size="1.5x" class="custom-class details" :ref="'importance'+problem.id"
+                  v-show="problem.importance === 'Важная'"
                   :style="[problem.importance == isImportnant ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
                   @click="changeImportance(problem.id, problem.importance)"></alert-circle-icon>
               </div>
@@ -140,7 +142,8 @@
                   Прогресс решения:
                 </span>
                 <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=35 :thickness="3">
-                  <span :ref="'legend-value'+problem.id" slot="legend-value" style="padding: 0;font-size: 11px !important;"
+                  <span :ref="'legend-value'+problem.id" slot="legend-value"
+                    style="padding: 0;font-size: 11px !important;"
                     @click="event => clickProgress(problem.id, event)">{{problem.progress}}%</span>
                   <input :ref="'progress-bar'+problem.id" class="progress-input" type="text" style="display: none;"
                     v-model="problem.progress" @blur="editProgress(problem.id, problem.progress)"
@@ -430,7 +433,7 @@
   } from 'vue-feather-icons'
 
   export default {
-    name: "problems",
+    name: "archive-problems",
     data: () => ({
       openDelete: false,
       openShow: false,
@@ -469,9 +472,14 @@
     },
 
     async mounted() {
-      await this.$store.dispatch('getProblems').catch(() => {
-          this.$store.commit('setProblems', '')
-        })
+      await this.$store.dispatch('archive', {
+        urgency: '',
+        importance: '',
+        deadline: '',
+        status: ''
+      }).catch(() => {
+        this.$store.commit('setProblems', '')
+      })
       await this.$store.dispatch('getGroups').catch(() => this.$router.push('/login'))
       await this.$store.dispatch('getAllUsers')
       // this.$route.path === '/' ? await this.$store.dispatch('getProblems') : ''
@@ -541,7 +549,7 @@
       async changeImportance(id, importance) {
         await this.$store.commit('setError404', '')
         if (this.fakeResponsible) {
-      
+
           if (importance === 'Обычная') {
             await this.$store.dispatch('changeImportance', {
               id,

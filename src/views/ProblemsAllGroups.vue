@@ -430,7 +430,7 @@
   } from 'vue-feather-icons'
 
   export default {
-    name: "problems",
+    name: "problems-of-all-groups",
     data: () => ({
       openDelete: false,
       openShow: false,
@@ -469,7 +469,12 @@
     },
 
     async mounted() {
-      await this.$store.dispatch('getProblems').catch(() => {
+      await this.$store.dispatch('getAllGroupsProblems', {
+          urgency: '',
+          importance: '',
+          deadline: '',
+          status: ''
+        }).catch(() => {
           this.$store.commit('setProblems', '')
         })
       await this.$store.dispatch('getGroups').catch(() => this.$router.push('/login'))

@@ -133,7 +133,65 @@ export default {
   },
 
   actions: {
-    
+    countAmountOfMyProblems: async ({
+      commit
+    }, param) => {
+      return new Promise((resolve) => {
+      axios.get(BASEURL+'/my-problems', {params: {
+        urgency: param.urgency,
+        importance: param.importance,
+        deadline: param.deadline,
+        status: param.status
+      }})
+        .then(response => {
+            commit('setError', '')
+            commit('setError404', '')
+            commit('amountOfMyProblems', response.data.length)
+            resolve(response.data)
+        })
+      })
+    },
+    countAmountOfProblemsForExecution: async ({
+      commit
+    }, param) => {
+      return new Promise((resolve) => {
+      axios.get(BASEURL+'/problems-for-execution', {params: {
+        urgency: param.urgency,
+        importance: param.importance,
+        deadline: param.deadline,
+        status: param.status
+      }})
+        .then(response => {
+            commit('setError', '')
+            commit('setError404', '')
+            commit('amountOfProblemsForExecution', response.data.length)
+            resolve(response.data)
+        })
+      })
+    },
+
+    countAmountOfProblemsForConfirmation: async ({
+      commit
+    }, param) => {
+      return new Promise((resolve) => {
+      axios.get(BASEURL+'/group-problems', {params: {
+        urgency: param.urgency,
+        importance: param.importance,
+        deadline: param.deadline,
+        status: param.status
+      }})
+        .then(response => {
+            commit('setError', '')
+            commit('setError404', '')
+            commit('amountOfProblemsForConfirmation', response.data.length)
+            resolve(response.data)
+        })
+      })
+    },
+
+
+
+
     changeStatusesProblem: ({commit}, arr) => {
       commit('statusesProblem', arr)
     },
@@ -269,6 +327,7 @@ export default {
             resolve(response.data)
         })
         .catch(error => {
+         
           commit('setProblems', '')
           if (error.response.status == 401) {
             commit('setError404', error.response.data.errors)

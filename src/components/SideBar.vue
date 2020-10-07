@@ -10,26 +10,35 @@
 
 
       <div class="main">
-        <a @click="allProblems">
+        <a>
           <router-link to="/" exact style="font-family: 'GothamPro-Medium';font-size: 16px;">Списки проблем:
           </router-link>
         </a>
-        <a @click="myProblems">
+
+
+        <a>
           <router-link to="/my-problems" exact>
             <user-plus-icon size="1.5x" class="custom-class"></user-plus-icon>Предложенные мной
-            <span class="amount" v-show="amountOfMyProblems != 0">{{amountOfMyProblems ? amountOfMyProblems > 9999 ? '9999+' : amountOfMyProblems : 0}}</span>
+            <span class="amount"
+              v-show="amountOfMyProblems != 0">{{amountOfMyProblems ? amountOfMyProblems > 9999 ? '9999+' : amountOfMyProblems : 0}}</span>
           </router-link>
         </a>
-        <a @click="problemsForConfirmation">
+
+
+        <a>
           <router-link to="/group-problems" exact>
             <eye-icon size="1.5x" class="custom-class"></eye-icon>На рассмотрении
-            <span class="amount" v-show="amountOfProblemsForConfirmation != 0">{{amountOfProblemsForConfirmation ? amountOfProblemsForExecution > 9999 ? '9999+' : amountOfMyProblems : ''}}</span>
+            <span class="amount"
+              v-show="amountOfProblemsForConfirmation != 0">{{amountOfProblemsForConfirmation ? amountOfProblemsForExecution > 9999 ? '9999+' : amountOfMyProblems : ''}}</span>
           </router-link>
         </a>
-        <a @click="problemsForExecution">
+
+
+        <a>
           <router-link to="/problems-for-execution" exact>
             <flag-icon size="1.5x" class="custom-class"></flag-icon>Для исполнения
-            <span class="amount" v-show="amountOfProblemsForExecution != 0">{{amountOfProblemsForExecution ? amountOfProblemsForExecution > 9999 ? '9999+' : amountOfMyProblems : ''}}</span>
+            <span class="amount"
+              v-show="amountOfProblemsForExecution != 0">{{amountOfProblemsForExecution ? amountOfProblemsForExecution > 9999 ? '9999+' : amountOfMyProblems : ''}}</span>
           </router-link>
         </a>
         <a @click="showLinks" style="cursor: pointer;">
@@ -40,7 +49,7 @@
 
         <transition name="fade">
           <div class="links_groups" v-show="showGroups">
-            <a @click="allGroupsProblems">
+            <a>
               <router-link to="/problems-of-all-groups" exact>Все</router-link>
             </a>
             <a @click="getProblemsByGroups(group.id, group.name)" v-for="(group, idx) in groups" :key="idx">
@@ -58,7 +67,8 @@
         <a href="#">
           <bar-chart-2-icon size="1.5x" class="custom-class"></bar-chart-2-icon>Статистика
         </a>
-        <a @click="archive">
+
+        <a>
           <archive-icon size="1.5x" class="custom-class"></archive-icon>
           <router-link to="/problems-user-archive" exact>Архив проблем</router-link>
         </a>
@@ -131,6 +141,29 @@
         return JSON.parse(localStorage.getItem('user'))
       }
     },
+
+    async mounted() {
+      await this.$store.dispatch('countAmountOfMyProblems', {
+        urgency: '',
+        importance: '',
+        deadline: '',
+        status: ''
+      })
+
+      await this.$store.dispatch('countAmountOfProblemsForExecution', {
+        urgency: '',
+        importance: '',
+        deadline: '',
+        status: ''
+      })
+
+      await this.$store.dispatch('countAmountOfProblemsForConfirmation', {
+        urgency: '',
+        importance: '',
+        deadline: '',
+        status: ''
+      })
+    },
     methods: {
       showLinks() {
         this.showGroups = !this.showGroups
@@ -149,59 +182,15 @@
           })
       },
 
-      async allProblems() {
-        await this.$store.dispatch('getProblems')
-      },
+      // async archive() {
+      //   await this.$store.dispatch('archive', {
+      //     urgency: '',
+      //     importance: '',
+      //     deadline: '',
+      //     status: ''
+      //   })
+      // },
 
-      async myProblems() {
-        await this.$store.dispatch('getMyProblems', {
-          urgency: '',
-          importance: '',
-          deadline: '',
-          status: ''
-        }).then((r) => {
-          this.$store.commit('amountOfMyProblems', r.length)
-        })
-
-      },
-
-      async problemsForExecution() {
-        await this.$store.dispatch('getProblemsForExecution', {
-          urgency: '',
-          importance: '',
-          deadline: '',
-          status: ''
-        }).then((r) => {
-          this.$store.commit('amountOfProblemsForExecution', r.length)
-        })
-      },
-
-      async problemsForConfirmation() {
-        await this.$store.dispatch('problemsForConfirmation', {
-          urgency: '',
-          importance: '',
-          deadline: '',
-          status: ''
-        }).then((r) => {
-          this.$store.commit('amountOfProblemsForConfirmation', r.length)
-        })
-      },
-      async archive() {
-        await this.$store.dispatch('archive', {
-          urgency: '',
-          importance: '',
-          deadline: '',
-          status: ''
-        })
-      },
-      async allGroupsProblems() {
-        await this.$store.dispatch('getAllGroupsProblems', {
-          urgency: '',
-          importance: '',
-          deadline: '',
-          status: ''
-        })
-      },
       async getProblemsByGroups(group, groupName) {
         await this.$store.dispatch('getProblemsByGroups', {
           group,

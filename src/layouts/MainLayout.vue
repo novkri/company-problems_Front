@@ -26,7 +26,7 @@
 <style scoped>
   .row {
     margin: 0;
-    height: 100vh;
+    height: 90vh;
   }
 
 

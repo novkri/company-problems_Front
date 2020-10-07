@@ -19,7 +19,7 @@ const routes = [
   {
     path: "/my-problems",
     name: "MyProblems",
-    component: () =>  import("../views/Problems.vue"),
+    component: () =>  import("../views/MyProblems.vue"),
     props: true,
     meta: { 
       requiresAuth: true,
@@ -29,7 +29,7 @@ const routes = [
   {
     path: "/problems-for-execution",
     name: "ProblemsForExecution",
-    component: () =>  import("../views/Problems.vue"),
+    component: () =>  import("../views/ProblemsForExecution.vue"),
     props: true,
     meta: { 
       requiresAuth: true,
@@ -38,8 +38,8 @@ const routes = [
   },
   {
     path: "/group-problems",
-    name: "ProblemsGroup",
-    component: () =>  import("../views/Problems.vue"),
+    name: "ProblemsForConfirmation",
+    component: () =>  import("../views/ProblemsForConfirmation.vue"),
     props: true,
     meta: { 
       requiresAuth: true,
@@ -49,7 +49,7 @@ const routes = [
   {
     path: "/problems-user-archive",
     name: "ProblemsArchive",
-    component: () =>  import("../views/Problems.vue"),
+    component: () =>  import("../views/Archive.vue"),
     props: true,
     meta: { 
       requiresAuth: true,
@@ -59,7 +59,7 @@ const routes = [
   {
     path: "/problems-of-all-groups",
     name: "ProblemsAllGroups",
-    component: () =>  import("../views/Problems.vue"),
+    component: () =>  import("../views/ProblemsAllGroups.vue"),
     props: true,
     meta: { 
       requiresAuth: true,
@@ -69,7 +69,7 @@ const routes = [
   {
     path: "/problems-by-groups/:id",
     name: "ProblemsGroupId",
-    component: () =>  import("../views/Problems.vue"),
+    component: () =>  import("../views/ProblemsGroupId.vue"),
     props: true,
     meta: { 
       requiresAuth: true,
