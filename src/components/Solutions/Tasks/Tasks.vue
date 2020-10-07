@@ -12,7 +12,7 @@
       </div>
     </div>
 
-    <div class="container row">
+    <div class="container row" ref="containerTask">
       <ol ref="olTask">
         <li id="list" v-for="(task, idx) in tasks" :key="idx">
           <div class="task-title col-4"
@@ -68,20 +68,20 @@
           <div class="selectResponsible col-2">
             <ss-select v-model="task.executor_id" :options="allUsersReduced" track-by="name" search-by="surname"
               @change="selectExecutorTask(task, val.executor_id)" disable-by="disabled" id="ss-select"
-              style="width: 100%;">
+              style="width: 100%;position: relative;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                 @click="onClickExecutor(selectedOption, task.id)" style="cursor: pointer; width: 100%;">
-                <ss-select-toggle class="flex items-center justify-between" style="margin: auto;">
+                <ss-select-toggle class="flex items-center justify-between" style="margin: auto;padding-right: 10px;">
                   <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                   {{ $get(selectedOption, 'name') ||  `${allUsersReduced.find(u => u.id == task.executor_id) ? allUsersReduced.find(u => u.id == task.executor_id).surname + ' ' 
                     + allUsersReduced.find(u => u.id == task.executor_id).name + ' ' 
                     + allUsersReduced.find(u => u.id == task.executor_id).father_name : 'Выбрать'}`}}
                 </ss-select-toggle>
 
-                <section v-show="isOpen" class="absolute border-l border-r min-w-full"
-                  style="height: 187px;top:41%;right: 9%;">
+                <section v-show="isOpen" class="absolute border-l border-r min-w-full" :ref="'slot-scopeExec'+task.id"
+                  style="height: 146px;">
                   <div class="px-px">
-                    <ss-select-search-input class="w-full px-3 py-2 search" placeholder="Впишите фамилию">
+                    <ss-select-search-input class="w-full px-3 py-2 search" autofocus="false" placeholder="Впишите фамилию">
                     </ss-select-search-input>
                   </div>
                   <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
@@ -108,9 +108,9 @@
     <div>
       <div style="padding: 20px; cursor: pointer; width: fit-content;min-height: 62px;" v-if="addNotClicked"
         @click.prevent="displayInput">
-        <!-- <plus-icon size="1.5x" class="custom-class" style="color: #92D2C3;">
-        </plus-icon> -->
-        <span v-show="val.executor_id == currentUid" style="margin-left: 16px; cursor: pointer;color: #92D2C3;font-family: 'GothamPro-Medium';font-size: 14px;
+
+        <!-- v-show="val.executor_id == currentUid"  -->
+        <span style="margin-left: 16px; cursor: pointer;color: #92D2C3;font-family: 'GothamPro-Medium';font-size: 14px;
           line-height: 24px;letter-spacing: 0.15px;">+ Добавить задачу</span>
       </div>
 
@@ -307,16 +307,12 @@
 
       onClickStatus(status, id) {
         this.currentTaskStatus = status
-        this.$refs['slot-scope'+id][0].style.display == 'none' ? this.$refs['olTask'].style.maxHeight = '182px' : this.$refs['olTask'].style.maxHeight = '650px'
+        this.$refs['slot-scope'+id][0].style.display == 'none' ? this.$refs['containerTask'].style.height = '56px' : this.$refs['containerTask'].style.height = '650px'
       },
 
-      // selectMouseOut(id) {
-      //   this.$refs['slot-scope'+id][0].style.display != 'none' ? this.$refs['olTask'].style.maxHeight = '182px' : this.$refs['olTask'].style.maxHeight = '650px'
-      // },
       onClickExecutor(sol, id) {
         this.currentExecutor = sol
-
-        this.$refs['slot-scope'+id][0].style.display == 'none' ? this.$refs['olTask'].style.maxHeight = '182px' : this.$refs['olTask'].style.maxHeight = '650px'
+        this.$refs['slot-scopeExec'+id][0].style.display == 'none' ? this.$refs['containerTask'].style.height = '56px' : this.$refs['containerTask'].style.height = '650px'
       },
       async selectExecutorTask(task, executor_id) {
         await this.$store.commit('setError404', '')
@@ -577,6 +573,7 @@
     padding-left: 10px;
 
     #ss-select {
+      overflow: visible;
       padding-left: 8px;
       align-items: center;
       display: flex;
@@ -585,7 +582,7 @@
       padding-right: 0;
       width: max-content !important;
 
-      overflow: hidden;
+      // overflow: hidden;
       height: 30px;
     }
 
