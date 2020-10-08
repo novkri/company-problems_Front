@@ -862,7 +862,6 @@
     color: #2D453F;
     font-size: 18px;
   } 
-
   .progress-input {
     width: 29px;
     background-color: #F7F7F7;
