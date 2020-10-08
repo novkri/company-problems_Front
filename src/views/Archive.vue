@@ -37,12 +37,12 @@
 
               <h5 class="mb-0" style="display: flex; width: 92%;">
                 <div style="width: inherit;"
-                  :style="[problem.creator_id == currentUid ? {'cursor': 'pointer'} : {'cursor': 'default'}]"
+                  
                   :ref="'name-div'+problem.id" @click="event => {onClickInput(problem.id, problem.creator_id, event)}">
                   {{ problem.name}}
                 </div>
                 <input class="form-control" style="display: none;" :id="'problem-name'+problem.id"
-                  :disabled="problem.creator_id !== currentUid" v-model="problem.name"
+                   v-model="problem.name"
                   :ref="'problem-name' + problem.id"
                   @keyup.enter="event => {editProblemName(problem.name, problem.id, event)}"
                   @focus="onFocusInput($event)" @blur="event => {onBlurInput(problem.name, problem.id, event)}" />
@@ -155,7 +155,7 @@
             <div class="icons col-1">
               <div class="trash-icon">
                 <trash-icon size="1.3x" class="custom-class" style="margin: auto;"
-                  v-show="problem.creator_id == currentUid" @click="deleteP(problem.id, problem.name)"
+                  @click="deleteP(problem.id, problem.name)"
                   data-toggle="modal" data-target="#popupDelete">
                 </trash-icon>
               </div>
