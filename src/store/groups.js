@@ -283,6 +283,9 @@ export default {
               commit('setError404', error.response.data.errors)
               reject(error.response)
             }
+          } else {
+            commit('setError404', error.response.data.message)
+            reject(error.response.data.message)
           }
         })
       })

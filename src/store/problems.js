@@ -178,7 +178,6 @@ export default {
         urgency: param.urgency,
         importance: param.importance,
         deadline: param.deadline,
-        status: param.status
       }})
         .then(response => {
             commit('setError', '')
@@ -349,6 +348,7 @@ export default {
         deadline: param.deadline
       }})
         .then(response => {
+          console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
