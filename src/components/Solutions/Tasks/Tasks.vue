@@ -21,7 +21,7 @@
             <input v-show="editable" class="form-control" v-model="task.description" :ref="'textarea_task' + task.id"
               @keyup.enter.prevent="event => {editTask(task.description, task.id, event)}" @focus="onFocusInput($event)"
               @blur="event => {onBlurInput(task.description, task.id, event)}" />
-            <div class="hidden" v-show="val.executor_id == currentUid">
+            <div class="hidden" v-show="val.executor_id == currentUid || user.is_admin">
               <button class="input-btn" @mousedown="event => {editTask(task.description, task.id, event)}">
                 <check-icon size="1x" class="custom-class"></check-icon>
               </button>
@@ -61,8 +61,8 @@
           <div class="dateDiv col-2">
             <input type="date" id="start" name="trip-start" class="date" onkeypress="return false"
               @click="onClickDate($event)" @change="changeDeadlineTask(task.deadline, task.id)"
-              :style="[val.executor_id != currentUid ? {'padding': '5px'} : {}]" v-model="task.deadline"
-              :disabled="val.executor_id != currentUid">
+              :style="[val.executor_id != currentUid || user.is_admin? {'padding': '5px'} : {}]" v-model="task.deadline"
+              :disabled="val.executor_id != currentUid || !user.is_admin">
           </div>
 
           <div class="selectResponsible col-2">
@@ -96,7 +96,7 @@
           </div>
 
           <div style="width: 54px" id="close" class="col">
-            <button type="button" v-show="task.executor_id == currentUid" class="close" id="remove"
+            <button type="button" v-show="task.executor_id == currentUid || user.is_admin" class="close" id="remove"
               style="margin: auto;" @click="showDelete(task.id)" data-toggle="modal" data-target="#popupDeleteSolution">
               <trash-icon size="1x" class="custom-class"></trash-icon>
             </button>
@@ -238,7 +238,7 @@
 
     computed: {
       ...mapGetters(['tasks', 'error', 'error404', 'allUsers', 'allUsersReduced', 'currentSolution', 'solutions',
-        'currentUid'
+        'currentUid', 'user'
       ]),
     },
 
@@ -274,7 +274,7 @@
 
       async changeStatusTask(id, status, executor_id) {
         await this.$store.commit('setError404', '')
-        if (executor_id == this.currentUid) {
+        if (executor_id == this.currentUid || this.user.is_admin) {
           await this.$store.dispatch('changeStatusTask', {
             status: status.name,
             id
@@ -316,7 +316,7 @@
       },
       async selectExecutorTask(task, executor_id) {
         await this.$store.commit('setError404', '')
-        if (executor_id == this.currentUid) {
+        if (executor_id == this.currentUid || this.user.is_admin) {
           await this.$store.dispatch('checkIfOk', {
             description: task.description,
             executor_id: task.executor_id,
@@ -346,7 +346,7 @@
 
 
       onClickInput(id, executor_id) {
-        if (executor_id == this.currentUid) {
+        if (executor_id == this.currentUid || this.user.is_admin) {
           this.editable = true
           this.$nextTick(() => {
             this.$refs['textarea_task' + id][0].focus()

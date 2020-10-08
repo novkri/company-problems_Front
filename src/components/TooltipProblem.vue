@@ -1,7 +1,6 @@
 <template>
   <div class="container_tooltip">
     <div class="main-tooltip">
-
       <div>
         <p style="align-self: baseline;"><span>Предложил проблему: </span>
           {{allUsers.find(u => u.id === val.creator_id).surname}}
@@ -13,10 +12,6 @@
         <p><span>Описание: </span>
         </p> 
         <p @click="event => changeProblemDesc(val.id, val.creator_id, event)" class="desc" v-show="!isEditDesc" :style="[val.description ? {'background-color': '#f9f9f9'} : {}]">{{val.description}}</p>
-        <!-- <p @click="event => changeProblemDesc(val.id, val.creator_id, event)" class="desc" v-show="!val.description" :style="[val.creator_id == currentUid ? {'cursor': 'pointer'} : {'cursor': 'default'}]">
-          <input class="form-control desc"  v-show="!emptyInputIsClicked" @click="emptyInputIsClicked = true"
-            placeholder="Введите описание...">
-        </p> -->
         <input v-show="isEditDesc" v-model="val.description" @blur="event => onBlurDesc(event, val.id)"
           @keyup.enter="onEnterDesc($event)" class="form-control desc" :ref="'descInput'+val.id" />
       </div>
@@ -26,11 +21,6 @@
         </p> 
         <p @click="event => changePossible(val.id, val.creator_id, event)" class="possible" v-show="!isEditPossible" :style="[val.possible_solution ? {'background-color': '#f9f9f9'} : {}]">
           {{val.possible_solution}}</p>
-        <!-- <p @click="event => changePossible(val.id, val.creator_id, event)" class="possible" v-show="!val.possible_solution">
-          <input class="form-control possible" v-show="!emptyInputPossibleIsClicked" :disabled="val.creator_id !== currentUid"
-            @click="emptyInputPossibleIsClicked = true" placeholder="Введите решение...">
-        </p> -->
-
         <input v-show="isEditPossible" v-model="val.possible_solution" @blur="event => onBlurPossible(event, val.id)"
           @keyup.enter="onEnterPossible($event)" class="form-control possible" :ref="'possibleInput'+val.id" />
       </div>
@@ -60,13 +50,13 @@
       newInput: ''
     }),
     computed: {
-      ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', 'currentUid']),
+      ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', 'currentUid', 'user']),
 
     },
     methods: {
       async changeProblemDesc(id,creator_id, event) {
         await this.$store.commit('setError404', '')
-        if (creator_id == this.currentUid) {
+        if (creator_id == this.user.id || this.user.is_admin) {
         this.isEditDesc = true
         this.newInputDesc = event.target.textContent
         this.$nextTick(() => {

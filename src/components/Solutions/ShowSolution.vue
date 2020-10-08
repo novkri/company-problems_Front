@@ -32,7 +32,7 @@
                     'margin-right': '-43px'} ]">
                     {{solution.name ? solution.name : "Введите решение..."}}</div>
                   <input v-show="editable" class="form-control" :id="'textarea'+val.id" v-model="solution.name"
-                    :disabled="solution.executor_id != currentUid" :ref="'textarea' + val.id"
+                    :disabled="solution.executor_id != currentUid || !user.is_admin" :ref="'textarea' + val.id"
                     @keyup.enter="event => {editSolClick(solution.name, solution.id, event)}"
                     @focus="event => onFocusInput(event, val.id)"
                     @blur="event => {onBlurInput(solution.name, solution.id, event)}" />
@@ -76,8 +76,8 @@
 
               <div class="dateDiv col-2">
                 <input type="date" id="start" name="trip-start" class="date" v-model="solution.deadline"
-                  :disabled="solution.executor_id !== currentUid"
-                  :style="[solution.executor_id !== currentUid ? {'padding': '5px'} : {}]" onkeypress="return false"
+                  :disabled="solution.executor_id !== currentUid || !user.is_admin"
+                  :style="[solution.executor_id !== currentUid || user.is_admin ? {'padding': '5px'} : {}]" onkeypress="return false"
                   @change="changeDeadline(solution.deadline, solution.id)" @click="onClickDate($event)">
               </div>
 
@@ -211,7 +211,7 @@
       SsSelectSearchInput
     },
     computed: {
-      ...mapGetters(['solutions', 'error', 'error404', 'allUsersReduced', 'currentSolution', 'tasks', 'currentUid']),
+      ...mapGetters(['solutions', 'error', 'error404', 'allUsersReduced', 'currentSolution', 'tasks', 'currentUid', 'user']),
     },
     methods: {
       onClickExecutor(sol) {
@@ -222,7 +222,7 @@
       },
       async selectExecutor(id, uid) {
         this.$store.commit('setError404', '')
-        if (uid == this.currentUid) {
+        if (uid == this.currentUid || this.user.is_admin) {
         await this.$store.dispatch('changeExecutor', {
           id,
           uid
@@ -248,7 +248,7 @@
 
       async changeStatus(id, status, executor_id) {
         await this.$store.commit('setError404', '')
-        if (executor_id == this.currentUid) {
+        if (executor_id == this.currentUid || this.user.is_admin) {
           await this.$store.dispatch('changeStatus', {
             status: status.name,
             id
@@ -300,7 +300,7 @@
       },
 
       onClickInput(id, executor_id) {
-        if (executor_id == this.currentUid) {
+        if (executor_id == this.currentUid  || this.user.is_admin) {
           this.editable = true
 
           event.target.style.display = 'none'

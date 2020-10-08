@@ -82,7 +82,7 @@
 
             <div class="selectResponsible col-3">
               <ss-select v-model="group.leader_id" :options="allUsersReduced.filter(u => u.group_id == group.id)"
-                track-by="name" search-by="name" @change="selectExecutorGroup(group, $event)" disable-by="disabled"
+                track-by="name" search-by="surname" @change="selectExecutorGroup(group, $event)" disable-by="disabled"
                 id="ss-select" style="width: fit-content;height: fit-content;">
                 <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                   @click.once="onClickExecutor(group.leader_id)" style="cursor: pointer; width: 100%;">
@@ -128,7 +128,7 @@
                   <h5 class="mb-0">
 
                     <div>
-                      <ss-select :options="usersNoGroup" track-by="name" search-by="name" disable-by="disabled"
+                      <ss-select :options="usersNoGroup" track-by="name" search-by="surname" disable-by="disabled"
                         id="ss-select" style="width: fit-content;" @change="putUserToGroup(group.id, $event)">
                         <div
                           slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"

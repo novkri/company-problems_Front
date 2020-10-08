@@ -78,6 +78,9 @@
         }
         await this.$store.dispatch('login', formData).then(() => {
           if (!this.errorU) {
+            this.$store.dispatch('checkIsLeader').then(() => {
+              console.log('here');
+            })
             this.$store.dispatch('getMyProblems', {
               urgency: '',
               importance: '',

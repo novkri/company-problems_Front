@@ -26,12 +26,16 @@ export default {
     token: localStorage.getItem('token') || '',
     status: '',
     user: localStorage.getItem('user') || '',
-    currentUid: localStorage.getItem('currentUid') || ''
+    currentUid: localStorage.getItem('currentUid') || '',
+    isLeader: ''
 
   },
   getters: {
     user: state => {
       return state.user
+    },
+    isLeader: state => {
+      return state.isLeader
     },
     currentUid: state => {
       return state.currentUid = localStorage.getItem('currentUid') 
@@ -54,6 +58,9 @@ export default {
     addUser: (state, payload) => {
       state.user = payload
       state.currentUid = payload.id
+    },
+    isLeader: (state, payload) => {
+      state.isLeader = payload
     },
 
     auth_request(state) {
@@ -99,6 +106,13 @@ export default {
           commit('setErrorUReg', error.response.data.errors)
         })
     },
+    checkIsLeader: async ({commit}) => {
+      await axios.get(BASEURL + '/is-group-leader')
+        .then(response => {
+          console.log(response);
+          commit('isLeader', response.data)
+        })
+    },
     login: async ({
       commit
     }, user) => {
@@ -108,7 +122,7 @@ export default {
           const token = resp.data.access_token
           const user = resp.data.user
           commit('addUser', user)
-console.log(resp);
+          
           localStorage.setItem('token', token)
           localStorage.setItem('currentUid', resp.data.user.id)
           localStorage.setItem('user', JSON.stringify(user))
