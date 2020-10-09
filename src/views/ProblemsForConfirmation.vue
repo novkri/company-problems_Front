@@ -296,8 +296,8 @@
                             </div>
 
 
-                            <div
-                              style="margin-bottom: -37px; margin-top: 14px; display: flex; justify-content: space-evenly; flex-direction: row;flex-wrap:wrap; align-items: center;">
+                            <div :style="[solutions[0].executor_id == currentUid ? {'display': 'none'} : {'display': 'flex'}]"
+                              style="margin-bottom: -37px; margin-top: 14px; justify-content: space-evenly; flex-direction: row;flex-wrap:wrap; align-items: center;">
                               <span
                                 v-show="problem.status == 'На проверке заказчика' && solutions[0].executor_id == currentUid"
                                 class="problem-send">Проблема
@@ -453,6 +453,7 @@
         }).catch(() => {
           this.$store.commit('setProblems', '')
         }).then((r) => {
+          console.log(r);
           this.$store.commit('amountOfProblemsForConfirmation', r.length)
         })
       await this.$store.dispatch('getGroups').catch(() => this.$router.push('/login'))
@@ -749,7 +750,7 @@
       async editPlan(id, plan, event) {
         event.target.blur()
         await this.$store.commit('setError404', '')
-        if (this.user.is_admin || this.solutions[0].executor_id == this.user.id || this.isLeader) {
+        if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
         await this.$store.dispatch('editPlan', {
             plan,
             id
@@ -766,7 +767,7 @@
       },
       async editTeam(id, team) {
         await this.$store.commit('setError404', '')
-        if (this.user.is_admin || this.solutions[0].executor_id == this.user.id || this.isLeader) {
+        if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
         await this.$store.dispatch('editTeam', {
             team,
             id
@@ -783,7 +784,7 @@
       },
       async editExp(id, experience) {
         await this.$store.commit('setError404', '')
-        if (this.user.is_admin || this.solutions[0].executor_id == this.user.id || this.isLeader) {
+        if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
           await this.$store.dispatch('editExp', {
             experience,
             id
@@ -801,7 +802,7 @@
       },
       async editResult(id, result) {
         await this.$store.commit('setError404', '')
-        if (this.user.is_admin || this.solutions[0].executor_id == this.user.id || this.isLeader) {
+        if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
         await this.$store.dispatch('editResult', {
             result,
             id

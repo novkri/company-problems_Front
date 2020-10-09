@@ -56,7 +56,7 @@
     methods: {
       async changeProblemDesc(id,creator_id, event) {
         await this.$store.commit('setError404', '')
-        if (creator_id == this.user.id || this.user.is_admin) {
+        if (creator_id == this.currentUid || this.user.is_admin) {
         this.isEditDesc = true
         this.newInputDesc = event.target.textContent
         this.$nextTick(() => {

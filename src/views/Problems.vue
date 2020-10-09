@@ -21,7 +21,7 @@
                   {{ problem.name}}
                 </div>
                 <input class="form-control" style="display: none;" :id="'problem-name'+problem.id"
-                  :disabled="!problem.creator_id == currentUid || !user.is_admin" v-model="problem.name"
+                  :disabled="problem.creator_id != currentUid || !user.is_admin" v-model="problem.name"
                   :ref="'problem-name' + problem.id"
                   @keyup.enter="event => {editProblemName(problem.name, problem.id, event)}"
                   @focus="onFocusInput($event)" @blur="event => {onBlurInput(problem.name, problem.id, event)}" />
@@ -184,8 +184,8 @@
                         style="width: 100%;">
                         <div class="card-body p-0">
                           <!-- plan,  -->
-                          <textarea placeholder="Опишите ваш план решения..." rows="6" :ref="'textarea_plan'+problem.id"
-                            v-model="solutions[0].plan"
+                          <textarea placeholder="Опишите ваш план решения..." rows="6" :ref="'textarea_plan'+problem.id" 
+                            v-model="solutions[0].plan" :disabled="validated ? '' : disabled"
                             @keydown.enter.prevent.exact="event => {editPlan(solutions[0].id, solutions[0].plan, event)}"
                             @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                             @blur="event => {onBlurTextarea(event, 'plan')}"></textarea>
@@ -230,7 +230,7 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Команда</label>
-                            <textarea rows="6"
+                            <textarea rows="6" :disabled="validated ? '' : disabled"
                               :ref="'textarea_team'+problem.id" v-model="solutions[0].team"
                               @keydown.enter.prevent.exact="event => {editTeam(solutions[0].id, solutions[0].team, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
@@ -253,7 +253,7 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Опыт</label>
-                            <textarea rows="6"
+                            <textarea rows="6" :disabled="validated ? '' : disabled"
                               :ref="'textarea_exp'+problem.id" v-model="problem.experience"
                               @keydown.enter.prevent.exact="event => {editExp(problem.id, problem.experience, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
@@ -276,7 +276,7 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Результат</label>
-                            <textarea rows="6"
+                            <textarea rows="6" :disabled="validated ? '' : disabled"
                               :ref="'textarea_result'+problem.id" v-model="problem.result"
                               @keydown.enter.prevent.exact="event => {editResult(problem.id, problem.result, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
@@ -296,8 +296,8 @@
                             </div>
 
 
-                            <div
-                              style="margin-bottom: -37px; margin-top: 14px; display: flex; justify-content: space-evenly; flex-direction: row;flex-wrap:wrap; align-items: center;">
+                            <div :style="[solutions[0].executor_id == currentUid ? {'display': 'none'} : {'display': 'flex'}]"
+                              style="margin-bottom: -37px; margin-top: 14px; justify-content: space-evenly; flex-direction: row;flex-wrap:wrap; align-items: center;">
                               <span
                                 v-show="problem.status == 'На проверке заказчика' && solutions[0].executor_id == currentUid"
                                 class="problem-send">Проблема
@@ -425,8 +425,7 @@
       isImportnant: 'Важная',
 
 
-      fakeAdmin: 1,
-      fakeResponsible: 1
+
     }),
     components: {
       TooltipProblem,
@@ -463,6 +462,8 @@
       ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', 'user',
         'currentUid', 'user', 'isLeader'
       ]),
+      validated: function() { return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : true}
+      
     },
 
     methods: {
@@ -742,7 +743,7 @@
       async editPlan(id, plan, event) {
         event.target.blur()
         await this.$store.commit('setError404', '')
-        if (this.user.is_admin || this.solutions[0].executor_id == this.user.id || this.isLeader) {
+        if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
         await this.$store.dispatch('editPlan', {
             plan,
             id
@@ -759,7 +760,7 @@
       },
       async editTeam(id, team) {
         await this.$store.commit('setError404', '')
-        if (this.user.is_admin || this.solutions[0].executor_id == this.user.id || this.isLeader) {
+        if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
         await this.$store.dispatch('editTeam', {
             team,
             id
@@ -776,7 +777,7 @@
       },
       async editExp(id, experience) {
         await this.$store.commit('setError404', '')
-        if (this.user.is_admin || this.solutions[0].executor_id == this.user.id || this.isLeader) {
+        if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
           await this.$store.dispatch('editExp', {
             experience,
             id
@@ -794,7 +795,7 @@
       },
       async editResult(id, result) {
         await this.$store.commit('setError404', '')
-        if (this.user.is_admin || this.solutions[0].executor_id == this.user.id || this.isLeader) {
+        if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
         await this.$store.dispatch('editResult', {
             result,
             id

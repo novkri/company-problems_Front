@@ -28,9 +28,10 @@ export default {
   },
   getters: {
     tasks: state => {
-      return state.tasks = state.tasks.sort(function (a, b) {
-        return (a.description.toLowerCase() > b.description.toLowerCase()) ? 1 : -1
-      })
+      return state.tasks
+      //  = state.tasks.sort(function (a, b) {
+      //   return (a.description.toLowerCase() > b.description.toLowerCase()) ? 1 : -1
+      // })
     },
     currentSolution: state => {
       return state.currentSolution
@@ -53,6 +54,8 @@ export default {
         state.tasks.push(payload)
       } else {
         state.tasks.push(payload)
+        state.tasks.sort(function (a, b) {
+          return (a.description.toLowerCase() > b.description.toLowerCase()) ? 1 : -1})
       }
     },
     deleteTask: (state, payload) => {
@@ -209,19 +212,24 @@ export default {
     changeStatusTask: async ({
       commit
     }, param) => {
+      return new Promise((resolve, reject) => {
       axios.put(URLTASK + `/${param.id}/change-status`, {
         status: param.status
       }).then(response => {
         commit('setError', '')
         commit('setError404', '')
         commit('editStatusTask', response.data)
+        resolve(response.data)
       }).catch((error) => {
-        if (error.response.status == 404) {
+        if (error.response.status == 404 || error.response.status == 403) {
           commit('setError404', error.response.data.message)
+          reject(error.response.data.message)
         } else if (error.response.status == 422) {
           commit('setError404', error.response.data.errors)
+          reject(error.response.data.errors)
         }
       })
+    })
     },
 
     changeDeadlineTask: async ({
@@ -235,7 +243,7 @@ export default {
           commit('editDeadlineTask', response.data)
           resolve(response)
         }).catch((error) => {
-          if (error.response.status == 404) {
+          if (error.response.status == 404 || error.response.status == 403) {
             commit('setError404', error.response.data.message)
             reject(error.response.data.errors)
           } else if (error.response.status == 422) {
@@ -250,22 +258,28 @@ export default {
     changeExecutorTask: async ({
       commit
     }, param) => {
+      return new Promise((resolve, reject) => {
       axios.put(URLTASK + `/${param.id}/set-executor`, {
         executor_id: param.uid
       }).then(response => {
         commit('setError', '')
         commit('editExecutorTask', response.data)
+        resolve(response.data)
       }).catch((error) => {
-        if (error.response.status == 404) {
+        if (error.response.status == 404 || error.response.status == 403) {
           commit('setError404', error.response.data.message)
+          reject(error.response.data.message)
         } else if (error.response.status == 422) {
           if (error.response.data.errors.executor_id) {
             commit('setError404', error.response.data.errors.executor_id[0])
+            reject(error.response.data.errors.executor_id[0])
           } else {
             commit('setError404', error.response.data.errors)
+            reject(error.response.data.errors)
           }
         }
       })
+    })
     },
   }
 }

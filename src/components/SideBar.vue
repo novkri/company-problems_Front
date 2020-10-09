@@ -486,7 +486,7 @@
   }
 
 
- 
+
   #ss-select {
     align-items: center;
     display: flex;
@@ -500,11 +500,8 @@
   section {
     width: max-content;
     padding: 22px;
-    // width: 250px;
-    // width: 215px;
     position: absolute;
     max-height: 257px;
-    // right: -19%;
     top: 102%;
 
     border-radius: 10px;
@@ -523,17 +520,21 @@
   @media (max-width: 1500px) {
     * {
       font-size: 14px !important;
-            .header {
+
+      .header {
         font-size: 20px !important;
       }
+
       .error {
         font-size: 12px !important;
       }
+
       .successfully {
         span {
           font-size: 20px !important;
         }
       }
+
       .tooltip-inner.popover-inner {
         a {
           font-size: 22px !important;

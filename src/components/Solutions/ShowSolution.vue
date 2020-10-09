@@ -32,7 +32,7 @@
                     'margin-right': '-43px'} ]">
                     {{solution.name ? solution.name : "Введите решение..."}}</div>
                   <input v-show="editable" class="form-control" :id="'textarea'+val.id" v-model="solution.name"
-                    :disabled="solution.executor_id != currentUid || !user.is_admin" :ref="'textarea' + val.id"
+                     :ref="'textarea' + val.id"
                     @keyup.enter="event => {editSolClick(solution.name, solution.id, event)}"
                     @focus="event => onFocusInput(event, val.id)"
                     @blur="event => {onBlurInput(solution.name, solution.id, event)}" />
@@ -76,8 +76,6 @@
 
               <div class="dateDiv col-2">
                 <input type="date" id="start" name="trip-start" class="date" v-model="solution.deadline"
-                  :disabled="solution.executor_id !== currentUid || !user.is_admin"
-                  :style="[solution.executor_id !== currentUid || user.is_admin ? {'padding': '5px'} : {}]" onkeypress="return false"
                   @change="changeDeadline(solution.deadline, solution.id)" @click="onClickDate($event)">
               </div>
 
@@ -211,7 +209,7 @@
       SsSelectSearchInput
     },
     computed: {
-      ...mapGetters(['solutions', 'error', 'error404', 'allUsersReduced', 'currentSolution', 'tasks', 'currentUid', 'user']),
+      ...mapGetters(['solutions', 'error', 'error404', 'allUsersReduced', 'currentSolution', 'tasks', 'currentUid', 'user', 'isLeader']),
     },
     methods: {
       onClickExecutor(sol) {
@@ -222,7 +220,7 @@
       },
       async selectExecutor(id, uid) {
         this.$store.commit('setError404', '')
-        if (uid == this.currentUid || this.user.is_admin) {
+        if (this.isLeader || this.user.is_admin) {
         await this.$store.dispatch('changeExecutor', {
           id,
           uid
@@ -233,8 +231,6 @@
             })
             })
         } else {
-          console.log(this.currentExecutorSol);
-          this.$store.commit('setError404', 'Не достаточно прав')
           this.$store.commit('editExecutor', {
           id,
           executor_id: this.currentExecutorSol
@@ -248,24 +244,18 @@
 
       async changeStatus(id, status, executor_id) {
         await this.$store.commit('setError404', '')
-        if (executor_id == this.currentUid || this.user.is_admin) {
+        console.log(executor_id, this.currentUid);
+        console.log(this.currentSolStatus);
+
           await this.$store.dispatch('changeStatus', {
             status: status.name,
             id
           }).catch(() => {
             this.$store.commit('editStatus', {
               id,
-              status: this.currentSolStatus
+              status: this.currentSolStatus.name
             })
           })
-        } else {
-          this.$store.commit('setError404', 'Не достаточно прав')
-          this.$store.commit('editStatus', {
-              id,
-              status: this.currentSolStatus
-            })
-        }
-
       },
 
       onClickDate(event) {
@@ -275,6 +265,7 @@
 
       async changeDeadline(deadline, id) {
         await this.$store.commit('setError404', '')
+        if (this.solutions[0].executor_id == this.currentUid || this.user.is_admin) {
         await this.$store.dispatch('changeDeadline', {
           deadline,
           id
@@ -284,6 +275,9 @@
             id
           })
         })
+        } else {
+          //
+        }
       },
 
       async removeFromWork(obj) {
@@ -300,7 +294,7 @@
       },
 
       onClickInput(id, executor_id) {
-        if (executor_id == this.currentUid  || this.user.is_admin) {
+        if (executor_id == this.currentUid  || this.user.is_admin || this.isLeader) {
           this.editable = true
 
           event.target.style.display = 'none'

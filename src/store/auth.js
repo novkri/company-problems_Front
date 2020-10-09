@@ -109,7 +109,6 @@ export default {
     checkIsLeader: async ({commit}) => {
       await axios.get(BASEURL + '/is-group-leader')
         .then(response => {
-          console.log(response);
           commit('isLeader', response.data)
         })
     },

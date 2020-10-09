@@ -463,22 +463,12 @@
     letter-spacing: 0.15px;
     color: #4F4F4F;
 
-    max-width: 340px;
+    max-width: 390px;
     word-break: break-all;
     overflow-y: hidden;
     max-height: 27px;
   }
 
-  // .v-tooltip-open {
-  //   color: #4F4F4F;
-  //   background-color: #fff;
-  // }
-
-  // .group_selected:hover {
-  //   overflow: visible;
-  //   width: fit-content;
-  //   height: fit-content;
-  // }
 
   .logo {
     font-size: 24px;
@@ -500,9 +490,6 @@
     }
   }
 
-  // .filter:last-child {
-  //   margin-top: 10px;
-  // }
 
   nav {
     background-color: #fff;

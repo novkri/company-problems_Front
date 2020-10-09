@@ -247,11 +247,13 @@ export default {
       axios.put(BASEURL + `/${param.id}/change-status`, {
         status: param.status
       }).then(response => {
+        console.log(response);
         commit('setError', '')
         commit('editStatus', response.data)
         resolve(response.data)
       }).catch((error) => {
-        if (error.response.status == 404) {
+        console.log(error.response);
+        if (error.response.status == 404 || error.response.status == 403) {
           commit('setError404', error.response.data.message)
           reject(error.response.data.message)
         } else if (error.response.status == 422) {
@@ -303,19 +305,25 @@ export default {
     changeExecutor: async ({
       commit
     }, param) => {
+      return new Promise((resolve, reject) => {
       axios.put(BASEURL + `/${param.id}/set-executor`, {
         executor_id: param.uid
       }).then(response => {
         commit('setError', '')
         commit('setError404', '')
         commit('editExecutor', response.data)
+        resolve(response.data)
       }).catch((error) => {
+        console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
+          reject(error.response.data.message)
         } else if (error.response.status == 422) {
           commit('setError404', error.response.data.errors.executor_id[0])
+          reject(error.response.data.errors.executor_id[0])
         }
       })
+    })
     },
 
     editPlan: async ({
