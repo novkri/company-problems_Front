@@ -658,7 +658,6 @@
     color: #fff;
     outline: none;
     max-height: 27px;
-    min-width: max-content;
 
     #ss-select {
       background-color: #4EAD96;

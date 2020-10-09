@@ -300,14 +300,14 @@
                               <div style="display: flex;">
                                 <span class="problem-send" v-if="problem.status == 'Решена'">Проблема решена</span>
                                 <button v-else
-                                  v-show="problem.creator_id == currentUid && problem.status == 'На проверке заказчика'"
+                                  v-show="problem.creator_id == currentUid && problem.status == 'На проверке заказчика' || user.is_admin && problem.status == 'На проверке заказчика'"
                                   class="btn btnMain problem-confirm y" style="margin-right: 11px;"
                                   @click="problemConfirm(problem.id)">Подтвердить
                                   решение</button>
 
                                   <span class="problem-send" v-if="problem.status == 'На рассмотрении'">Проблема направлена руководителю для рассмотрения</span>
                                 <button v-else
-                                  v-show="problem.creator_id == currentUid && problem.status == 'На проверке заказчика'"
+                                  v-show="problem.creator_id == currentUid && problem.status == 'На проверке заказчика' || user.is_admin && problem.status == 'На проверке заказчика'"
                                   class="btn btnMain problem-confirm" style="background-color: #EBEBEB;color: #4F4F4F;"
                                   @click="problemReject(problem.id)">Отклонить</button>
                               </div>
@@ -341,7 +341,7 @@
                           <div class="check-inputs">
                             <div class="custom-control custom-checkbox" v-for="(group, idx) in groups" :key="idx">
                               <input type="checkbox" class="custom-control-input" :id="'groupCheck'+group.id"
-                                :value="group.id" v-model="checkedGroups">
+                                :value="group.id" v-model="checkedGroups" :disabled="validatedExecutorAndAdmin">
                               <label class="custom-control-label" :for="'groupCheck'+group.id">{{group.name}}</label>
                             </div>
                           </div>
@@ -425,7 +425,8 @@
 
 
       isProblemConfirmed: false, 
-      isProblemDeclined: false
+      isProblemDeclined: false,
+      isLeaderOgUser: false
     }),
     components: {
       TooltipProblem,
@@ -464,12 +465,17 @@
           this.$toast.error(this.error404);
         }
       },
+      isLeaderOgUser(newValue) {
+        return newValue
+      }
     },
     computed: {
       ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', 'user',
         'currentUid', 'user', 'isLeader'
       ]),
-       validatedExecutorAndAdmin: function() { return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : true}
+       validatedExecutorAndAdmin: function() { 
+         return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : this.isLeaderOgUser ? false : true
+         }
     },
 
     methods: {
@@ -623,7 +629,9 @@
                 element.classList.contains('show') ? this.$refs['collapseGroupsBtn'].forEach(element => {
                   element.click()
                 }) : ''
-              });
+              })
+
+              this.isLeaderOgUser = this.groups.find(g => g.id == problem.creator_id).leader_id == this.currentUid
             })
             .catch(() => {
               this.$store.dispatch('clearTasks')

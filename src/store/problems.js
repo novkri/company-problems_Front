@@ -28,7 +28,8 @@ export default {
     statusesProblem: [],
     amountOfMyProblems: '',
     amountOfProblemsForExecution: '',
-    amountOfProblemsForConfirmation: ''
+    amountOfProblemsForConfirmation: '',
+    amountOfProblemsForConfirmationAdmin: ''
   },
   getters: {
     statusesProblem: state => {
@@ -55,6 +56,9 @@ export default {
     },
     amountOfProblemsForConfirmation: state => {
       return state.amountOfProblemsForConfirmation
+    },
+    amountOfProblemsForConfirmationAdmin: state => {
+      return state.amountOfProblemsForConfirmationAdmin
     },
   },
   mutations: {
@@ -126,6 +130,9 @@ export default {
     amountOfProblemsForConfirmation: (state, payload) => {
       state.amountOfProblemsForConfirmation = payload
     },
+    amountOfProblemsForConfirmationAdmin: (state, payload) => {
+      state.amountOfProblemsForConfirmationAdmin = payload
+    },
 
     problemSolved: (state, payload) => {
       state.problems.find(p => p.id == payload.id).status = payload.status
@@ -195,7 +202,25 @@ export default {
         })
       })
     },
-
+    countAmountOfProblemsForConfirmationAdmin: async ({
+      commit
+    }, param) => {
+      return new Promise((resolve) => {
+      axios.get(BASEURL+'/problems-of-all-groups', {params: {
+        urgency: param.urgency,
+        importance: param.importance,
+        deadline: param.deadline,
+        status: param.status
+      }})
+        .then(response => {
+          console.log(response.data.length);
+            commit('setError', '')
+            commit('setError404', '')
+            commit('amountOfProblemsForConfirmationAdmin', response.data.length)
+            resolve(response.data)
+        })
+      })
+    },
 
     changeStatusesProblem: ({commit}, arr) => {
       commit('statusesProblem', arr)
@@ -423,6 +448,7 @@ export default {
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
+            commit('amountOfProblemsForConfirmationAdmin', response.data.length)
             resolve(response.data)
         })
         .catch(error => {

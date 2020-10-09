@@ -1,6 +1,5 @@
 <template>
-
-  <div class="sidebar col">
+  <div class="sidebar col"> 
     <div class="links">
       <div class="addProblem">
         <button type="button" class="btn btnMainAdd" @click="create" data-toggle="modal" data-target="#popupCreate">
@@ -8,14 +7,11 @@
         </button>
       </div>
 
-
       <div class="main">
         <a>
           <router-link to="/" exact style="font-family: 'GothamPro-Medium';font-size: 16px;">Списки проблем:
           </router-link>
         </a>
-
-
         <a>
           <router-link to="/my-problems" exact>
             <user-plus-icon size="1.5x" class="custom-class"></user-plus-icon>Предложенные мной
@@ -25,11 +21,18 @@
         </a>
 
 
-        <a v-show="isLeader || user.is_admin">
+        <a v-show="isLeader || isLeader && user.is_admin">
           <router-link to="/group-problems" exact>
             <eye-icon size="1.5x" class="custom-class"></eye-icon>На рассмотрении
             <span class="amount"
               v-show="amountOfProblemsForConfirmation != 0">{{amountOfProblemsForConfirmation ? amountOfProblemsForExecution > 9999 ? '9999+' : amountOfProblemsForConfirmation : ''}}</span>
+          </router-link>
+        </a>
+        <a v-show="user.is_admin">
+          <router-link to="/problems-of-all-groups" exact>
+            <eye-icon size="1.5x" class="custom-class"></eye-icon>На рассмотрении
+            <span class="amount"
+              v-show="amountOfProblemsForConfirmationAdmin != 0">{{amountOfProblemsForConfirmationAdmin ? amountOfProblemsForConfirmationAdmin > 9999 ? '9999+' : amountOfProblemsForConfirmationAdmin : ''}}</span>
           </router-link>
         </a>
 
@@ -131,7 +134,7 @@
       PopupCreate
     },
     computed: {
-      ...mapGetters(['groups', 'user', 'amountOfProblemsForConfirmation', 'amountOfProblemsForExecution',
+      ...mapGetters(['groups', 'user', 'amountOfProblemsForConfirmation', 'amountOfProblemsForExecution', 'amountOfProblemsForConfirmationAdmin',
         'amountOfMyProblems', 'isLeader', 'user', 'currentUid'
       ]),
       isLoggedIn: function () {
@@ -157,12 +160,18 @@
         status: ''
       })
 
-      await this.$store.dispatch('countAmountOfProblemsForConfirmation', {
+      this.isLeader ? await this.$store.dispatch('countAmountOfProblemsForConfirmation', {
         urgency: '',
         importance: '',
         deadline: '',
         status: ''
-      })
+      }) : ''
+      this.user.is_admin ? await this.$store.dispatch('countAmountOfProblemsForConfirmationAdmin', {
+        urgency: '',
+        importance: '',
+        deadline: '',
+        status: ''
+      }) : ''
     },
     methods: {
       showLinks() {

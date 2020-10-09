@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span class="empty"  v-show="problems.length == 0 && _isMounted">Список проблем пуст...</span>
+    <span class="empty" v-show="problems.length == 0 && _isMounted">Список проблем пуст...</span>
     <div class="filters">
     </div>
     <div class="container" v-if="_isMounted">
@@ -42,12 +42,14 @@
                 </v-popover>
               </div>
               <div style="width: 21px;">
-                <clock-icon size="1.5x" class="custom-class details" :ref="'urgency'+problem.id" v-show="problem.urgency === 'Срочная'"
+                <clock-icon size="1.5x" class="custom-class details" :ref="'urgency'+problem.id"
+                  v-show="problem.urgency === 'Срочная'"
                   :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
                   @click="changeUrgency(problem.id, problem.urgency)"></clock-icon>
               </div>
               <div style="width: 21px;">
-                <alert-circle-icon size="1.5x" class="custom-class details" :ref="'importance'+problem.id" v-show="problem.importance === 'Важная'"
+                <alert-circle-icon size="1.5x" class="custom-class details" :ref="'importance'+problem.id"
+                  v-show="problem.importance === 'Важная'"
                   :style="[problem.importance == isImportnant ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
                   @click="changeImportance(problem.id, problem.importance)"></alert-circle-icon>
               </div>
@@ -89,7 +91,7 @@
               </div>
               <div>
                 <span :style="[problem.urgency == isUrgent ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]">
-                  Срочная: 
+                  Срочная:
                 </span>
                 <clock-icon size="1.3x" class="custom-class details" :ref="'urgency'+problem.id"
                   :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
@@ -118,7 +120,8 @@
                   Прогресс решения:
                 </span>
                 <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=35 :thickness="3">
-                  <span :ref="'legend-value'+problem.id" slot="legend-value" style="padding: 0;font-size: 11px !important;"
+                  <span :ref="'legend-value'+problem.id" slot="legend-value"
+                    style="padding: 0;font-size: 11px !important;"
                     @click="event => clickProgress(problem.id, event)">{{problem.progress}}%</span>
                   <input :ref="'progress-bar'+problem.id" class="progress-input" type="text" style="display: none;"
                     v-model="problem.progress" @blur="editProgress(problem.id, problem.progress)"
@@ -230,8 +233,8 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Команда</label>
-                           <textarea rows="6" :disabled="validatedExecutorAndAdmin"
-                              :ref="'textarea_team'+problem.id" v-model="solutions[0].team"
+                            <textarea rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_team'+problem.id"
+                              v-model="solutions[0].team"
                               @keydown.enter.prevent.exact="event => {editTeam(solutions[0].id, solutions[0].team, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea(event, 'team')}"></textarea>
@@ -253,8 +256,8 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Опыт</label>
-                             <textarea rows="6" :disabled="validatedExecutorAndAdmin"
-                              :ref="'textarea_exp'+problem.id" v-model="problem.experience"
+                            <textarea rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_exp'+problem.id"
+                              v-model="problem.experience"
                               @keydown.enter.prevent.exact="event => {editExp(problem.id, problem.experience, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea( event, 'exp')}"></textarea>
@@ -276,8 +279,8 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Результат</label>
-                           <textarea rows="6" :disabled="validatedExecutorAndAdmin"
-                              :ref="'textarea_result'+problem.id" v-model="problem.result"
+                            <textarea rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_result'+problem.id"
+                              v-model="problem.result"
                               @keydown.enter.prevent.exact="event => {editResult(problem.id, problem.result, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea(event, 'result')}"></textarea>
@@ -295,28 +298,32 @@
                               </div>
                             </div>
 
-                            <div :style="[solutions[0].executor_id == currentUid || problem.creator_id == currentUid || user.is_admin? {'display': 'flex'} : {'display': 'none'}]"
+                            <div
+                              :style="[solutions[0].executor_id == currentUid || problem.creator_id == currentUid || user.is_admin || isLeaderOgUser ? {'display': 'flex'} : {'display': 'none'}]"
                               style="margin-bottom: -37px; margin-top: 14px; justify-content: space-evenly; flex-direction: row;flex-wrap:wrap; align-items: center;">
-                              <span
-                                v-if="problem.status == 'На проверке заказчика'"
-                                class="problem-send">Проблема
-                                отправлена для подтверждения решения</span>
+                              <div v-if="problem.status == 'На рассмотрении' || problem.status == 'В работе'">
+                                <span v-if="problem.status == 'На проверке заказчика'" class="problem-send">Проблема
+                                  отправлена для подтверждения решения</span>
 
-                              <button v-else
-                                v-show="user.is_admin || isLeader || solutions[0].executor_id == currentUid"
-                                class="btn btnMain problem-solved" @click="problemSolved(problem.id)">Проблема
-                                решена</button>
-                              <div style="display: flex;">
+                                <button v-else
+                                  v-show="user.is_admin || isLeader || solutions[0].executor_id == currentUid || isLeaderOgUser"
+                                  class="btn btnMain problem-solved" @click="problemSolved(problem.id)">Проблема
+                                  решена</button>
+                              </div>
+
+
+                              <div style="display: flex;" v-else>
                                 <span class="problem-send" v-if="problem.status == 'Решена'">Проблема решена</span>
                                 <button v-else
-                                  v-show="problem.creator_id == currentUid && problem.status == 'На проверке заказчика'"
+                                  v-show="problem.creator_id == currentUid && problem.status == 'На проверке заказчика' || user.is_admin && problem.status == 'На проверке заказчика'"
                                   class="btn btnMain problem-confirm y" style="margin-right: 11px;"
                                   @click="problemConfirm(problem.id)">Подтвердить
                                   решение</button>
 
-                                  <span class="problem-send" v-if="problem.status == 'На рассмотрении'">Проблема направлена руководителю для рассмотрения</span>
+                                <span class="problem-send" v-if="problem.status == 'На рассмотрении'">Проблема
+                                  направлена руководителю для рассмотрения</span>
                                 <button v-else
-                                  v-show="problem.creator_id == currentUid && problem.status == 'На проверке заказчика'"
+                                  v-show="problem.creator_id == currentUid && problem.status == 'На проверке заказчика' || user.is_admin && problem.status == 'На проверке заказчика'"
                                   class="btn btnMain problem-confirm" style="background-color: #EBEBEB;color: #4F4F4F;"
                                   @click="problemReject(problem.id)">Отклонить</button>
                               </div>
@@ -350,7 +357,7 @@
                           <div class="check-inputs">
                             <div class="custom-control custom-checkbox" v-for="(group, idx) in groups" :key="idx">
                               <input type="checkbox" class="custom-control-input" :id="'groupCheck'+group.id"
-                                :value="group.id" v-model="checkedGroups">
+                                :value="group.id" v-model="checkedGroups" :disabled="validatedExecutorAndAdmin">
                               <label class="custom-control-label" :for="'groupCheck'+group.id">{{group.name}}</label>
                             </div>
                           </div>
@@ -379,11 +386,11 @@
       </div>
     </div>
     <div v-else class="d-flex justify-content-center" style="margin-top: 20px;">
-    <div class="d-flex justify-content-center">
-      <div class="spinner-border" role="status">
-        <span class="sr-only">Loading...</span>
+      <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
       </div>
-    </div>
     </div>
 
 
@@ -433,8 +440,9 @@
       isImportnant: 'Важная',
 
 
-isProblemConfirmed: false, 
-      isProblemDeclined: false
+      isProblemConfirmed: false,
+      isProblemDeclined: false,
+      isLeaderOgUser: false,
     }),
     components: {
       TooltipProblem,
@@ -475,12 +483,17 @@ isProblemConfirmed: false,
           this.$toast.error(this.error404);
         }
       },
+      isLeaderOgUser(newValue) {
+        return newValue
+      }
     },
     computed: {
       ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', 'user',
         'currentUid', 'user', 'isLeader'
       ]),
-       validatedExecutorAndAdmin: function() { return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : true}
+      validatedExecutorAndAdmin: function () {
+        return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : this.isLeaderOgUser ? false : true
+      }
     },
 
     methods: {
@@ -520,8 +533,8 @@ isProblemConfirmed: false,
 
       async changeImportance(id, importance) {
         await this.$store.commit('setError404', '')
-        if (this.user.is_admin || this.solutions[0].executor_id  == this.currentUid) {
-      
+        if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid) {
+
           if (importance === 'Обычная') {
             await this.$store.dispatch('changeImportance', {
               id,
@@ -638,7 +651,8 @@ isProblemConfirmed: false,
                 element.classList.contains('show') ? this.$refs['collapseGroupsBtn'].forEach(element => {
                   element.click()
                 }) : ''
-              });
+              })
+              this.isLeaderOgUser = this.groups.find(g => g.id == problem.creator_id).leader_id == this.currentUid
             })
             .catch(() => {
               this.$store.dispatch('clearTasks')
@@ -764,16 +778,16 @@ isProblemConfirmed: false,
         event.target.blur()
         await this.$store.commit('setError404', '')
         if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
-        await this.$store.dispatch('editPlan', {
-            plan,
-            id
-          })
-          .catch(() => {
-            this.$store.commit('editPlan', {
-              plan: this.currentTextarea,
+          await this.$store.dispatch('editPlan', {
+              plan,
               id
             })
-          })
+            .catch(() => {
+              this.$store.commit('editPlan', {
+                plan: this.currentTextarea,
+                id
+              })
+            })
         } else {
           //
         }
@@ -782,16 +796,16 @@ isProblemConfirmed: false,
         event.target.blur()
         await this.$store.commit('setError404', '')
         if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
-        await this.$store.dispatch('editTeam', {
-            team,
-            id
-          })
-          .catch(() => {
-            this.$store.commit('editTeam', {
-              team: this.currentTextarea,
+          await this.$store.dispatch('editTeam', {
+              team,
               id
             })
-          })
+            .catch(() => {
+              this.$store.commit('editTeam', {
+                team: this.currentTextarea,
+                id
+              })
+            })
         } else {
           //
         }
@@ -801,34 +815,34 @@ isProblemConfirmed: false,
         await this.$store.commit('setError404', '')
         if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
           await this.$store.dispatch('editExp', {
-            experience,
-            id
-          })
-          .catch(() => {
-            this.$store.commit('editExp', {
-              experience: this.currentTextarea,
+              experience,
               id
             })
-          })
+            .catch(() => {
+              this.$store.commit('editExp', {
+                experience: this.currentTextarea,
+                id
+              })
+            })
         } else {
           //
         }
-        
+
       },
       async editResult(id, result, event) {
         event.target.blur()
         await this.$store.commit('setError404', '')
         if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
-        await this.$store.dispatch('editResult', {
-            result,
-            id
-          })
-          .catch(() => {
-            this.$store.commit('editResult', {
-              result: this.currentTextarea,
+          await this.$store.dispatch('editResult', {
+              result,
               id
             })
-          })
+            .catch(() => {
+              this.$store.commit('editResult', {
+                result: this.currentTextarea,
+                id
+              })
+            })
         } else {
           //
         }

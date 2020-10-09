@@ -46,7 +46,7 @@
                 </ss-select-toggle>
 
                 <section v-show="isOpen" :ref="'slot-scope'+task.id" class="absolute border-l border-r min-w-full"
-                  style="height: 187px;" >
+                  style="height: fit-content;" >
                   <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index"
                     :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                     pointerIndex == index ? 'bg-light text-dark' : '',
@@ -71,8 +71,7 @@
               style="width: 100%;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                 @click="onClickExecutor(selectedOption, task.id)" style="cursor: pointer; width: 100%;">
-                <ss-select-toggle class="flex items-center justify-between" style="margin: auto;padding-right: 10px;max-height: 30px;
-    overflow-y: hidden;">
+                <ss-select-toggle class="flex items-center justify-between" style="margin: auto;max-height: 30px;overflow-y: hidden;">
                   <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                   {{ $get(selectedOption, 'name') ||  `${allUsersReduced.find(u => u.id == task.executor_id) ? allUsersReduced.find(u => u.id == task.executor_id).surname + ' ' 
                     + allUsersReduced.find(u => u.id == task.executor_id).name + ' ' 
@@ -98,7 +97,7 @@
 
           <div style="width: 54px" id="close" class="col">
             <button type="button" v-show="val.executor_id == currentUid || user.is_admin || isLeader" class="close" id="remove"
-              style="margin: auto;" @click="showDelete(task.id)" data-toggle="modal" data-target="#popupDeleteSolution">
+              @click="showDelete(task.id)" data-toggle="modal" data-target="#popupDeleteSolution">
               <trash-icon size="1x" class="custom-class"></trash-icon>
             </button>
           </div>
@@ -280,6 +279,11 @@
           await this.$store.dispatch('changeStatusTask', {
             status: status.name,
             id
+          }).catch(() => {
+            this.$store.commit('editStatusTask', {
+              status: this.currentTaskStatus,
+              id
+            })
           })
 
         } else {
@@ -521,14 +525,13 @@
     font-style: normal;
     font-weight: normal;
     background-color: #fff;
-    position: relative;
+    // position: relative;
 
     ol {
-      // max-height: 300px;
-      max-height: 182px;
-      // min-height: 189px;
-      overflow-y: scroll;
-      overflow-x: hidden;
+      // max-height: 182px;
+      // overflow-y: scroll;
+      overflow-x: overlay;
+      
     }
   }
 
@@ -568,7 +571,6 @@
   }
 
 
-
   .modal-content {
     border-radius: 12px;
     border: none;
@@ -587,6 +589,10 @@
     display: flex;
     padding-left: 10px;
 
+    section {
+      right: -65% !important;
+      top: 102% !important;
+    }
     #ss-select {
       overflow: visible;
       padding-left: 8px;
@@ -596,8 +602,7 @@
       text-align: center;
       padding-right: 0;
       width: max-content !important;
-
-      // overflow: hidden;
+      position: relative;
       height: 30px;
     }
 
@@ -620,9 +625,6 @@
       background-color: #f6f6f6;
     }
 
-    section {
-      right: 1%;
-    }
   }
 
 
@@ -758,6 +760,10 @@
       line-height: 24px;
       letter-spacing: 0.15px;
     }
+    section {
+      top: 102%;
+      left: -27%;
+    }
   }
 
   #ss-select {
@@ -766,7 +772,7 @@
     width: fit-content;
     align-items: center;
     display: flex;
-
+    position: relative;
   }
 
   .green {
@@ -920,10 +926,15 @@
     background: #92D2C3;
   }
 
-  #close {
+ #close {
     display: flex;
-    justify-content: center;
-  }
+    justify-content: flex-end;
+    svg {
+      min-height: 30px;
+    min-width: 19px;
+    margin: 0 4px 0 0;
+    }
+}
 
   #select-toggle {
     font-family: 'GothamPro';

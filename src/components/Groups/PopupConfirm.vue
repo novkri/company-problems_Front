@@ -37,7 +37,6 @@
       },
 
       async undoChanges() {
-
         this.$emit('undoChanges', this.val)
       }
     }

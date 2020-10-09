@@ -84,7 +84,7 @@
                 track-by="name" search-by="surname" @change="selectExecutorGroup(group, $event)" disable-by="disabled"
                 id="ss-select" style="width: fit-content;height: fit-content;">
                 <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                  @click.once="onClickExecutor(group.leader_id)" style="cursor: pointer; width: 100%;">
+                  @click="event => onClickExecutor(group.leader_id, event)" style="cursor: pointer; width: 100%;">
                   <ss-select-toggle class="flex justify-between"
                     style="width: 100%; padding: 2px 5px; align-items: center;">
                     <award-icon size="1.5x" class="custom-class"></award-icon>
@@ -102,7 +102,7 @@
                     </div>
                     <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
                       data-toggle="modal" data-target="#groupConfirm" :key="index"
-                      class="px-4 py-2 border-b cursor-pointer" :class="[
+                      class="px-4 py-2 border-b cursor-pointer ss-select-option" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
                                 $selected(option) ? 'bg-light text-dark' : '',
                                 $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
@@ -387,8 +387,10 @@
         });
       },
 
-      onClickExecutor(leader) {
-        this.currentExecutor = leader
+      onClickExecutor(leader, event) {
+        console.log(event.target.classList.contains('ss-select-option'));
+        event.target.classList.contains('ss-select-option') ? '' : this.currentExecutor = leader
+        console.log(this.currentExecutor);
       },
       selectExecutorGroup(group, event) {
         this.openConfirm = true
@@ -399,18 +401,21 @@
       },
       async setNewLeader(param) {
         await this.$store.commit('setError404', '')
+        console.log(param);
         this.$store.dispatch('changeExecutorGroup', {
             id: param.groupId,
             uid: param.leader_id
           })
           .then(() => {
-            this.$store.commit('editExecutorGroup', {
-              id: param.groupId,
-              leader_id: param.leader_id
-            })
-            this.$store.dispatch('getLeader', param.groupId)
+          //   // this.$store.commit('editExecutorGroup', {
+          //   //   id: param.groupId,
+          //   //   leader_id: param.leader_id
+          //   // })
+          //   this.$store.dispatch('getLeader', param.groupId)
+   
             this.$store.commit('changeLeader', param.leader_id)
-            this.currentExecutor = param.leader_id
+          //   this.currentExecutor = param.leader_id
+          //   console.log(this.currentExecutor);
           })
           .catch(() => {
             this.$store.commit('editExecutorGroup', {
@@ -891,10 +896,6 @@
 
 
   @media (max-width: 1500px) {
-    // svg {
-    //   font-size: 20px !important;
-    // }
-
     .page-item a {
       margin: 0 9px;
     }
@@ -954,22 +955,16 @@
   }
 
   @media (min-width: 500px) {
-    // .container {
-    //   width: 85% !important;
-    // }
-
     h2 {
       width: 64%;
     }
 
     .subtitle {
-      // width: 73%;
       padding-left: 68px !important;
     }
   }
 
   .col-3 {
-    // height: 100%  !important;
     padding: 0px;
   }
 </style>

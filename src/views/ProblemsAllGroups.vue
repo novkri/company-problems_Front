@@ -233,7 +233,8 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Команда</label>
-                            <textarea rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_team'+problem.id" v-model="solutions[0].team"
+                            <textarea rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_team'+problem.id"
+                              v-model="solutions[0].team"
                               @keydown.enter.prevent.exact="event => {editTeam(solutions[0].id, solutions[0].team, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea(event, 'team')}"></textarea>
@@ -255,7 +256,8 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Опыт</label>
-                             <textarea rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_exp'+problem.id" v-model="problem.experience"
+                            <textarea rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_exp'+problem.id"
+                              v-model="problem.experience"
                               @keydown.enter.prevent.exact="event => {editExp(problem.id, problem.experience, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea( event, 'exp')}"></textarea>
@@ -277,7 +279,8 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Результат</label>
-                           <textarea rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_result'+problem.id" v-model="problem.result"
+                            <textarea rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_result'+problem.id"
+                              v-model="problem.result"
                               @keydown.enter.prevent.exact="event => {editResult(problem.id, problem.result, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea(event, 'result')}"></textarea>
@@ -296,28 +299,32 @@
                             </div>
 
 
-                            <div :style="[solutions[0].executor_id == currentUid || problem.creator_id == currentUid || user.is_admin? {'display': 'flex'} : {'display': 'none'}]"
+                            <div
+                              :style="[solutions[0].executor_id == currentUid || problem.creator_id == currentUid || user.is_admin || isLeaderOgUser ? {'display': 'flex'} : {'display': 'none'}]"
                               style="margin-bottom: -37px; margin-top: 14px; justify-content: space-evenly; flex-direction: row;flex-wrap:wrap; align-items: center;">
-                              <span
-                                v-if="problem.status == 'На проверке заказчика'"
-                                class="problem-send">Проблема
-                                отправлена для подтверждения решения</span>
+                              <div v-if="problem.status == 'На рассмотрении' || problem.status == 'В работе'">
+                                <span v-if="problem.status == 'На проверке заказчика'" class="problem-send">Проблема
+                                  отправлена для подтверждения решения</span>
 
-                              <button v-else
-                                v-show="user.is_admin || isLeader || solutions[0].executor_id == currentUid"
-                                class="btn btnMain problem-solved" @click="problemSolved(problem.id)">Проблема
-                                решена</button>
-                              <div style="display: flex; ">
+                                <button v-else
+                                  v-show="user.is_admin || isLeader || solutions[0].executor_id == currentUid || isLeaderOgUser "
+                                  class="btn btnMain problem-solved" @click="problemSolved(problem.id)">Проблема
+                                  решена</button>
+                              </div>
+
+
+                              <div style="display: flex;" v-else>
                                 <span class="problem-send" v-if="problem.status == 'Решена'">Проблема решена</span>
                                 <button v-else
-                                  v-show="problem.creator_id == currentUid && problem.status == 'На проверке заказчика'"
+                                  v-show="problem.creator_id == currentUid && problem.status == 'На проверке заказчика' || user.is_admin && problem.status == 'На проверке заказчика'"
                                   class="btn btnMain problem-confirm y" style="margin-right: 11px;"
                                   @click="problemConfirm(problem.id)">Подтвердить
                                   решение</button>
 
-                                  <span class="problem-send" v-if="problem.status == 'На рассмотрении'">Проблема направлена руководителю для рассмотрения</span>
+                                <span class="problem-send" v-if="problem.status == 'На рассмотрении'">Проблема
+                                  направлена руководителю для рассмотрения</span>
                                 <button v-else
-                                  v-show="problem.creator_id == currentUid && problem.status == 'На проверке заказчика'"
+                                  v-show="problem.creator_id == currentUid && problem.status == 'На проверке заказчика' || user.is_admin && problem.status == 'На проверке заказчика'"
                                   class="btn btnMain problem-confirm" style="background-color: #EBEBEB;color: #4F4F4F;"
                                   @click="problemReject(problem.id)">Отклонить</button>
                               </div>
@@ -351,7 +358,7 @@
                           <div class="check-inputs">
                             <div class="custom-control custom-checkbox" v-for="(group, idx) in groups" :key="idx">
                               <input type="checkbox" class="custom-control-input" :id="'groupCheck'+group.id"
-                                :value="group.id" v-model="checkedGroups">
+                                :value="group.id" v-model="checkedGroups" :disabled="validatedExecutorAndAdmin">
                               <label class="custom-control-label" :for="'groupCheck'+group.id">{{group.name}}</label>
                             </div>
                           </div>
@@ -380,11 +387,11 @@
       </div>
     </div>
     <div v-else class="d-flex justify-content-center" style="margin-top: 20px;">
-    <div class="d-flex justify-content-center">
-      <div class="spinner-border" role="status">
-        <span class="sr-only">Loading...</span>
+      <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
       </div>
-    </div>
     </div>
 
 
@@ -434,8 +441,9 @@
       isImportnant: 'Важная',
 
 
-isProblemConfirmed: false, 
-      isProblemDeclined: false
+      isProblemConfirmed: false,
+      isProblemDeclined: false,
+      isLeaderOgUser: false,
     }),
     components: {
       TooltipProblem,
@@ -472,6 +480,9 @@ isProblemConfirmed: false,
           this.$toast.error(this.error404);
         }
       },
+      isLeaderOgUser(newValue) {
+        return newValue
+      }
     },
     computed: {
       ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', 'user',
@@ -517,8 +528,8 @@ isProblemConfirmed: false,
 
       async changeImportance(id, importance) {
         await this.$store.commit('setError404', '')
-        if (this.user.is_admin || this.solutions[0].executor_id  == this.currentUid) {
-      
+        if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid) {
+
           if (importance === 'Обычная') {
             await this.$store.dispatch('changeImportance', {
               id,
@@ -535,7 +546,7 @@ isProblemConfirmed: false,
           await this.$store.commit('setError404', 'У вас недостаточно прав')
         }
       },
-      
+
       async clickProgress(id) {
         await this.$store.commit('setError404', '')
         if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid) {
@@ -626,6 +637,7 @@ isProblemConfirmed: false,
               this.$store.dispatch('getCurrentSolution', response.id)
             })
             .then(() => {
+              
               this.$refs['collapsed-results'].forEach(element => {
                 element.classList.contains('show') ? this.$refs['collapseResultsBtn'].forEach(element => {
                   element.click()
@@ -635,7 +647,8 @@ isProblemConfirmed: false,
                 element.classList.contains('show') ? this.$refs['collapseGroupsBtn'].forEach(element => {
                   element.click()
                 }) : ''
-              });
+              })
+              this.isLeaderOgUser = this.groups.find(g => g.id == problem.creator_id).leader_id == this.currentUid
             })
             .catch(() => {
               this.$store.dispatch('clearTasks')
