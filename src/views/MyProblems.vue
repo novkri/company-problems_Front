@@ -1,9 +1,9 @@
 <template>
   <div>
-    <span class="empty" v-show="problems.length == 0">Список проблем пуст...</span>
+    <span class="empty" v-show="problems.length == 0 && _isMounted">Список проблем пуст...</span>
     <div class="filters">
     </div>
-    <div class="container">
+    <div class="container" v-if="_isMounted">
       <div id="accordion">
         <div class="card" id="card" v-for="(problem, idx) in problems" :key="idx">
           <div class="card-header row" :id="'heading'+problem.id" ref="collapsed-header">
@@ -21,7 +21,7 @@
                   {{ problem.name}}
                 </div>
                 <input class="form-control" style="display: none;" :id="'problem-name'+problem.id"
-                  :disabled="!problem.creator_id == currentUid || !user.is_admin" v-model="problem.name"
+                  :disabled="problem.creator_id != currentUid || !user.is_admin" v-model="problem.name"
                   :ref="'problem-name' + problem.id"
                   @keyup.enter="event => {editProblemName(problem.name, problem.id, event)}"
                   @focus="onFocusInput($event)" @blur="event => {onBlurInput(problem.name, problem.id, event)}" />
@@ -185,7 +185,7 @@
                         <div class="card-body p-0">
                           <!-- plan,  -->
                           <textarea placeholder="Опишите ваш план решения..." rows="6" :ref="'textarea_plan'+problem.id"
-                            v-model="solutions[0].plan"
+                            v-model="solutions[0].plan" :disabled="validatedExecutorAndAdmin"
                             @keydown.enter.prevent.exact="event => {editPlan(solutions[0].id, solutions[0].plan, event)}"
                             @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                             @blur="event => {onBlurTextarea(event, 'plan')}"></textarea>
@@ -230,7 +230,7 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Команда</label>
-                            <textarea rows="6"
+                            <textarea rows="6" :disabled="validatedExecutorAndAdmin"
                               :ref="'textarea_team'+problem.id" v-model="solutions[0].team"
                               @keydown.enter.prevent.exact="event => {editTeam(solutions[0].id, solutions[0].team, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
@@ -253,7 +253,7 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Опыт</label>
-                            <textarea rows="6"
+                             <textarea rows="6" :disabled="validatedExecutorAndAdmin"
                               :ref="'textarea_exp'+problem.id" v-model="problem.experience"
                               @keydown.enter.prevent.exact="event => {editExp(problem.id, problem.experience, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
@@ -276,7 +276,7 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Результат</label>
-                            <textarea rows="6"
+                            <textarea rows="6" :disabled="validatedExecutorAndAdmin"
                               :ref="'textarea_result'+problem.id" v-model="problem.result"
                               @keydown.enter.prevent.exact="event => {editResult(problem.id, problem.result, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
@@ -295,24 +295,18 @@
                               </div>
                             </div>
 
-                            <div :style="[solutions[0].executor_id == currentUid ? {'display': 'none'} : {'display': 'flex'}]"
+                            <div :style="[solutions[0].executor_id == currentUid || problem.creator_id == currentUid || user.is_admin? {'display': 'flex'} : {'display': 'none'}]"
                               style="margin-bottom: -37px; margin-top: 14px; justify-content: space-evenly; flex-direction: row;flex-wrap:wrap; align-items: center;">
-                              <span
-                                v-show="problem.status == 'На проверке заказчика' && solutions[0].executor_id == currentUid"
-                                class="problem-send">Проблема
-                                отправлена для подтверждения решения</span>
-
-                              <button
-                                v-show="problem.status != 'На проверке заказчика' && solutions[0].executor_id == currentUid"
-                                class="btn btnMain problem-solved" @click="problemSolved(problem.id)">Проблема
-                                решена</button>
-                              <div style="display: flex; ">
-                                <button
+                              <div style="display: flex;">
+                                <span class="problem-send" v-if="problem.status == 'Решена'">Проблема решена</span>
+                                <button v-else
                                   v-show="problem.creator_id == currentUid && problem.status == 'На проверке заказчика'"
                                   class="btn btnMain problem-confirm y" style="margin-right: 11px;"
                                   @click="problemConfirm(problem.id)">Подтвердить
                                   решение</button>
-                                <button
+
+                                  <span class="problem-send" v-if="problem.status == 'На рассмотрении'">Проблема направлена руководителю для рассмотрения</span>
+                                <button v-else
                                   v-show="problem.creator_id == currentUid && problem.status == 'На проверке заказчика'"
                                   class="btn btnMain problem-confirm" style="background-color: #EBEBEB;color: #4F4F4F;"
                                   @click="problemReject(problem.id)">Отклонить</button>
@@ -375,7 +369,13 @@
         </div>
       </div>
     </div>
-
+    <div v-else class="d-flex justify-content-center" style="margin-top: 20px;">
+    <div class="d-flex justify-content-center">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+    </div>
 
 
     <PopupDelete v-if="openDelete" :val="paramsModal" @deleteProblem="deleteProblem(param = $event)" />
@@ -424,8 +424,8 @@
       isImportnant: 'Важная',
 
 
-      fakeAdmin: 1,
-      fakeResponsible: 1
+      isProblemConfirmed: false, 
+      isProblemDeclined: false
     }),
     components: {
       TooltipProblem,
@@ -469,6 +469,7 @@
       ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', 'user',
         'currentUid', 'user', 'isLeader'
       ]),
+       validatedExecutorAndAdmin: function() { return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : true}
     },
 
     methods: {
@@ -480,14 +481,11 @@
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('problemConfirm', id)
       },
-      async problemSolved(id) {
-        await this.$store.commit('setError404', '')
-        await this.$store.dispatch('problemSolved', id)
-      },
+
 
       async changeUrgency(id, urgency) {
         await this.$store.commit('setError404', '')
-        if (this.user.is_admin || this.solutions[0].executor_id) {
+        if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid) {
           if (urgency === 'Обычная') {
             await this.$store.dispatch('changeUrgency', {
               id,
@@ -501,14 +499,13 @@
             })
           }
         } else {
-          // await this.$store.commit('setError404', 'Не достаточно прав')
+          await this.$store.commit('setError404', 'У вас недостаточно прав')
         }
-
       },
 
       async changeImportance(id, importance) {
         await this.$store.commit('setError404', '')
-        if (this.user.is_admin || this.solutions[0].executor_id) {
+        if (this.user.is_admin || this.solutions[0].executor_id  == this.currentUid) {
       
           if (importance === 'Обычная') {
             await this.$store.dispatch('changeImportance', {
@@ -523,14 +520,13 @@
             })
           }
         } else {
-          // await this.$store.commit('setError404', 'Не достаточно прав')
+          await this.$store.commit('setError404', 'У вас недостаточно прав')
         }
-
       },
 
       async clickProgress(id) {
         await this.$store.commit('setError404', '')
-        if (this.user.is_admin || this.solutions[0].executor_id) {
+        if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid) {
           this.currentProgress = this.$refs['progress-bar' + id][0].value
           this.$refs['legend-value' + id][0].style.display = 'none'
           this.$refs['legend-value' + id][1].style.display = 'none'
@@ -639,6 +635,8 @@
         await this.$store.dispatch('sendToGroup', {
           id,
           groupsArray
+        }).then(() => {
+          this.$toast.success("Проблема направлена в подразделения");
         })
         this.checkedGroups = null
       },
@@ -763,7 +761,8 @@
           //
         }
       },
-      async editTeam(id, team) {
+      async editTeam(id, team, event) {
+        event.target.blur()
         await this.$store.commit('setError404', '')
         if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
         await this.$store.dispatch('editTeam', {
@@ -780,7 +779,8 @@
           //
         }
       },
-      async editExp(id, experience) {
+      async editExp(id, experience, event) {
+        event.target.blur()
         await this.$store.commit('setError404', '')
         if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
           await this.$store.dispatch('editExp', {
@@ -798,7 +798,8 @@
         }
         
       },
-      async editResult(id, result) {
+      async editResult(id, result, event) {
+        event.target.blur()
         await this.$store.commit('setError404', '')
         if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
         await this.$store.dispatch('editResult', {
@@ -1313,6 +1314,9 @@
     font-size: 16px;
     line-height: 15px;
     margin-bottom: 6px;
+  }
+  .problem-confirm:hover {
+    color: #fff;
   }
 
   .check-inputs {

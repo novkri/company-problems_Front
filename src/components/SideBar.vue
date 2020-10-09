@@ -1,6 +1,6 @@
 <template>
-  <div class="sidebar col">
 
+  <div class="sidebar col">
     <div class="links">
       <div class="addProblem">
         <button type="button" class="btn btnMainAdd" @click="create" data-toggle="modal" data-target="#popupCreate">
@@ -25,11 +25,11 @@
         </a>
 
 
-        <a>
+        <a v-show="isLeader || user.is_admin">
           <router-link to="/group-problems" exact>
             <eye-icon size="1.5x" class="custom-class"></eye-icon>На рассмотрении
             <span class="amount"
-              v-show="amountOfProblemsForConfirmation != 0">{{amountOfProblemsForConfirmation ? amountOfProblemsForExecution > 9999 ? '9999+' : amountOfMyProblems : ''}}</span>
+              v-show="amountOfProblemsForConfirmation != 0">{{amountOfProblemsForConfirmation ? amountOfProblemsForExecution > 9999 ? '9999+' : amountOfProblemsForConfirmation : ''}}</span>
           </router-link>
         </a>
 
@@ -38,7 +38,7 @@
           <router-link to="/problems-for-execution" exact>
             <flag-icon size="1.5x" class="custom-class"></flag-icon>Для исполнения
             <span class="amount"
-              v-show="amountOfProblemsForExecution != 0">{{amountOfProblemsForExecution ? amountOfProblemsForExecution > 9999 ? '9999+' : amountOfMyProblems : ''}}</span>
+              v-show="amountOfProblemsForExecution != 0">{{amountOfProblemsForExecution ? amountOfProblemsForExecution > 9999 ? '9999+' : amountOfProblemsForExecution : ''}}</span>
           </router-link>
         </a>
         <a @click="showLinks" style="cursor: pointer;">
@@ -132,7 +132,7 @@
     },
     computed: {
       ...mapGetters(['groups', 'user', 'amountOfProblemsForConfirmation', 'amountOfProblemsForExecution',
-        'amountOfMyProblems'
+        'amountOfMyProblems', 'isLeader', 'user', 'currentUid'
       ]),
       isLoggedIn: function () {
         return this.$store.getters.isLoggedIn

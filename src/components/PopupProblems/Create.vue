@@ -15,7 +15,7 @@
                 <div class="form-group">
                   <label for="new-problem-title">Название *</label>
                   <input type="text" ref="input" v-model="formData.name" class="form-control" id="new-problem-title"
-                    placeholder="Название проблемы..." 
+                    placeholder="Название проблемы..."
                     :class="{ 'form-control--error': $v.formData.name.$invalid, 'form-control--valid': formData.name && !$v.formData.name.$invalid}">
                   <div class="error" v-if="error.name">{{error.name[0]}}</div>
                   <div class="error" v-if="!formData.name">Это поле обязательно для заполнения.</div>
@@ -109,9 +109,15 @@
           description: this.formData.description,
           possible_solution: this.formData.solution,
         }).then((r) => {
-          this.$router.push('/my-problems')
+          this.$router.path == '/my-problems' ? this.$router.push('/my-problems') : ''
           if (!this.error) {
             this.$store.dispatch('getThisProblem', r.id)
+            this.$store.dispatch('countAmountOfMyProblems', {
+              urgency: '',
+              importance: '',
+              deadline: '',
+              status: ''
+            })
             this.formData = []
             document.getElementById('close').click()
           } 

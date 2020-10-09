@@ -60,7 +60,7 @@
 
           <div class="dateDiv col-2">
             <input type="date" id="start" name="trip-start" class="date" onkeypress="return false"
-              @click="onClickDate($event)" @change="changeDeadlineTask(task.deadline, task.id, task.executor_id)"
+              @click="onClickDate($event)" @change="changeDeadlineTask(task.deadline, task.id, val.executor_id)"
                v-model="task.deadline"
               >
           </div>
@@ -71,7 +71,8 @@
               style="width: 100%;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                 @click="onClickExecutor(selectedOption, task.id)" style="cursor: pointer; width: 100%;">
-                <ss-select-toggle class="flex items-center justify-between" style="margin: auto;padding-right: 10px;">
+                <ss-select-toggle class="flex items-center justify-between" style="margin: auto;padding-right: 10px;max-height: 30px;
+    overflow-y: hidden;">
                   <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                   {{ $get(selectedOption, 'name') ||  `${allUsersReduced.find(u => u.id == task.executor_id) ? allUsersReduced.find(u => u.id == task.executor_id).surname + ' ' 
                     + allUsersReduced.find(u => u.id == task.executor_id).name + ' ' 
@@ -306,6 +307,7 @@
             id
           })
         })} else {
+          this.$store.commit('setError404', 'У вас недостаточно прав')
           this.$store.commit('editDeadlineTask', {
             description: this.currentDate,
             id
@@ -556,7 +558,7 @@
   }
 
   div {
-    padding: 0 2px;
+    padding: 0;
   }
 
   svg {
@@ -666,8 +668,6 @@
   }
 
   .date {
-    // width: 200px;
-    // margin-left: -17px;
     border: none;
     position: relative;
     height: 81%;
@@ -676,7 +676,6 @@
     padding-bottom: 5px;
     padding-top: 5px;
     border-radius: 10px;
-    // width: 168px;
     width: 100%;
     background-color: #fff;
   }
@@ -709,23 +708,23 @@
   }
 
   input[class="date"]::-webkit-calendar-picker-indicator {
-    background: url('~@/assets/calendar.png');
+    background: url('~@/assets/calendar.png') left;
     background-size: 80%;
     background-repeat: no-repeat;
     cursor: pointer;
     position: absolute;
-    left: -15%;
-    top: 25%;
+    left: -14%;
+    top: 20%;
   }
 
   input[class="date"]:focus::-webkit-calendar-picker-indicator {
-    background: url('~@/assets/calendarW.png');
+    background: url('~@/assets/calendarW.png') left;
     background-size: 80%;
     background-repeat: no-repeat;
     cursor: pointer;
     position: absolute;
-    left: -15%;
-    top: 25%;
+    left: -14%;
+    top: 20%;
   }
 
   select {

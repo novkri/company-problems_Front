@@ -130,6 +130,12 @@ export default {
     problemSolved: (state, payload) => {
       state.problems.find(p => p.id == payload.id).status = payload.status
     },
+    problemReject: (state, payload) => {
+      state.problems.find(p => p.id == payload.id).status = payload.status
+    },
+    problemConfirm: (state, payload) => {
+      state.problems.find(p => p.id == payload.id).status = payload.status
+    },
   },
 
   actions: {
@@ -162,6 +168,7 @@ export default {
         status: param.status
       }})
         .then(response => {
+          console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('amountOfProblemsForExecution', response.data.length)
@@ -180,6 +187,7 @@ export default {
         deadline: param.deadline,
       }})
         .then(response => {
+          console.log(response.data.length);
             commit('setError', '')
             commit('setError404', '')
             commit('amountOfProblemsForConfirmation', response.data.length)
@@ -187,8 +195,6 @@ export default {
         })
       })
     },
-
-
 
 
     changeStatusesProblem: ({commit}, arr) => {
@@ -293,6 +299,7 @@ export default {
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
+            commit('amountOfMyProblems', response.data.length)
             resolve(response.data)
         })
         .catch(error => {
@@ -323,6 +330,7 @@ export default {
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
+            commit('amountOfProblemsForExecution', response.data.length)
             resolve(response.data)
         })
         .catch(error => {
@@ -352,6 +360,7 @@ export default {
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
+            commit('amountOfProblemsForConfirmation', response.data.length)
             resolve(response.data)
         })
         .catch(error => {
@@ -758,11 +767,8 @@ export default {
       axios.put(BASEURL + `/${id}/reject-solution	`).then(response => {
         commit('setError', '')
         commit('setError404', '')
-        // ????/
-        // commit('problemReject', response.data)
-        //????/
+        commit('problemReject', response.data)
         resolve(response.data)
-        // ??????????
       }).catch((error) => {
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
@@ -781,11 +787,8 @@ export default {
       axios.put(BASEURL + `/${id}/confirm-solution`).then(response => {
         commit('setError', '')
         commit('setError404', '')
-        // ????/
-        // commit('problemConfirm', response.data)
-        //????/
+        commit('problemConfirm', response.data)
         resolve(response.data)
-        // ??????????
       }).catch((error) => {
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)

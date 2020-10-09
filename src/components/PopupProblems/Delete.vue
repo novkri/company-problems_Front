@@ -38,6 +38,12 @@
           await this.$store.dispatch('checkIfExists', {id: this.val.id})
           .then(async () => {
               await this.$store.dispatch('deleteProblem', {id: this.val.id})
+              await this.$store.dispatch('countAmountOfMyProblems', {
+                urgency: '',
+                importance: '',
+                deadline: '',
+                status: ''
+              })
           })
           .catch(() => this.$store.commit('setError404', ''))
       },

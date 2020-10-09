@@ -2,22 +2,25 @@
   <div class="container" :style=" [success ? {'height': '100vh'} : {'height': 'inherit'} ]">
     <div class="form" v-if="!success">
       <div class="header">Регистрация</div>
+
+      <div class="error" style="margin-bottom: 25px;">* - Это поле обязательно для заполнения.</div>
+
       <form>
         <div class="form-group-div">
-          <label for="text">Фамилия *<span
+          <label for="text">Фамилия <span class="error">*</span><span
               v-if="surname.length >= 20 && surname.length <= 25">{{$v.surname.$params.maxLength.max - surname.length}}</span></label>
           <input type="text" class="form-control" id="surname" v-model="surname"
             :class="{ 'form-control--error': $v.surname.$invalid, 'form-control--valid': surname && !$v.surname.$invalid}">
-          <div class="error" v-if="!surname">Это поле обязательно для заполнения.</div>
+          
           <div class="errorAuth" v-if="errorUReg.surname">{{errorUReg.surname[0]}} </div>
         </div>
 
         <div class="form-group-div">
-          <label for="text">Имя *<span
+          <label for="text">Имя <span class="error">*</span><span
               v-if="name.length >= 20 && name.length <= 25">{{$v.name.$params.maxLength.max - name.length}}</span></label>
           <input type="text" class="form-control" id="name" v-model="name"
             :class="{ 'form-control--error': $v.name.$invalid, 'form-control--valid': name && !$v.name.$invalid}">
-          <div class="error" v-if="!name">Это поле обязательно для заполнения.</div>
+         
           <div class="errorAuth" v-if="errorUReg.name">{{errorUReg.name[0]}} </div>
         </div>
 
@@ -30,16 +33,16 @@
         </div>
 
         <div class="form-group-div">
-          <label for="email">Электронная почта *<span
+          <label for="email">Электронная почта <span class="error">*</span><span
               v-if="email.length >= 250 && email.length <= 255">{{$v.email.$params.maxLength.max - email.length}}</span></label>
           <input type="email" class="form-control" id="email" v-model="email"
             :class="{ 'form-control--error': $v.email.$invalid, 'form-control--valid': email && !$v.email.$invalid}">
-          <div class="error" v-if="!email">Это поле обязательно для заполнения.</div>
+      
           <div class="errorAuth" v-if="errorUReg.email">{{errorUReg.email[0]}} </div>
         </div>
 
         <div class="form-group-div">
-          <label for="password">Пароль *<span
+          <label for="password">Пароль <span class="error">*</span><span
               v-if="password.length >= 15 && password.length <= 20">{{$v.password.$params.maxLength.max - password.length}}</span></label>
           <div class="input-group" id="show_hide_password">
             <input :type="passwordFieldType" class="form-control" id="password" v-model="password" ref="password"
@@ -51,13 +54,13 @@
               <eye-off-icon size="1.5x" class="custom-class" v-else></eye-off-icon>
             </button>
           </div>
-          <div class="error" v-if="!password">Это поле обязательно для заполнения.</div>
+        
           <div class="errorAuth" v-if="errorUReg.password">{{errorUReg.password[0]}} </div>
         </div>
 
 
         <div class="form-group-div">
-          <label for="password">Повторите пароль *<span
+          <label for="password">Повторите пароль <span class="error">*</span><span
               v-if="confirm.length >= 15 && confirm.length <= 20">{{$v.confirm.$params.maxLength.max - confirm.length}}</span></label>
           <div class="input-group" id="show_hide_password">
             <input :type="passwordFieldTypeC" class="form-control" id="passwordConfirm" data-toggle="password"
@@ -70,9 +73,12 @@
               <eye-off-icon size="1.5x" class="custom-class" v-else></eye-off-icon>
             </button>
           </div>
-          <div class="error" v-if="!confirm">Это поле обязательно для заполнения.</div>
+        
           <div class="errorAuth" v-if="errorUReg.password">{{errorUReg.password[1]}} </div>
         </div>
+
+       
+
       </form>
       <button type="submit" class="btn" @click.prevent="register">Зарегистрироваться</button>
       <div class="to-login">Уже зарегистрированы? <router-link to="/login">Вход</router-link>
@@ -219,7 +225,7 @@
     justify-content: space-between;
 
     div {
-      margin-bottom: 47px;
+      margin-bottom: 36px;
     }
   }
 
@@ -249,8 +255,8 @@
     justify-content: center;
     align-items: center;
     height: auto;
-    padding-top: 63px;
-    padding-bottom: 130px;
+    padding-top: 40px;
+    // padding-bottom: 130px;
     font-family: 'Roboto';
     font-style: normal;
     font-weight: normal;
@@ -263,7 +269,7 @@
 
   label {
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
     margin: 0 7px 12px 18px;
     font-size: 14px;
     font-family: 'GothamPro';
@@ -272,6 +278,10 @@
     color: #828282;
   }
 
+  span.error {
+    margin-left: 5px;
+    font-size: 14px !important;
+  }
   .btn {
     display: flex;
     justify-content: center;
@@ -300,6 +310,7 @@
     letter-spacing: 0.15px;
     color: #EC7676;
   }
+
 
   input,
   input:active {
@@ -413,7 +424,7 @@
   .to-login {
     justify-content: center;
     display: flex;
-    margin-top: 56px;
+    margin-top: 36px;
     font-size: 18px;
     line-height: 17px;
     color: #9B9B9B;

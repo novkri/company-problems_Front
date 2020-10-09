@@ -1,7 +1,6 @@
 <template>
-  <div style="height: 50vh;padding-top: 77px;">
-    <h2>Список подразделений</h2>
-    <div class="subtitle row" style="width: 89%;">
+  <div style="height: 50vh;padding-top: 45px;">
+    <div class="subtitle row">
       <span class="col-4">Название подразделения</span>
       <span class="col-4">Название подразделения (сокращенно)</span>
       <span class="col-2">Руководитель</span>
@@ -563,7 +562,7 @@
     padding-left: 68px;
     height: auto;
 
-    width: 79%;
+    // width: 79%;
     margin: 0 auto 15px;
   }
 
@@ -939,7 +938,7 @@
   }
 
   @media (min-width: 1400px) {
-    .container {
+    .container, .subtitle {
       max-width: 1350px;
     }
 
@@ -964,7 +963,7 @@
     }
 
     .subtitle {
-      width: 73%;
+      // width: 73%;
       padding-left: 68px !important;
     }
   }

@@ -9,15 +9,15 @@
           <div class="col-3" style="justify-content: center;display: flex;">
             <span style="text-align: center;">Статус выполнения</span>
           </div>
-          <div class="col-2" style="justify-content: center;display: flex;">
+          <div class="col-3" style="justify-content: center;display: flex;">
             <span style="text-align: center;">Срок исполнения</span>
           </div>
           <div class="col-2" style="justify-content: center;display: flex;">
             <span>Ответственный</span>
           </div>
-          <div style="width: 20px" class="col">
+          <!-- <div style="width: 20px" class="col">
 
-          </div>
+          </div> -->
         </div>
         <div>
 
@@ -74,7 +74,7 @@
                 </ss-select>
               </div>
 
-              <div class="dateDiv col-2">
+              <div class="dateDiv col-3">
                 <input type="date" id="start" name="trip-start" class="date" v-model="solution.deadline"
                   @change="changeDeadline(solution.deadline, solution.id)" @click="onClickDate($event)">
               </div>
@@ -107,12 +107,12 @@
                 </ss-select>
               </div>
 
-              <div style="width: 20px" class="col">
+              <!-- <div style="width: 20px" class="col"> -->
                 <!-- <button type="button" class="close" id="remove" @click="removeFromWork(solution)" data-toggle="modal"
                   data-target="#popupRemoveFromWOrk">
                   <span aria-hidden="true">&times;</span>
                 </button> -->
-              </div>
+              <!-- </div> -->
             </li>
           </ol>
         </div>
@@ -231,6 +231,7 @@
             })
             })
         } else {
+          this.$store.commit('setError404', 'У вас недостаточно прав')
           this.$store.commit('editExecutor', {
           id,
           executor_id: this.currentExecutorSol
@@ -240,22 +241,29 @@
 
       onClickStatus(status) {
         this.currentSolStatus = status
+        console.log(this.currentSolStatus);
       },
 
       async changeStatus(id, status, executor_id) {
         await this.$store.commit('setError404', '')
-        console.log(executor_id, this.currentUid);
-        console.log(this.currentSolStatus);
-
+        if (executor_id == this.currentUid || this.user.is_admin) {
           await this.$store.dispatch('changeStatus', {
             status: status.name,
             id
           }).catch(() => {
+            console.log(this.currentSolStatus);
             this.$store.commit('editStatus', {
               id,
-              status: this.currentSolStatus.name
+              status: this.currentSolStatus
             })
           })
+          } else {
+          this.$store.commit('setError404', 'У вас недостаточно прав')
+          this.$store.commit('editStatus', {
+            status: this.currentSolStatus,
+            id
+          })
+        }
       },
 
       onClickDate(event) {
@@ -391,7 +399,7 @@
     width: 100%;
 
     div {
-      padding: 0 2px;
+      padding: 0;
     }
   }
 
@@ -505,6 +513,9 @@
 
   .modal-body {
     padding: 0;
+    margin-top: -22px;
+    margin-right: 20px;
+    margin-left: 20px;
   }
 
   ol {
@@ -544,16 +555,13 @@
   .list-item {
     display: flex;
     flex-direction: column;
-    margin-right: 10px;
+    // margin-right: 10px;
   }
 
   .desc {
     display: flex;
-    // flex-wrap: wrap;
     flex-direction: row;
     align-items: center;
-    // width: fit-content;
-    // font-family: 'GothamPro-Medium';
     font-size: 18px;
     line-height: 24px;
     letter-spacing: 0.15px;
@@ -608,7 +616,7 @@
       background-color: #F2F5FA;
 
       >div {
-        max-height: 27px;
+        max-height: 30px;
         min-width: max-content;
         padding-right: 10px;
       }
@@ -617,6 +625,7 @@
     #select-toggle {
       font-family: 'GothamPro';
       color: #4F4F4F;
+      max-height: 25px;
     }
 
 
@@ -737,11 +746,14 @@
     font-size: 20px;
   }
 
+  .dateDiv {
+    justify-content: center;
+    display: flex;
+  }
 
   .date {
     outline: none;
-    // width: 200px;
-    width: 100%;
+    width: fit-content;
     border: none;
     position: relative;
     color: #4f4f4f;
@@ -749,10 +761,7 @@
     padding-bottom: 5px;
     padding-top: 5px;
     border-radius: 10px;
-    // width: 168px;
     background-color: #fff;
-
-
   }
 
   .date:hover {
@@ -781,23 +790,23 @@
   }
 
   input[type="date"]::-webkit-calendar-picker-indicator {
-    background: url('~@/assets/calendar.png');
+    background: url('~@/assets/calendar.png') left;
     background-size: 80%;
     background-repeat: no-repeat;
     cursor: pointer;
     color: #828282;
     position: absolute;
     top: 20%;
-    left: -12%;
+    left: -14%;
   }
 
   input[class="date"]:focus::-webkit-calendar-picker-indicator {
-    background: url('~@/assets/calendarW.png');
+    background: url('~@/assets/calendarW.png') left;
     background-size: 80%;
     background-repeat: no-repeat;
     cursor: pointer;
     position: absolute;
-    left: -12%;
+    left: -14%;
     top: 20%;
   }
 

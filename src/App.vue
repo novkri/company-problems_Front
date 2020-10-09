@@ -24,6 +24,10 @@
   }
 </script>
 <style lang="scss">
+  .spinner-border {
+    margin: auto;
+    color: #92D2C3;
+  }
   .yes {
     background-color: #4EAD96 !important;
     color: #fff !important;

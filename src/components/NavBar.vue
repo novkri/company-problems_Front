@@ -1,48 +1,5 @@
 <template>
-  <!-- <div id="nav">
-    <div class="dropdown">
-      <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="false">
-        Меню
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-        <div class="links">
-          <div class="main">
-            <ul>
-              <li>Списки проблем:</li>
-              <li>-Предложенные мной</li>
-              <li>-На рассмотрении</li>
-              <li>-Для исполнения</li>
-              <li>-По подразделениям</li>
-            </ul>
-
-            <router-link to="/" exact>Проблемы</router-link>
-            <ul>
-              <li>
-                <router-link to="/" exact>Все</router-link>
-              </li>
-              <li v-for="(group, idx) in groups" :key="idx">
-                {{group.name}}
-              </li>
-            </ul>
-          </div>
-          <div class="groups">
-            <a href="#">Проекты</a>
-            <a href="#">Отделы</a>
-            <a href="#">Команды</a>
-          </div>
-          <div class="info">
-            <router-link to="/groups">Список подразделений</router-link>
-            <a href="#">Статистика</a>
-          </div>
-          <div class="footer">
-            <a href="#">Помощь</a>
-            <a href="#">Выйти из системы</a>
-          </div>
-        </div>
-      </div>
-    </div> -->
-  <nav class="navbar navbar-light" :class="[this.$route.path === '/' ? 'main' : '']">
+  <nav class="navbar navbar-light" :class="[this.$route.path === '/' || this.$route.path == '/groups' ? 'main' : '']">
     <div class="logo" @click="allProblems">
       <router-link to="/" exact style="font-family: 'GothamPro-Medium';font-size: 16px;"><img src="@/assets/logo.png"
           alt="PSS Software">
@@ -51,6 +8,9 @@
     <div v-tooltip="currentGroupName" class="group_selected"
       v-if="$route.path.split('-').includes('problems') || $route.path.split('-').includes('/problems')">
       Список проблем: {{currentGroupName}} <p></p>
+    </div>
+    <div v-show="$route.path == '/groups'" class="group_selected">
+      Список подразделений <p></p>
     </div>
     <div class="filter"
       v-if="$route.path.split('-').includes('problems') || $route.path.split('-').includes('/problems')"
@@ -196,7 +156,6 @@
     },
     watch: {
       $route(to) {
-        // console.log(to, from);
         this.statusProblem = ''
         this.time = ''
         this.importance = ''
@@ -222,7 +181,6 @@
             this.$store.dispatch('changeCurrentGroupName', "Предложенные мной")
             break;
           case "/problems-for-execution":
-
             this.$store.dispatch('changeStatusesProblem', [{
                 name: "В работе"
               },
@@ -238,6 +196,9 @@
           case "/group-problems":
             this.$store.dispatch('changeStatusesProblem', [])
             this.$store.dispatch('changeCurrentGroupName', "На рассмотрении")
+            break;
+          case "/group":
+            this.$store.dispatch('changeCurrentGroupName', "Список подразделений")
             break;
           case "/problems-of-all-groups":
             this.$store.dispatch('changeStatusesProblem', [{
@@ -277,7 +238,8 @@
                 name: "Все"
               },
             ])
-            this.$store.dispatch('changeCurrentGroupName', this.groups.find(g => g.id == to.params.id).name)
+            to.params.id ? this.$store.dispatch('changeCurrentGroupName', this.groups.find(g => g.id == to.params.id)
+              .name) : ''
             break;
         }
       }
@@ -288,7 +250,6 @@
         await this.$store.dispatch('getProblems')
       },
       async filterImportance(imp) {
-        // console.log(this.$route.path);
         switch (imp.name) {
           case "Только важные":
             this.$store.dispatch('filterImportance', {

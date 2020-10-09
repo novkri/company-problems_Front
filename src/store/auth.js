@@ -38,7 +38,7 @@ export default {
       return state.isLeader
     },
     currentUid: state => {
-      return state.currentUid = localStorage.getItem('currentUid') 
+      return state.currentUid
     },
     errorU: state => {
       return state.errorU
@@ -76,6 +76,7 @@ export default {
     logout(state) {
       state.status = ''
       state.token = ''
+      state.currentUid = ''
     },
     setErrorU: (state, payload) => {
       state.errorU = payload
@@ -149,9 +150,9 @@ export default {
     }) {
       return new Promise((resolve) => {
         commit('logout')
-        // commit('removeUser')
         localStorage.removeItem('token')
         localStorage.removeItem('user')
+        localStorage.removeItem('currentUid')
         delete axios.defaults.headers.common['Authorization']
         resolve()
       })

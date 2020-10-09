@@ -17,20 +17,10 @@ import VueEllipseProgress from 'vue-ellipse-progress';
 Vue.use(VueEllipseProgress);
 
 
-// const token = localStorage.getItem('token')
-// if (token) {
-//   axios.defaults.headers.common['Authorization'] = token
-// }
 
 // eslint-disable-next-line 
 import styles from './scss/app.scss';
 
-
-// Vue.filter('problems_status', function (value, arg) {
-//   // if (!value) return ''
-//   // value = value.toString()
-//   return value.filter(p => p.status == arg)
-// })
 
 
 Vue.use(Vuelidate)

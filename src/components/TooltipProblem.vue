@@ -148,6 +148,9 @@
 
   p {
     word-break: break-word;
+    span {
+      cursor: default;
+    }
   }
 
   .container_tooltip {
