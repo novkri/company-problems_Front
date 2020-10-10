@@ -80,8 +80,7 @@
             </div>
 
             <div class="selectResponsible col-3">
-              {{group.leader_id}}
-              <ss-select v-model="group.leader_id" :options="allUsersReduced.filter(u => u.group_id == group.id)"
+              <ss-select v-model="group.leader_id" :options="allUsersReduced.filter(u => u.group_id == group.id)" 
                 track-by="name" search-by="surname" @change="selectExecutorGroup(group, $event)" disable-by="disabled"
                 id="ss-select" style="width: fit-content;height: fit-content;">
                 <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
@@ -113,7 +112,7 @@
               </ss-select>
             </div>
             <div style="width: 50px;height: 100%;" class="icons col-1">
-              <button type="button" class="close" id="remove" data-toggle="modal" data-target="#groupDelete"
+              <button type="button" class="close" id="remove" data-toggle="modal" data-target="#groupDelete" v-show="user.is_admin"
                 @click="deleteGroup(group)">
                 <trash-icon size="1x" class="custom-class"></trash-icon>
               </button>
@@ -123,7 +122,7 @@
 
           <div :id="'collapseOne'+group.id" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
             <div class="card-body">
-              <div class="card">
+              <div class="card" v-show="user.is_admin">
                 <div class="card-header" id="headingOneAdd">
                   <h5 class="mb-0">
 
@@ -174,7 +173,7 @@
     </div>
 
 
-    <button type="button" class="btn btnMain" @click="createG" data-toggle="modal" data-target="#groupCreate"
+    <button v-show="user.is_admin" type="button" class="btn btnMain" @click="createG" data-toggle="modal" data-target="#groupCreate"
       style="margin: 100px auto 30px;">
       <plus-icon size="1.5x" class="custom-class" style="color: white; margin-right: 5px;"></plus-icon><span>Добавить
         подразделение</span>
@@ -268,7 +267,7 @@
       await this.$store.dispatch('getAllUsers')
     },
     computed: {
-      ...mapGetters(['groups', 'error', 'error404', 'allUsers', 'members', 'usersNoGroup',  'allUsersReduced']),
+      ...mapGetters(['groups', 'error', 'error404', 'allUsers', 'members', 'usersNoGroup',  'allUsersReduced', 'user']),
 
       pageCount() {
         let l = this.groups.length,
@@ -290,7 +289,8 @@
     },
     methods: {
       onClickInput(id, type, event) {
-        event.target.style.display = 'none'
+        if (this.user.is_admin) {
+          event.target.style.display = 'none'
         this.$nextTick(() => {
           if (type == 'name') {
             this.$refs['group-name' + id][0].style.display = 'flex'
@@ -300,6 +300,16 @@
             this.$refs['group-name-short' + id][0].focus()
           }
         })
+        } else {
+          this.$nextTick(() => {
+          if (type == 'name') {
+            this.$refs['group-name' + id][0].style.display = 'none'
+          } else {
+            this.$refs['group-name-short' + id][0].style.display = 'none'
+          }
+        })
+        }
+        
       },
 
       showOnClickUsers(id) {

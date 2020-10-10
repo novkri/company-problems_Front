@@ -10,7 +10,7 @@
             1. {{leaderReduced.surname}} {{leaderReduced.name}} {{leaderReduced.father_name}}
           </div>
           <div class="close">
-            <button type="button" id="close" class="close" data-dismiss="modal"
+            <button type="button" id="close" class="close" data-dismiss="modal" v-show="user.is_admin"
               @click="removeLeader(leaderReduced.id, val)">
               <span aria-hidden="true" style="font-size: 20px;">&times;</span>
             </button>
@@ -26,7 +26,7 @@
               {{idx+2}}. {{member.surname}} {{member.name[0]}}. {{member.father_name ? member.father_name[0]+'.' : ''}}
             </div>
             <div class="close">
-              <button type="button" id="close" class="close" data-dismiss="modal"
+              <button type="button" id="close" class="close" data-dismiss="modal" v-show="user.is_admin"
                 @click="removeUserFromGroup(member.id, val)" data-toggle="modal" data-target="#groupDeleteUser">
                 <span aria-hidden="true" style="font-size: 20px;">&times;</span>
               </button>
@@ -75,7 +75,7 @@
       HalfCircleSpinner
     },
     computed: {
-      ...mapGetters(['error', 'error404', 'members', 'usersNoGroup', 'leaderReduced', 'allUsersReduced']),
+      ...mapGetters(['error', 'error404', 'members', 'usersNoGroup', 'leaderReduced', 'allUsersReduced', 'user']),
     },
 
     async mounted() {

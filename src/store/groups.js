@@ -299,14 +299,13 @@ export default {
     putUserToGroup: async ({
       commit
     }, param) => {
-      // param.uid = 10000000000
       return new Promise((resolve, reject) => {
         axios.put(process.env.VUE_APP_ROOT_URL + `/group/${param.id}/user/${param.uid}`).then(response => {
           commit('setError', '')
           commit('setUserToGroup', response.data)
           resolve(response.data)
         }).catch((error) => {
-          if (error.response.status == 404) {
+          if (error.response.status == 404 || error.response.status == 403) {
             commit('setError404', error.response.data.message)
             reject(error.response.data.message)
           } else if (error.response.status == 422) {
