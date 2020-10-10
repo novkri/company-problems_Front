@@ -95,7 +95,7 @@
                     <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                   </ss-select-toggle>
 
-                  <section v-show="isOpen" class="absolute border-l border-r min-w-full">
+                  <section v-show="isOpen && user.is_admin" class="absolute border-l border-r min-w-full">
                     <div class="px-px">
                       <ss-select-search-input class="w-full px-3 py-2 search" placeholder="Впишите фамилию">
                       </ss-select-search-input>
@@ -128,11 +128,11 @@
 
                     <div>
                       <ss-select :options="usersNoGroup" track-by="name" search-by="surname" disable-by="disabled"
-                        id="ss-select" style="width: fit-content;" @change="putUserToGroup(group.id, $event)">
+                        id="ss-select" style="width: fit-content;" @change="putUserToGroup(group.id, $event)" >
                         <div
                           slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                           style="cursor: pointer; width: 100%;">
-                          <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between"
+                          <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between" 
                             style="width: 100%; padding: 13px;">
                             <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                             <plus-icon size="1x" class="custom-class" id="plusIcon"></plus-icon>

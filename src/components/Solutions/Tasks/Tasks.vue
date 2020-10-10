@@ -11,7 +11,7 @@
       <div style="width: 54px" class="col">
       </div>
     </div>
-
+ 
     <div class="container row" ref="containerTask">
       <ol ref="olTask">
         <li id="list" v-for="(task, idx) in tasks" :key="idx">
@@ -45,7 +45,7 @@
                   <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                 </ss-select-toggle>
 
-                <section v-show="isOpen" :ref="'slot-scope'+task.id" class="absolute border-l border-r min-w-full"
+                <section v-show="isOpen && user.is_admin || isOpen && task.executor_id == currentUid" :ref="'slot-scope'+task.id" class="absolute border-l border-r min-w-full"
                   style="height: fit-content;" >
                   <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index"
                     :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
@@ -78,7 +78,7 @@
                     + allUsersReduced.find(u => u.id == task.executor_id).father_name : 'Выбрать'}`}}
                 </ss-select-toggle>
 
-                <section v-show="isOpen" class="absolute border-l border-r min-w-full" :ref="'slot-scopeExec'+task.id"
+                <section v-show="isOpen && user.is_admin || isOpen && task.executor_id == currentUid || isOpen && isLeader" class="absolute border-l border-r min-w-full" :ref="'slot-scopeExec'+task.id"
                   style="height: 146px;">
                   <div class="px-px">
                     <ss-select-search-input class="w-full px-3 py-2 search" autofocus="false" placeholder="Впишите фамилию">

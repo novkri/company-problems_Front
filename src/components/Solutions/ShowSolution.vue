@@ -62,7 +62,7 @@
                       <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                     </ss-select-toggle>
 
-                    <section v-show="isOpen" class="absolute border-l border-r min-w-full" style="height: auto;left: 1%;">
+                    <section v-show="isOpen && user.is_admin || isOpen && solution.executor_id == currentUid" class="absolute border-l border-r min-w-full" style="height: auto;left: 1%;">
                       <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index"
                         :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
@@ -90,7 +90,7 @@
                       {{ $get(selectedOption, 'id') || `${allUsersReduced.find(u => u.id == solution.executor_id) ? allUsersReduced.find(u => u.id == solution.executor_id).surname + ' ' + allUsersReduced.find(u => u.id == solution.executor_id).name + allUsersReduced.find(u => u.id == solution.executor_id).father_name : 'Выбрать'}`}}
                     </ss-select-toggle>
 
-                    <section v-show="isOpen" class="absolute border-l border-r min-w-full">
+                    <section v-show="isOpen && user.is_admin || isOpen && isLeader" class="absolute border-l border-r min-w-full">
                       <div class="px-px">
                         <ss-select-search-input class="w-full px-3 py-2 search" placeholder="Впишите фамилию">
                         </ss-select-search-input>
@@ -627,7 +627,6 @@
       color: #4F4F4F;
       max-height: 25px;
     }
-
 
     select {
       margin: 0;
