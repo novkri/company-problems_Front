@@ -8,9 +8,8 @@
       </div>
 
       <div class="main">
-        <a>
-          <router-link to="/" exact style="font-family: 'GothamPro-Medium';font-size: 16px;">Списки проблем:
-          </router-link>
+        <a style="font-family: 'GothamPro';font-size: 16px; cursor: default;">
+          Списки проблем:
         </a>
         <a>
           <router-link to="/my-problems" exact>

@@ -80,6 +80,7 @@
             </div>
 
             <div class="selectResponsible col-3">
+              {{group.leader_id}}
               <ss-select v-model="group.leader_id" :options="allUsersReduced.filter(u => u.group_id == group.id)"
                 track-by="name" search-by="surname" @change="selectExecutorGroup(group, $event)" disable-by="disabled"
                 id="ss-select" style="width: fit-content;height: fit-content;">
@@ -407,15 +408,8 @@
             uid: param.leader_id
           })
           .then(() => {
-          //   // this.$store.commit('editExecutorGroup', {
-          //   //   id: param.groupId,
-          //   //   leader_id: param.leader_id
-          //   // })
-          //   this.$store.dispatch('getLeader', param.groupId)
-   
-            this.$store.commit('changeLeader', param.leader_id)
-          //   this.currentExecutor = param.leader_id
-          //   console.log(this.currentExecutor);
+            this.$store.dispatch('getMembers', param.groupId)
+            this.$store.dispatch('getLeader', param.groupId)
           })
           .catch(() => {
             this.$store.commit('editExecutorGroup', {

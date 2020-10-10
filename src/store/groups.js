@@ -54,13 +54,17 @@ export default {
     },
     setLeader: (state, payload) => {
       state.leader = payload[0]
+      console.log('setLeader',state.leader);
     },
     setLeaderReduced: (state, payload) => {
       payload[0].name = payload[0].name[0] + '.'
       payload[0].father_name ? payload[0].father_name = payload[0].father_name[0] + '.' : ' '
       state.leaderReduced = payload[0]
+      console.log('state.leaderReduced', state.leaderReduced);
     },
     changeLeader: (state, payload) => {
+      console.log('changeLeader',state.members);
+      console.log('changeLeader', state.leaderReduced);
       state.leaderReduced = state.members.filter(u => u.id == payload)[0]
       state.leaderReduced.name = state.leaderReduced.name[0] + '.'
       state.leaderReduced.father_name ? state.leaderReduced.father_name = state.leaderReduced.father_name[0] + '.' : ' '
@@ -133,6 +137,7 @@ export default {
     }, id) => {
       await axios.get(process.env.VUE_APP_ROOT_URL + `/group/${id}/leader`)
         .then(response => {
+          console.log(response.data.id);
           commit('setError', '')
           commit('setError404', '')
           commit('setLeader', response.data)
@@ -272,6 +277,7 @@ export default {
           commit('editExecutorGroup', response.data)
           resolve(response.data)
         }).catch((error) => {
+          console.log(error.response);
           if (error.response.status == 404) {
             error.response.data.message ? commit('setError404', error.response.data.message) : commit('setError404', error.response.data.errors)
             reject(error.response)

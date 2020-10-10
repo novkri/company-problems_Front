@@ -634,6 +634,10 @@
       width: 100%;
       background-color: #f6f6f6;
     }
+
+    section {
+      left: -56% !important;
+    }
   }
 
   .search {

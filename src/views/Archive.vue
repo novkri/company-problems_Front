@@ -42,12 +42,14 @@
                 </v-popover>
               </div>
               <div style="width: 21px;">
-                <clock-icon size="1.5x" class="custom-class details" :ref="'urgency'+problem.id" v-show="problem.urgency === 'Срочная'"
+                <clock-icon size="1.5x" class="custom-class details" :ref="'urgency'+problem.id"
+                  v-show="problem.urgency === 'Срочная'"
                   :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
                   @click="changeUrgency(problem.id, problem.urgency)"></clock-icon>
               </div>
               <div style="width: 21px;">
-                <alert-circle-icon size="1.5x" class="custom-class details" :ref="'importance'+problem.id" v-show="problem.importance === 'Важная'"
+                <alert-circle-icon size="1.5x" class="custom-class details" :ref="'importance'+problem.id"
+                  v-show="problem.importance === 'Важная'"
                   :style="[problem.importance == isImportnant ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
                   @click="changeImportance(problem.id, problem.importance)"></alert-circle-icon>
               </div>
@@ -62,7 +64,7 @@
                   </button>
                 </div>
               </div>
-              <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=45 :thickness="4">
+              <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=45 :thickness="3">
                 <span slot="legend-value" :ref="'legend-value'+problem.id"
                   @click="event => clickProgress(problem.id, event)">{{problem.progress}}%</span>
                 <input :ref="'progress-bar'+problem.id" class="progress-input" type="text" style="display: none;"
@@ -89,7 +91,7 @@
               </div>
               <div>
                 <span :style="[problem.urgency == isUrgent ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]">
-                  Срочная: 
+                  Срочная:
                 </span>
                 <clock-icon size="1.3x" class="custom-class details" :ref="'urgency'+problem.id"
                   :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
@@ -117,8 +119,9 @@
                 <span style="color: #828282;">
                   Прогресс решения:
                 </span>
-                <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=35 :thickness="3">
-                  <span :ref="'legend-value'+problem.id" slot="legend-value" style="padding: 0;font-size: 11px !important;"
+                <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=35 :thickness="2">
+                  <span :ref="'legend-value'+problem.id" slot="legend-value"
+                    style="padding: 0;font-size: 11px !important;display: flex;"
                     @click="event => clickProgress(problem.id, event)">{{problem.progress}}%</span>
                   <input :ref="'progress-bar'+problem.id" class="progress-input" type="text" style="display: none;"
                     v-model="problem.progress" @blur="editProgress(problem.id, problem.progress)"
@@ -145,7 +148,7 @@
                     <div class="card">
                       <div class="card-header" id="headingTasks" style="width: 100%;">
                         <div class="name">
-                          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTasks"
+                          <button class="btn btn-link" data-toggle="collapse" data-target="#collapseTasks"
                             aria-expanded="false" aria-controls="collapseTasks">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                           </button>
@@ -170,7 +173,7 @@
                     <div class="card">
                       <div class="card-header" id="headingPlan" style="width: 100%;">
                         <div class="name">
-                          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapsePlan"
+                          <button class="btn btn-link" data-toggle="collapse" data-target="#collapsePlan"
                             aria-expanded="false" aria-controls="collapsePlan">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                           </button>
@@ -230,8 +233,8 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Команда</label>
-                            <textarea rows="6" :disabled="validatedExecutorAndAdmin"
-                              :ref="'textarea_team'+problem.id" v-model="solutions[0].team"
+                            <textarea rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_team'+problem.id"
+                              v-model="solutions[0].team"
                               @keydown.enter.prevent.exact="event => {editTeam(solutions[0].id, solutions[0].team, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea(event, 'team')}"></textarea>
@@ -253,8 +256,8 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Опыт</label>
-                             <textarea rows="6" :disabled="validatedExecutorAndAdmin"
-                              :ref="'textarea_exp'+problem.id" v-model="problem.experience"
+                            <textarea rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_exp'+problem.id"
+                              v-model="problem.experience"
                               @keydown.enter.prevent.exact="event => {editExp(problem.id, problem.experience, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea( event, 'exp')}"></textarea>
@@ -276,8 +279,8 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Результат</label>
-                            <textarea rows="6" :disabled="validatedExecutorAndAdmin"
-                              :ref="'textarea_result'+problem.id" v-model="problem.result"
+                            <textarea rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_result'+problem.id"
+                              v-model="problem.result"
                               @keydown.enter.prevent.exact="event => {editResult(problem.id, problem.result, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea(event, 'result')}"></textarea>
@@ -351,11 +354,11 @@
       </div>
     </div>
     <div v-else class="d-flex justify-content-center" style="margin-top: 20px;">
-    <div class="d-flex justify-content-center">
-      <div class="spinner-border" role="status">
-        <span class="sr-only">Loading...</span>
+      <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
       </div>
-    </div>
     </div>
 
 
@@ -444,7 +447,9 @@
       ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', 'user',
         'currentUid', 'user', 'isLeader'
       ]),
-       validatedExecutorAndAdmin: function() { return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : true}
+      validatedExecutorAndAdmin: function () {
+        return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : true
+      }
     },
 
     methods: {
@@ -470,8 +475,8 @@
 
       async changeImportance(id, importance) {
         await this.$store.commit('setError404', '')
-        if (this.user.is_admin || this.solutions[0].executor_id  == this.currentUid) {
-      
+        if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid) {
+
           if (importance === 'Обычная') {
             await this.$store.dispatch('changeImportance', {
               id,
@@ -488,7 +493,7 @@
           await this.$store.commit('setError404', 'У вас недостаточно прав')
         }
       },
-      
+
       async clickProgress(id) {
         await this.$store.commit('setError404', '')
         if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid) {
@@ -573,10 +578,10 @@
           this.$store.commit('setError', '')
 
           await this.$store.dispatch('getSolutions', problem.id).then(response => {
-              this.mounted = true
               this.$store.dispatch('getTasks', response.id)
               this.$store.dispatch('getCurrentSolution', '')
               this.$store.dispatch('getCurrentSolution', response.id)
+              this.mounted = true
             })
             .then(() => {
               this.$refs['collapsed-results'].forEach(element => {
@@ -712,16 +717,16 @@
         event.target.blur()
         await this.$store.commit('setError404', '')
         if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
-        await this.$store.dispatch('editPlan', {
-            plan,
-            id
-          })
-          .catch(() => {
-            this.$store.commit('editPlan', {
-              plan: this.currentTextarea,
+          await this.$store.dispatch('editPlan', {
+              plan,
               id
             })
-          })
+            .catch(() => {
+              this.$store.commit('editPlan', {
+                plan: this.currentTextarea,
+                id
+              })
+            })
         } else {
           //
         }
@@ -730,16 +735,16 @@
         event.target.blur()
         await this.$store.commit('setError404', '')
         if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
-        await this.$store.dispatch('editTeam', {
-            team,
-            id
-          })
-          .catch(() => {
-            this.$store.commit('editTeam', {
-              team: this.currentTextarea,
+          await this.$store.dispatch('editTeam', {
+              team,
               id
             })
-          })
+            .catch(() => {
+              this.$store.commit('editTeam', {
+                team: this.currentTextarea,
+                id
+              })
+            })
         } else {
           //
         }
@@ -749,34 +754,34 @@
         await this.$store.commit('setError404', '')
         if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
           await this.$store.dispatch('editExp', {
-            experience,
-            id
-          })
-          .catch(() => {
-            this.$store.commit('editExp', {
-              experience: this.currentTextarea,
+              experience,
               id
             })
-          })
+            .catch(() => {
+              this.$store.commit('editExp', {
+                experience: this.currentTextarea,
+                id
+              })
+            })
         } else {
           //
         }
-        
+
       },
       async editResult(id, result, event) {
         event.target.blur()
         await this.$store.commit('setError404', '')
         if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
-        await this.$store.dispatch('editResult', {
-            result,
-            id
-          })
-          .catch(() => {
-            this.$store.commit('editResult', {
-              result: this.currentTextarea,
+          await this.$store.dispatch('editResult', {
+              result,
               id
             })
-          })
+            .catch(() => {
+              this.$store.commit('editResult', {
+                result: this.currentTextarea,
+                id
+              })
+            })
         } else {
           //
         }
@@ -1312,22 +1317,12 @@
   #results {
     .card-body {
       height: fit-content;
-      // height: 459px !important;
-    }
-  }
-
-  #plan {
-
-    .card,
-    .card-body {
-      height: 100% !important;
     }
   }
 
   #groups {
     .card-body {
       height: fit-content;
-      // height: 459px !important;
     }
   }
 

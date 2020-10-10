@@ -5,6 +5,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Вы точно хотите назначить нового руководителя для подразделения?</h5>
+            {{val}}
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>

@@ -64,7 +64,7 @@
                   </button>
                 </div>
               </div>
-              <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=45 :thickness="4">
+              <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=45 :thickness="3">
                 <span slot="legend-value" :ref="'legend-value'+problem.id"
                   @click="event => clickProgress(problem.id, event)">{{problem.progress}}%</span>
                 <input :ref="'progress-bar'+problem.id" class="progress-input" type="text" style="display: none;"
@@ -119,9 +119,9 @@
                 <span style="color: #828282;">
                   Прогресс решения:
                 </span>
-                <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=35 :thickness="3">
+                <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=35 :thickness="2">
                   <span :ref="'legend-value'+problem.id" slot="legend-value"
-                    style="padding: 0;font-size: 11px !important;"
+                    style="padding: 0;font-size: 11px !important;display: flex;"
                     @click="event => clickProgress(problem.id, event)">{{problem.progress}}%</span>
                   <input :ref="'progress-bar'+problem.id" class="progress-input" type="text" style="display: none;"
                     v-model="problem.progress" @blur="editProgress(problem.id, problem.progress)"
@@ -148,7 +148,7 @@
                     <div class="card">
                       <div class="card-header" id="headingTasks" style="width: 100%;">
                         <div class="name">
-                          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTasks"
+                          <button class="btn btn-link" data-toggle="collapse" data-target="#collapseTasks"
                             aria-expanded="false" aria-controls="collapseTasks">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                           </button>
@@ -173,7 +173,7 @@
                     <div class="card">
                       <div class="card-header" id="headingPlan" style="width: 100%;">
                         <div class="name">
-                          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapsePlan"
+                          <button class="btn btn-link" data-toggle="collapse" data-target="#collapsePlan"
                             aria-expanded="false" aria-controls="collapsePlan">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                           </button>
@@ -470,7 +470,8 @@
         'currentUid', 'user', 'isLeader'
       ]),
       validatedExecutorAndAdmin: function () {
-        return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : this.isLeaderOgUser ? false : true
+        return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : this
+          .isLeaderOgUser ? false : true
       }
     },
 
@@ -607,10 +608,10 @@
 
           this.$store.commit('setError', '')
           await this.$store.dispatch('getSolutions', problem.id).then(response => {
-              this.mounted = true
               this.$store.dispatch('getTasks', response.id)
               this.$store.dispatch('getCurrentSolution', '')
               this.$store.dispatch('getCurrentSolution', response.id)
+              this.mounted = true
             })
             .then(() => {
               this.$refs['collapsed-results'].forEach(element => {
@@ -1347,22 +1348,13 @@
   #results {
     .card-body {
       height: fit-content;
-      // height: 459px !important;
     }
   }
 
-  #plan {
-
-    .card,
-    .card-body {
-      height: 100% !important;
-    }
-  }
 
   #groups {
     .card-body {
       height: fit-content;
-      // height: 459px !important;
     }
   }
 

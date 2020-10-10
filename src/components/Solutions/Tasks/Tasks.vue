@@ -21,7 +21,7 @@
             <input v-show="editable" class="form-control" v-model="task.description" :ref="'textarea_task' + task.id"
               @keyup.enter.prevent="event => {editTask(task.description, task.id, event)}" @focus="onFocusInput($event)"
               @blur="event => {onBlurInput(task.description, task.id, event)}" />
-            <div class="hidden" v-show="val.executor_id == currentUid || user.is_admin">
+            <div class="hidden">
               <button class="input-btn" @mousedown="event => {editTask(task.description, task.id, event)}">
                 <check-icon size="1x" class="custom-class"></check-icon>
               </button>
@@ -105,12 +105,9 @@
       </ol>
     </div>
 
-
-    <div v-show="val.executor_id == currentUid || user.is_admin || isLeader">
+    <div style="margin-top: 44px;" v-show="val.executor_id == currentUid || user.is_admin || isLeader">
       <div style="padding: 20px; cursor: pointer; width: fit-content;min-height: 62px;" v-if="addNotClicked"
         @click.prevent="displayInput">
-
-        <!-- v-show="val.executor_id == currentUid"  -->
         <span style="margin-left: 16px; cursor: pointer;color: #92D2C3;font-family: 'GothamPro-Medium';font-size: 14px;
           line-height: 24px;letter-spacing: 0.15px;">+ Добавить задачу</span>
       </div>
@@ -359,13 +356,18 @@
 
 
       onClickInput(id, executor_id) {
+        console.log(executor_id == this.currentUid , this.user.is_admin , this.isLeader);
         if (executor_id == this.currentUid || this.user.is_admin || this.isLeader) {
           this.editable = true
           this.$nextTick(() => {
             this.$refs['textarea_task' + id][0].focus()
           })
         } else {
+          event.preventDefault()
           this.editable = false
+          this.$nextTick(() => {
+            this.$refs['textarea_task' + id][0].blur()
+          })
         }
 
       },
@@ -530,7 +532,8 @@
     ol {
       // max-height: 182px;
       // overflow-y: scroll;
-      overflow-x: overlay;
+      // overflow-x: overlay;
+      overflow-x: visible;
       
     }
   }
@@ -590,7 +593,7 @@
     padding-left: 10px;
 
     section {
-      right: -65% !important;
+      right: -19% !important;
       top: 102% !important;
     }
     #ss-select {
