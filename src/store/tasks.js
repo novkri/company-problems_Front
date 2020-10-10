@@ -1,6 +1,6 @@
 import axios from "axios";
-const BASEURL = 'http://31.31.199.37/api/solution' //все решения
-const URLTASK = 'http://31.31.199.37/api/task' //одно решение
+// const process.env.VUE_APP_ROOT_URL = 'http://31.31.199.37/api/solution' //все решения
+// const process.env.VUE_APP_ROOT_URL = 'http://31.31.199.37/api/task' //одно решение
 
 
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
@@ -100,7 +100,7 @@ export default {
     getTasks: async ({
       commit
     }, param) => {
-      await axios.get(BASEURL + `/${param}/task`)
+      await axios.get(process.env.VUE_APP_ROOT_URL + `/solution/${param}/task`)
         .then(response => {
             commit('setError', '')
             commit('setError404', '')
@@ -115,7 +115,7 @@ export default {
     }, param) => {
       // param.solutionId = 100000000
       return new Promise((resolve, reject) => {
-        axios.post(BASEURL + `/${param.solutionId}/task`, {
+        axios.post(process.env.VUE_APP_ROOT_URL + `/solution/${param.solutionId}/task`, {
             description: param.params.taskName,
             deadline: param.params.deadline,
             executor_id: param.params.executor
@@ -153,7 +153,7 @@ export default {
       commit
     }, id) => {
       // id = 10000000000
-      await axios.delete(URLTASK + `/${id}`).then(() => {
+      await axios.delete(process.env.VUE_APP_ROOT_URL + `/task/${id}`).then(() => {
             commit('setError', '')
             commit('setError404', '')
             commit('deleteTask', id)
@@ -182,7 +182,7 @@ export default {
     }, param) => {
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
-        axios.put(URLTASK + `/${param.id}`, {
+        axios.put(process.env.VUE_APP_ROOT_URL + `/task/${param.id}`, {
           description: param.description
         }).then(response => {
           commit('setError', '')
@@ -213,7 +213,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-      axios.put(URLTASK + `/${param.id}/change-status`, {
+      axios.put(process.env.VUE_APP_ROOT_URL + `/task/${param.id}/change-status`, {
         status: param.status
       }).then(response => {
         commit('setError', '')
@@ -236,7 +236,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-        axios.put(URLTASK + `/${param.id}/set-deadline`, {
+        axios.put(process.env.VUE_APP_ROOT_URL + `/task/${param.id}/set-deadline`, {
           deadline: param.deadline
         }).then(response => {
           commit('setError', '')
@@ -259,7 +259,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-      axios.put(URLTASK + `/${param.id}/set-executor`, {
+      axios.put(process.env.VUE_APP_ROOT_URL + `/task/${param.id}/set-executor`, {
         executor_id: param.uid
       }).then(response => {
         commit('setError', '')

@@ -1,5 +1,5 @@
 import axios from "axios";
-const BASEURL = 'http://31.31.199.37/api/group'
+// const process.env.VUE_APP_ROOT_URL = 'http://31.31.199.37/api/group'
 
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 axios.defaults.headers.common['Accept'] = 'application/json'
@@ -108,7 +108,7 @@ export default {
       commit
     }) => {
       return new Promise((resolve, reject) => {
-      axios.get(BASEURL)
+      axios.get(process.env.VUE_APP_ROOT_URL + '/group')
         .then(response => {
           commit('setError', '')
           commit('setError404', '')
@@ -131,7 +131,7 @@ export default {
     getLeader: async ({
       commit
     }, id) => {
-      await axios.get(BASEURL + `/${id}/leader`)
+      await axios.get(process.env.VUE_APP_ROOT_URL + `/group/${id}/leader`)
         .then(response => {
           commit('setError', '')
           commit('setError404', '')
@@ -149,7 +149,7 @@ export default {
     getMembers: async ({
       commit
     }, id) => {
-      await axios.get(BASEURL + `/${id}/user`)
+      await axios.get(process.env.VUE_APP_ROOT_URL + `/group/${id}/user`)
         .then(response => {
           commit('setError', '')
           commit('setError404', '')
@@ -170,7 +170,7 @@ export default {
     }, param) => {
       param.short_name == '' ? delete param.short_name : param.short_name
       return new Promise((resolve, reject) => {
-        axios.post(BASEURL, param)
+        axios.post(process.env.VUE_APP_ROOT_URL + '/group', param)
           .then(response => {
             commit('setError', '')
             commit('setError404', '')
@@ -195,7 +195,7 @@ export default {
     }, param) => {
       // param.id = 10000000
       return new Promise((resolve, reject) => {
-        axios.delete(BASEURL + `/${param.id}`).then(response => {
+        axios.delete(process.env.VUE_APP_ROOT_URL + `/group/${param.id}`).then(response => {
             commit('setError', '')
             commit('setError404', '')
             commit('deleteGroup', param.id)
@@ -219,7 +219,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-        axios.put(BASEURL + `/${param.id}`, {
+        axios.put(process.env.VUE_APP_ROOT_URL + `/group/${param.id}`, {
           name: param.name
         }).then(response => {
           commit('setError', '')
@@ -243,7 +243,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-        axios.put(BASEURL + `/${param.id}/change-short-name`, {
+        axios.put(process.env.VUE_APP_ROOT_URL + `/group/${param.id}/change-short-name`, {
           short_name: param.short_name
         }).then(response => {
           commit('setError', '')
@@ -267,7 +267,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-        axios.put(BASEURL + `/${param.id}/change-leader/${param.uid}`).then(response => {
+        axios.put(process.env.VUE_APP_ROOT_URL + `/group/${param.id}/change-leader/${param.uid}`).then(response => {
           commit('setError', '')
           commit('editExecutorGroup', response.data)
           resolve(response.data)
@@ -295,7 +295,7 @@ export default {
     }, param) => {
       // param.uid = 10000000000
       return new Promise((resolve, reject) => {
-        axios.put(BASEURL + `/${param.id}/user/${param.uid}`).then(response => {
+        axios.put(process.env.VUE_APP_ROOT_URL + `/group/${param.id}/user/${param.uid}`).then(response => {
           commit('setError', '')
           commit('setUserToGroup', response.data)
           resolve(response.data)
@@ -318,7 +318,7 @@ export default {
       commit
     }, param) => {
       // param.uid = 10000000000
-      axios.put(BASEURL + `/${param.id}/remove-user/${param.uid}`).then(() => {
+      axios.put(process.env.VUE_APP_ROOT_URL + `/group/${param.id}/remove-user/${param.uid}`).then(() => {
         commit('setError', '')
         commit('setRemoveUser', param)
       }).catch((error) => {

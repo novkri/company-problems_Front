@@ -1,7 +1,7 @@
 import axios from "axios";
-const BASEURL = 'http://31.31.199.37/api/solution' //все решения
-const URLSOLUTION = 'http://31.31.199.37/api/problem' //одно решение
-const ALLUSERS = 'http://31.31.199.37/api/users'
+// const process.env.VUE_APP_ROOT_URL  = 'http://31.31.199.37/api/solution' //все решения
+// const process.env.VUE_APP_ROOT_URL = 'http://31.31.199.37/api/problem' //одно решение
+// const process.env.VUE_APP_ROOT_URL = 'http://31.31.199.37/api/users'
 
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 axios.defaults.headers.common['Accept'] = 'application/json'
@@ -118,7 +118,7 @@ export default {
       commit
     }, problemId) => {
       return await new Promise((resolve, reject) => {
-        axios.get(URLSOLUTION + `/${problemId}/solution`) 
+        axios.get(process.env.VUE_APP_ROOT_URL + `/problem/${problemId}/solution`) 
           .then(response => {
               commit('setError', '')
               commit('setError404', '')
@@ -135,7 +135,7 @@ export default {
       commit
     }, param) => {
       // param.problemId = 100000000
-      await axios.post(URLSOLUTION + `/${param.problemId}/solution`, {
+      await axios.post(process.env.VUE_APP_ROOT_URL + `/problem/${param.problemId}/solution`, {
           name: param.name
         })
         .then(response => {
@@ -163,7 +163,7 @@ export default {
       commit
     }, id) => {
       // id = 10000000000
-      await axios.delete(BASEURL + `/${id}`).then(() => {
+      await axios.delete(process.env.VUE_APP_ROOT_URL  + `/solution/${id}`).then(() => {
             commit('setError', '')
             commit('setError404', '')
             commit('deleteSolution', id)
@@ -178,7 +178,7 @@ export default {
     }, param) => {
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
-        axios.put(BASEURL + `/${param.id}`, {
+        axios.put(process.env.VUE_APP_ROOT_URL  + `/solution/${param.id}`, {
           name: param.name
         }).then(response => {
           commit('setError', '')
@@ -219,7 +219,7 @@ export default {
     }, param) => {
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
-        axios.put(BASEURL + `/${param.id}/change-in-work`, {
+        axios.put(process.env.VUE_APP_ROOT_URL  + `/solution/${param.id}/change-in-work`, {
           in_work: param.in_work
         }).then(response => {
           commit('setError', '')
@@ -244,7 +244,7 @@ export default {
     }, param) => {
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
-      axios.put(BASEURL + `/${param.id}/change-status`, {
+      axios.put(process.env.VUE_APP_ROOT_URL  + `/solution/${param.id}/change-status`, {
         status: param.status
       }).then(response => {
         console.log(response);
@@ -269,7 +269,7 @@ export default {
     }, param) => {
       // param.id = 10000000000
       return new Promise((resolve, reject) => {
-      axios.put(BASEURL + `/${param.id}/set-deadline`, {
+      axios.put(process.env.VUE_APP_ROOT_URL  + `/solution/${param.id}/set-deadline`, {
         deadline: param.deadline
       }).then(response => {
         commit('setError', '')
@@ -290,7 +290,7 @@ export default {
     getAllUsers: async ({
       commit
     }) => {
-      await axios.get(ALLUSERS).then(response => {
+      await axios.get(process.env.VUE_APP_ROOT_URL + '/users').then(response => {
             commit('setError', '')
             commit('setError404', '')
             commit('setAllUsers', response.data)
@@ -306,7 +306,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-      axios.put(BASEURL + `/${param.id}/set-executor`, {
+      axios.put(process.env.VUE_APP_ROOT_URL  + `/solution/${param.id}/set-executor`, {
         executor_id: param.uid
       }).then(response => {
         commit('setError', '')
@@ -330,7 +330,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-      axios.put(BASEURL + `/${param.id}/set-plan`, {
+      axios.put(process.env.VUE_APP_ROOT_URL  + `/solution/${param.id}/set-plan`, {
         plan: param.plan
       }).then(response => {
         commit('setError', '')
@@ -352,7 +352,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-      axios.put(BASEURL + `/${param.id}/set-team`, {
+      axios.put(process.env.VUE_APP_ROOT_URL  + `/solution/${param.id}/set-team`, {
         team: param.team
       }).then(response => {
         commit('setError', '')

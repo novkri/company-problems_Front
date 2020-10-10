@@ -632,11 +632,11 @@
 
           this.$store.commit('setError', '')
           await this.$store.dispatch('getSolutions', problem.id).then(response => {
-              this.mounted = true
+              
               this.$store.dispatch('getTasks', response.id)
               this.$store.dispatch('getCurrentSolution', '')
               this.$store.dispatch('getCurrentSolution', response.id)
-              
+              this.mounted = true
             })
             .then(() => {
               this.$refs['collapsed-results'].forEach(element => {

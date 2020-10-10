@@ -1,5 +1,5 @@
 import axios from "axios";
-const BASEURL = 'http://31.31.199.37/api'
+// const process.env.VUE_APP_ROOT_URL = 'http://31.31.199.37/api'
 
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 axios.defaults.headers.common['Accept'] = 'application/json'
@@ -94,7 +94,7 @@ export default {
       commit
     }, formData) => {
       commit('auth_request')
-      await axios.post(BASEURL + '/register', formData).then(response => {
+      await axios.post(process.env.VUE_APP_ROOT_URL + '/register', formData).then(response => {
           if (response.status == 201) {
             commit('setErrorUReg', '')
             commit('setErrorU', '')
@@ -108,7 +108,7 @@ export default {
         })
     },
     checkIsLeader: async ({commit}) => {
-      await axios.get(BASEURL + '/is-group-leader')
+      await axios.get(process.env.VUE_APP_ROOT_URL + '/is-group-leader')
         .then(response => {
           commit('isLeader', response.data)
         })
@@ -117,7 +117,7 @@ export default {
       commit
     }, user) => {
       commit('auth_request')
-      await axios.post(BASEURL + '/login', user)
+      await axios.post(process.env.VUE_APP_ROOT_URL + '/login', user)
         .then(resp => {
           const token = resp.data.access_token
           const user = resp.data.user

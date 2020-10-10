@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASEURL = 'http://31.31.199.37/api/problem'
+// const process.env.VUE_APP_ROOT_URL = 'http://31.31.199.37/api/problem'
 
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 axios.defaults.headers.common['Accept'] = 'application/json'
@@ -150,7 +150,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve) => {
-      axios.get(BASEURL+'/my-problems', {params: {
+      axios.get(process.env.VUE_APP_ROOT_URL+'/problem/my-problems', {params: {
         urgency: param.urgency,
         importance: param.importance,
         deadline: param.deadline,
@@ -168,7 +168,7 @@ export default {
       commit 
     }, param) => {
       return new Promise((resolve) => {
-      axios.get(BASEURL+'/problems-for-execution', {params: {
+      axios.get(process.env.VUE_APP_ROOT_URL+'/problem/problems-for-execution', {params: {
         urgency: param.urgency,
         importance: param.importance,
         deadline: param.deadline,
@@ -188,7 +188,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve) => {
-      axios.get(BASEURL+'/group-problems', {params: {
+      axios.get(process.env.VUE_APP_ROOT_URL+'/problem/group-problems', {params: {
         urgency: param.urgency,
         importance: param.importance,
         deadline: param.deadline,
@@ -206,7 +206,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve) => {
-      axios.get(BASEURL+'/problems-of-all-groups', {params: {
+      axios.get(process.env.VUE_APP_ROOT_URL+'/problem/problems-of-all-groups', {params: {
         urgency: param.urgency,
         importance: param.importance,
         deadline: param.deadline,
@@ -230,7 +230,7 @@ export default {
     }, param) => {
       
       return new Promise((resolve, reject) => {
-      axios.get(BASEURL+`${param.path}`, {params: {
+      axios.get(process.env.VUE_APP_ROOT_URL+`/problem${param.path}`, {params: {
         // ...param
         urgency: param.urgency,
         importance: param.importance,
@@ -258,7 +258,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-      axios.get(BASEURL+`${param.path}`, {params: {
+      axios.get(process.env.VUE_APP_ROOT_URL+`/problem${param.path}`, {params: {
         // ...param
         urgency: param.urgency,
         importance: param.importance,
@@ -286,7 +286,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-      axios.get(BASEURL+`${param.path}`, {params: {
+      axios.get(process.env.VUE_APP_ROOT_URL+`/problem${param.path}`, {params: {
         urgency: param.urgency,
         importance: param.importance,
         deadline: param.deadline,
@@ -314,7 +314,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-      axios.get(BASEURL+'/my-problems', {params: {
+      axios.get(process.env.VUE_APP_ROOT_URL+'/problem/my-problems', {params: {
         urgency: param.urgency,
         importance: param.importance,
         deadline: param.deadline,
@@ -344,7 +344,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-      axios.get(BASEURL+'/problems-for-execution', {params: {
+      axios.get(process.env.VUE_APP_ROOT_URL+'/problem/problems-for-execution', {params: {
         urgency: param.urgency,
         importance: param.importance,
         deadline: param.deadline,
@@ -375,7 +375,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-      axios.get(BASEURL+'/group-problems', {params: {
+      axios.get(process.env.VUE_APP_ROOT_URL+'/problem/group-problems', {params: {
         urgency: param.urgency,
         importance: param.importance,
         deadline: param.deadline
@@ -406,10 +406,10 @@ export default {
     }, param) => {
       // console.log(param);
       return new Promise((resolve, reject) => {
-      // axios.get(BASEURL+'/problems-user-archive')
-      // axios.get(BASEURL+'/problems-group-archive')
-      // 0:  axios.get(BASEURL+'/problems-archive'
-      axios.get(BASEURL+'/problems-user-archive', {params: { 
+      // axios.get(process.env.VUE_APP_ROOT_URL+'/problem/problems-user-archive')
+      // axios.get(process.env.VUE_APP_ROOT_URL+'/problem/problems-group-archive')
+      // 0:  axios.get(process.env.VUE_APP_ROOT_URL+'/problem/problems-archive'
+      axios.get(process.env.VUE_APP_ROOT_URL+'/problem/problems-user-archive', {params: { 
         urgency: param.urgency,
         importance: param.importance,
         deadline: param.deadline,
@@ -437,7 +437,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-      axios.get(BASEURL+'/problems-of-all-groups', {params: {
+      axios.get(process.env.VUE_APP_ROOT_URL+'/problem/problems-of-all-groups', {params: {
         urgency: param.urgency,
         importance: param.importance,
         deadline: param.deadline,
@@ -467,7 +467,7 @@ export default {
     }, param) => {
       console.log(param);
       return new Promise((resolve, reject) => {
-      axios.get(BASEURL+`/problems-by-groups/${param.group}`, {params: {
+      axios.get(process.env.VUE_APP_ROOT_URL+`/problem/problems-by-groups/${param.group}`, {params: {
         urgency: param.urgency,
         importance: param.importance,
         deadline: param.deadline,
@@ -498,8 +498,8 @@ export default {
     getProblems: async ({
       commit
     }) => {
-      await axios.get(BASEURL)
-      // await axios.get(BASEURL+'/problems-of-all-groups')
+      await axios.get(process.env.VUE_APP_ROOT_URL+'/problem')
+      // await axios.get(process.env.VUE_APP_ROOT_URL+'/problem/problems-of-all-groups')
         .then(response => {
             commit('setError', '')
             commit('setError404', '')
@@ -517,7 +517,7 @@ export default {
     getThisProblem: async ({
       commit
     }, id) => {
-      await axios.get(BASEURL+`/${id}`)
+      await axios.get(process.env.VUE_APP_ROOT_URL+`/problem/${id}`)
         .then(response => {
             commit('setError', '')
             commit('setError404', '')
@@ -536,7 +536,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-       axios.post(BASEURL, param)
+       axios.post(process.env.VUE_APP_ROOT_URL + '/problem', param)
         .then(response => {
           if (response.status == 201) {
             commit('setError', '')
@@ -559,7 +559,7 @@ export default {
     deleteProblem: async ({
       commit
     }, param) => {
-      await axios.delete(BASEURL + `/${param.id}`).then(() => {
+      await axios.delete(process.env.VUE_APP_ROOT_URL + `/problem/${param.id}`).then(() => {
           commit('setError', '')
           commit('setError404', '')
           commit('deleteProblem', param.id)
@@ -576,7 +576,7 @@ export default {
     checkIfExists: async ({
       commit
     }, param) => {
-      axios.get(BASEURL + `/${param.id}`).catch((error) => {
+      axios.get(process.env.VUE_APP_ROOT_URL + `/problem/${param.id}`).catch((error) => {
         commit('setError404', error.response.data.message)
       })
     },
@@ -585,7 +585,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-        axios.put(BASEURL + `/${param.id}`, {
+        axios.put(process.env.VUE_APP_ROOT_URL + `/problem/${param.id}`, {
           name: param.name
         }).then(response => {
             commit('setError', '')
@@ -605,7 +605,7 @@ export default {
     },
 
     problemLike: async ({commit}, id) => {
-      axios.post(BASEURL + `/${id}/like`)
+      axios.post(process.env.VUE_APP_ROOT_URL + `/problem/${id}/like`)
         .then(() => {
           commit('setError', '')
           commit('setError404', '')
@@ -617,7 +617,7 @@ export default {
     },
 
     sendToGroup: async ({commit}, param) => {
-      axios.post(BASEURL + `/${param.id}/send-to-group`, {group_ids: param.groupsArray})
+      axios.post(process.env.VUE_APP_ROOT_URL + `/problem/${param.id}/send-to-group`, {group_ids: param.groupsArray})
         .then(() => {
           commit('setError', '')
           commit('setError404', '')
@@ -632,7 +632,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-      axios.put(BASEURL + `/${param.id}/set-experience`, {
+      axios.put(process.env.VUE_APP_ROOT_URL + `/problem/${param.id}/set-experience`, {
         experience: param.experience
       }).then(response => {
         commit('setError', '')
@@ -654,7 +654,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-      axios.put(BASEURL + `/${param.id}/set-result`, {
+      axios.put(process.env.VUE_APP_ROOT_URL + `/problem/${param.id}/set-result`, {
         result: param.result
       }).then(response => {
         commit('setError', '')
@@ -677,7 +677,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-      axios.put(BASEURL + `/${param.id}`, {
+      axios.put(process.env.VUE_APP_ROOT_URL + `/problem/${param.id}`, {
         name: param.name
       }).then(response => {
         commit('setError', '')
@@ -700,7 +700,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-      axios.put(BASEURL + `/${param.id}/set-importance`, {
+      axios.put(process.env.VUE_APP_ROOT_URL + `/problem/${param.id}/set-importance`, {
         importance: param.importance
       }).then(response => {
         commit('setError', '')
@@ -723,7 +723,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-      axios.put(BASEURL + `/${param.id}/set-urgency`, {
+      axios.put(process.env.VUE_APP_ROOT_URL + `/problem/${param.id}/set-urgency`, {
         urgency: param.urgency
       }).then(response => {
         commit('setError', '')
@@ -746,7 +746,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-      axios.put(BASEURL + `/${param.id}/set-progress`, {
+      axios.put(process.env.VUE_APP_ROOT_URL + `/problem/${param.id}/set-progress`, {
         progress: param.progress
       }).then(response => {
         commit('setError', '')
@@ -769,7 +769,7 @@ export default {
       commit
     }, id) => {
       return new Promise((resolve, reject) => {
-      axios.put(BASEURL + `/${id}/send-for-confirmation`).then(response => {
+      axios.put(process.env.VUE_APP_ROOT_URL + `/problem/${id}/send-for-confirmation`).then(response => {
         commit('setError', '')
         commit('setError404', '')
         commit('problemSolved', response.data)
@@ -790,7 +790,7 @@ export default {
       commit
     }, id) => {
       return new Promise((resolve, reject) => {
-      axios.put(BASEURL + `/${id}/reject-solution	`).then(response => {
+      axios.put(process.env.VUE_APP_ROOT_URL + `/problem/${id}/reject-solution	`).then(response => {
         commit('setError', '')
         commit('setError404', '')
         commit('problemReject', response.data)
@@ -810,7 +810,7 @@ export default {
       commit
     }, id) => {
       return new Promise((resolve, reject) => {
-      axios.put(BASEURL + `/${id}/confirm-solution`).then(response => {
+      axios.put(process.env.VUE_APP_ROOT_URL + `/problem/${id}/confirm-solution`).then(response => {
         commit('setError', '')
         commit('setError404', '')
         commit('problemConfirm', response.data)
@@ -831,7 +831,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-      axios.put(BASEURL + `/${param.id}/set-description`, {
+      axios.put(process.env.VUE_APP_ROOT_URL + `/problem/${param.id}/set-description`, {
         description: param.description
       }).then(response => {
         commit('setError', '')
@@ -854,7 +854,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-      axios.put(BASEURL + `/${param.id}/set-possible-solution`, {
+      axios.put(process.env.VUE_APP_ROOT_URL + `/problem/${param.id}/set-possible-solution`, {
         possible_solution: param.possible_solution
       }).then(response => {
         commit('setError', '')
