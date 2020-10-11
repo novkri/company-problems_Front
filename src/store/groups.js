@@ -36,7 +36,7 @@ export default {
       return state.leaderReduced
     },
     members: state => {
-      return state.members
+      return state.members 
     },
     usersNoGroup: (state, rootState) => {
       state.usersNoGroup = rootState.allUsers.filter(u => u.group_id == null)
