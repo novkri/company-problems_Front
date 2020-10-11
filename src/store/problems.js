@@ -23,6 +23,9 @@ export default {
     error404: '',
     token: localStorage.getItem('user-token') || '',
     statusesProblem: [],
+
+    // amountOfProblems: '',
+
     amountOfMyProblems: '',
     amountOfProblemsForExecution: '',
     amountOfProblemsForConfirmation: '',
@@ -44,6 +47,12 @@ export default {
     error404: state => {
       return state.error404
     },
+
+    
+    
+    // amountOfProblems: state => {
+    //   return state.amountOfProblems
+    // },
 
     amountOfMyProblems: state => {
       return state.amountOfMyProblems
@@ -117,6 +126,12 @@ export default {
       state.problems.find(problem => problem.id == payload.id).possible_solution = payload.possible_solution
     },
 
+
+
+    // amountOfProblems: (state, payload) => {
+    //   state.amountOfProblems = payload
+    // },
+
     amountOfMyProblems: (state, payload) => {
       state.amountOfMyProblems = payload
     },
@@ -142,6 +157,23 @@ export default {
   },
 
   actions: {
+    // countAmountOfProblems: async ({
+    //   commit
+    // }) => {
+    //   return new Promise((resolve) => {
+    //   axios.get(process.env.VUE_APP_ROOT_URL+'/problem/count-problems')
+    //     .then(response => {
+    //       console.log(response.data);
+    //         commit('setError', '')
+    //         commit('setError404', '')
+    //         commit('amountOfProblems', response.data)
+    //         resolve(response.data)
+    //     })
+    //   })
+    // },
+
+
+
     countAmountOfMyProblems: async ({
       commit
     }, param) => {

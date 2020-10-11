@@ -466,6 +466,7 @@
       }).catch(() => {
         this.$store.commit('setProblems', '')
       }).then((r) => {
+        // this.$store.dispatch('countAmountOfProblems')
         this.$store.commit('amountOfMyProblems', r.length)
       })
       await this.$store.dispatch('getGroups').catch(() => this.$router.push('/login'))
