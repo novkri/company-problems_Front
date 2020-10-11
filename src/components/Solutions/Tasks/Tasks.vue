@@ -35,7 +35,7 @@
 
           <div class="select col-3" ref="select">
             <ss-select v-model="task.status" :options="statusesT" track-by="name" class="form-control"
-              @change="changeStatusTask(task.id, task.status, task.executor_id)" disable-by="disabled"
+              @change="changeStatusTask(task.id, task.status, task.executor_id, val.executor_id)" disable-by="disabled"
               :class="[task.status == 'Выполнено' ? 'green' : task.status == 'В процессе' ? 'blue' : 'gray']"
               id="ss-select" style="margin:auto; width: 87%;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
@@ -61,7 +61,7 @@
 
           <div class="dateDiv col-2">
             <input type="date" id="start" name="trip-start" class="date" onkeypress="return false"
-              @click="onClickDate($event)" @change="changeDeadlineTask(task.deadline, task.id, val.executor_id)"
+              @click="onClickDate($event)" @change="changeDeadlineTask(task.deadline, task.id, val.executor_id)" :disabled="validatedExecutorAndAdmin && task.executor_id != currentUid"
               v-model="task.deadline">
           </div>
 
@@ -241,6 +241,10 @@
       ...mapGetters(['tasks', 'error', 'error404', 'allUsers', 'allUsersReduced', 'currentSolution', 'solutions',
         'currentUid', 'user', 'isLeader'
       ]),
+      validatedExecutorAndAdmin: function () {
+        return this.val.executor_id == this.currentUid ? false : this.user.is_admin ? false : this
+          .isLeaderOgUser ? false : true
+      },
     },
 
     methods: {
@@ -275,7 +279,8 @@
 
       async changeStatusTask(id, status, executor_id) {
         await this.$store.commit('setError404', '')
-        if (executor_id == this.currentUid || this.user.is_admin || this.isLeader) {
+        if (executor_id == this.currentUid || this.user.is_admin) {
+        // if (executor_id == this.currentUid || this.user.is_admin || this.isLeader || executorSol == this.currentUid) {
           await this.$store.dispatch('changeStatusTask', {
             status: status.name,
             id
