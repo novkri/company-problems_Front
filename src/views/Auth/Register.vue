@@ -237,7 +237,6 @@
     line-height: 24px;
     letter-spacing: 0.15px;
     color: #FF8585;
-    // color: red;
     margin-top: 10px;
   }
 
@@ -256,7 +255,6 @@
     align-items: center;
     height: auto;
     padding-top: 40px;
-    // padding-bottom: 130px;
     font-family: 'Roboto';
     font-style: normal;
     font-weight: normal;
@@ -269,7 +267,6 @@
 
   label {
     display: flex;
-    // justify-content: space-between;
     margin: 0 7px 12px 18px;
     font-size: 14px;
     font-family: 'GothamPro';
@@ -444,7 +441,6 @@
   button:active,
   button {
     outline: none;
-    // border: transparent;
   }
 
 

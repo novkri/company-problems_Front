@@ -609,28 +609,9 @@
     #select-toggle {
       padding: 1px 16px 2px 24px;
     }
-
-    // ::-webkit-scrollbar {
-    //   width: 10px;
-    // }
-
-    // ::-webkit-scrollbar-thumb {
-    //   background: #92D2C3;
-    //   border-radius: 3px;
-    //   height: 73px;
-    // }
-
-    // ::-webkit-scrollbar-track {
-    //   background: #F2F2F2;
-    //   border-left: 4px solid white;
-    //   border-right: 4px solid white;
-    // }
-
   }
 
   section {
-    // width: max-content;
-    // padding: 22px;
     padding: 0;
     position: absolute;
     max-height: 257px;

@@ -1,8 +1,5 @@
 import axios from "axios";
 
-// const process.env.VUE_APP_ROOT_URL = 'http://31.31.199.37/api/problem'
-
-// axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 axios.defaults.headers.common['Accept'] = 'application/json'
 axios.interceptors.request.use(
   (config) => {
@@ -75,7 +72,6 @@ export default {
     },
     addProblem: (state, payload) => {
       state.problems.push(payload)
-      // state.amountOfMyProblems++
     },
     deleteProblem: (state, payload) => {
       state.problems = state.problems.filter(problem => problem.id !== payload)
@@ -175,7 +171,6 @@ export default {
         status: param.status
       }})
         .then(response => {
-          console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('amountOfProblemsForExecution', response.data.length)
@@ -194,7 +189,6 @@ export default {
         deadline: param.deadline,
       }})
         .then(response => {
-          console.log(response.data.length);
             commit('setError', '')
             commit('setError404', '')
             commit('amountOfProblemsForConfirmation', response.data.length)
@@ -213,7 +207,6 @@ export default {
         status: param.status
       }})
         .then(response => {
-          console.log(response.data.length);
             commit('setError', '')
             commit('setError404', '')
             commit('amountOfProblemsForConfirmationAdmin', response.data.length)
@@ -231,7 +224,6 @@ export default {
       
       return new Promise((resolve, reject) => {
       axios.get(process.env.VUE_APP_ROOT_URL+`/problem${param.path}`, {params: {
-        // ...param
         urgency: param.urgency,
         importance: param.importance,
         deadline: param.deadline,
@@ -259,7 +251,6 @@ export default {
     }, param) => {
       return new Promise((resolve, reject) => {
       axios.get(process.env.VUE_APP_ROOT_URL+`/problem${param.path}`, {params: {
-        // ...param
         urgency: param.urgency,
         importance: param.importance,
         deadline: param.deadline,
@@ -351,7 +342,6 @@ export default {
         status: param.status
       }})
         .then(response => {
-          console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
@@ -359,7 +349,6 @@ export default {
             resolve(response.data)
         })
         .catch(error => {
-         
           commit('setProblems', '')
           if (error.response.status == 401) {
             commit('setError404', error.response.data.errors)
@@ -381,7 +370,6 @@ export default {
         deadline: param.deadline
       }})
         .then(response => {
-          console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
@@ -389,7 +377,6 @@ export default {
             resolve(response.data)
         })
         .catch(error => {
-          console.log(error.response);
           commit('setProblems', '')
           if (error.response.status == 401) {
             commit('setError404', error.response.data.errors)
@@ -404,7 +391,6 @@ export default {
     archive: async ({
       commit
     }, param) => {
-      // console.log(param);
       return new Promise((resolve, reject) => {
       // axios.get(process.env.VUE_APP_ROOT_URL+'/problem/problems-user-archive')
       // axios.get(process.env.VUE_APP_ROOT_URL+'/problem/problems-group-archive')
@@ -465,7 +451,6 @@ export default {
     getProblemsByGroups: async ({
       commit
     }, param) => {
-      console.log(param);
       return new Promise((resolve, reject) => {
       axios.get(process.env.VUE_APP_ROOT_URL+`/problem/problems-by-groups/${param.group}`, {params: {
         urgency: param.urgency,
@@ -474,15 +459,12 @@ export default {
         status: param.status
       }})
         .then(response => {
-          console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
-            // commit('setProblems', response.data.find(group => group.name == param.groupName).problems)
             resolve(response.data)
         })
         .catch(error => {
-          console.log(error.response);
           commit('setProblems', '')
           if (error.response.status == 401) {
             commit('setError404', error.response.data.errors)
@@ -778,7 +760,6 @@ export default {
         commit('setError', '')
         commit('setError404', '')
         commit('problemSolved', response.data)
-        console.log(response.data);
         resolve(response.data)
       }).catch((error) => {
         if (error.response.status == 404) {

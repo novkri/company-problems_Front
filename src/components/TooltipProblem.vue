@@ -135,7 +135,6 @@
   min-width: 189.8px;
   min-height: 33.5px;
   border-radius: 6px;
-  // margin-bottom: 3px;
   padding-top: 4px;
   align-self: normal;
   cursor: pointer;

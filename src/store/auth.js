@@ -1,7 +1,5 @@
 import axios from "axios";
-// const process.env.VUE_APP_ROOT_URL = 'http://31.31.199.37/api'
 
-// axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 axios.defaults.headers.common['Accept'] = 'application/json'
 axios.interceptors.request.use(
   (config) => {

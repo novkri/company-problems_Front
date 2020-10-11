@@ -20,10 +20,6 @@
         return (this.$route.meta.layout) + '-layout';
       }
     },
-    mounted() {
-      console.log(process.env.VUE_APP_ROOT_URL);
-    }
-
   }
 </script>
 <style lang="scss">

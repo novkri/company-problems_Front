@@ -131,8 +131,6 @@
 
 <script>
   import {
-    // UserIcon,
-    // EyeIcon,
     AwardIcon,
     ChevronDownIcon,
     PlusIcon,
@@ -213,11 +211,9 @@
     },
     methods: {
       onClickExecutor(sol) {
-        console.log(sol);
-        this.currentExecutorSol = sol
-        console.log(this.currentExecutorSol);
-        
+        this.currentExecutorSol = sol     
       },
+
       async selectExecutor(id, uid) {
         this.$store.commit('setError404', '')
         if (this.isLeader || this.user.is_admin) {
@@ -241,7 +237,6 @@
 
       onClickStatus(status) {
         this.currentSolStatus = status
-        console.log(this.currentSolStatus);
       },
 
       async changeStatus(id, status, executor_id) {
@@ -251,7 +246,6 @@
             status: status.name,
             id
           }).catch(() => {
-            console.log(this.currentSolStatus);
             this.$store.commit('editStatus', {
               id,
               status: this.currentSolStatus
@@ -312,7 +306,6 @@
         } else {
           // 
         }
-
       },
 
       async onBlurInputPossible(name, id) {
@@ -535,7 +528,6 @@
       border-radius: 9px;
       background-color: #fff;
       margin: 0 24px 16px 0;
-      // align-items: flex-start;
     }
   }
 
@@ -543,7 +535,6 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    // box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
     position: relative;
 
     span {
@@ -555,7 +546,6 @@
   .list-item {
     display: flex;
     flex-direction: column;
-    // margin-right: 10px;
   }
 
   .desc {
@@ -684,7 +674,6 @@
 
   #new-problem-title {
     border: none;
-    // border-bottom: 2px solid #92D2C3;
     border-radius: 6px;
     background-color: #F0F0F0;
     color: #2D453F;
@@ -986,17 +975,11 @@
     }
 
     .subt div {
-      // div {
       font-size: 13px;
-      // }
     }
   }
 
   @media (max-width: 1200px) {
-
-    // * {
-    //   font-size: 13px;
-    // }
     input[type="date"]::-webkit-calendar-picker-indicator {
       background: url('~@/assets/calendar.png') 100%;
       background-repeat: no-repeat;

@@ -399,9 +399,7 @@
       },
 
       onClickExecutor(leader, event) {
-        console.log(event.target.classList.contains('ss-select-option'));
         event.target.classList.contains('ss-select-option') ? '' : this.currentExecutor = leader
-        console.log(this.currentExecutor);
       },
       selectExecutorGroup(group, event) {
         this.openConfirm = true
@@ -412,7 +410,7 @@
       },
       async setNewLeader(param) {
         await this.$store.commit('setError404', '')
-        console.log(param);
+
         this.$store.dispatch('changeExecutorGroup', {
             id: param.groupId,
             uid: param.leader_id
@@ -447,12 +445,6 @@
         }).then(() => {
           this.$store.dispatch('getAllUsers')
         })
-        // .catch(() => {
-        //   this.$store.commit('changeExecutorGroup', {
-        //     id: group.id,
-        //     leader_id: this.currentExecutor
-        //   })
-        // })
       },
 
 
@@ -499,7 +491,6 @@
     display: flex;
     height: fit-content;
     flex: 0 0 auto;
-    // width: 100%;
     width: auto;
 
     span {
@@ -570,8 +561,6 @@
     justify-content: space-between;
     padding-left: 68px;
     height: auto;
-
-    // width: 79%;
     margin: 0 auto 15px;
   }
 
@@ -596,7 +585,6 @@
     width: 84%;
     display: flex;
     flex-direction: column;
-    // justify-content: center;
     background: #F6F7F9;
     border-radius: 0 0 9px 9px;
     margin: auto;
@@ -606,7 +594,6 @@
     .card {
       width: 100%;
       background-color: transparent;
-      // margin-bottom: 30px;
       padding-bottom: 30px;
       padding-top: 30px;
       border-bottom: 1px solid #DEDEDE;
@@ -763,7 +750,7 @@
     margin-right: 11px;
   }
 
-  // from Groups
+
   h2 {
     font-family: 'GothamPro-Medium';
     font-style: normal;
@@ -919,9 +906,7 @@
     }
 
     .selectResponsible #ss-select div {
-      // justify-content: center;
       width: 100%;
-
     }
 
     #remove {

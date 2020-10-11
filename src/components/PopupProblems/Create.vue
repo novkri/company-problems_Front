@@ -87,12 +87,6 @@
     },
 
     methods: {
-      // onBlur(event) {
-      //   event.target.nextElementSibling.style.display = 'none'
-      // },
-      // onFocus(event) {
-      //   event.target.nextElementSibling.style.display = 'flex'
-      // },
       onEnter(event) {
         event.target.blur()
       },
@@ -128,10 +122,6 @@
         this.formData = []
         this.$store.commit('setError', '')
       },
-
-      // selectGroup(option) {
-      //   console.log(option);
-      // },
     }
   }
 </script>
@@ -157,7 +147,6 @@
     border-radius: 12px;
     border: none;
     padding: 30px 41px 40px 41px;
-    // width: 530px;
     width: 100%;
   }
 
@@ -328,14 +317,12 @@
     #select-toggle {
       font-family: 'GothamPro-Medium';
       word-break: break-all;
-    height: fit-content;
-    svg {
-      width: inherit;
-    }
-    // }
-    }
+      height: fit-content;
+        svg {
+          width: inherit;
+        }
+      }
     
-
       ::-webkit-scrollbar {
         width: 10px;
       }

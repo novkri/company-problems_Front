@@ -1,9 +1,5 @@
 import axios from "axios";
-// const process.env.VUE_APP_ROOT_URL  = 'http://31.31.199.37/api/solution' //все решения
-// const process.env.VUE_APP_ROOT_URL = 'http://31.31.199.37/api/problem' //одно решение
-// const process.env.VUE_APP_ROOT_URL = 'http://31.31.199.37/api/users'
 
-// axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 axios.defaults.headers.common['Accept'] = 'application/json'
 axios.interceptors.request.use(
   (config) => {
@@ -27,7 +23,6 @@ export default {
     solutionsOther: [],
     allUsers: [],
     allUsersReduced: [],
-    // usersNoGroup: [],
     token: localStorage.getItem('user-token') || '',
   },
   getters: {
@@ -99,9 +94,7 @@ export default {
       state.allUsersReduced = usersPayload
     },
     editExecutor: (state, payload) => {
-      console.log(payload.executor_id);
       state.solutions.find(solution => solution.id == payload.id).executor_id = payload.executor_id
-      console.log(state.solutions.find(solution => solution.id == payload.id).executor_id);
     },
 
     editPlan: (state, payload) => {
@@ -134,7 +127,6 @@ export default {
     postSolution: async ({
       commit
     }, param) => {
-      // param.problemId = 100000000
       await axios.post(process.env.VUE_APP_ROOT_URL + `/problem/${param.problemId}/solution`, {
           name: param.name
         })
@@ -162,7 +154,6 @@ export default {
     deleteSolution: async ({
       commit
     }, id) => {
-      // id = 10000000000
       await axios.delete(process.env.VUE_APP_ROOT_URL  + `/solution/${id}`).then(() => {
             commit('setError', '')
             commit('setError404', '')
@@ -176,7 +167,6 @@ export default {
     editSolution: async ({
       commit
     }, param) => {
-      // param.id = 10000000000
       return new Promise((resolve, reject) => {
         axios.put(process.env.VUE_APP_ROOT_URL  + `/solution/${param.id}`, {
           name: param.name
@@ -202,7 +192,6 @@ export default {
     checkAmountSolInWork: async ({
       state
     }, obj) => {
-      // param.id = 10000000000
       return new Promise((resolve, reject) => {
         if (state.solutions.find(s => s.id == obj.id) && obj.in_work.name == "В работе") {
           reject('false')
@@ -217,7 +206,6 @@ export default {
     changeinWork: async ({
       commit
     }, param) => {
-      // param.id = 10000000000
       return new Promise((resolve, reject) => {
         axios.put(process.env.VUE_APP_ROOT_URL  + `/solution/${param.id}/change-in-work`, {
           in_work: param.in_work
@@ -242,17 +230,14 @@ export default {
     changeStatus: async ({
       commit
     }, param) => {
-      // param.id = 10000000000
       return new Promise((resolve, reject) => {
       axios.put(process.env.VUE_APP_ROOT_URL  + `/solution/${param.id}/change-status`, {
         status: param.status
       }).then(response => {
-        console.log(response);
         commit('setError', '')
         commit('editStatus', response.data)
         resolve(response.data)
       }).catch((error) => {
-        console.log(error.response);
         if (error.response.status == 404 || error.response.status == 403) {
           commit('setError404', error.response.data.message)
           reject(error.response.data.message)
@@ -267,7 +252,6 @@ export default {
     changeDeadline: async ({
       commit
     }, param) => {
-      // param.id = 10000000000
       return new Promise((resolve, reject) => {
       axios.put(process.env.VUE_APP_ROOT_URL  + `/solution/${param.id}/set-deadline`, {
         deadline: param.deadline
@@ -314,7 +298,6 @@ export default {
         commit('editExecutor', response.data)
         resolve(response.data)
       }).catch((error) => {
-        console.log(error.response);
         if (error.response.status == 404) {
           commit('setError404', error.response.data.message)
           reject(error.response.data.message)

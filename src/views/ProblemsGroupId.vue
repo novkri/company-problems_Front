@@ -473,7 +473,6 @@
     async mounted() {
       await this.$store.dispatch('getGroups').catch(() => this.$router.push('/login'))
       await this.$store.dispatch('getAllUsers')
-      // this.$route.path === '/' ? await this.$store.dispatch('getProblems') : ''
     },
     watch: {
       error404() {
@@ -688,7 +687,6 @@
         }).then(() => {
           this.$toast.success("Проблема направлена в подразделения");
         })
-        // this.checkedGroups = null
       },
 
 
@@ -1179,7 +1177,6 @@
     background-color: #fff;
     width: 100%;
     display: flex;
-    // min-height: 60px;
     height: fit-content;
 
     justify-content: space-between;
@@ -1207,7 +1204,6 @@
   }
 
   .collapsed-header {
-    // border-bottom: none;
     border-radius: 9px 9px 0 0;
 
     .middle-icons {
@@ -1230,7 +1226,6 @@
     flex-direction: column;
     border-radius: 0 0 9px 9px;
     background: #F2F5FA;
-    // background-color: #fff;
     margin: auto;
     padding-top: 0;
     margin-bottom: 10px;
@@ -1240,7 +1235,6 @@
       background-color: transparent;
       padding-bottom: 30px;
       padding-top: 30px;
-      // border-bottom: 1px solid #DEDEDE;
       padding-left: 18px;
       height: fit-content;
       margin: 0;
@@ -1479,47 +1473,6 @@
     }
   }
 
-  // .pagination {
-  //   align-items: center;
-  //   justify-content: flex-end;
-  //   margin-bottom: 0;
-  // }
-
-  // .page-link {
-  //   background: none;
-  //   border: none;
-  //   color: #5F5F5F;
-  //   font-size: 18px;
-  //   margin: 0;
-
-  //   svg {
-  //     color: #5F5F5F;
-  //   }
-  // }
-
-  // .block {
-  //   color: #D3D3D3;
-  //   opacity: 0.5;
-  //   pointer-events: none;
-  //   cursor: default;
-  // }
-
-  // .page-link img {
-  //   margin: 0;
-  // }
-
-  // .page-item {
-  //   font-style: normal;
-  //   font-weight: normal;
-  //   font-size: 18px;
-  //   line-height: 17px;
-  //   color: #5F5F5F;
-  // }
-
-  // .page-item a {
-  //   padding: 0;
-  //   margin: 15px;
-  // }
 
   .borderline {
     margin: -2px 0;
@@ -1555,27 +1508,15 @@
         font-size: 11px !important;
       }
     }
-
-    // .modal-body {
-    //   max-width: 95% !important;
-    // }
   }
 
   @media (min-width: 1430px) {
-    // .container {
-    //   max-width: 1370px;
-    // }
-
     h2 {
       max-width: 1270px;
     }
   }
 
   @media (min-width: 500px) {
-    // .container {
-    //   width: 85% !important;
-    // }
-
     h2 {
       width: 75%;
     }

@@ -98,9 +98,8 @@
     SsSelectToggle,
     SsSelectOption,
   } from 'ss-select'
-  // // SsSelectSearchInput
+  // SsSelectSearchInput
   import {
-    // UserIcon,
     ChevronDownIcon,
     AwardIcon
   } from 'vue-feather-icons'
@@ -115,14 +114,13 @@
       leader_id: '',
     }),
     components: {
-      // UserIcon,
       ChevronDownIcon,
       AwardIcon,
 
       SsSelect,
       SsSelectToggle,
       SsSelectOption,
-      // // SsSelectSearchInput
+      // SsSelectSearchInput
     },
     validations: {
       name: {
@@ -352,7 +350,6 @@
 
   #new-group-title:focus,
   #new-group-title__short:focus {
-    // border-radius: 9px 0 0 9px;
     width: fit-content;
   }
 
@@ -391,14 +388,9 @@
   }
 
   .btnsAddTask {
-    // padding-left: 50px;
-    // margin: auto;
     text-align: center;
     background-color: #fff;
     width: 100%;
-    // padding-top: 19px;
-
-
   }
 
   .btn {

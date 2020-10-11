@@ -30,7 +30,6 @@
 </template>
 
 <script>
-  // import {mapGetters} from 'vuex'
   import {
     maxLength,
     minLength,
@@ -155,7 +154,6 @@
   .btn {
     display: flex;
     justify-content: center;
-    // margin: 0 auto;
     margin-right: 22px;
     padding: 0;
     border-radius: 12px;

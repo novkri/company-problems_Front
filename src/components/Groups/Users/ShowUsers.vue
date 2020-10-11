@@ -148,10 +148,4 @@
       padding-right: 10px;
     }
   }
-
-  // @media (max-width: 1500px) {
-  //   #headingOneAdd {
-  //     height: auto;
-  //   }
-  // }
 </style>>

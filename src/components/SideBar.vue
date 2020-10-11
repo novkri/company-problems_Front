@@ -190,15 +190,6 @@
           })
       },
 
-      // async archive() {
-      //   await this.$store.dispatch('archive', {
-      //     urgency: '',
-      //     importance: '',
-      //     deadline: '',
-      //     status: ''
-      //   })
-      // },
-
       async getProblemsByGroups(group, groupName) {
         await this.$store.dispatch('getProblemsByGroups', {
           group,
@@ -266,9 +257,7 @@
   .btnMainAdd {
     padding: 8px 7px;
     border-radius: 12px;
-    // width: 213px;
     width: auto;
-    // height: 58px;
     background-color: #ffffff;
     color: #4EAD96;
     font-size: 16px;
@@ -303,7 +292,6 @@
 
   .sidebar {
     max-width: 287px;
-    // max-width: 15%;
     background-color: #F2F5FA;
     padding: 0;
 
@@ -426,19 +414,6 @@
     justify-content: center;
     margin-top: 100px;
   }
-
-  // a {
-  //   margin: 0;
-  //   font-size: 18px;
-  //   line-height: 17px;
-  //   font-family: 'GothamPro-Medium';
-  //   color: #92D2C3;
-  //   cursor: pointer;
-  // }
-
-  // a:hover {
-  //   color: #92D2C3;
-  // }
 
   button:focus,
   .btn:focus {

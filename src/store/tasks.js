@@ -1,9 +1,5 @@
 import axios from "axios";
-// const process.env.VUE_APP_ROOT_URL = 'http://31.31.199.37/api/solution' //все решения
-// const process.env.VUE_APP_ROOT_URL = 'http://31.31.199.37/api/task' //одно решение
 
-
-// axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 axios.defaults.headers.common['Accept'] = 'application/json'
 axios.interceptors.request.use(
   (config) => {
@@ -29,9 +25,6 @@ export default {
   getters: {
     tasks: state => {
       return state.tasks
-      //  = state.tasks.sort(function (a, b) {
-      //   return (a.description.toLowerCase() > b.description.toLowerCase()) ? 1 : -1
-      // })
     },
     currentSolution: state => {
       return state.currentSolution
@@ -113,7 +106,6 @@ export default {
     postTask: async ({
       commit
     }, param) => {
-      // param.solutionId = 100000000
       return new Promise((resolve, reject) => {
         axios.post(process.env.VUE_APP_ROOT_URL + `/solution/${param.solutionId}/task`, {
             description: param.params.taskName,
@@ -152,7 +144,6 @@ export default {
     deleteTask: async ({
       commit
     }, id) => {
-      // id = 10000000000
       await axios.delete(process.env.VUE_APP_ROOT_URL + `/task/${id}`).then(() => {
             commit('setError', '')
             commit('setError404', '')
@@ -180,7 +171,6 @@ export default {
     editTask: async ({
       commit
     }, param) => {
-      // param.id = 10000000000
       return new Promise((resolve, reject) => {
         axios.put(process.env.VUE_APP_ROOT_URL + `/task/${param.id}`, {
           description: param.description

@@ -11,7 +11,7 @@
       <div style="width: 54px" class="col">
       </div>
     </div>
- 
+
     <div class="container row" ref="containerTask">
       <ol ref="olTask">
         <li id="list" v-for="(task, idx) in tasks" :key="idx">
@@ -45,8 +45,9 @@
                   <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                 </ss-select-toggle>
 
-                <section v-show="isOpen && user.is_admin || isOpen && task.executor_id == currentUid" :ref="'slot-scope'+task.id" class="absolute border-l border-r min-w-full"
-                  style="height: fit-content;" >
+                <section v-show="isOpen && user.is_admin || isOpen && task.executor_id == currentUid"
+                  :ref="'slot-scope'+task.id" class="absolute border-l border-r min-w-full"
+                  style="height: fit-content;">
                   <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index"
                     :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                     pointerIndex == index ? 'bg-light text-dark' : '',
@@ -61,8 +62,7 @@
           <div class="dateDiv col-2">
             <input type="date" id="start" name="trip-start" class="date" onkeypress="return false"
               @click="onClickDate($event)" @change="changeDeadlineTask(task.deadline, task.id, val.executor_id)"
-               v-model="task.deadline"
-              >
+              v-model="task.deadline">
           </div>
 
           <div class="selectResponsible col-2">
@@ -71,17 +71,20 @@
               style="width: 100%;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                 @click="onClickExecutor(selectedOption, task.id)" style="cursor: pointer; width: 100%;">
-                <ss-select-toggle class="flex items-center justify-between" style="margin: auto;max-height: 30px;overflow-y: hidden;">
+                <ss-select-toggle class="flex items-center justify-between"
+                  style="margin: auto;max-height: 30px;overflow-y: hidden;">
                   <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                   {{ $get(selectedOption, 'name') ||  `${allUsersReduced.find(u => u.id == task.executor_id) ? allUsersReduced.find(u => u.id == task.executor_id).surname + ' ' 
                     + allUsersReduced.find(u => u.id == task.executor_id).name + ' ' 
                     + allUsersReduced.find(u => u.id == task.executor_id).father_name : 'Выбрать'}`}}
                 </ss-select-toggle>
 
-                <section v-show="isOpen && user.is_admin || isOpen && task.executor_id == currentUid || isOpen && isLeader" class="absolute border-l border-r min-w-full" :ref="'slot-scopeExec'+task.id"
-                  style="height: 146px;">
+                <section
+                  v-show="isOpen && user.is_admin || isOpen && task.executor_id == currentUid || isOpen && isLeader"
+                  class="absolute border-l border-r min-w-full" :ref="'slot-scopeExec'+task.id" style="height: 146px;">
                   <div class="px-px">
-                    <ss-select-search-input class="w-full px-3 py-2 search" autofocus="false" placeholder="Впишите фамилию">
+                    <ss-select-search-input class="w-full px-3 py-2 search" autofocus="false"
+                      placeholder="Впишите фамилию">
                     </ss-select-search-input>
                   </div>
                   <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
@@ -96,8 +99,8 @@
           </div>
 
           <div style="width: 54px" id="close" class="col">
-            <button type="button" v-show="val.executor_id == currentUid || user.is_admin || isLeader" class="close" id="remove"
-              @click="showDelete(task.id)" data-toggle="modal" data-target="#popupDeleteSolution">
+            <button type="button" v-show="val.executor_id == currentUid || user.is_admin || isLeader" class="close"
+              id="remove" @click="showDelete(task.id)" data-toggle="modal" data-target="#popupDeleteSolution">
               <trash-icon size="1x" class="custom-class"></trash-icon>
             </button>
           </div>
@@ -298,16 +301,17 @@
       },
       async changeDeadlineTask(deadline, id, executor_id) {
         await this.$store.commit('setError404', '')
-         if (executor_id == this.currentUid || this.user.is_admin) {
-        await this.$store.dispatch('changeDeadlineTask', {
-          deadline,
-          id
-        }).catch(() => {
-          this.$store.commit('editDeadlineTask', {
-            description: this.currentDate,
+        if (executor_id == this.currentUid || this.user.is_admin) {
+          await this.$store.dispatch('changeDeadlineTask', {
+            deadline,
             id
+          }).catch(() => {
+            this.$store.commit('editDeadlineTask', {
+              description: this.currentDate,
+              id
+            })
           })
-        })} else {
+        } else {
           this.$store.commit('setError404', 'У вас недостаточно прав')
           this.$store.commit('editDeadlineTask', {
             description: this.currentDate,
@@ -318,12 +322,10 @@
 
       onClickStatus(status) {
         this.currentTaskStatus = status
-        // this.$refs['slot-scope'+id][0].style.display == 'none' ? this.$refs['containerTask'].style.height = '56px' : this.$refs['containerTask'].style.height = '650px'
       },
 
       onClickExecutor(sol) {
         this.currentExecutor = sol
-        // this.$refs['slot-scopeExec'+id][0].style.display == 'none' ? this.$refs['containerTask'].style.height = '56px' : this.$refs['containerTask'].style.height = '650px'
       },
       async selectExecutorTask(task, executor_id) {
         await this.$store.commit('setError404', '')
@@ -345,18 +347,15 @@
           })
         } else {
           this.$store.commit('setError404', 'У вас недостаточно прав')
-         this.$store.commit('editExecutorTask', {
+          this.$store.commit('editExecutorTask', {
             id: task.id,
             executor_id: this.currentExecutor
           })
         }
-
       },
 
 
-
       onClickInput(id, executor_id) {
-        console.log(executor_id == this.currentUid , this.user.is_admin , this.isLeader);
         if (executor_id == this.currentUid || this.user.is_admin || this.isLeader) {
           this.editable = true
           this.$nextTick(() => {
@@ -373,7 +372,6 @@
       },
 
       async onBlurInput(name, id, event) {
-        console.log('blur');
         this.editable = false
         event.path[0].nextElementSibling.classList.remove('flex')
 
@@ -392,14 +390,10 @@
 
       },
       onFocusInput(event) {
-        console.log('focus');
         this.currentTaskName = event.target.value
         this.currentTaskInput = event.target
 
         event.path[0].nextElementSibling.classList.add('flex')
-        console.log(this.currentTaskName);
-        console.log(this.currentTaskInput);
-        console.log(event.path[0].nextElementSibling);
       },
 
       onClear(event, id) {
@@ -409,7 +403,6 @@
 
       editTask() {
         this.currentTaskInput.blur()
-        console.log('editTask');
       },
 
       showDelete(id) {
@@ -496,7 +489,6 @@
   .header {
     margin: 0;
     margin-top: 22px;
-    // padding-top: 30px;
     align-items: center;
     max-width: inherit;
     width: -webkit-fill-available;
@@ -527,14 +519,13 @@
     font-style: normal;
     font-weight: normal;
     background-color: #fff;
-    // position: relative;
 
     ol {
       // max-height: 182px;
       // overflow-y: scroll;
       // overflow-x: overlay;
       overflow-x: visible;
-      
+
     }
   }
 
@@ -596,6 +587,7 @@
       right: -19% !important;
       top: 102% !important;
     }
+
     #ss-select {
       overflow: visible;
       padding-left: 8px;
@@ -763,6 +755,7 @@
       line-height: 24px;
       letter-spacing: 0.15px;
     }
+
     section {
       top: 102%;
       left: -27%;
@@ -860,7 +853,6 @@
     border: none;
     background-color: #fff;
     color: #828282;
-    // margin-left: -16px;
     outline: none;
 
 
@@ -887,7 +879,6 @@
 
   .btnsAddTask {
     padding-left: 50px;
-    // background-color: #F2F5FA;
     width: 100%;
     padding-top: 19px;
     cursor: default;
@@ -929,15 +920,16 @@
     background: #92D2C3;
   }
 
- #close {
+  #close {
     display: flex;
     justify-content: flex-end;
+
     svg {
       min-height: 30px;
-    min-width: 19px;
-    margin: 0 4px 0 0;
+      min-width: 19px;
+      margin: 0 4px 0 0;
     }
-}
+  }
 
   #select-toggle {
     font-family: 'GothamPro';
@@ -948,14 +940,6 @@
 
 
 
-
-  @media (max-width: 1500px) {
-
-
-    // .selectsInputAdd {
-    //   padding-left: 60px;
-    // }
-  }
 
   @media (max-width: 1300px) {
     * {
@@ -979,49 +963,13 @@
       display: flex;
       flex-direction: initial;
       font-size: 13px;
-      // flex-wrap: wrap;
-      // justify-content: space-between;
-
-      // div {
-      //   margin-bottom: 30px;
-      // }
-
-      // #close {
-      //   order: 2;
-
-      //   margin-left: -48px;
-
-      // }
-
-      // .select {
-      //   order: 3;
-      // }
-
-      // .dateDiv {
-      //   order: 4;
-      // }
-
-      // .selectResponsible {
-      //   order: 5;
-      // }
 
       .task-title {
         font-size: 13px;
-        //   order: 1;
-        //   margin-right: 109px;
       }
     }
 
-    // .task-title {
-    //   flex: 0 1;
-    //   min-width: fit-content;
-    // }
-
-    // .selectsInputAdd {
-    //   display: none;
-    // }
     #select-toggle {
-      // padding: 0;
       padding: 3px !important;
       font-size: 13px;
     }
@@ -1035,8 +983,6 @@
       position: absolute;
       top: -5%;
       left: -95%;
-      // width: 100%;
-      // height: 100%;
     }
 
     input[class="date"]:focus::-webkit-calendar-picker-indicator {
@@ -1046,8 +992,6 @@
       cursor: pointer;
       position: absolute;
       left: -95%;
-      // width: 100%;
-      // height: 100%;
       top: -5%;
     }
 
@@ -1061,9 +1005,6 @@
     }
 
     .selectsInputAdd {
-      // border-radius: 9px;
-      // width: 100%;
-      // padding: 0;
       padding-left: 0;
       padding-right: 0;
       justify-content: space-evenly;

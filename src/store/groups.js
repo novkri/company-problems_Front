@@ -1,7 +1,5 @@
 import axios from "axios";
-// const process.env.VUE_APP_ROOT_URL = 'http://31.31.199.37/api/group'
 
-// axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 axios.defaults.headers.common['Accept'] = 'application/json'
 axios.interceptors.request.use(
   (config) => {
@@ -54,17 +52,13 @@ export default {
     },
     setLeader: (state, payload) => {
       state.leader = payload[0]
-      console.log('setLeader',state.leader);
     },
     setLeaderReduced: (state, payload) => {
       payload[0].name = payload[0].name[0] + '.'
       payload[0].father_name ? payload[0].father_name = payload[0].father_name[0] + '.' : ' '
       state.leaderReduced = payload[0]
-      console.log('state.leaderReduced', state.leaderReduced);
     },
     changeLeader: (state, payload) => {
-      console.log('changeLeader',state.members);
-      console.log('changeLeader', state.leaderReduced);
       state.leaderReduced = state.members.filter(u => u.id == payload)[0]
       state.leaderReduced.name = state.leaderReduced.name[0] + '.'
       state.leaderReduced.father_name ? state.leaderReduced.father_name = state.leaderReduced.father_name[0] + '.' : ' '
@@ -112,24 +106,24 @@ export default {
       commit
     }) => {
       return new Promise((resolve, reject) => {
-      axios.get(process.env.VUE_APP_ROOT_URL + '/group')
-        .then(response => {
-          commit('setError', '')
-          commit('setError404', '')
-          commit('setGroups', response.data)
-          resolve(response.data)
-        })
-        .catch(error => {
-          if (error.response.status == 401) {
-            commit('setError404', error.response.data.errors)
-            localStorage.removeItem('token')
-            localStorage.removeItem('user')
-            reject(error.response.data.errors)
-          } else {
-            commit('setError', error.response.data.message)
-            reject(error.response.data.message)
-          }
-        })
+        axios.get(process.env.VUE_APP_ROOT_URL + '/group')
+          .then(response => {
+            commit('setError', '')
+            commit('setError404', '')
+            commit('setGroups', response.data)
+            resolve(response.data)
+          })
+          .catch(error => {
+            if (error.response.status == 401) {
+              commit('setError404', error.response.data.errors)
+              localStorage.removeItem('token')
+              localStorage.removeItem('user')
+              reject(error.response.data.errors)
+            } else {
+              commit('setError', error.response.data.message)
+              reject(error.response.data.message)
+            }
+          })
       })
     },
     getLeader: async ({
@@ -137,7 +131,6 @@ export default {
     }, id) => {
       await axios.get(process.env.VUE_APP_ROOT_URL + `/group/${id}/leader`)
         .then(response => {
-          console.log(response.data.id);
           commit('setError', '')
           commit('setError404', '')
           commit('setLeader', response.data)
@@ -198,7 +191,6 @@ export default {
     deleteGroup: async ({
       commit
     }, param) => {
-      // param.id = 10000000
       return new Promise((resolve, reject) => {
         axios.delete(process.env.VUE_APP_ROOT_URL + `/group/${param.id}`).then(response => {
             commit('setError', '')
@@ -209,7 +201,6 @@ export default {
           .catch(error => {
             if (error.response.status !== 422) {
               error.response.data.message ? commit('setError404', error.response.data.message) : commit('setError404', error.response.data.errors)
-              // commit('setError404', error.response.data.message)
               reject(error.response.data.message)
             } else {
               commit('setError', error.response.data.errors.name[0])
@@ -234,7 +225,6 @@ export default {
         }).catch((error) => {
           if (error.response.status !== 422) {
             error.response.data.message ? commit('setError404', error.response.data.message) : commit('setError404', error.response.data.errors)
-            // commit('setError404', error.response.data.message)
             reject(error.response.data.message)
           } else {
             commit('setError404', error.response.data.errors.name[0])
@@ -258,7 +248,6 @@ export default {
         }).catch((error) => {
           if (error.response.status !== 422) {
             error.response.data.message ? commit('setError404', error.response.data.message) : commit('setError404', error.response.data.errors)
-            // commit('setError404', error.response.data.message)
             reject(error.response.data.message)
           } else {
             commit('setError404', error.response.data.errors.short_name[0])
@@ -277,7 +266,6 @@ export default {
           commit('editExecutorGroup', response.data)
           resolve(response.data)
         }).catch((error) => {
-          console.log(error.response);
           if (error.response.status == 404) {
             error.response.data.message ? commit('setError404', error.response.data.message) : commit('setError404', error.response.data.errors)
             reject(error.response)
@@ -322,7 +310,6 @@ export default {
     removeUserFromGroup: async ({
       commit
     }, param) => {
-      // param.uid = 10000000000
       axios.put(process.env.VUE_APP_ROOT_URL + `/group/${param.id}/remove-user/${param.uid}`).then(() => {
         commit('setError', '')
         commit('setRemoveUser', param)
