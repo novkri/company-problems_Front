@@ -354,6 +354,12 @@
                         data-parent="#groups" ref="collapsed-groups">
                         <div class="card-body p-0">
                           <div class="check-inputs">
+                            <div class="custom-control custom-checkbox">
+                              <input type="checkbox" class="custom-control-input" id="groupCheckAll"
+                                @click="checkAll(problem)" v-model="all" :disabled="validatedExecutorAndAdmin">
+                              <label class="custom-control-label" for="groupCheckAll">Все</label>
+                            </div>
+
                             <div class="custom-control custom-checkbox" v-for="(group, idx) in groups" :key="idx">
                               <input type="checkbox" class="custom-control-input" :id="'groupCheck'+group.id"
                                 :value="group.id" v-model="checkedGroups" :disabled="validatedExecutorAndAdmin">
@@ -442,6 +448,7 @@
       isProblemConfirmed: false,
       isProblemDeclined: false,
       isLeaderOgUser: false,
+      all: false
 
     }),
     components: {
@@ -486,11 +493,24 @@
         return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : this
           .isLeaderOgUser ? false : true
       },
-
-
     },
 
     methods: {
+      checkAll() {
+        if (!this.all) {
+          this.all = true
+          this.checkedGroups = []
+
+          this.groups.forEach(element => {
+            this.checkedGroups.push(element.id)
+          });
+
+        } else {
+          this.all = false
+          this.checkedGroups = []
+        }
+      },
+
       async problemReject(id) {
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('problemReject', id)
@@ -615,7 +635,12 @@
       },
 
       async onClickShow(problem) {
-        
+        // this.checkedGroups = []
+        // problem.groups.forEach(element => {
+        //   this.checkedGroups.push(element.id)
+        // });
+        // this.checkedGroups.length < this.groups.length ? this.all = false : this.all = true
+
         this.$refs['collapsed-header'].forEach(element => {
           element.classList.contains('collapsed-header') && element.id !== 'heading' + problem.id ? element
             .classList.remove('collapsed-header') : ''

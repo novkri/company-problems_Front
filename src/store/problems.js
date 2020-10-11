@@ -517,19 +517,24 @@ export default {
     getThisProblem: async ({
       commit
     }, id) => {
-      await axios.get(process.env.VUE_APP_ROOT_URL+`/problem/${id}`)
+      return new Promise((resolve, reject) => {
+      axios.get(process.env.VUE_APP_ROOT_URL+`/problem/${id}`)
         .then(response => {
             commit('setError', '')
             commit('setError404', '')
             commit('setThisProblem', response.data)
+            resolve(response.data)
         })
         .catch(error => {
           if (error.response.status == 401) {
             commit('setError404', error.response.data.errors)
+            reject(error.response.data.errors)
           } else {
             commit('setError', error.response.data.message)
+            reject(error.response.data.message)
           }
         })
+      })
     },
 
     postProblem: async ({

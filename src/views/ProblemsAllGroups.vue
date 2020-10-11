@@ -6,6 +6,7 @@
     <div class="container" v-if="_isMounted">
       <div id="accordion">
         <div class="card" id="card" v-for="(problem, idx) in problems" :key="idx">
+          {{problem}}
           <div class="card-header row" :id="'heading'+problem.id" ref="collapsed-header">
             <div class="name col-4">
               <button class="btn btn-link collapsed" @click="onClickShow(problem)" data-toggle="collapse"
@@ -346,8 +347,8 @@
                             aria-expanded="false" aria-controls="collapseGroups" ref="collapseGroupsBtn">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                           </button>
-                          <h5 class="mb-0">
-                            Направить в подразделение
+                          <h5 class="mb-0" >
+                            Направить в подразделение 
                           </h5>
                         </div>
                       </div>
@@ -356,10 +357,16 @@
                         data-parent="#groups" ref="collapsed-groups">
                         <div class="card-body p-0">
                           <div class="check-inputs">
+                            <div class="custom-control custom-checkbox">
+                              <input type="checkbox" class="custom-control-input" id="groupCheckAll"
+                                @click="checkAll(problem)" v-model="all" :disabled="validatedExecutorAndAdmin">
+                              <label class="custom-control-label" for="groupCheckAll">Все</label>
+                            </div>
+
                             <div class="custom-control custom-checkbox" v-for="(group, idx) in groups" :key="idx">
                               <input type="checkbox" class="custom-control-input" :id="'groupCheck'+group.id"
                                 :value="group.id" v-model="checkedGroups" :disabled="validatedExecutorAndAdmin">
-                              <label class="custom-control-label" :for="'groupCheck'+group.id">{{group.name}}</label>
+                              <label class="custom-control-label" :for="'groupCheck'+group.id">{{group.name}} {{group.id}} </label>
                             </div>
                           </div>
 
@@ -444,6 +451,7 @@
       isProblemConfirmed: false,
       isProblemDeclined: false,
       isLeaderOgUser: false,
+      all: false
     }),
     components: {
       TooltipProblem,
@@ -488,9 +496,28 @@
       ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', 'user',
         'currentUid', 'user', 'isLeader'
       ]),
+      validatedExecutorAndAdmin: function () {
+        return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : this
+          .isLeaderOgUser ? false : true
+      },
     },
 
     methods: {
+      checkAll() {
+        if (!this.all) {
+          this.all = true
+          this.checkedGroups = []
+
+          this.groups.forEach(element => {
+            this.checkedGroups.push(element.id)
+          });
+
+        } else {
+          this.all = false
+          this.checkedGroups = []
+        }
+      },
+
       async problemReject(id) {
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('problemReject', id)
@@ -615,6 +642,13 @@
       },
 
       async onClickShow(problem) {
+        this.checkedGroups = []
+        problem.groups.forEach(element => {
+          this.checkedGroups.push(element.id)
+        });
+        this.checkedGroups.length < this.groups.length ? this.all = false : this.all = true
+
+        
         this.$refs['collapsed-header'].forEach(element => {
           element.classList.contains('collapsed-header') && element.id !== 'heading' + problem.id ? element
             .classList.remove('collapsed-header') : ''
@@ -663,7 +697,7 @@
         }).then(() => {
           this.$toast.success("Проблема направлена в подразделения");
         })
-        this.checkedGroups = null
+        // this.checkedGroups = null
       },
 
 

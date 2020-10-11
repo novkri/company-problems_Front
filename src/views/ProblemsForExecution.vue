@@ -355,6 +355,12 @@
                         data-parent="#groups" ref="collapsed-groups">
                         <div class="card-body p-0">
                           <div class="check-inputs">
+                            <div class="custom-control custom-checkbox">
+                              <input type="checkbox" class="custom-control-input" id="groupCheckAll"
+                                @click="checkAll(problem)" v-model="all" :disabled="validatedExecutorAndAdmin">
+                              <label class="custom-control-label" for="groupCheckAll">Все</label>
+                            </div>
+
                             <div class="custom-control custom-checkbox" v-for="(group, idx) in groups" :key="idx">
                               <input type="checkbox" class="custom-control-input" :id="'groupCheck'+group.id"
                                 :value="group.id" v-model="checkedGroups" :disabled="validatedExecutorAndAdmin">
@@ -371,7 +377,6 @@
                 </div>
               </div>
               <div v-else class="d-flex justify-content-center" style="margin-top: 20px;">
-                <!-- <half-circle-spinner :animation-duration="1500" :size="50" color="#92D2C3" /> -->
                 <div class="d-flex justify-content-center">
                   <div class="spinner-border" role="status">
                     <span class="sr-only">Loading...</span>
@@ -443,6 +448,7 @@
       isProblemConfirmed: false,
       isProblemDeclined: false,
       isLeaderOgUser: false,
+      all: false
     }),
     components: {
       TooltipProblem,
@@ -498,19 +504,53 @@
     },
 
     methods: {
+      checkAll() {
+        if (!this.all) {
+          this.all = true
+          this.checkedGroups = []
+
+          this.groups.forEach(element => {
+            this.checkedGroups.push(element.id)
+          });
+
+        } else {
+          this.all = false
+          this.checkedGroups = []
+        }
+      },
+
       async problemReject(id) {
+        this.isProblemDeclined = true
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('problemReject', id)
+        this.$store.dispatch('countAmountOfProblemsForExecution', {
+        urgency: '',
+        importance: '',
+        deadline: '',
+        status: ''
+      })
       },
       async problemConfirm(id) {
         this.isProblemConfirmed = true
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('problemConfirm', id)
+        this.$store.dispatch('countAmountOfProblemsForExecution', {
+        urgency: '',
+        importance: '',
+        deadline: '',
+        status: ''
+      })
       },
       async problemSolved(id) {
-        this.isProblemDeclined = true
+        
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('problemSolved', id)
+        this.$store.dispatch('countAmountOfProblemsForExecution', {
+        urgency: '',
+        importance: '',
+        deadline: '',
+        status: ''
+      })
       },
       async changeUrgency(id, urgency) {
         await this.$store.commit('setError404', '')
@@ -621,6 +661,13 @@
       },
 
       async onClickShow(problem) {
+        this.checkedGroups = []
+        problem.groups.forEach(element => {
+          this.checkedGroups.push(element.id)
+        });
+        this.checkedGroups.length < this.groups.length ? this.all = false : this.all = true
+        
+
         this.$refs['collapsed-header'].forEach(element => {
           element.classList.contains('collapsed-header') && element.id !== 'heading' + problem.id ? element
             .classList.remove('collapsed-header') : ''
