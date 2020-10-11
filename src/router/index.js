@@ -104,6 +104,16 @@ const routes = [
       layout: 'main'
     }
   },
+  {
+    path: "/statistics",
+    name: "Statistics",
+    component: () =>  import("../views/Statistics.vue"),
+    meta: { 
+      requiresAuth: true,
+      layout: 'main'
+    }
+  },
+
   { path: '*', component: () =>  import("../views/NotFound.vue"),
   meta: { 
     requiresAuth: true,

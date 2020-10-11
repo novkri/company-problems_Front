@@ -66,9 +66,12 @@
         <router-link to="/groups">
           <list-icon size="1.5x" class="custom-class"></list-icon>Состав подразделений
         </router-link>
-        <a href="#">
+        <!-- <a href="#">
           <bar-chart-2-icon size="1.5x" class="custom-class"></bar-chart-2-icon>Статистика
-        </a>
+        </a> -->
+        <router-link to="/statistics">
+          <bar-chart-2-icon size="1.5x" class="custom-class"></bar-chart-2-icon>Статистика
+        </router-link>
 
         <a>
           <archive-icon size="1.5x" class="custom-class"></archive-icon>
@@ -114,8 +117,6 @@
     data: () => ({
       showGroups: false,
       openCreate: false,
-
-
     }),
     components: {
       ChevronDownIcon,

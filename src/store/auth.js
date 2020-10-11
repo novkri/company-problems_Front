@@ -111,6 +111,7 @@ export default {
           commit('isLeader', response.data)
         })
     },
+    
     login: async ({
       commit
     }, user) => {

@@ -506,7 +506,7 @@
 
   .modal-body {
     padding: 0;
-    margin-top: -22px;
+    // margin-top: -22px;
     margin-right: 20px;
     margin-left: 20px;
   }

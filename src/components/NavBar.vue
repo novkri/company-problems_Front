@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-light" :class="[this.$route.path === '/' || this.$route.path == '/groups' ? 'main' : '']">
+  <nav class="navbar navbar-light" :class="[this.$route.path === '/' || this.$route.path == '/groups' || this.$route.path == '/statistics' ? 'main' : '']">
     <div class="logo" @click="allProblems">
       <router-link to="/" exact style="font-family: 'GothamPro-Medium';font-size: 16px;"><img src="@/assets/logo.png"
           alt="PSS Software">
@@ -11,6 +11,9 @@
     </div>
     <div v-show="$route.path == '/groups'" class="group_selected">
       Список подразделений <p></p>
+    </div>
+    <div v-show="$route.path == '/statistics'" class="group_selected">
+      Статистика <p></p>
     </div>
     <div class="filter"
       v-if="$route.path.split('-').includes('problems') || $route.path.split('-').includes('/problems')"

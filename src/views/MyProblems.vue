@@ -147,15 +147,15 @@
                   <div class="accordion col-9" id="tasks">
                     <div class="card">
                       <div class="card-header" id="headingTasks" style="width: 100%;">
-                        <div class="name">
-                          <button class="btn btn-link" data-toggle="collapse" data-target="#collapseTasks"
+                        <h5 class="mb-0">
+                          <button class="btn btn-link btn-block text-left"  type="button" data-toggle="collapse" data-target="#collapseTasks"
                             aria-expanded="false" aria-controls="collapseTasks">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
+                             <p>
+                              Решение
+                            </p>
                           </button>
-                          <h5 class="mb-0">
-                            Решение
-                          </h5>
-                        </div>
+                        </h5>
                       </div>
 
                       <div id="collapseTasks" class="collapse show" aria-labelledby="headingTasks" data-parent="#tasks"
@@ -172,15 +172,15 @@
                   <div class="accordion col-3" id="plan">
                     <div class="card">
                       <div class="card-header" id="headingPlan" style="width: 100%;">
-                        <div class="name">
-                          <button class="btn btn-link" data-toggle="collapse" data-target="#collapsePlan"
+                        <h5 class="mb-0">
+                          <button class="btn btn-link btn-block text-left"  type="button" data-toggle="collapse" data-target="#collapsePlan"
                             aria-expanded="false" aria-controls="collapsePlan">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
+                             <p>
+                               План решения
+                            </p>
                           </button>
-                          <h5 class="mb-0">
-                            План решения
-                          </h5>
-                        </div>
+                        </h5>
                       </div>
 
                       <div id="collapsePlan" class="collapse show" aria-labelledby="headingPlan" data-parent="#plan"
@@ -216,15 +216,15 @@
                   <div class="accordion col-9" id="results">
                     <div class="card">
                       <div class="card-header" id="headingResults" style="width: 100%;">
-                        <div class="name">
-                          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseResults"
-                            aria-expanded="false" aria-controls="collapseResults" ref="collapseResultsBtn">
+                        <h5 class="mb-0">
+                          <button class="btn btn-link btn-block text-left"  type="button" data-toggle="collapse" data-target="#collapseResults"
+                            aria-expanded="false" aria-controls="collapseResults">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
+                             <p>
+                               Команда, опыт, результат
+                            </p>
                           </button>
-                          <h5 class="mb-0">
-                            Команда, опыт, результат
-                          </h5>
-                        </div>
+                        </h5>
                       </div>
 
                       <div id="collapseResults" class="collapse" aria-labelledby="headingResults" style="width: 100%;"
@@ -329,15 +329,15 @@
                   <div class="accordion col-3" id="groups">
                     <div class="card">
                       <div class="card-header" id="headingGroups" style="width: 100%;">
-                        <div class="name">
-                          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseGroups"
-                            aria-expanded="false" aria-controls="collapseGroups" ref="collapseGroupsBtn">
+                        <h5 class="mb-0">
+                          <button class="btn btn-link btn-block text-left"  type="button" data-toggle="collapse" data-target="#collapseGroups"
+                            aria-expanded="false" aria-controls="collapseGroups">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
+                             <p>
+                              Направить в подразделение
+                            </p>
                           </button>
-                          <h5 class="mb-0">
-                            Направить в подразделение
-                          </h5>
-                        </div>
+                        </h5>
                       </div>
 
                       <div id="collapseGroups" class="collapse" aria-labelledby="headingGroups" style="width: 100%;"
@@ -1093,6 +1093,10 @@
 
       .card-header {
         height: fit-content;
+
+        button {
+          display: flex;
+        }
       }
     }
 
@@ -1156,13 +1160,20 @@
     button {
       padding-top: 0;
       padding-bottom: 0;
+      display: flex;
+      h5 {
+        padding-left: 16px;
+      }
     }
   }
 
   .collapsed {
-    transform: rotate(180deg);
+    svg {
+      transform: rotate(180deg);
+    }
     padding-left: 16px;
   }
+  
 
   .card-header {
     align-items: center;
@@ -1254,6 +1265,15 @@
         border: none;
         background-color: transparent;
         width: 349px;
+        
+        p {
+          padding-left: 13px;
+          font-family: 'GothamPro-Medium';
+          color: #4f4f4f;
+          font-size: 16px;
+          line-height: 24px;
+          letter-spacing: 0.15px;
+        }
       }
     }
   }

@@ -6,6 +6,7 @@ import auth from './auth'
 import solutions from './solutions'
 import tasks from './tasks'
 import groups from './groups'
+import statistics from './statistics'
 
 import createPersistedState from 'vuex-persistedstate'
 
@@ -20,6 +21,7 @@ export default new Vuex.Store({
     auth,
     solutions,
     tasks,
-    groups
+    groups,
+    statistics
   }
 });
