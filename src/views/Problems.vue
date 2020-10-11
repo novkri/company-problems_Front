@@ -7,7 +7,7 @@
 
       <div id="accordion">
         <div class="card" id="card" v-for="(problem, idx) in problems" :key="idx">
-          {{problem.status}}
+          <!-- {{problem.status}} -->
           <div class="card-header row" :id="'heading'+problem.id" ref="collapsed-header">
             <div class="name col-4">
               <button class="btn btn-link collapsed" @click="onClickShow(problem)" data-toggle="collapse"
@@ -914,7 +914,7 @@
   .form-control {
     border: none;
     border-radius: 6px;
-    background-color: #F0F0F0;
+    background-color: #fff;
     color: #2D453F;
     font-size: 18px;
   }

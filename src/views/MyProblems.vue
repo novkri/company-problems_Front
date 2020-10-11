@@ -906,7 +906,7 @@
   .form-control {
     border: none;
     border-radius: 6px;
-    background-color: #F0F0F0;
+    background-color: #fff;
     color: #2D453F;
     font-size: 18px;
   }

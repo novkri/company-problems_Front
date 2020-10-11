@@ -187,11 +187,43 @@
   .form-group {
     margin: 0 0 15px 0;
   }
+  .form-control {
+    border-radius: 12px;
+  }
 
   .form-control:active,
   .form-control:focus {
     background-color: #FFF;
-    border-bottom: 2px solid #FF8585 !important;
+    // border-bottom: 2px solid #FF8585 !important;
+  }
+  .form-control--valid {
+    border: transparent;
+    border-radius: 6px;
+    background-color: #FAFAFA;
+    color: #2D453F;
+    caret-color: #92D2C3;
+    border-bottom: 2px solid #92D2C3 !important;
+
+
+    &:focus {
+      box-shadow: none;
+      border-bottom: 2px solid #92D2C3;
+    }
+  }
+
+  .form-control--error {
+    border: transparent;
+    border-radius: 6px;
+    background-color: #FAFAFA;
+    color: #2D453F;
+    caret-color: #92D2C3;
+    border-bottom: 2px solid #EC7676 !important;
+
+
+    &:focus {
+      box-shadow: none;
+      border-bottom: 2px solid #EC7676;
+    }
   }
 
   .btn-and-link {

@@ -341,7 +341,7 @@
     }
   }
 
-      .form-control--error {
+  .form-control--error {
     border: transparent;
     border-radius: 6px;
     background-color: #FAFAFA;
