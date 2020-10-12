@@ -108,7 +108,9 @@
       </ol>
     </div>
 
-    <div style="margin-top: 44px;" v-show="val.executor_id == currentUid || user.is_admin || isLeader">
+
+
+    <div style="margin-top: 44px;" v-if="val.executor_id == currentUid || user.is_admin || isLeader">
       <div style="padding: 20px; cursor: pointer; width: fit-content;min-height: 62px;" v-if="addNotClicked"
         @click.prevent="displayInput">
         <span style="margin-left: 16px; cursor: pointer;color: #92D2C3;font-family: 'GothamPro-Medium';font-size: 14px;
@@ -164,6 +166,7 @@
         <span @click.prevent="addNotClicked = true">Отменить</span>
       </div>
     </div>
+    <div v-else style="height: 108px;"></div>
 
     <DeleteTask v-if="openDeleteTask" :openDeleteTask="openDeleteTask" @closeDeleteTask="closeDeleteTask($event)"
       :val="taskIdDelete" />

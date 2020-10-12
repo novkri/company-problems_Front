@@ -292,7 +292,8 @@
   }
 
   .sidebar {
-    max-width: 287px;
+    // max-width: 287px;
+    max-width: fit-content;
     background-color: #F2F5FA;
     padding: 0;
 
@@ -328,6 +329,7 @@
       flex-direction: column;
       justify-content: space-between;
       padding: 40px 26px 0;
+      width: fit-content;
 
       .user {
         position: relative;

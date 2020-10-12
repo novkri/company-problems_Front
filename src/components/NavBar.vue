@@ -451,6 +451,8 @@
 
     span {
       padding-right: 5px;
+      align-self: center;
+      padding-bottom: 4px;
     }
   }
 
