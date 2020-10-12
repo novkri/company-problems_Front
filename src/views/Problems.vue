@@ -9,18 +9,18 @@
         <div class="card" id="card" v-for="(problem, idx) in problems" :key="idx">
           <!-- {{problem.status}} -->
           <div class="card-header row" :id="'heading'+problem.id" ref="collapsed-header" style="position: relative;">
-            <button class="btn btn-link collapsed btn-block text-left" :id="'button'+problem.id" type="button"
+            <!-- <button class="btn btn-link collapsed btn-block text-left" :id="'button'+problem.id" type="button"
               style="width: 100%;display: flex;" @click="onClickShow(problem)" data-toggle="collapse"
               :data-target="'#collapseOne'+problem.id" aria-expanded="false" :aria-controls="'collapseOne'+problem.id">
-
+ -->
 
               <div class="name col-4">
-                <!-- <button class="btn btn-link collapsed btn-block text-left" type="button" @click="onClickShow(problem)" data-toggle="collapse"
+                <button class="btn btn-link collapsed btn-block text-left" type="button" @click="onClickShow(problem)" data-toggle="collapse"
                 :data-target="'#collapseOne'+problem.id" aria-expanded="false"
                 :aria-controls="'collapseOne'+problem.id">
-                <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
-              </button> -->
                 <chevron-up-icon size="1.5x" class="custom-class arrow"></chevron-up-icon>
+              </button>
+
                 <h5 class="mb-0" style="display: flex; width: 92%;">
                   <div style="width: inherit;"
                     :style="[problem.creator_id == currentUid || user.is_admin ? {'cursor': 'pointer'} : {'cursor': 'default'}]"
@@ -37,8 +37,8 @@
               </div>
 
               <div class="middle-icons col-7">
-                <div style="width: 99px;">
-                  <!--  <v-popover offset="16" :id="'details'+problem.id">
+                <div>
+                   <v-popover offset="16" :id="'details'+problem.id">
                   <file-text-icon size="1.5x" class="custom-class details tooltip-target b3"  @click="event => detailsClick(event, problem.id)">
                   </file-text-icon>
 
@@ -47,19 +47,19 @@
                     <a v-close-popover
                       style="display: flex;justify-content: flex-end; font-size: 28px; font-family: 'GothamPro'; cursor: pointer;">&times;</a>
                   </template>
-                </v-popover> -->
+                </v-popover>
                 </div>
                 <div style="width: 21px;">
                   <clock-icon size="1.5x" class="custom-class details" :ref="'urgency'+problem.id"
                     v-show="problem.urgency === 'Срочная'"
                     :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
-                    @click="event => changeUrgency(problem.id, problem.urgency, event)"></clock-icon>
+                    ></clock-icon>
                 </div>
                 <div style="width: 21px;">
                   <alert-circle-icon size="1.5x" class="custom-class details" :ref="'importance'+problem.id"
                     v-show="problem.importance === 'Важная'"
                     :style="[problem.importance == isImportnant ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
-                    @click="event => changeImportance(problem.id, problem.importance, event)"></alert-circle-icon>
+                    ></alert-circle-icon>
                 </div>
 
                 <div>
@@ -82,8 +82,8 @@
               </div>
 
               <div class="middle-icons_text col-8">
-                <div style="width: 99px;">
-                  <!--  <span style="color: #828282;">
+                <div >
+                   <span style="color: #828282;">
                   Подробнее:
                 </span>
                 <v-popover offset="16" :id="'details'+problem.id">
@@ -95,7 +95,7 @@
                     <a v-close-popover
                       style="display: flex;justify-content: flex-end; font-size: 28px; font-family: 'GothamPro'">&times;</a>
                   </template>
-                </v-popover>-->
+                </v-popover>
                 </div>
                 <div>
                   <span :style="[problem.urgency == isUrgent ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]"
@@ -150,8 +150,8 @@
               </div>
 
               <!-- </div> -->
-            </button>
-            <div style="position: absolute;
+            <!-- </button> -->
+            <!-- <div style="position: absolute;
     top: 33%;
     right: 58%;
 }" class="middle-icons_btn">
@@ -185,7 +185,7 @@
                     style="display: flex;justify-content: flex-end; font-size: 28px; font-family: 'GothamPro'">&times;</a>
                 </template>
               </v-popover>
-            </div>
+            </div> -->
 
           </div>
 
@@ -219,11 +219,12 @@
 
                   <!-- План -->
                   <div class="accordion col-3" id="plan">
-                    <div class="card">
+                    <div class="card" :ref="'cardPlan'+problem.id" style="height: 100%;">
                       <div class="card-header" id="headingPlan" style="width: 100%;">
                         <h5 class="mb-0">
                           <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                            data-target="#collapsePlan" aria-expanded="false" aria-controls="collapsePlan">
+                            data-target="#collapsePlan" aria-expanded="false" aria-controls="collapsePlan"
+                            @click="onClickPlan(problem.id)">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                             <p>
                               План решения
@@ -234,10 +235,10 @@
 
                       <div id="collapsePlan" class="collapse show" aria-labelledby="headingPlan" data-parent="#plan"
                         style="width: 100%;">
-                        <div class="card-body p-0">
+                        <div class="card-body p-0" :ref="'cardBody'+problem.id" style="height: 100%;">
                           <!-- plan,  -->
                           <textarea placeholder="Опишите ваш план решения..." rows="6" :ref="'textarea_plan'+problem.id"
-                            v-model="solutions[0].plan" :disabled="validatedExecutorAndAdmin"
+                            style="height: 100%;" v-model="solutions[0].plan" :disabled="validatedExecutorAndAdmin"
                             @keydown.enter.prevent.exact="event => {editPlan(solutions[0].id, solutions[0].plan, event)}"
                             @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                             @blur="event => {onBlurTextarea(event, 'plan')}"></textarea>
@@ -561,6 +562,16 @@
     },
 
     methods: {
+      onClickPlan(id) {
+        document.getElementById('collapsePlan').classList.contains('show') ? this.$refs['cardPlan' + id][0].style
+          .height = 'fit-content' : this.$refs['cardPlan' + id][0].style.height = '100%'
+        document.getElementById('collapsePlan').classList.contains('show') ? this.$refs['textarea_plan' + id][0].style
+          .height = 'fit-content' : this.$refs['textarea_plan' + id][0].style.height = '100%'
+        document.getElementById('collapsePlan').classList.contains('show') ? this.$refs['cardBody' + id][0].style
+          .height = 'fit-content' : this.$refs['cardBody' + id][0].style.height = '100%'
+      },
+
+
       detailsClick(e, id) {
         console.log(e);
         // e.stopPropagation()
@@ -754,7 +765,7 @@
                   element.click()
                 }) : ''
               })
-              this.isLeaderOgUser = this.groups.find(g => g.id == problem.creator_id).leader_id == this.currentUid
+              this.isLeaderOgUser = this.groups.find(g => g.leader_id == this.currentUid) ? true : false
             })
             .catch(() => {
               this.$store.dispatch('clearTasks')
@@ -1211,6 +1222,22 @@
     }
   }
 
+  // #collapsePlan {
+  //   textarea {
+  //     height: 514px !important;
+  //   }
+  // }
+
+  // #collapseTasks {
+  //   max-height: 600px;
+  //   overflow: scroll;
+  //   overflow-x: auto;
+
+  //   .card-body {
+  //     background-color: #fff;
+  //   }
+  // }
+
   #collapseTasks {
     .card-body {
       background-color: #fff;
@@ -1244,6 +1271,7 @@
 
   .name {
     display: flex;
+    padding: 0;
 
     button {
       padding-top: 0;
@@ -1278,8 +1306,10 @@
     margin-left: 0px;
     background-color: #F2F5FA;
 
-    .btn-link:hover, .btn-link:focus, .btn-link:active {
-        text-decoration: none;
+    .btn-link:hover,
+    .btn-link:focus,
+    .btn-link:active {
+      text-decoration: none;
     }
   }
 

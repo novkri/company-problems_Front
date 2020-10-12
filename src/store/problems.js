@@ -49,10 +49,7 @@ export default {
     },
 
     
-    
-    // amountOfProblems: state => {
-    //   return state.amountOfProblems
-    // },
+  
 
     amountOfMyProblems: state => {
       return state.amountOfMyProblems
@@ -128,10 +125,6 @@ export default {
 
 
 
-    // amountOfProblems: (state, payload) => {
-    //   state.amountOfProblems = payload
-    // },
-
     amountOfMyProblems: (state, payload) => {
       state.amountOfMyProblems = payload
     },
@@ -187,7 +180,8 @@ export default {
         .then(response => {
             commit('setError', '')
             commit('setError404', '')
-            commit('amountOfMyProblems', response.data.length)
+            commit('amountOfMyProblems', response.data.filter(p => p.status == 'На проверке заказчика').length)
+            // console.log(response.data.filter(p => p.status == 'На проверке заказчика'));
             resolve(response.data)
         })
       })

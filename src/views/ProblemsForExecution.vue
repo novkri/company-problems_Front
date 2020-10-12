@@ -6,7 +6,7 @@
     <div class="container" v-if="_isMounted">
       <div id="accordion">
         <div class="card" id="card" v-for="(problem, idx) in problems" :key="idx">
-          
+
           <div class="card-header row" :id="'heading'+problem.id" ref="collapsed-header">
             <div class="name col-4">
               <button class="btn btn-link collapsed" @click="onClickShow(problem)" data-toggle="collapse"
@@ -46,13 +46,13 @@
                 <clock-icon size="1.5x" class="custom-class details" :ref="'urgency'+problem.id"
                   v-show="problem.urgency === 'Срочная'"
                   :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
-                  @click="changeUrgency(problem.id, problem.urgency)"></clock-icon>
+                  ></clock-icon>
               </div>
               <div style="width: 21px;">
                 <alert-circle-icon size="1.5x" class="custom-class details" :ref="'importance'+problem.id"
                   v-show="problem.importance === 'Важная'"
                   :style="[problem.importance == isImportnant ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
-                  @click="changeImportance(problem.id, problem.importance)"></alert-circle-icon>
+                  ></alert-circle-icon>
               </div>
 
               <div>
@@ -149,10 +149,10 @@
                     <div class="card">
                       <div class="card-header" id="headingTasks" style="width: 100%;">
                         <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left"  type="button" data-toggle="collapse" data-target="#collapseTasks"
-                            aria-expanded="false" aria-controls="collapseTasks">
+                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                            data-target="#collapseTasks" aria-expanded="false" aria-controls="collapseTasks">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
-                             <p>
+                            <p>
                               Решение
                             </p>
                           </button>
@@ -171,14 +171,15 @@
 
                   <!-- План -->
                   <div class="accordion col-3" id="plan">
-                    <div class="card">
+                    <div class="card" :ref="'cardPlan'+problem.id" style="height: 100%;">
                       <div class="card-header" id="headingPlan" style="width: 100%;">
                         <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left"  type="button" data-toggle="collapse" data-target="#collapsePlan"
-                            aria-expanded="false" aria-controls="collapsePlan">
+                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                            data-target="#collapsePlan" aria-expanded="false" aria-controls="collapsePlan"
+                            @click="onClickPlan(problem.id)">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
-                             <p>
-                               План решения
+                            <p>
+                              План решения
                             </p>
                           </button>
                         </h5>
@@ -186,10 +187,10 @@
 
                       <div id="collapsePlan" class="collapse show" aria-labelledby="headingPlan" data-parent="#plan"
                         style="width: 100%;">
-                        <div class="card-body p-0">
+                        <div class="card-body p-0" :ref="'cardBody'+problem.id" style="height: 100%;">
                           <!-- plan,  -->
                           <textarea placeholder="Опишите ваш план решения..." rows="6" :ref="'textarea_plan'+problem.id"
-                            v-model="solutions[0].plan" :disabled="validatedExecutorAndAdmin"
+                            style="height: 100%;" v-model="solutions[0].plan" :disabled="validatedExecutorAndAdmin"
                             @keydown.enter.prevent.exact="event => {editPlan(solutions[0].id, solutions[0].plan, event)}"
                             @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                             @blur="event => {onBlurTextarea(event, 'plan')}"></textarea>
@@ -218,11 +219,11 @@
                     <div class="card">
                       <div class="card-header" id="headingResults" style="width: 100%;">
                         <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left"  type="button" data-toggle="collapse" data-target="#collapseResults"
-                            aria-expanded="false" aria-controls="collapseResults">
+                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                            data-target="#collapseResults" aria-expanded="false" aria-controls="collapseResults">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
-                             <p>
-                               Команда, опыт, результат
+                            <p>
+                              Команда, опыт, результат
                             </p>
                           </button>
                         </h5>
@@ -342,10 +343,10 @@
                     <div class="card">
                       <div class="card-header" id="headingGroups" style="width: 100%;">
                         <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left"  type="button" data-toggle="collapse" data-target="#collapseGroups"
-                            aria-expanded="false" aria-controls="collapseGroups">
+                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                            data-target="#collapseGroups" aria-expanded="false" aria-controls="collapseGroups">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
-                             <p>
+                            <p>
                               Направить в подразделение
                             </p>
                           </button>
@@ -504,6 +505,14 @@
     },
 
     methods: {
+      onClickPlan(id) {
+        document.getElementById('collapsePlan').classList.contains('show') ? this.$refs['cardPlan' + id][0].style
+          .height = 'fit-content' : this.$refs['cardPlan' + id][0].style.height = '100%'
+        document.getElementById('collapsePlan').classList.contains('show') ? this.$refs['textarea_plan' + id][0].style
+          .height = 'fit-content' : this.$refs['textarea_plan' + id][0].style.height = '100%'
+        document.getElementById('collapsePlan').classList.contains('show') ? this.$refs['cardBody' + id][0].style
+          .height = 'fit-content' : this.$refs['cardBody' + id][0].style.height = '100%'
+      },
       checkAll() {
         if (!this.all) {
           this.all = true
@@ -524,33 +533,33 @@
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('problemReject', id)
         this.$store.dispatch('countAmountOfProblemsForExecution', {
-        urgency: '',
-        importance: '',
-        deadline: '',
-        status: ''
-      })
+          urgency: '',
+          importance: '',
+          deadline: '',
+          status: ''
+        })
       },
       async problemConfirm(id) {
         this.isProblemConfirmed = true
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('problemConfirm', id)
         this.$store.dispatch('countAmountOfProblemsForExecution', {
-        urgency: '',
-        importance: '',
-        deadline: '',
-        status: ''
-      })
+          urgency: '',
+          importance: '',
+          deadline: '',
+          status: ''
+        })
       },
       async problemSolved(id) {
-        
+
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('problemSolved', id)
         this.$store.dispatch('countAmountOfProblemsForExecution', {
-        urgency: '',
-        importance: '',
-        deadline: '',
-        status: ''
-      })
+          urgency: '',
+          importance: '',
+          deadline: '',
+          status: ''
+        })
       },
       async changeUrgency(id, urgency) {
         await this.$store.commit('setError404', '')
@@ -700,7 +709,8 @@
                   element.click()
                 }) : ''
               })
-              this.isLeaderOgUser = this.groups.find(g => g.id == problem.creator_id).leader_id == this.currentUid
+              // this.isLeaderOgUser = this.groups.find(g => g.id == problem.creator_id).leader_id == this.currentUid
+              this.isLeaderOgUser = this.groups.find(g => g.leader_id == this.currentUid) ? true : false
             })
             .catch(() => {
               this.$store.dispatch('clearTasks')
@@ -1159,6 +1169,22 @@
     }
   }
 
+  // #collapsePlan {
+  //   textarea {
+  //     height: 514px !important;
+  //   }
+  // }
+
+  // #collapseTasks {
+  //   max-height: 600px;
+  //   overflow: scroll;
+  //   overflow-x: auto;
+
+  //   .card-body {
+  //     background-color: #fff;
+  //   }
+  // }
+
   #collapseTasks {
     .card-body {
       background-color: #fff;
@@ -1192,11 +1218,13 @@
 
   .name {
     display: flex;
+    padding: 0;
 
     button {
       padding-top: 0;
       padding-bottom: 0;
       display: flex;
+
       h5 {
         padding-left: 16px;
       }
@@ -1207,9 +1235,10 @@
     svg {
       transform: rotate(180deg);
     }
+
     padding-left: 16px;
   }
-  
+
   .card-header {
     align-items: center;
     border: none;
@@ -1300,7 +1329,7 @@
         border: none;
         background-color: transparent;
         width: 349px;
-        
+
         p {
           padding-left: 13px;
           font-family: 'GothamPro-Medium';

@@ -1,5 +1,5 @@
 <template>
-  <div ref="mainTask">
+  <div ref="mainTask" v-show="_isMounted">
     <div class="header row" style="position: relative;">
       <div class="col-4">
         <span style="font-family: 'GothamPro-Medium'; color: #4f4f4f;">Задачи:</span>
@@ -61,7 +61,7 @@
 
           <div class="dateDiv col-2">
             <input type="date" id="start" name="trip-start" class="date" onkeypress="return false"
-              @click="onClickDate($event)" @change="changeDeadlineTask(task.deadline, task.id, val.executor_id)" :disabled="validatedExecutorAndAdmin && task.executor_id != currentUid"
+              @click="onClickDate($event)" @change="changeDeadlineTask(task.deadline, task.id, val.executor_id)"
               v-model="task.deadline">
           </div>
 
@@ -109,7 +109,10 @@
     </div>
 
 
-
+<!-- style="height: 159px;align-items: center;
+    display: flex;position: sticky;
+    bottom: 0;
+    background-color: #fff;" -->
     <div style="margin-top: 44px;" v-if="val.executor_id == currentUid || user.is_admin || isLeader">
       <div style="padding: 20px; cursor: pointer; width: fit-content;min-height: 62px;" v-if="addNotClicked"
         @click.prevent="displayInput">
@@ -282,8 +285,8 @@
 
       async changeStatusTask(id, status, executor_id) {
         await this.$store.commit('setError404', '')
+        console.log(id);
         if (executor_id == this.currentUid || this.user.is_admin) {
-        // if (executor_id == this.currentUid || this.user.is_admin || this.isLeader || executorSol == this.currentUid) {
           await this.$store.dispatch('changeStatusTask', {
             status: status.name,
             id
@@ -766,7 +769,7 @@
 
     section {
       top: 102%;
-      left: -27%;
+      left: 0%;
     }
   }
 

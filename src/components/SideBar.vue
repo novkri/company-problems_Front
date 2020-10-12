@@ -19,8 +19,8 @@
           </router-link>
         </a>
 
-
-        <a v-show="isLeader || isLeader && user.is_admin">
+<!-- || user.is_admin  -->
+        <a v-show="isLeader || isLeader && user.is_admin ">
           <router-link to="/group-problems" exact>
             <eye-icon size="1.5x" class="custom-class"></eye-icon>На рассмотрении
             <span class="amount"
@@ -243,6 +243,8 @@
   }
 
   .links_groups {
+        max-width: 65%;
+
     min-height: 10px;
     max-height: 215px;
     overflow-y: scroll;
@@ -293,7 +295,7 @@
 
   .sidebar {
     // max-width: 287px;
-    max-width: fit-content;
+    max-width: 299px;
     background-color: #F2F5FA;
     padding: 0;
 

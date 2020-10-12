@@ -1,7 +1,7 @@
 <template>
-  <div class="row">
+  <div class="row" >
 
-    <div class="modal-body">
+    <div class="modal-body" v-show="_isMounted">
       <div>
         <div class="subtitle row subt">
           <div class="col-4">
