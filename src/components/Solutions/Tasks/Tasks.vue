@@ -760,7 +760,7 @@
 
     section {
       top: 102%;
-      left: 0%;
+      left: -2%;
     }
   }
 
@@ -770,14 +770,14 @@
     }
     .selectResponsible {
       section {
-        top: -487%;
+        top: -634%;
       }
     }
   }
 
   li:last-child {
     section {
-      top: -634%;
+      top: -447%;
     }
     .selectResponsible {
       section {
