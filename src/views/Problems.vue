@@ -153,7 +153,7 @@
               <div class="card" style="padding-top: 34px;" v-if="mounted">
                 <div class="row" style="display: flex; flex-direction: row; margin-bottom: 8px;">
                   <div class="accordion col-9" id="tasks">
-                    <div class="card" :ref="'cardSol'+problem.id" style="    max-height: 500px;
+                    <div class="card" :ref="'cardSol'+problem.id" style="min-height: 345px; max-height: 500px;
     overflow-y: scroll;
     padding-bottom: 0;">
                       <div class="card-header" id="headingTasks" style="width: 100%;width: 100%;
