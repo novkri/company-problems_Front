@@ -50,7 +50,6 @@
     },
     watch: {
       val(newValue) {
-        // console.log(`Updating from ${oldValue.name} to ${newValue.name}`)
         this.name = newValue.name
       }
     },

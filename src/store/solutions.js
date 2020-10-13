@@ -34,7 +34,6 @@ export default {
       return state.allUsers
     },
     allUsersReduced: state => {
-      // return state.allUsersReduced
       return state.allUsersReduced = state.allUsersReduced.sort(function (a, b) {
         return (a.surname.toLowerCase() > b.surname.toLowerCase()) ? 1 : -1
       })

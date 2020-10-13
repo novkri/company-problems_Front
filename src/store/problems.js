@@ -24,8 +24,6 @@ export default {
     token: localStorage.getItem('user-token') || '',
     statusesProblem: [],
 
-    // amountOfProblems: '',
-
     amountOfMyProblems: '',
     amountOfProblemsForExecution: '',
     amountOfProblemsForConfirmation: '',
@@ -39,9 +37,6 @@ export default {
       return state.problems = state.problems.sort(function (a, b) {
         return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1
       })
-      // return  state.problems.filter(function(item, index){
-      //   return (index < 10);
-      // })
     },
 
     error: state => {
@@ -51,10 +46,8 @@ export default {
       return state.error404
     },
 
-    
-  
-
     amountOfMyProblems: state => {
+      console.log(state.amountOfMyProblems);
       return state.amountOfMyProblems
     },
     amountOfProblemsForExecution: state => {
@@ -130,7 +123,9 @@ export default {
 
 
     amountOfMyProblems: (state, payload) => {
+      console.log(payload);
       state.amountOfMyProblems = payload
+      console.log(state.amountOfMyProblems);
     },
     amountOfProblemsForExecution: (state, payload) => {
       state.amountOfProblemsForExecution = payload
@@ -154,22 +149,6 @@ export default {
   },
 
   actions: {
-    // countAmountOfProblems: async ({
-    //   commit
-    // }) => {
-    //   return new Promise((resolve) => {
-    //   axios.get(process.env.VUE_APP_ROOT_URL+'/problem/count-problems')
-    //     .then(response => {
-    //       console.log(response.data);
-    //         commit('setError', '')
-    //         commit('setError404', '')
-    //         commit('amountOfProblems', response.data)
-    //         resolve(response.data)
-    //     })
-    //   })
-    // },
-
-
 
     countAmountOfMyProblems: async ({
       commit
@@ -182,10 +161,10 @@ export default {
         status: param.status
       }})
         .then(response => {
+          console.log(response);
             commit('setError', '')
             commit('setError404', '')
-            commit('amountOfMyProblems', response.data.filter(p => p.status == 'На проверке заказчика').length)
-            // console.log(response.data.filter(p => p.status == 'На проверке заказчика'));
+            commit('amountOfMyProblems', response.data.length)
             resolve(response.data)
         })
       })
@@ -346,7 +325,7 @@ export default {
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
-            commit('amountOfMyProblems', response.data.length)
+            // commit('amountOfMyProblems', response.data.length)
             resolve(response.data)
         })
         .catch(error => {
@@ -377,7 +356,7 @@ export default {
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
-            commit('amountOfProblemsForExecution', response.data.length)
+            // commit('amountOfProblemsForExecution', response.data.length)
             resolve(response.data)
         })
         .catch(error => {
@@ -405,7 +384,7 @@ export default {
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
-            commit('amountOfProblemsForConfirmation', response.data.length)
+            // commit('amountOfProblemsForConfirmation', response.data.length)
             resolve(response.data)
         })
         .catch(error => {
@@ -466,7 +445,7 @@ export default {
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
-            commit('amountOfProblemsForConfirmationAdmin', response.data.length)
+            // commit('amountOfProblemsForConfirmationAdmin', response.data.length)
             resolve(response.data)
         })
         .catch(error => {
@@ -513,13 +492,11 @@ export default {
       commit
     }) => {
       await axios.get(process.env.VUE_APP_ROOT_URL+'/problem')
-      // await axios.get(process.env.VUE_APP_ROOT_URL+'/problem/problems-of-all-groups')
         .then(response => {
             commit('setError', '')
             commit('setError404', '')
             console.log(response.data);
             commit('setProblems', response.data.filter(p => p.status !== "Удалена" && p.status !== "Решена"))
-            // commit('setProblems', response.data)
         })
         .catch(error => {
           if (error.response.status == 401) {
@@ -642,8 +619,6 @@ export default {
         .then(() => {
           commit('setError', '')
           commit('setError404', '')
-          // ?????
-          // commit('changeProblemLike', id)
         })
         .catch((error) => {
           commit('setError404', error.response.data.message)

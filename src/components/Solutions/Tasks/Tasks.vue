@@ -1,5 +1,5 @@
 <template>
-  <div ref="mainTask" >
+  <div ref="mainTask">
     <div class="header row" style="position: relative;">
       <div class="col-4">
         <span style="font-family: 'GothamPro-Medium'; color: #4f4f4f;">Задачи:</span>
@@ -17,7 +17,7 @@
         <li id="list" v-for="(task, idx) in tasks" :key="idx">
           <div class="task-title col-4"
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">
-            <div @click="onClickInput(task.id, val.executor_id)" v-show="!editable" >{{task.description}}</div>
+            <div @click="onClickInput(task.id, val.executor_id)" v-show="!editable">{{task.description}}</div>
             <input v-show="editable" class="form-control" v-model="task.description" :ref="'textarea_task' + task.id"
               @keyup.enter.prevent="event => {editTask(task.description, task.id, event)}" @focus="onFocusInput($event)"
               @blur="event => {onBlurInput(task.description, task.id, event)}" />
@@ -39,7 +39,7 @@
               :class="[task.status == 'Выполнено' ? 'green' : task.status == 'В процессе' ? 'blue' : 'gray']"
               id="ss-select" style="margin:auto; width: 87%;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                style="cursor: pointer; width: 100%;" @click="onClickStatus(selectedOption, task.id)" >
+                style="cursor: pointer; width: 100%;" @click="onClickStatus(selectedOption, task.id)">
                 <ss-select-toggle style="width: 100%; padding: 6px;" id="select-toggle">
                   {{ $get(selectedOption, 'name') || `${task.status}`}}
                   <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
@@ -109,10 +109,7 @@
     </div>
 
 
-<!-- style="height: 159px;align-items: center;
-    display: flex;position: sticky;
-    bottom: 0;
-    background-color: #fff;" -->
+
     <div style="
     position: sticky;
     bottom: 0;
@@ -122,8 +119,7 @@
       <div style="    cursor: pointer;
     width: fit-content;
     min-height: 70px; cursor: pointer;    display: flex;
-    align-items: center;" v-if="addNotClicked"
-        @click.prevent="displayInput">
+    align-items: center;" v-if="addNotClicked" @click.prevent="displayInput">
         <span style="margin-left: 16px; cursor: pointer;color: #92D2C3;font-family: 'GothamPro-Medium';font-size: 14px;
           line-height: 24px;letter-spacing: 0.15px;">+ Добавить задачу</span>
       </div>
@@ -540,11 +536,7 @@
     background-color: #fff;
 
     ol {
-      // max-height: 182px;
-      // overflow-y: scroll;
-      // overflow-x: overlay;
       overflow-x: visible;
-
     }
   }
 
@@ -779,26 +771,21 @@
       top: 102%;
       left: 0%;
     }
+  }
+
+  li:nth-last-child(2) {
+    section {
+      top: 104%;
+    }
 
   }
 
-
-      li:nth-last-child(2) {
-      section {
-        top: 104%;
-      }
-      
-    }
-    li:last-child {
-      // color: red;
-      section {
-        top: -56%;
-      }
-      
+  li:last-child {
+    section {
+      top: -56%;
     }
 
-
-
+  }
 
   #ss-select {
     border-radius: 10px;

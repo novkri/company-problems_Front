@@ -63,9 +63,7 @@
           this.$refs['descInput' + id].focus()
           event.target.style.display = 'none'
         })
-        } else {
-          // await this.$store.commit('setError404', 'не хватает прав')
-        }
+        } 
         
       },
 
@@ -100,8 +98,6 @@
           event.target.style.display = 'none'
           this.$refs['possibleInput' + id].focus()
         })
-        } else {
-          // await this.$store.commit('setError404', 'не хватает прав')
         }
       },
 

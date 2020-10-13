@@ -116,6 +116,7 @@
 
   ul {
     padding: 0;
+    margin-bottom: 0;
     list-style: none;
     padding-right: 24px;
 
@@ -131,7 +132,7 @@
     width: 100%;
     justify-content: space-between;
 
-    padding: 30px 24px;
+    padding: 24px 24px;
     border-bottom: 1px solid #DEDEDE;
   }
 

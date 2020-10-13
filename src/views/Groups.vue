@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 50vh;padding-top: 45px;">
+  <div style="height: 68vh;padding-top: 45px;">
     <div class="subtitle row">
       <span class="col-4">Название подразделения</span>
       <span class="col-4">Название подразделения (сокращенно)</span>
@@ -594,8 +594,8 @@
     .card {
       width: 100%;
       background-color: transparent;
-      padding-bottom: 30px;
-      padding-top: 30px;
+      padding-bottom: 14px;
+      padding-top: 14px;
       border-bottom: 1px solid #DEDEDE;
       padding-left: 18px;
       height: fit-content;
@@ -638,6 +638,7 @@
 
   section {
     top: 62%;
+    font-family: 'GothamPro';
   }
 
   .short-name,

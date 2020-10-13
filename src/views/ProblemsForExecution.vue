@@ -22,14 +22,13 @@
                   {{ problem.name}}
                 </div>
                 <input class="form-control" style="display: none;" :id="'problem-name'+problem.id"
-                  :disabled="isCreatorOrAdmin" v-model="problem.name"
-                  :ref="'problem-name' + problem.id"
+                  :disabled="isCreatorOrAdmin" v-model="problem.name" :ref="'problem-name' + problem.id"
                   @keyup.enter="event => {editProblemName(problem.name, problem.id, event)}"
                   @focus="onFocusInput($event)" @blur="event => {onBlurInput(problem.name, problem.id, event)}" />
               </h5>
             </div>
 
-            <div class="middle-icons col-7">
+            <div class="middle-icons col-6">
               <div>
                 <v-popover offset="16">
                   <file-text-icon size="1.5x" class="custom-class details tooltip-target b3">
@@ -145,7 +144,7 @@
               <div class="card" style="padding-top: 34px;" v-if="mounted">
                 <div class="row" style="display: flex; flex-direction: row; margin-bottom: 8px;">
                   <div class="accordion col-9" id="tasks">
-                    <div class="card" :ref="'cardSol'+problem.id" style="min-height: 345px; max-height: 500px;
+                    <div class="card" :ref="'cardSol'+problem.id" style="max-height: 500px;
     overflow-y: scroll;
     padding-bottom: 0;">
                       <div class="card-header" id="headingTasks" style="width: 100%;width: 100%;
@@ -199,17 +198,13 @@
                             @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                             @blur="event => {onBlurTextarea(event, 'plan')}"></textarea>
                           <div class="hidden" style="bottom: 13%; right: 11%;">
-                            <!-- <div v-show="solutions[0].executor_id == currentUid"> -->
-                              <button class="input-btn confirm"
-                                @mousedown="event => {editPlan(solutions[0].id,solutions[0].plan, event)}">
-                                <check-icon size="1.4x" class="custom-class"></check-icon>
-                              </button>
-                              <!-- <div> -->
-                                <button class="input-btn cancel" @mousedown="event => onClear(event, problem.id, 'plan')">
-                                  <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
-                                </button>
-                              <!-- </div> -->
-                            <!-- </div> -->
+                            <button class="input-btn confirm"
+                              @mousedown="event => {editPlan(solutions[0].id,solutions[0].plan, event)}">
+                              <check-icon size="1.4x" class="custom-class"></check-icon>
+                            </button>
+                            <button class="input-btn cancel" @mousedown="event => onClear(event, problem.id, 'plan')">
+                              <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -245,17 +240,13 @@
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea(event, 'team')}"></textarea>
                             <div class="hidden">
-                              <!-- <div v-show="solutions[0].executor_id == currentUid"> -->
-                                <button class="input-btn confirm"
-                                  @mousedown="event => {editTeam(solutions[0].id, solutions[0].team, event)}">
-                                  <check-icon size="1.4x" class="custom-class"></check-icon>
-                                </button>
-                                <!-- <div> -->
-                                  <button class="input-btn cancel" @mousedown="event => onClear(event, problem.id, 'team')">
-                                    <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
-                                  </button>
-                                <!-- </div> -->
-                              <!-- </div> -->
+                              <button class="input-btn confirm"
+                                @mousedown="event => {editTeam(solutions[0].id, solutions[0].team, event)}">
+                                <check-icon size="1.4x" class="custom-class"></check-icon>
+                              </button>
+                              <button class="input-btn cancel" @mousedown="event => onClear(event, problem.id, 'team')">
+                                <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
+                              </button>
 
                             </div>
                           </div>
@@ -268,16 +259,14 @@
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea( event, 'exp')}"></textarea>
                             <div class="hidden">
-                              <!-- <div v-show="solutions[0].executor_id == currentUid"> -->
-                                <button class="input-btn confirm"
-                                  @mousedown="event => {editExp(problem.id, problem.experience, event)}">
-                                  <check-icon size="1.4x" class="custom-class"></check-icon>
-                                </button>
-                                <!-- <div> -->
-                                  <button class="input-btn cancel" @mousedown="event => onClear(event, problem.id, 'exp')">
-                                    <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
-                                  </button>
-                                <!-- </div>
+                              <button class="input-btn confirm"
+                                @mousedown="event => {editExp(problem.id, problem.experience, event)}">
+                                <check-icon size="1.4x" class="custom-class"></check-icon>
+                              </button>
+                              <button class="input-btn cancel" @mousedown="event => onClear(event, problem.id, 'exp')">
+                                <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
+                              </button>
+                              <!-- </div>
                               </div> -->
 
                             </div>
@@ -291,17 +280,14 @@
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
                               @blur="event => {onBlurTextarea(event, 'result')}"></textarea>
                             <div class="hidden">
-                              <!-- <div v-show="solutions[0].executor_id == currentUid"> -->
-                                <button class="input-btn confirm"
-                                  @mousedown="event => {editResult(problem.id, problem.result, event)}">
-                                  <check-icon size="1.4x" class="custom-class"></check-icon>
-                                </button>
-                                <!-- <div> -->
-                                  <button class="input-btn cancel" @mousedown="event => onClear(event, problem.id, 'result')">
-                                    <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
-                                  </button>
-                                <!-- </div>
-                              </div> -->
+                              <button class="input-btn confirm"
+                                @mousedown="event => {editResult(problem.id, problem.result, event)}">
+                                <check-icon size="1.4x" class="custom-class"></check-icon>
+                              </button>
+                              <button class="input-btn cancel"
+                                @mousedown="event => onClear(event, problem.id, 'result')">
+                                <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
+                              </button>
                             </div>
 
                             <div
@@ -688,7 +674,7 @@
 
       async onClickShow(problem) {
         this.checkedGroups = []
-        problem.groups.length > 0 ? problem.groups.forEach(element => {
+        problem.groups ? problem.groups.forEach(element => {
           this.checkedGroups.push(element.id)
         }) : this.checkedGroups = []
         this.checkedGroups.length < this.groups.length ? this.all = false : this.all = true
@@ -1089,7 +1075,7 @@
     height: 69px;
     display: flex;
     align-items: center;
-    padding-left: 10px;
+    padding-right: 10px;
 
     &>div {
       border-top: 2px solid #E7E5F1;
@@ -1158,7 +1144,6 @@
       background-color: #fff;
       border-radius: 9px;
       padding: 16px 13px;
-      // padding-bottom: 18px;
       padding-bottom: 0;
 
       .card-header {
@@ -1172,7 +1157,9 @@
 
   }
 
-#results, #groups, #plan {
+  #results,
+  #groups,
+  #plan {
     .card {
       padding-bottom: 13px !important;
     }
@@ -1196,22 +1183,6 @@
       height: 84% !important;
     }
   }
-
-  // #collapsePlan {
-  //   textarea {
-  //     height: 514px !important;
-  //   }
-  // }
-
-  // #collapseTasks {
-  //   max-height: 600px;
-  //   overflow: scroll;
-  //   overflow-x: auto;
-
-  //   .card-body {
-  //     background-color: #fff;
-  //   }
-  // }
 
   #collapseTasks {
     .card-body {
@@ -1504,6 +1475,7 @@
     .card-body {
       height: fit-content;
     }
+
     p {
       word-break: break-word;
     }

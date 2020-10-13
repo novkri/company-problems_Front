@@ -195,7 +195,6 @@
   .form-control:active,
   .form-control:focus {
     background-color: #FFF;
-    // border-bottom: 2px solid #FF8585 !important;
   }
   .form-control--valid {
     border: transparent;

@@ -111,7 +111,6 @@ export default {
       return new Promise((resolve, reject) => {
         axios.get(process.env.VUE_APP_ROOT_URL + '/problem/statistic/categories	').then(response => {
             commit('setError404', '')
-            // commit('statisticCategories', response.data)
             commit('statisticCategories', Object.entries(response.data))
             resolve(response.data)
           })

@@ -42,7 +42,7 @@
                 urgency: '',
                 importance: '',
                 deadline: '',
-                status: ''
+                status: 'На проверке заказчика'
               })
           })
           .catch(() => this.$store.commit('setError404', ''))

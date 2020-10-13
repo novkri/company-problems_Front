@@ -1,11 +1,9 @@
 <template>
-  <div class="row" style="    position: sticky;
+  <div class="row" style="position: sticky;
     top: 0;
     z-index: 10;
-    
     background-color: #fff;">
-<!-- {{val}}
-{{solutions}} -->
+
     <div class="modal-body">
       <div>
         <div class="subtitle row subt">
@@ -20,9 +18,7 @@
           <div class="col-2" style="justify-content: center;display: flex;">
             <span>Ответственный</span>
           </div>
-          <!-- <div style="width: 20px" class="col">
 
-          </div> -->
         </div>
         <div>
 
@@ -111,12 +107,6 @@
                 </ss-select>
               </div>
 
-              <!-- <div style="width: 20px" class="col"> -->
-                <!-- <button type="button" class="close" id="remove" @click="removeFromWork(solution)" data-toggle="modal"
-                  data-target="#popupRemoveFromWOrk">
-                  <span aria-hidden="true">&times;</span>
-                </button> -->
-              <!-- </div> -->
             </li>
           </ol>
         </div>
@@ -281,9 +271,7 @@
             id
           })
         })
-        } else {
-          //
-        }
+        } 
       },
 
       async removeFromWork(obj) {
@@ -307,8 +295,6 @@
           this.$nextTick(() => {
             this.$refs['textarea' + id][0].focus()
           })
-        } else {
-          // 
         }
       },
 
@@ -510,7 +496,6 @@
 
   .modal-body {
     padding: 0;
-    // margin-top: -22px;
     margin-right: 20px;
     margin-left: 20px;
   }

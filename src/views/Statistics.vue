@@ -213,53 +213,11 @@
 
               </table>
 
-
-
-
-              <!-- <ol style="width: 65%;">
-                <li class="header_li with_border">Категория</li>
-                <li class="with_border" style="justify-content: flex-start; padding-left: 45px;"
-                  :ref="'li_category'+title" v-for="(item, title) in statisticCategories" :key="title">{{item[0]}}</li>
-              </ol>
-              <ol style="width: 35%;">
-                <li class="header_li">Значение</li>
-
-                <li style="justify-content: flex-start;
-    padding-left: 58px; display: flex;
-    flex-direction: column; align-items: flex-start; padding-bottom: 8px;
-    padding-top: 8px; height: fit-content;" id="second_category_li">
-                  <span v-for="(problem, idx) in statisticCategories[0][1]" :key="idx">
-                    {{problem.name}},
-                  </span>
-                  <span>
-                    {{ statisticCategories[0][1].reduce((acc, curr) => acc.likes_count > curr.likes_count ? acc.likes_count : curr.likes_count) }}
-                    лайка(ов)
-                  </span>
-                </li>
-                <li style="justify-content: flex-start;
-    padding-left: 58px;">
-                  {{ statisticCategories[1][1][0].name }}
-                  {{ ((new Date().getTime() - new Date(statisticCategories[1][1][0].created_at).getTime()) / (1000 * 60 * 60 * 24)).toFixed(0) }}
-                  дней
-
-                </li>
-                <li style="justify-content: flex-start;
-    padding-left: 58px;">{{ statisticCategories[2][1][0].surname }} {{ statisticCategories[2][1][0].name[0]+'.' }}
-                  {{ statisticCategories[2][1][0].father_name ? statisticCategories[2][1][0].father_name[0]+'.,' : ',' }}
-                  {{ statisticCategories[2][1][0].solutions_count}} проблем(ы)
-
-
-                </li>
-              </ol> -->
-
             </div>
 
           </div>
         </div>
       </div>
-
-
-
     </div>
   </div>
 </template>
@@ -275,7 +233,7 @@
 
   export default {
     name: 'statistics',
-    // data: 
+
     components: {
       ChevronUpIcon
     },
@@ -296,24 +254,6 @@
     methods: {
       clickCard(id_string) {
         document.getElementById(id_string).style.borderRadius = '9px 9px 0px 0px';
-
-        // if (id_string == 'statisticQuarterly1') {
-        // //   // console.log(this.$refs['li_category0']);
-        //   console.log(document.getElementById('second_category_li').clientHeight);
-
-
-        // //   // let thisHeigth = document.getElementById('second_category_li').clientHeight
-        //   this.$nextTick(() => {
-        //     if (document.getElementById('second_category_li').clientHeight != 0) {
-        //     this.$refs['li_category0'][0].style.height =
-        //       `${document.getElementById('second_category_li').clientHeight}px`
-        //      } 
-        //   })
-
-        //   // console.log(thisHeigth);
-        //   // document.getElementById('second_category_li').clientHeight != 0 ? let thisHeigth = document.getElementById('second_category_li').clientHeight : ''
-        //   //  this.$refs['li_category0'][0].style.height = thisHeigth
-        // }
       }
     },
   }
@@ -358,7 +298,6 @@
   .card-body {
     div {
       background-color: #fff;
-      // padding: 27px 45px;
       border-radius: 9px;
     }
   }

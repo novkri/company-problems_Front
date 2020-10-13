@@ -19,7 +19,6 @@
           </router-link>
         </a>
 
-<!-- || user.is_admin  -->
         <a v-show="isLeader || isLeader && user.is_admin || user.is_admin">
           <router-link to="/group-problems" exact>
             <eye-icon size="1.5x" class="custom-class"></eye-icon>На рассмотрении
@@ -27,14 +26,6 @@
               v-show="amountOfProblemsForConfirmation != 0">{{amountOfProblemsForConfirmation ? amountOfProblemsForExecution > 9999 ? '9999+' : amountOfProblemsForConfirmation : ''}}</span>
           </router-link>
         </a>
-        <!-- <a v-show="user.is_admin">
-          <router-link to="/problems-of-all-groups" exact>
-            <eye-icon size="1.5x" class="custom-class"></eye-icon>На рассмотрении
-            <span class="amount"
-              v-show="amountOfProblemsForConfirmationAdmin != 0">{{amountOfProblemsForConfirmationAdmin ? amountOfProblemsForConfirmationAdmin > 9999 ? '9999+' : amountOfProblemsForConfirmationAdmin : ''}}</span>
-          </router-link>
-        </a> -->
-
 
         <a>
           <router-link to="/problems-for-execution" exact>
@@ -66,9 +57,7 @@
         <router-link to="/groups">
           <list-icon size="1.5x" class="custom-class"></list-icon>Состав подразделений
         </router-link>
-        <!-- <a href="#">
-          <bar-chart-2-icon size="1.5x" class="custom-class"></bar-chart-2-icon>Статистика
-        </a> -->
+
         <router-link to="/statistics">
           <bar-chart-2-icon size="1.5x" class="custom-class"></bar-chart-2-icon>Статистика
         </router-link>
@@ -150,7 +139,7 @@
         urgency: '',
         importance: '',
         deadline: '',
-        status: ''
+        status: 'На проверке заказчика'
       })
 
       await this.$store.dispatch('countAmountOfProblemsForExecution', {
@@ -294,7 +283,6 @@
   }
 
   .sidebar {
-    // max-width: 287px;
     max-width: 299px;
     background-color: #F2F5FA;
     padding: 0;

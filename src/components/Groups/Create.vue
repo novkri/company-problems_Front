@@ -9,7 +9,7 @@
             </button>
             <h5 class="modal-title" id="exampleModalLabel">Добавить подразделение</h5>
           </div>
-          <!--  v-model="name"  -->
+
           <div class="modal-body">
             <div>
               <form class="form-group">
@@ -68,11 +68,8 @@
                   <div class="error" v-if="error.leader_id">{{error.leader_id[0]}}</div>
                 </div>
               </form>
-              <!-- <div class="error" v-if="error">{{error}}</div> -->
             </div>
 
-
-            <!-- :disabled="!enableAddBtntn" -->
             <div type="submit" class="btnsAddTask">
               <button id="addBtn" class="btn" :class="[error ? 'btnPink' : 'btnMain']"
                 @click.prevent="addGroup">Добавить подразделение</button>
@@ -134,7 +131,6 @@
     },
     watch: {
       error() {
-        // console.log(`Updating from ${oldValue} to ${newValue}`);
       }
     },
     computed: {

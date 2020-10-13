@@ -79,7 +79,6 @@
     },
     watch: {
       error() {
-        // console.log(`Updating from ${oldValue} to ${newValue}`);
       }
     },
     computed: {
@@ -110,7 +109,7 @@
               urgency: '',
               importance: '',
               deadline: '',
-              status: ''
+              status: 'На проверке заказчика'
             })
             this.formData = []
             document.getElementById('close').click()
