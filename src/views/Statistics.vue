@@ -18,13 +18,17 @@
           aria-labelledby="statisticQuantitativeIndicators" data-parent="#accordionStatistics">
           <div class="card-body">
             <div class="container-list">
-              <ol>
-                <li class="header_li">Категория</li>
-                <li v-for="(item, title) in statisticQuantitativeIndicators" :key="title">{{title}}</li>
+              <ol style="width: 80%;">
+                <li class="header_li with_border">Категория</li>
+                <li class="with_border"
+                  :style="[title == '1.1. Решено' || title == '1.2. Не решено' ? {'padding-left': '58px'} : {}]" style="justify-content: flex-start;
+    padding-left: 45px;" v-for="(item, title) in statisticQuantitativeIndicators" :key="title">{{title}}
+                </li>
               </ol>
-              <ol>
-                <li class="header_li">Количество, (%)</li>
-                <li v-for="(item, title) in statisticQuantitativeIndicators" :key="title">
+              <ol style="width: 20%;">
+                <li class="header_li">Количество и/или (%)</li>
+                <li v-for="(item, title) in statisticQuantitativeIndicators" :key="title"
+                  style="white-space: break-spaces;">
                   {{item}}
                   <span v-show="title == '1.1. Решено' || title == '1.2. Не решено'">
                     ({{ ( 1 / (totalAmountOfProblems / 100 / item)).toFixed(0) }} %)
@@ -54,71 +58,74 @@
           </h2>
         </div>
 
-        <div id="collapse_statisticCategories" class="collapse show" aria-labelledby="statisticCategories"
+        <div id="collapse_statisticCategories" class="collapse" aria-labelledby="statisticCategories"
           data-parent="#accordionStatistics">
           <div class="card-body">
             <div class="container-list">
 
-              <ol>
-                <li class="header_li">Категория\Квартал</li>
-                <li>Кол-во выявленных проблем (квартал/всего)</li>
-                <li>Кол-во проблем, планируемых к решению (квартал)</li>
-                <li>Кол-во решенных проблем (квартал/всего)</li>
+              <ol style="width: 40%;">
+                <li class="header_li with_border">Категория\Квартал</li>
+                <li class="with_border" style="justify-content: flex-start;
+    padding-left: 45px;">Кол-во выявленных проблем (квартал/всего)</li>
+                <li class="with_border" style="justify-content: flex-start;
+    padding-left: 45px;">Кол-во проблем, планируемых к решению (квартал)</li>
+                <li class="with_border" style="justify-content: flex-start;
+    padding-left: 45px;">Кол-во решенных проблем (квартал/всего)</li>
               </ol>
 
-              <ol>
-                <li class="header_li">
+              <ol style="width: 15%;">
+                <li class="header_li with_border" style="padding: 0 35px;text-align: center;">
                   {{Object.values(statisticQuarterly1)[0]}}
                 </li>
-                <li>
+                <li class="with_border">
                   {{Object.values(statisticQuarterly1)[1]}}
                   ({{Object.values(statisticQuarterly1)[2]}})
                 </li>
-                <li>
+                <li class="with_border">
                   {{Object.values(statisticQuarterly1)[3]}}
                 </li>
-                <li>
+                <li class="with_border">
                   {{Object.values(statisticQuarterly1)[4]}}
                   ({{Object.values(statisticQuarterly1)[5]}})
                 </li>
               </ol>
 
-              <ol>
-                <li class="header_li">
+              <ol style="width: 15%;">
+                <li class="header_li with_border" style="padding: 0 35px;text-align: center;">
                   {{Object.values(statisticQuarterly2)[0]}}
                 </li>
-                <li>
+                <li class="with_border">
                   {{Object.values(statisticQuarterly2)[1]}}
                   ({{Object.values(statisticQuarterly2)[2]}})
                 </li>
-                <li>
+                <li class="with_border">
                   {{Object.values(statisticQuarterly2)[3]}}
                 </li>
-                <li>
+                <li class="with_border">
                   {{Object.values(statisticQuarterly2)[4]}}
                   ({{Object.values(statisticQuarterly2)[5]}})
                 </li>
               </ol>
 
-              <ol>
-                <li class="header_li">
+              <ol style="width: 15%;">
+                <li class="header_li with_border" style="padding: 0 35px;text-align: center;">
                   {{Object.values(statisticQuarterly3)[0]}}
                 </li>
-                <li>
+                <li class="with_border">
                   {{Object.values(statisticQuarterly3)[1]}}
                   ({{Object.values(statisticQuarterly3)[2]}})
                 </li>
-                <li>
+                <li class="with_border">
                   {{Object.values(statisticQuarterly3)[3]}}
                 </li>
-                <li>
+                <li class="with_border">
                   {{Object.values(statisticQuarterly3)[4]}}
                   ({{Object.values(statisticQuarterly3)[5]}})
                 </li>
               </ol>
 
-              <ol>
-                <li class="header_li">
+              <ol style="width: 15%;">
+                <li class="header_li" style="padding: 0 35px;text-align: center;">
                   {{Object.values(statisticQuarterly4)[0]}}
                 </li>
                 <li>
@@ -135,7 +142,6 @@
               </ol>
 
             </div>
-
           </div>
         </div>
       </div>
@@ -145,54 +151,106 @@
         <div class="card-header" id="statisticQuarterly1" @click="clickCard('statisticQuarterly1')">
           <h2 class="mb-0">
             <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-              data-target="#collapse_statisticQuarterly1" aria-expanded="true"
+              @click="clickCard('statisticQuarterly1')" data-target="#collapse_statisticQuarterly1" aria-expanded="true"
               aria-controls="collapse_statisticQuarterly1">
               <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon> Отдельные категории проблем
             </button>
           </h2>
         </div>
 
-        <div id="collapse_statisticQuarterly1" class="collapse show" aria-labelledby="statisticQuarterly1"
+        <div id="collapse_statisticQuarterly1" class="collapse" aria-labelledby="statisticQuarterly1"
           data-parent="#accordionStatistics">
           <div class="card-body">
 
             <div class="container-list">
-              <ol>
-                <li class="header_li">Категория</li>
-                <li v-for="(item, title) in statisticCategories" :key="title">{{item[0]}}</li>
+
+              <table>
+                <thead>
+                  <tr class="header_li">
+                    <td class="with_border">Категория</td>
+                    <td>Значение</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="with_border">1. Проблема (проблемы) с наибольшим кол-во “лайков”</td>
+                    <td><span v-for="(problem, idx) in statisticCategories[0][1]" :key="idx">
+                        {{problem.name}},
+                      </span>
+                      <span>
+                        {{ statisticCategories[0][1].reduce((acc, curr) => acc.likes_count > curr.likes_count ? acc.likes_count : curr.likes_count) }}
+                        лайка(ов)
+                      </span></td>
+                  </tr>
+                  <tr>
+                    <td class="with_border">2. Проблема, которая не решается дольше всего с указанием дней с момента
+                      заведения в системе</td>
+                    <td>
+                      {{ statisticCategories[1][1][0].name }}
+                      <!-- даты -->
+                      <!-- {{ new Date(statisticCategories[1][1][0].created_at).toLocaleString() }}
+                  {{ new Date().toLocaleString() }} -->
+
+                      {{ ((new Date().getTime() - new Date(statisticCategories[1][1][0].created_at).getTime()) / (1000 * 60 * 60 * 24)).toFixed(0) }}
+                      дней
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="with_border">3. Сотрудник (сотрудники), являющийся ответственным за решение для
+                      наибольшего кол-ва нерешенных проблем</td>
+                    <td>
+                      {{ statisticCategories[2][1][0].surname }}
+                      {{ statisticCategories[2][1][0].father_name ? statisticCategories[2][1][0].name[0]+'.' : statisticCategories[2][1][0].name[0]+'.,'}}
+                      {{ statisticCategories[2][1][0].father_name ? statisticCategories[2][1][0].father_name[0]+'.,' : '' }}
+                      {{ statisticCategories[2][1][0].solutions_count}} проблем(ы)
+                      <!-- <br>
+<br>
+{{ statisticCategories[2][1]}}
+{{ statisticCategories[2][1].length - 1 }} -->
+                    </td>
+                  </tr>
+                </tbody>
+
+              </table>
+
+
+
+
+              <!-- <ol style="width: 65%;">
+                <li class="header_li with_border">Категория</li>
+                <li class="with_border" style="justify-content: flex-start; padding-left: 45px;"
+                  :ref="'li_category'+title" v-for="(item, title) in statisticCategories" :key="title">{{item[0]}}</li>
               </ol>
-              <ol>
+              <ol style="width: 35%;">
                 <li class="header_li">Значение</li>
-                <!-- <li v-for="(item, title) in statisticCategories" :key="title">{{item[1]}}</li> -->
-                <li>
+
+                <li style="justify-content: flex-start;
+    padding-left: 58px; display: flex;
+    flex-direction: column; align-items: flex-start; padding-bottom: 8px;
+    padding-top: 8px; height: fit-content;" id="second_category_li">
                   <span v-for="(problem, idx) in statisticCategories[0][1]" :key="idx">
                     {{problem.name}},
-                    <!-- {{problem.likes_count}} -->
                   </span>
                   <span>
                     {{ statisticCategories[0][1].reduce((acc, curr) => acc.likes_count > curr.likes_count ? acc.likes_count : curr.likes_count) }}
                     лайка(ов)
                   </span>
                 </li>
-                <li>
+                <li style="justify-content: flex-start;
+    padding-left: 58px;">
                   {{ statisticCategories[1][1][0].name }}
-                  <!-- даты -->
-                  <!-- {{ new Date(statisticCategories[1][1][0].created_at).toLocaleString() }}
-                  {{ new Date().toLocaleString() }} -->
-
                   {{ ((new Date().getTime() - new Date(statisticCategories[1][1][0].created_at).getTime()) / (1000 * 60 * 60 * 24)).toFixed(0) }}
                   дней
 
                 </li>
-                <li>{{ statisticCategories[2][1][0].surname }} {{ statisticCategories[2][1][0].name[0]+'.' }} {{ statisticCategories[2][1][0].father_name ? statisticCategories[2][1][0].father_name[0]+'.,' : ',' }} 
+                <li style="justify-content: flex-start;
+    padding-left: 58px;">{{ statisticCategories[2][1][0].surname }} {{ statisticCategories[2][1][0].name[0]+'.' }}
+                  {{ statisticCategories[2][1][0].father_name ? statisticCategories[2][1][0].father_name[0]+'.,' : ',' }}
                   {{ statisticCategories[2][1][0].solutions_count}} проблем(ы)
-<!-- <br>
-<br>
-{{ statisticCategories[2][1]}}
-{{ statisticCategories[2][1].length - 1 }} -->
+
 
                 </li>
-              </ol>
+              </ol> -->
 
             </div>
 
@@ -231,10 +289,31 @@
       await this.$store.dispatch('getStatisticQuantitativeIndicators')
       await this.$store.dispatch('getStatisticCategories')
       await this.$store.dispatch('getStatisticQuarterly')
+
+
+
     },
     methods: {
       clickCard(id_string) {
         document.getElementById(id_string).style.borderRadius = '9px 9px 0px 0px';
+
+        // if (id_string == 'statisticQuarterly1') {
+        // //   // console.log(this.$refs['li_category0']);
+        //   console.log(document.getElementById('second_category_li').clientHeight);
+
+
+        // //   // let thisHeigth = document.getElementById('second_category_li').clientHeight
+        //   this.$nextTick(() => {
+        //     if (document.getElementById('second_category_li').clientHeight != 0) {
+        //     this.$refs['li_category0'][0].style.height =
+        //       `${document.getElementById('second_category_li').clientHeight}px`
+        //      } 
+        //   })
+
+        //   // console.log(thisHeigth);
+        //   // document.getElementById('second_category_li').clientHeight != 0 ? let thisHeigth = document.getElementById('second_category_li').clientHeight : ''
+        //   //  this.$refs['li_category0'][0].style.height = thisHeigth
+        // }
       }
     },
   }
@@ -299,20 +378,88 @@
   ol {
     list-style: none;
     padding: 0;
+    margin-bottom: 0;
+  }
 
-    li {
-      font-family: 'GothamPro';
-      font-size: 14px;
-      line-height: 13px;
-      color: #000000;
-      padding: 27px 45px;
+  li {
+    font-family: 'GothamPro';
+    font-size: 14px;
+    line-height: 13px;
+    color: #000000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #E7E5F1;
+    height: 49px;
+
+
+  }
+
+  tr {
+    font-family: 'GothamPro';
+    font-size: 14px;
+    line-height: 13px;
+    color: #000000;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #E7E5F1;
+    height: 49px;
+  }
+
+
+  li:last-child,
+  tr:last-child {
+    border-bottom: none;
+  }
+
+  .header_li {
+    font-family: 'GothamPro-Medium';
+    font-size: 18px;
+    line-height: 17px;
+    color: #4EAD96;
+    height: 66px;
+  }
+
+  .with_border {
+    border-right: 1px solid #E7E5F1;
+  }
+
+  thead {
+    border-bottom: 1px solid #E7E5F1;
+
+    td {
+      text-align: center;
     }
 
-    li.header_li {
-      font-family: 'GothamPro-Medium';
-      font-size: 18px;
-      line-height: 17px;
-      color: #4EAD96;
+    td.with_border {
+      border-right: 1px solid #E7E5F1;
+    }
+  }
+
+  tr {
+    td:first-child {
+      width: 60%;
+    }
+
+    td:last-child {
+      width: 40%;
+      padding-right: 10px;
+    }
+  }
+
+  tbody {
+    td {
+      min-height: 50px;
+      padding-left: 45px;
+
+      font-family: 'GothamPro';
+      font-size: 14px;
+      line-height: 16px;
+      letter-spacing: 0.15px;
+      color: #000000;
+
+      padding-top: 24px;
+      padding-bottom: 18px;
     }
 
   }

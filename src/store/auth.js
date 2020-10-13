@@ -108,7 +108,7 @@ export default {
     checkIsLeader: async ({commit}) => {
       await axios.get(process.env.VUE_APP_ROOT_URL + '/is-group-leader')
         .then(response => {
-          commit('isLeader', response.data)
+          commit('isLeader', response.data) 
         })
     },
     

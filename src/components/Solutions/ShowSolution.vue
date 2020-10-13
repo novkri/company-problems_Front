@@ -1,7 +1,12 @@
 <template>
-  <div class="row" >
-
-    <div class="modal-body" v-show="_isMounted">
+  <div class="row" style="    position: sticky;
+    top: 0;
+    z-index: 10;
+    
+    background-color: #fff;">
+<!-- {{val}}
+{{solutions}} -->
+    <div class="modal-body">
       <div>
         <div class="subtitle row subt">
           <div class="col-4">
@@ -23,7 +28,6 @@
 
           <ol>
             <li v-for="(solution, idx) in solutions" :key="idx" id="list" class="row">
-
               <div class="list-item col-4">
                 <div class="desc" ref="desc">
                   <div style="width: 90%; cursor: pointer;" :ref="'sol-div'+val.id"

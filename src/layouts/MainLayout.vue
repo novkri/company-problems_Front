@@ -28,7 +28,16 @@
     margin: 0;
     height: 90vh;
   }
+  .content {
+    max-width: 81%;
+    padding-right: 0;
+  }
 
-
+  @media (min-width: 1600px) {
+    .content {
+    max-width: 84%;
+    padding-right: 0;
+  }
+  }
   
 </style>

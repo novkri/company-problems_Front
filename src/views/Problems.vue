@@ -6,40 +6,41 @@
     <div class="container" v-if="_isMounted">
 
       <div id="accordion">
-        <div class="card" id="card" v-for="(problem, idx) in problems" :key="idx">
-          <!-- {{problem.status}} -->
-          <div class="card-header row" :id="'heading'+problem.id" ref="collapsed-header" style="position: relative;">
+        <div class="card" id="card" v-for="(problem, idx) in problems" :key="idx"
+          @click="event => clickOnCard(problem.id, event)">
+
+
+          <div class="card-header row" :id="'heading'+problem.id" ref="collapsed-header">
             <!-- <button class="btn btn-link collapsed btn-block text-left" :id="'button'+problem.id" type="button"
               style="width: 100%;display: flex;" @click="onClickShow(problem)" data-toggle="collapse"
               :data-target="'#collapseOne'+problem.id" aria-expanded="false" :aria-controls="'collapseOne'+problem.id">
  -->
 
-              <div class="name col-4">
-                <button class="btn btn-link collapsed btn-block text-left" type="button" @click="onClickShow(problem)" data-toggle="collapse"
-                :data-target="'#collapseOne'+problem.id" aria-expanded="false"
+            <div class="name col-4">
+              <button class="btn btn-link collapsed" :ref="'button_card'+problem.id" @click="onClickShow(problem)"
+                data-toggle="collapse" :data-target="'#collapseOne'+problem.id" aria-expanded="false"
                 :aria-controls="'collapseOne'+problem.id">
                 <chevron-up-icon size="1.5x" class="custom-class arrow"></chevron-up-icon>
               </button>
 
-                <h5 class="mb-0" style="display: flex; width: 92%;">
-                  <div style="width: inherit;"
-                    :style="[problem.creator_id == currentUid || user.is_admin ? {'cursor': 'pointer'} : {'cursor': 'default'}]"
-                    :ref="'name-div'+problem.id"
-                    @click="event => {onClickInput(problem.id, problem.creator_id, event)}">
-                    {{ problem.name}}
-                  </div>
-                  <input class="form-control" style="display: none;" :id="'problem-name'+problem.id"
-                    :disabled="problem.creator_id != currentUid || !user.is_admin" v-model="problem.name"
-                    :ref="'problem-name' + problem.id"
-                    @keyup.enter="event => {editProblemName(problem.name, problem.id, event)}"
-                    @focus="onFocusInput($event)" @blur="event => {onBlurInput(problem.name, problem.id, event)}" />
-                </h5>
-              </div>
+              <h5 class="mb-0" style="display: flex; width: 92%;">
+                <div style="width: fit-content;max-width: 90%;" class="name_div"
+                  :style="[problem.creator_id == currentUid || user.is_admin ? {'cursor': 'pointer'} : {'cursor': 'default'}]"
+                  :ref="'name-div'+problem.id" @click="event => {onClickInput(problem.id, problem.creator_id, event)}">
+                  {{ problem.name}}
+                </div>
+                <!-- сюда нормальный disbled -->
+                <input class="form-control" style="display: none;" :id="'problem-name'+problem.id"
+                  v-model="problem.name" :ref="'problem-name' + problem.id"
+                  @keyup.enter="event => {editProblemName(problem.name, problem.id, event)}"
+                  @focus="onFocusInput($event)" @blur="event => {onBlurInput(problem.name, problem.id, event)}" />
+              </h5>
+            </div>
 
-              <div class="middle-icons col-7">
-                <div>
-                   <v-popover offset="16" :id="'details'+problem.id">
-                  <file-text-icon size="1.5x" class="custom-class details tooltip-target b3"  @click="event => detailsClick(event, problem.id)">
+            <div class="middle-icons col-7">
+              <div>
+                <v-popover offset="16" :id="'details'+problem.id">
+                  <file-text-icon size="1.5x" class="custom-class details tooltip-target b3">
                   </file-text-icon>
 
                   <template slot="popover">
@@ -48,46 +49,46 @@
                       style="display: flex;justify-content: flex-end; font-size: 28px; font-family: 'GothamPro'; cursor: pointer;">&times;</a>
                   </template>
                 </v-popover>
-                </div>
-                <div style="width: 21px;">
-                  <clock-icon size="1.5x" class="custom-class details" :ref="'urgency'+problem.id"
-                    v-show="problem.urgency === 'Срочная'"
-                    :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
-                    ></clock-icon>
-                </div>
-                <div style="width: 21px;">
-                  <alert-circle-icon size="1.5x" class="custom-class details" :ref="'importance'+problem.id"
-                    v-show="problem.importance === 'Важная'"
-                    :style="[problem.importance == isImportnant ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
-                    ></alert-circle-icon>
-                </div>
-
-                <div>
-                  <div class="like" :class="[problem.is_liked ? 'liked' : '']">
-                    <button class="likeBtn" @click="event => likeProblem(problem.id, event)">
-                      <span>
-                        {{ problem.likes_count }}
-                      </span>
-                      <thumbs-up-icon size="1.5x" class="custom-class"></thumbs-up-icon>
-                    </button>
-                  </div>
-                </div>
-                <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=45 :thickness="3">
-                  <span slot="legend-value" :ref="'legend-value'+problem.id"
-                    @click="event => clickProgress(problem.id, event)">{{problem.progress}}%</span>
-                  <input :ref="'progress-bar'+problem.id" class="progress-input" type="text" style="display: none;"
-                    v-model="problem.progress" @blur="editProgress(problem.id, problem.progress)"
-                    @keyup.enter="editProgress(problem.id, problem.progress)">
-                </vue-ellipse-progress>
+              </div>
+              <div style="width: 21px;">
+                <clock-icon size="1.5x" class="custom-class details" :ref="'urgency'+problem.id"
+                  v-show="problem.urgency === 'Срочная'"
+                  :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"></clock-icon>
+              </div>
+              <div style="width: 21px;">
+                <alert-circle-icon size="1.5x" class="custom-class details" :ref="'importance'+problem.id"
+                  v-show="problem.importance === 'Важная'"
+                  :style="[problem.importance == isImportnant ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]">
+                </alert-circle-icon>
               </div>
 
-              <div class="middle-icons_text col-8">
-                <div >
-                   <span style="color: #828282;">
+              <div>
+                <div class="like" :class="[problem.is_liked ? 'liked' : '']">
+                  <button class="likeBtn" @click="event => likeProblem(problem.id, event)">
+                    <span>
+                      {{ problem.likes_count }}
+                    </span>
+                    <thumbs-up-icon size="1.5x" class="custom-class"></thumbs-up-icon>
+                  </button>
+                </div>
+              </div>
+              <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=45 :thickness="3">
+                <span slot="legend-value" :ref="'legend-value'+problem.id"
+                  @click="event => clickProgress(problem.id, event)">{{problem.progress}}%</span>
+                <input :ref="'progress-bar'+problem.id" class="progress-input" type="text" style="display: none;"
+                  v-model="problem.progress" @blur="editProgress(problem.id, problem.progress)"
+                  @keyup.enter="editProgress(problem.id, problem.progress)">
+              </vue-ellipse-progress>
+            </div>
+
+            <div class="middle-icons_text col-8">
+              <div>
+                <span style="color: #828282;">
                   Подробнее:
                 </span>
                 <v-popover offset="16" :id="'details'+problem.id">
-                  <file-text-icon size="1.5x" class="custom-class details tooltip-target b3"  @click="event => detailsClick(event, problem.id)">
+                  <file-text-icon size="1.5x" class="custom-class details tooltip-target b3"
+                    @click="event => detailsClick(event, problem.id)">
                   </file-text-icon>
 
                   <template slot="popover">
@@ -96,60 +97,60 @@
                       style="display: flex;justify-content: flex-end; font-size: 28px; font-family: 'GothamPro'">&times;</a>
                   </template>
                 </v-popover>
-                </div>
-                <div>
-                  <span :style="[problem.urgency == isUrgent ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]"
-                    @click="event => changeUrgency(problem.id, problem.urgency, event)">
-                    Срочная:
-                  </span>
-                  <clock-icon size="1.3x" class="custom-class details" :ref="'urgency'+problem.id"
-                    :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
-                    @click="event => changeUrgency(problem.id, problem.urgency, event)"></clock-icon>
-                </div>
-                <div>
-                  <span @click="event => changeImportance(problem.id, problem.importance, event)"
-                    :style="[problem.importance == `Важная` ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]">Важная:</span>
-                  <alert-circle-icon size="1.3x" class="custom-class details" :ref="'importance'+problem.id"
-                    :style="[problem.importance == isImportnant ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
-                    @click="event => changeImportance(problem.id, problem.importance, event)"></alert-circle-icon>
-                </div>
-                <div>
-                  <span style="color: #828282;">У меня такая же проблема: </span>
-                  <div class="like" :class="[problem.is_liked ? 'liked' : '']">
-                    <button class="likeBtn" @click="event => likeProblem(problem.id, event)">
-                      <span>
-                        {{ problem.likes_count }}
-                      </span>
-                      <thumbs-up-icon size="1.5x" class="custom-class"></thumbs-up-icon>
-                    </button>
-                  </div>
-                </div>
-                <div>
-                  <span style="color: #828282;">
-                    Прогресс решения:
-                  </span>
-                  <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=35 :thickness="2">
-                    <span :ref="'legend-value'+problem.id" slot="legend-value"
-                      style="padding: 0;font-size: 11px !important;display: flex;"
-                      @click="event => clickProgress(problem.id, event)">{{problem.progress}}%</span>
-                    <input :ref="'progress-bar'+problem.id" class="progress-input" type="text" style="display: none;"
-                      v-model="problem.progress" @blur="editProgress(problem.id, problem.progress)"
-                      @keyup.enter="editProgress(problem.id, problem.progress)">
-                  </vue-ellipse-progress>
+              </div>
+              <div>
+                <span :style="[problem.urgency == isUrgent ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]"
+                  @click="event => changeUrgency(problem.id, problem.urgency, event)">
+                  Срочная:
+                </span>
+                <clock-icon size="1.3x" class="custom-class details" :ref="'urgency'+problem.id"
+                  :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
+                  @click="event => changeUrgency(problem.id, problem.urgency, event)"></clock-icon>
+              </div>
+              <div>
+                <span @click="event => changeImportance(problem.id, problem.importance, event)"
+                  :style="[problem.importance == `Важная` ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]">Важная:</span>
+                <alert-circle-icon size="1.3x" class="custom-class details" :ref="'importance'+problem.id"
+                  :style="[problem.importance == isImportnant ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
+                  @click="event => changeImportance(problem.id, problem.importance, event)"></alert-circle-icon>
+              </div>
+              <div>
+                <span style="color: #828282;">У меня такая же проблема: </span>
+                <div class="like" :class="[problem.is_liked ? 'liked' : '']">
+                  <button class="likeBtn" @click="event => likeProblem(problem.id, event)">
+                    <span>
+                      {{ problem.likes_count }}
+                    </span>
+                    <thumbs-up-icon size="1.5x" class="custom-class"></thumbs-up-icon>
+                  </button>
                 </div>
               </div>
-
-              <div class="icons col-1">
-                <div class="trash-icon">
-                  <trash-icon size="1.3x" class="custom-class" style="margin: auto;"
-                    v-show="problem.creator_id == currentUid || user.is_admin"
-                    @click="event => deleteP(problem.id, problem.name, event)" data-toggle="modal"
-                    data-target="#popupDelete">
-                  </trash-icon>
-                </div>
+              <div>
+                <span style="color: #828282;">
+                  Прогресс решения:
+                </span>
+                <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=35 :thickness="2">
+                  <span :ref="'legend-value'+problem.id" slot="legend-value"
+                    style="padding: 0;font-size: 11px !important;display: flex;"
+                    @click="event => clickProgress(problem.id, event)">{{problem.progress}}%</span>
+                  <input :ref="'progress-bar'+problem.id" class="progress-input" type="text" style="display: none;"
+                    v-model="problem.progress" @blur="editProgress(problem.id, problem.progress)"
+                    @keyup.enter="editProgress(problem.id, problem.progress)">
+                </vue-ellipse-progress>
               </div>
+            </div>
 
-              <!-- </div> -->
+            <div class="icons col-1">
+              <div class="trash-icon">
+                <trash-icon size="1.3x" class="custom-class" style="margin: auto;"
+                  v-show="problem.creator_id == currentUid || user.is_admin"
+                  @click="event => deleteP(problem.id, problem.name, event)" data-toggle="modal"
+                  data-target="#popupDelete">
+                </trash-icon>
+              </div>
+            </div>
+
+            <!-- </div> -->
             <!-- </button> -->
             <!-- <div style="position: absolute;
     top: 33%;
@@ -194,8 +195,13 @@
               <div class="card" style="padding-top: 34px;" v-if="mounted">
                 <div class="row" style="display: flex; flex-direction: row; margin-bottom: 8px;">
                   <div class="accordion col-9" id="tasks">
-                    <div class="card">
-                      <div class="card-header" id="headingTasks" style="width: 100%;">
+                    <div class="card" :ref="'cardSol'+problem.id" style="    max-height: 500px;
+    overflow-y: scroll;
+    padding-bottom: 0;">
+                      <div class="card-header" id="headingTasks" style="width: 100%;width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 10;">
                         <h5 class="mb-0">
                           <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
                             data-target="#collapseTasks" aria-expanded="false" aria-controls="collapseTasks">
@@ -209,7 +215,7 @@
 
                       <div id="collapseTasks" class="collapse show" aria-labelledby="headingTasks" data-parent="#tasks"
                         style="width: 100%;">
-                        <div class="card-body" :val="solutions">
+                        <div class="card-body" :val="solutions" style="padding-bottom: 0;">
                           <PopupShow v-if="openShow" :val="paramsModal" />
                           <Tasks v-if="solutions[0]" :val="solutions[0]" />
                         </div>
@@ -553,7 +559,7 @@
     },
     computed: {
       ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', 'user',
-        'currentUid', 'isLeader'
+        'currentUid', 'isLeader', 'members'
       ]),
       validatedExecutorAndAdmin: function () {
         return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : this
@@ -562,6 +568,31 @@
     },
 
     methods: {
+      change() {
+        console.log('dgfdg');
+      },
+      onClickSol(id) {
+        if (document.getElementById('collapseTasks').classList.contains('show')) {
+          this.$refs['cardSol' + id][0].style.paddingBottom = '18px'
+          this.$refs['cardSol' + id][0].style.overflowY = 'auto'
+        } else {
+          this.$refs['cardSol' + id][0].style.paddingBottom = '0px'
+          this.$refs['cardSol' + id][0].style.overflowY = 'scroll'
+        }
+      },
+
+      clickOnCard(id, e) {
+        // console.log(this.$refs['button_card'+id][0]);
+        console.log(e.target);
+        if (e.target.tagName == 'DIV' && !e.target.classList.contains('name_div') || e.target.tagName == 'BUTTON' || e
+          .target.tagName == 'H5') {
+          this.$refs['button_card' + id][0].click()
+          console.log('d');
+        }
+
+      },
+
+
       onClickPlan(id) {
         document.getElementById('collapsePlan').classList.contains('show') ? this.$refs['cardPlan' + id][0].style
           .height = 'fit-content' : this.$refs['cardPlan' + id][0].style.height = '100%'
@@ -572,16 +603,7 @@
       },
 
 
-      detailsClick(e, id) {
-        console.log(e);
-        // e.stopPropagation()
-        // e.preventDefault()
-        console.log(id);
-        // document.getElementById('heading'+id).classList.remove('collapsed-header')
-        // console.log(document.getElementById('button'+id));
-        // e.stopPropagation()
-        // document.getElementById('details'+id).classList.add('open')
-      },
+
       checkAll() {
         if (!this.all) {
           this.all = true
@@ -612,8 +634,7 @@
         await this.$store.dispatch('problemSolved', id)
       },
 
-      async changeUrgency(id, urgency, e) {
-        e.stopPropagation()
+      async changeUrgency(id, urgency) {
         await this.$store.commit('setError404', '')
         if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid) {
           if (urgency === 'Обычная') {
@@ -633,8 +654,7 @@
         }
       },
 
-      async changeImportance(id, importance, e) {
-        e.stopPropagation()
+      async changeImportance(id, importance) {
         await this.$store.commit('setError404', '')
         if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid) {
 
@@ -655,8 +675,7 @@
         }
       },
 
-      async clickProgress(id, e) {
-        e.stopPropagation()
+      async clickProgress(id) {
         await this.$store.commit('setError404', '')
         if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid) {
           this.currentProgress = this.$refs['progress-bar' + id][0].value
@@ -707,8 +726,7 @@
         this.$store.commit('setError', '')
       },
 
-      deleteP(id, name, e) {
-        e.stopPropagation();
+      deleteP(id, name) {
         this.openShow = false
         this.openDelete = true
         this.paramsModal = {
@@ -720,16 +738,15 @@
         await this.$store.dispatch('deleteProblem', param)
       },
 
-      async likeProblem(id, e) {
-        e.stopPropagation();
+      async likeProblem(id) {
         await this.$store.dispatch('problemLike', id)
       },
 
       async onClickShow(problem) {
         // this.checkedGroups = []
-        // problem.groups.forEach(element => {
+        // problem.groups.length > 0 ? problem.groups.forEach(element => {
         //   this.checkedGroups.push(element.id)
-        // });
+        // }) : this.checkedGroups = []
         // this.checkedGroups.length < this.groups.length ? this.all = false : this.all = true
 
         this.$refs['collapsed-header'].forEach(element => {
@@ -765,7 +782,14 @@
                   element.click()
                 }) : ''
               })
-              this.isLeaderOgUser = this.groups.find(g => g.leader_id == this.currentUid) ? true : false
+
+
+              if (this.members.find(m => m.id == problem.creator_id) && this.isLeader) {
+                this.isLeaderOgUser = true
+                console.log(this.isLeader);
+              } else {
+                this.isLeaderOgUser = false
+              }
             })
             .catch(() => {
               this.$store.dispatch('clearTasks')
@@ -784,8 +808,10 @@
 
 
       async onClickInput(id, creator_id, event) {
+        // event.stopPropagation()
         await this.$store.commit('setError404', '')
         if (creator_id == this.currentUid || this.user.is_admin) {
+          console.log('click');
           event.target.style.display = 'none'
           this.$nextTick(() => {
             this.$refs['problem-name' + id][0].style.display = 'initial'
@@ -823,6 +849,7 @@
       },
       onFocusInput(event) {
         this.currentProblemName = event.target.value
+        console.log('onFocusInput');
       },
 
       async editProblemName(name, id, event) {
@@ -1188,7 +1215,8 @@
       background-color: #fff;
       border-radius: 9px;
       padding: 16px 13px;
-      padding-bottom: 30px;
+      // padding-bottom: 18px;
+      padding-bottom: 0;
 
       .card-header {
         height: fit-content;

@@ -39,6 +39,9 @@ export default {
       return state.problems = state.problems.sort(function (a, b) {
         return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1
       })
+      // return  state.problems.filter(function(item, index){
+      //   return (index < 10);
+      // })
     },
 
     error: state => {
@@ -70,6 +73,7 @@ export default {
     },
     setProblems: (state, payload) => {
       payload ? state.problems = payload : state.problems = []
+      
     },
 
     setThisProblem: (state, payload) => {
@@ -338,6 +342,7 @@ export default {
         status: param.status
       }})
         .then(response => {
+          console.log(response.data);
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
@@ -512,7 +517,9 @@ export default {
         .then(response => {
             commit('setError', '')
             commit('setError404', '')
+            console.log(response.data);
             commit('setProblems', response.data.filter(p => p.status !== "Удалена" && p.status !== "Решена"))
+            // commit('setProblems', response.data)
         })
         .catch(error => {
           if (error.response.status == 401) {

@@ -59,7 +59,7 @@
       },
     },
     computed: {
-      ...mapGetters(['errorU', 'error401',])
+      ...mapGetters(['errorU', 'error401', 'currentUid', 'groups'])
     },
     mounted() {
       this.$store.commit('setError401', '')
@@ -78,6 +78,7 @@
         await this.$store.dispatch('login', formData).then(() => {
           if (!this.errorU) {
             this.$store.dispatch('checkIsLeader').then(() => {
+              this.$store.dispatch('getMembers', this.groups.find(g => g.leader_id == this.currentUid).id)
             })
             this.$store.dispatch('getMyProblems', {
               urgency: '',

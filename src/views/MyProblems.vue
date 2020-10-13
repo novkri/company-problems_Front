@@ -44,14 +44,13 @@
               <div style="width: 21px;">
                 <clock-icon size="1.5x" class="custom-class details" :ref="'urgency'+problem.id"
                   v-show="problem.urgency === 'Срочная'"
-                  :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
-                  ></clock-icon>
+                  :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"></clock-icon>
               </div>
               <div style="width: 21px;">
                 <alert-circle-icon size="1.5x" class="custom-class details" :ref="'importance'+problem.id"
                   v-show="problem.importance === 'Важная'"
-                  :style="[problem.importance == isImportnant ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
-                  ></alert-circle-icon>
+                  :style="[problem.importance == isImportnant ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]">
+                </alert-circle-icon>
               </div>
 
               <div>
@@ -145,11 +144,17 @@
               <div class="card" style="padding-top: 34px;" v-if="mounted">
                 <div class="row" style="display: flex; flex-direction: row; margin-bottom: 8px;">
                   <div class="accordion col-9" id="tasks">
-                    <div class="card">
-                      <div class="card-header" id="headingTasks" style="width: 100%;">
+                    <div class="card" :ref="'cardSol'+problem.id" style="    max-height: 500px;
+    overflow-y: scroll;
+    padding-bottom: 0;">
+                      <div class="card-header" id="headingTasks" style="width: 100%;width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 10;">
                         <h5 class="mb-0">
                           <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                            data-target="#collapseTasks" aria-expanded="false" aria-controls="collapseTasks">
+                            @click="onClickSol(problem.id)" data-target="#collapseTasks" aria-expanded="false"
+                            aria-controls="collapseTasks">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                             <p>
                               Решение
@@ -160,7 +165,7 @@
 
                       <div id="collapseTasks" class="collapse show" aria-labelledby="headingTasks" data-parent="#tasks"
                         style="width: 100%;">
-                        <div class="card-body" :val="solutions">
+                        <div class="card-body" :val="solutions" style="padding-bottom: 0;">
                           <PopupShow v-if="openShow" :val="paramsModal" />
                           <Tasks v-if="solutions[0]" :val="solutions[0]" />
                         </div>
@@ -170,7 +175,7 @@
 
                   <!-- План -->
                   <div class="accordion col-3" id="plan">
-                    <div class="card" :ref="'cardPlan'+problem.id" style="height: 100%;">
+                    <div class="card" :ref="'cardPlan'+problem.id" style="height: 100%;padding-bottom: 18px;">
                       <div class="card-header" id="headingPlan" style="width: 100%;">
                         <h5 class="mb-0">
                           <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
@@ -485,7 +490,7 @@
     },
     computed: {
       ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', 'user',
-        'currentUid', 'user', 'isLeader'
+        'currentUid', 'user', 'isLeader', 'members'
       ]),
       validatedExecutorAndAdmin: function () {
         return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : this
@@ -494,6 +499,16 @@
     },
 
     methods: {
+      onClickSol(id) {
+        if (document.getElementById('collapseTasks').classList.contains('show')) {
+          this.$refs['cardSol' + id][0].style.paddingBottom = '18px'
+          this.$refs['cardSol' + id][0].style.overflowY = 'auto'
+        } else {
+          this.$refs['cardSol' + id][0].style.paddingBottom = '0px'
+          this.$refs['cardSol' + id][0].style.overflowY = 'scroll'
+        }
+      },
+      
       onClickPlan(id) {
         document.getElementById('collapsePlan').classList.contains('show') ? this.$refs['cardPlan' + id][0].style
           .height = 'fit-content' : this.$refs['cardPlan' + id][0].style.height = '100%'
@@ -636,9 +651,9 @@
 
       async onClickShow(problem) {
         this.checkedGroups = []
-        problem.groups.forEach(element => {
+        problem.groups.length > 0 ? problem.groups.forEach(element => {
           this.checkedGroups.push(element.id)
-        });
+        }) : this.checkedGroups = []
         this.checkedGroups.length < this.groups.length ? this.all = false : this.all = true
 
 
@@ -675,8 +690,12 @@
                 }) : ''
               })
 
-              // this.isLeaderOgUser = this.groups.find(g => g.id == problem.creator_id).leader_id == this.currentUid
-              this.isLeaderOgUser = this.groups.find(g => g.leader_id == this.currentUid) ? true : false
+              if (this.members.find(m => m.id == problem.creator_id) && this.isLeader) {
+                this.isLeaderOgUser = true
+                console.log(this.isLeader);
+              } else {
+                this.isLeaderOgUser = false
+              }
             })
             .catch(() => {
               this.$store.dispatch('clearTasks')
@@ -1099,7 +1118,8 @@
       background-color: #fff;
       border-radius: 9px;
       padding: 16px 13px;
-      padding-bottom: 30px;
+      // padding-bottom: 18px;
+      padding-bottom: 0;
 
       .card-header {
         height: fit-content;
