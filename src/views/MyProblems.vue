@@ -35,8 +35,7 @@
 
                   <template slot="popover">
                     <TooltipProblem char="=" :val="problem" />
-                    <a v-close-popover
-                      style="display: flex;justify-content: flex-end; font-size: 28px; font-family: 'GothamPro'; cursor: pointer;">&times;</a>
+                    <a v-close-popover class="close-popover">&times;</a>
                   </template>
                 </v-popover>
               </div>
@@ -82,8 +81,7 @@
 
                   <template slot="popover">
                     <TooltipProblem char="=" :val="problem" />
-                    <a v-close-popover
-                      style="display: flex;justify-content: flex-end; font-size: 28px; font-family: 'GothamPro'; cursor: pointer;">&times;</a>
+                    <a v-close-popover class="close-popover">&times;</a>
                   </template>
                 </v-popover>
               </div>
@@ -143,13 +141,8 @@
               <div class="card" style="padding-top: 34px;" v-if="mounted">
                 <div class="row" style="display: flex; flex-direction: row; margin-bottom: 8px;">
                   <div class="accordion col-9" id="tasks">
-                    <div class="card" :ref="'cardSol'+problem.id" style="max-height: 500px;
-    overflow-y: scroll;
-    padding-bottom: 0;">
-                      <div class="card-header" id="headingTasks" style="width: 100%;width: 100%;
-    position: sticky;
-    top: 0;
-    z-index: 10;">
+                    <div class="card" :ref="'cardSol'+problem.id">
+                      <div class="card-header" id="headingTasks">
                         <h5 class="mb-0">
                           <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
                             @click="onClickSol(problem.id)" data-target="#collapseTasks" aria-expanded="false"
@@ -493,7 +486,7 @@
     methods: {
       onClickSol(id) {
         if (document.getElementById('collapseTasks').classList.contains('show')) {
-          this.$refs['cardSol' + id][0].style.paddingBottom = '18px'
+          this.$refs['cardSol' + id][0].style.paddingBottom = '13px'
           this.$refs['cardSol' + id][0].style.overflowY = 'auto'
         } else {
           this.$refs['cardSol' + id][0].style.paddingBottom = '0px'
@@ -1457,6 +1450,21 @@
     }
   }
 
+  #tasks {
+    .card {
+      max-height: 500px;
+      overflow-y: scroll;
+      padding-bottom: 0;
+    }
+
+    .card-header {
+      width: 100%;
+      width: 100%;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+  }
 
   .list-group-item {
     border-radius: 7px;
@@ -1558,6 +1566,13 @@
     cursor: pointer;
   }
 
+  .close-popover {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 28px;
+    font-family: 'GothamPro';
+    cursor: pointer;
+  }
 
   @media (max-width: 1300px) {
     * {

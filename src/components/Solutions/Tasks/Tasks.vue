@@ -2,7 +2,7 @@
   <div ref="mainTask">
     <div class="header row" style="position: relative;">
       <div class="col-4">
-        <span style="font-family: 'GothamPro-Medium'; color: #4f4f4f;">Задачи:</span>
+        <span>Задачи:</span>
       </div>
       <div class="subt col-3" style="justify-content: center;display: flex;"><span>Статус выполнения</span></div>
       <div class="subt col-2" style="display: flex;"><span style="text-align: center;">Срок
@@ -81,7 +81,7 @@
 
                 <section
                   v-show="isOpen && user.is_admin || isOpen && task.executor_id == currentUid || isOpen && isLeader"
-                  class="absolute border-l border-r min-w-full" :ref="'slot-scopeExec'+task.id" style="height: 146px;">
+                  class="absolute border-l border-r min-w-full" :ref="'slot-scopeExec'+task.id" style="height: 188px;">
                   <div class="px-px">
                     <ss-select-search-input class="w-full px-3 py-2 search" autofocus="false"
                       placeholder="Впишите фамилию">
@@ -110,18 +110,9 @@
 
 
 
-    <div style="
-    position: sticky;
-    bottom: 0;
-    background-color: #fff;
-    height: 100%;padding-bottom: 5px;
-    " v-if="val.executor_id == currentUid || user.is_admin || isLeader">
-      <div style="    cursor: pointer;
-    width: fit-content;
-    min-height: 70px; cursor: pointer;    display: flex;
-    align-items: center;" v-if="addNotClicked" @click.prevent="displayInput">
-        <span style="margin-left: 16px; cursor: pointer;color: #92D2C3;font-family: 'GothamPro-Medium';font-size: 14px;
-          line-height: 24px;letter-spacing: 0.15px;">+ Добавить задачу</span>
+    <div class="new-task_container" v-if="val.executor_id == currentUid || user.is_admin || isLeader">
+      <div class="before-clicked" v-if="addNotClicked" @click.prevent="displayInput">
+        <span>+ Добавить задачу</span>
       </div>
 
       <div v-else class="inputAdd" style="padding: 0 14px;">
@@ -595,8 +586,8 @@
     padding-left: 10px;
 
     section {
-      right: -19% !important;
-      top: 102% !important;
+      right: -68% !important;
+      top: 102%;
     }
 
     #ss-select {
@@ -777,14 +768,22 @@
     section {
       top: 104%;
     }
-
+    .selectResponsible {
+      section {
+        top: -487%;
+      }
+    }
   }
 
   li:last-child {
     section {
-      top: -56%;
+      top: -634%;
     }
-
+    .selectResponsible {
+      section {
+      top: -643%;
+    }
+    }
   }
 
   #ss-select {
@@ -963,8 +962,41 @@
     color: #4F4F4F;
   }
 
+  .mainTask {
+    .col-4 {
+      span {
+        font-family: 'GothamPro-Medium';
+        color: #4f4f4f;
+      }
+    }
+  }
 
+  .new-task_container {
+    position: sticky;
+    bottom: 0;
+    background-color: #fff;
+    height: 100%;
+    padding-bottom: 5px;
+  }
 
+  .before-clicked {
+    cursor: pointer;
+    width: fit-content;
+    min-height: 70px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+
+    span {
+      margin-left: 16px;
+      cursor: pointer;
+      color: #92D2C3;
+      font-family: 'GothamPro-Medium';
+      font-size: 14px;
+      line-height: 24px;
+      letter-spacing: 0.15px;
+    }
+  }
 
   @media (max-width: 1300px) {
     * {

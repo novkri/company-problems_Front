@@ -1,9 +1,5 @@
 <template>
-  <div class="row" style="position: sticky;
-    top: 0;
-    z-index: 10;
-    background-color: #fff;">
-
+  <div class="row container-row">
     <div class="modal-body">
       <div>
         <div class="subtitle row subt">
@@ -32,8 +28,7 @@
                     'margin-right': '-43px'} ]">
                     {{solution.name ? solution.name : "Введите решение..."}}</div>
                   <input v-show="editable" class="form-control" :id="'textarea'+val.id" v-model="solution.name"
-                     :ref="'textarea' + val.id"
-                    @keyup.enter="event => {editSolClick(solution.name, solution.id, event)}"
+                    :ref="'textarea' + val.id" @keyup.enter="event => {editSolClick(solution.name, solution.id, event)}"
                     @focus="event => onFocusInput(event, val.id)"
                     @blur="event => {onBlurInput(solution.name, solution.id, event)}" />
                   <div class="hidden" :ref="'hidden'+val.id">
@@ -62,7 +57,8 @@
                       <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                     </ss-select-toggle>
 
-                    <section v-show="isOpen && user.is_admin || isOpen && solution.executor_id == currentUid" class="absolute border-l border-r min-w-full" style="height: auto;left: 1%;">
+                    <section v-show="isOpen && user.is_admin || isOpen && solution.executor_id == currentUid"
+                      class="absolute border-l border-r min-w-full" style="height: auto;left: 1%;">
                       <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index"
                         :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
@@ -90,7 +86,8 @@
                       {{ $get(selectedOption, 'id') || `${allUsersReduced.find(u => u.id == solution.executor_id) ? allUsersReduced.find(u => u.id == solution.executor_id).surname + ' ' + allUsersReduced.find(u => u.id == solution.executor_id).name + allUsersReduced.find(u => u.id == solution.executor_id).father_name : 'Выбрать'}`}}
                     </ss-select-toggle>
 
-                    <section v-show="isOpen && user.is_admin || isOpen && isLeader" class="absolute border-l border-r min-w-full">
+                    <section v-show="isOpen && user.is_admin || isOpen && isLeader"
+                      class="absolute border-l border-r min-w-full">
                       <div class="px-px">
                         <ss-select-search-input class="w-full px-3 py-2 search" placeholder="Впишите фамилию">
                         </ss-select-search-input>
@@ -201,31 +198,33 @@
       SsSelectSearchInput
     },
     computed: {
-      ...mapGetters(['solutions', 'error', 'error404', 'allUsersReduced', 'currentSolution', 'tasks', 'currentUid', 'user', 'isLeader']),
+      ...mapGetters(['solutions', 'error', 'error404', 'allUsersReduced', 'currentSolution', 'tasks', 'currentUid',
+        'user', 'isLeader'
+      ]),
     },
     methods: {
       onClickExecutor(sol) {
-        this.currentExecutorSol = sol     
+        this.currentExecutorSol = sol
       },
 
       async selectExecutor(id, uid) {
         this.$store.commit('setError404', '')
         if (this.isLeader || this.user.is_admin) {
-        await this.$store.dispatch('changeExecutor', {
-          id,
-          uid
-        }).catch(() => {
+          await this.$store.dispatch('changeExecutor', {
+            id,
+            uid
+          }).catch(() => {
             this.$store.commit('editExecutor', {
               id,
               executor_id: this.currentExecutorSol
             })
-            })
+          })
         } else {
           this.$store.commit('setError404', 'У вас недостаточно прав')
           this.$store.commit('editExecutor', {
-          id,
-          executor_id: this.currentExecutorSol
-        })   
+            id,
+            executor_id: this.currentExecutorSol
+          })
         }
       },
 
@@ -245,7 +244,7 @@
               status: this.currentSolStatus
             })
           })
-          } else {
+        } else {
           this.$store.commit('setError404', 'У вас недостаточно прав')
           this.$store.commit('editStatus', {
             status: this.currentSolStatus,
@@ -262,16 +261,16 @@
       async changeDeadline(deadline, id) {
         await this.$store.commit('setError404', '')
         if (this.solutions[0].executor_id == this.currentUid || this.user.is_admin) {
-        await this.$store.dispatch('changeDeadline', {
-          deadline,
-          id
-        }).catch(() => {
-          this.$store.commit('editDeadline', {
-            deadline: this.currentDate,
+          await this.$store.dispatch('changeDeadline', {
+            deadline,
             id
+          }).catch(() => {
+            this.$store.commit('editDeadline', {
+              deadline: this.currentDate,
+              id
+            })
           })
-        })
-        } 
+        }
       },
 
       async removeFromWork(obj) {
@@ -288,7 +287,7 @@
       },
 
       onClickInput(id, executor_id) {
-        if (executor_id == this.currentUid  || this.user.is_admin || this.isLeader) {
+        if (executor_id == this.currentUid || this.user.is_admin || this.isLeader) {
           this.editable = true
 
           event.target.style.display = 'none'
@@ -935,7 +934,12 @@
     outline: none;
   }
 
-
+  .container-row {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #fff;
+  }
 
 
   .modal-dialog {

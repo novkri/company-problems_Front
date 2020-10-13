@@ -20,9 +20,9 @@
             <div class="container-list">
               <ol style="width: 80%;">
                 <li class="header_li with_border">Категория</li>
-                <li class="with_border"
-                  :style="[title == '1.1. Решено' || title == '1.2. Не решено' ? {'padding-left': '58px'} : {}]" style="justify-content: flex-start;
-    padding-left: 45px;" v-for="(item, title) in statisticQuantitativeIndicators" :key="title">{{title}}
+                <li class="with_border li-category_titles"
+                  :style="[title == '1.1. Решено' || title == '1.2. Не решено' ? {'padding-left': '58px'} : {}]"
+                  v-for="(item, title) in statisticQuantitativeIndicators" :key="title">{{title}}
                 </li>
               </ol>
               <ol style="width: 20%;">
@@ -65,16 +65,13 @@
 
               <ol style="width: 40%;">
                 <li class="header_li with_border">Категория\Квартал</li>
-                <li class="with_border" style="justify-content: flex-start;
-    padding-left: 45px;">Кол-во выявленных проблем (квартал/всего)</li>
-                <li class="with_border" style="justify-content: flex-start;
-    padding-left: 45px;">Кол-во проблем, планируемых к решению (квартал)</li>
-                <li class="with_border" style="justify-content: flex-start;
-    padding-left: 45px;">Кол-во решенных проблем (квартал/всего)</li>
+                <li class="with_border li-quartals_title">Кол-во выявленных проблем (квартал/всего)</li>
+                <li class="with_border li-quartals_title">Кол-во проблем, планируемых к решению (квартал)</li>
+                <li class="with_border li-quartals_title">Кол-во решенных проблем (квартал/всего)</li>
               </ol>
 
               <ol style="width: 15%;">
-                <li class="header_li with_border" style="padding: 0 35px;text-align: center;">
+                <li class="header_li with_border quartal-header">
                   {{Object.values(statisticQuarterly1)[0]}}
                 </li>
                 <li class="with_border">
@@ -91,7 +88,7 @@
               </ol>
 
               <ol style="width: 15%;">
-                <li class="header_li with_border" style="padding: 0 35px;text-align: center;">
+                <li class="header_li with_border quartal-header">
                   {{Object.values(statisticQuarterly2)[0]}}
                 </li>
                 <li class="with_border">
@@ -108,7 +105,7 @@
               </ol>
 
               <ol style="width: 15%;">
-                <li class="header_li with_border" style="padding: 0 35px;text-align: center;">
+                <li class="header_li with_border quartal-header">
                   {{Object.values(statisticQuarterly3)[0]}}
                 </li>
                 <li class="with_border">
@@ -125,7 +122,7 @@
               </ol>
 
               <ol style="width: 15%;">
-                <li class="header_li" style="padding: 0 35px;text-align: center;">
+                <li class="header_li quartal-header">
                   {{Object.values(statisticQuarterly4)[0]}}
                 </li>
                 <li>
@@ -400,6 +397,20 @@
       padding-top: 24px;
       padding-bottom: 18px;
     }
+  }
 
+  .li-category_titles {
+    justify-content: flex-start;
+    padding-left: 45px;
+  }
+
+  .li-quartals_title {
+    justify-content: flex-start;
+    padding-left: 45px;
+  }
+
+  .quartal-header {
+    padding: 0 35px;
+    text-align: center;
   }
 </style>

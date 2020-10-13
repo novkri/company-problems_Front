@@ -71,6 +71,7 @@
     },
     methods: {
       async login() {
+        this.$store.commit('setError401', '')
         const formData = {
           email: this.email,
           password: this.password,

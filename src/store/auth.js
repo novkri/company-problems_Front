@@ -105,44 +105,51 @@ export default {
           commit('setErrorUReg', error.response.data.errors)
         })
     },
-    checkIsLeader: async ({commit}) => {
+    checkIsLeader: async ({
+      commit
+    }) => {
       await axios.get(process.env.VUE_APP_ROOT_URL + '/is-group-leader')
         .then(response => {
-          commit('isLeader', response.data) 
+          commit('isLeader', response.data)
         })
     },
-    
+
     login: async ({
       commit
     }, user) => {
       commit('auth_request')
-      await axios.post(process.env.VUE_APP_ROOT_URL + '/login', user)
-        .then(resp => {
-          const token = resp.data.access_token
-          const user = resp.data.user
-          commit('addUser', user)
-          
-          localStorage.setItem('token', token)
-          localStorage.setItem('currentUid', resp.data.user.id)
-          localStorage.setItem('user', JSON.stringify(user))
-          axios.defaults.headers.common['Authorization'] = token
+      return new Promise((resolve, reject) => {
+        axios.post(process.env.VUE_APP_ROOT_URL + '/login', user)
+          .then(resp => {
+            const token = resp.data.access_token
+            const user = resp.data.user
+            commit('addUser', user)
 
-          commit('auth_success', token)
-          commit('setErrorU', '')
-          commit('setError401', '')
-        })
-        .catch(err => {
-          if (err.response.status == 401) {
-            commit('setError401', err.response.data.errors)
-          } else {
+            localStorage.setItem('token', token)
+            localStorage.setItem('currentUid', resp.data.user.id)
+            localStorage.setItem('user', JSON.stringify(user))
+            axios.defaults.headers.common['Authorization'] = token
+
+            commit('auth_success', token)
             commit('setErrorU', '')
-          commit('setErrorU', err.response.data.errors)
-          }
-          
-          commit('auth_error')
-          localStorage.removeItem('token')
-          localStorage.removeItem('user')
-        })
+            commit('setError401', '')
+            resolve(resp.data)
+          })
+          .catch(err => {
+            if (err.response.status == 401) {
+              commit('setError401', err.response.data.errors)
+              reject(err.response.data.errors)
+            } else {
+              commit('setErrorU', '')
+              commit('setErrorU', err.response.data.errors)
+              reject(err.response.data.errors)
+            }
+
+            commit('auth_error')
+            localStorage.removeItem('token')
+            localStorage.removeItem('user')
+          })
+      })
     },
     logout({
       commit
