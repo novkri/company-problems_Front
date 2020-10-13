@@ -20,20 +20,20 @@
         </a>
 
 <!-- || user.is_admin  -->
-        <a v-show="isLeader || isLeader && user.is_admin ">
+        <a v-show="isLeader || isLeader && user.is_admin || user.is_admin">
           <router-link to="/group-problems" exact>
             <eye-icon size="1.5x" class="custom-class"></eye-icon>На рассмотрении
             <span class="amount"
               v-show="amountOfProblemsForConfirmation != 0">{{amountOfProblemsForConfirmation ? amountOfProblemsForExecution > 9999 ? '9999+' : amountOfProblemsForConfirmation : ''}}</span>
           </router-link>
         </a>
-        <a v-show="user.is_admin">
+        <!-- <a v-show="user.is_admin">
           <router-link to="/problems-of-all-groups" exact>
             <eye-icon size="1.5x" class="custom-class"></eye-icon>На рассмотрении
             <span class="amount"
               v-show="amountOfProblemsForConfirmationAdmin != 0">{{amountOfProblemsForConfirmationAdmin ? amountOfProblemsForConfirmationAdmin > 9999 ? '9999+' : amountOfProblemsForConfirmationAdmin : ''}}</span>
           </router-link>
-        </a>
+        </a> -->
 
 
         <a>
