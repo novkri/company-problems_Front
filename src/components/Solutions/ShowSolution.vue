@@ -497,6 +497,8 @@
     padding: 0;
     margin-right: 20px;
     margin-left: 20px;
+    max-width: -webkit-fill-available;
+    max-width: -moz-available;
   }
 
   ol {

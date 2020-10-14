@@ -5,7 +5,7 @@
           alt="PSS Software">
       </router-link>
     </div>
-    <div v-tooltip="currentGroupName" class="group_selected"
+    <div v-tooltip="currentGroupName.length > 30 ? currentGroupName : ''" class="group_selected"
       v-if="$route.path.split('-').includes('problems') || $route.path.split('-').includes('/problems')">
       Список проблем: {{currentGroupName}} <p></p>
     </div>
@@ -578,6 +578,7 @@
   .btnMain:hover,
   .btn-secondary:hover {
     background-color: #76DFC7 !important;
+    color: #fff !important;
   }
 
 

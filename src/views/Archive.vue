@@ -144,7 +144,7 @@
                     <div class="card" :ref="'cardSol'+problem.id">
                       <div class="card-header" id="headingTasks">
                         <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" id="collapseTasks_btn"
                             @click="onClickSol(problem.id)" data-target="#collapseTasks" aria-expanded="false"
                             aria-controls="collapseTasks">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
@@ -228,7 +228,7 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Команда</label>
-                            <textarea rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_team'+problem.id"
+                            <textarea rows="6" :disabled="isResponsibleAndAdmin" :ref="'textarea_team'+problem.id"
                               v-model="solutions[0].team"
                               @keydown.enter.prevent.exact="event => {editTeam(solutions[0].id, solutions[0].team, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
@@ -307,18 +307,18 @@
                           <div class="check-inputs">
                             <div class="custom-control custom-checkbox">
                               <input type="checkbox" class="custom-control-input" id="groupCheckAll"
-                                @click="checkAll(problem)" v-model="all" :disabled="validatedExecutorAndAdmin">
+                                @click="checkAll(problem)" v-model="all" :disabled="isCreatorLeaderOrAdmin">
                               <label class="custom-control-label" for="groupCheckAll">Все</label>
                             </div>
 
                             <div class="custom-control custom-checkbox" v-for="(group, idx) in groups" :key="idx">
                               <input type="checkbox" class="custom-control-input" :id="'groupCheck'+group.id"
-                                :value="group.id" v-model="checkedGroups">
+                                :value="group.id" v-model="checkedGroups" :disabled="isCreatorLeaderOrAdmin">
                               <label class="custom-control-label" :for="'groupCheck'+group.id">{{group.name}}</label>
                             </div>
                           </div>
 
-                          <button class="btn btnMain btn-to-groups"
+                          <button class="btn btnMain btn-to-groups" v-show="!isCreatorLeaderOrAdmin"
                             @click="sendToGroup(problem.id, checkedGroups)">Направить</button>
                         </div>
                       </div>
@@ -443,10 +443,13 @@
       isCreatorOrAdmin: function () {
         return this.currentProblemCreator == this.currentUid ? false : this.user.is_admin ? false : true
       },
-      // validatedExecutorAndAdminAndLeader: function () {
-      //   return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : this
-      //     .isLeaderOgUser ? false : true
-      // },
+      isCreatorLeaderOrAdmin: function () {
+        return this.currentProblemCreator == this.currentUid ? false : this.user.is_admin ? false : this
+          .isLeaderOgUser ? false : true
+      },
+      isResponsibleAndAdmin: function () {
+        return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : true
+      },
     },
 
     methods: {
@@ -596,6 +599,8 @@
         }) : this.checkedGroups = []
         this.checkedGroups.length < this.groups.length ? this.all = false : this.all = true
 
+this.currentProblemCreator = problem.creator_id
+
         this.$refs['collapsed-header'].forEach(element => {
           element.classList.contains('collapsed-header') && element.id !== 'heading' + problem.id ? element
             .classList.remove('collapsed-header') : ''
@@ -618,6 +623,8 @@
               this.mounted = true
             })
             .then(() => {
+            document.getElementById('collapseTasks').classList.contains('show') ? '' : document.getElementById('collapseTasks_btn').click()
+
               this.$refs['collapsed-results'].forEach(element => {
                 element.classList.contains('show') ? this.$refs['collapseResultsBtn'].forEach(element => {
                   element.click()
@@ -771,7 +778,7 @@
       async editTeam(id, team, event) {
         event.target.blur()
         await this.$store.commit('setError404', '')
-        if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
+        if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid) {
           await this.$store.dispatch('editTeam', {
               team,
               id

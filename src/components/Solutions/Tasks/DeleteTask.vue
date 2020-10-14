@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-content">
+  <div class="modal-content" style="z-index: 100;">
     <div class="modal-header">
       <h5 class="modal-title">Вы точно хотите удалить задачу?</h5>
       <button type="button" class="close" @click="closeDeleteTask" data-dismiss="modal" data-target="#popupDeleteTask" > 

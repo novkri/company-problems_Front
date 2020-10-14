@@ -11,14 +11,16 @@
           </div>
           <div class="modal-body">
             <div style="width: 100%;">
+
+              <div class="error" style="margin-bottom: 5px;">* - Это поле обязательно для заполнения.</div>
+
               <form @submit.prevent="addProblem()" class="form-group">
                 <div class="form-group">
-                  <label for="new-problem-title">Название *</label>
+                  <label for="new-problem-title">Название<span class="error">*</span></label>
                   <input type="text" ref="input" v-model="formData.name" class="form-control" id="new-problem-title"
                     placeholder="Название проблемы..."
                     :class="{ 'form-control--error': $v.formData.name.$invalid, 'form-control--valid': formData.name && !$v.formData.name.$invalid}">
                   <div class="error" v-if="error.name">{{error.name[0]}}</div>
-                  <div class="error" v-if="!formData.name">Это поле обязательно для заполнения.</div>
                 </div>
                 <div class="form-group">
                   <label for="description">Описание</label>
@@ -273,6 +275,11 @@
     margin: 78px auto 0;
   }
 
+  span.error {
+    margin-left: 5px;
+    font-size: 14px !important;
+  }
+  
   #description {
     padding-right: 0;
   }

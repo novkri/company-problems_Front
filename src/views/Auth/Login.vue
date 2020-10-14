@@ -59,7 +59,7 @@
       },
     },
     computed: {
-      ...mapGetters(['errorU', 'error401', 'currentUid', 'groups'])
+      ...mapGetters(['errorU', 'error401', 'currentUid', 'groups', 'isLeader', 'user'])
     },
     mounted() {
       this.$store.commit('setError401', '')
@@ -78,9 +78,20 @@
         }
         await this.$store.dispatch('login', formData).then(() => {
           if (!this.errorU) {
-            this.$store.dispatch('checkIsLeader').then(() => {
-              this.$store.dispatch('getMembers', this.groups.find(g => g.leader_id == this.currentUid).id)
+            this.$store.dispatch('countAmountOfProblemsForExecution', {
+              urgency: '',
+              importance: '',
+              deadline: '',
+              status: ''
             })
+            this.isLeader || this.user.is_admin ? this.$store.dispatch('countAmountOfProblemsForConfirmation', {
+              urgency: '',
+              importance: '',
+              deadline: '',
+              status: ''
+            }) : ''
+
+
             this.$store.dispatch('getMyProblems', {
               urgency: '',
               importance: '',
@@ -88,6 +99,14 @@
               status: ''
             })
             this.$router.push('/my-problems')
+
+
+
+            this.$store.dispatch('checkIsLeader').then(() => {
+              this.$store.dispatch('getMembers', this.groups.find(g => g.leader_id == this.currentUid).id)
+            })
+
+
           }
         })
       },
@@ -189,6 +208,7 @@
   .form-group {
     margin: 0 0 15px 0;
   }
+
   .form-control {
     border-radius: 12px;
   }
@@ -197,6 +217,7 @@
   .form-control:focus {
     background-color: #FFF;
   }
+
   .form-control--valid {
     border: transparent;
     border-radius: 12px;

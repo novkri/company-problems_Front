@@ -17,8 +17,10 @@
         <li id="list" v-for="(task, idx) in tasks" :key="idx">
           <div class="task-title col-4"
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">
-            <div @click="onClickInput(task.id, val.executor_id)" v-show="!editable">{{task.description}}</div>
-            <input v-show="editable" class="form-control" v-model="task.description" :ref="'textarea_task' + task.id"
+            <div style="width: 100%;" @click="onClickInput(task.id, val.executor_id)" :ref="'desc_div'+task.id">
+              {{task.description}}</div>
+            <input style="display:none;" class="form-control" v-model="task.description"
+              :ref="'textarea_task' + task.id"
               @keyup.enter.prevent="event => {editTask(task.description, task.id, event)}" @focus="onFocusInput($event)"
               @blur="event => {onBlurInput(task.description, task.id, event)}" />
             <div class="hidden">
@@ -127,7 +129,7 @@
             </div>
 
             <div class="selectResponsible" style="background-color: #fff;">
-              <ss-select v-model="formInput.executor" :options="allUsersReduced" track-by="name" search-by="name"
+              <ss-select v-model="formInput.executor" :options="allUsersReduced" track-by="name" search-by="surname"
                 disable-by="disabled" id="ss-select" style="width: fit-content; position: relative;">
                 <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                   style="cursor: pointer; width: 100%;">
@@ -141,7 +143,11 @@
                   </ss-select-toggle>
 
                   <section v-show="isOpen" class="absolute border-l border-r min-w-full"
-                    style="top: -297%;; right: -25%; width: fit-content;">
+                    style="top: -297%;; right: -25%;width: 249px;">
+                    <div class="px-px">
+                      <ss-select-search-input class="w-full px-3 py-2 search" placeholder="Впишите фамилию">
+                      </ss-select-search-input>
+                    </div>
                     <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id" :index="index"
                       :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
                                 pointerIndex == index ? 'bg-light text-dark' : '',
@@ -307,7 +313,7 @@
       },
       async changeDeadlineTask(deadline, id, executor_id) {
         await this.$store.commit('setError404', '')
-        if (executor_id == this.currentUid || this.user.is_admin) {
+        if (executor_id == this.currentUid || this.user.is_admin || this.isLeader) {
           await this.$store.dispatch('changeDeadlineTask', {
             deadline,
             id
@@ -364,14 +370,20 @@
       onClickInput(id, executor_id) {
         if (executor_id == this.currentUid || this.user.is_admin || this.isLeader) {
           this.editable = true
+
           this.$nextTick(() => {
+            this.$refs['desc_div' + id][0].style.display = 'none'
+            this.$refs['textarea_task' + id][0].style.display = 'block'
             this.$refs['textarea_task' + id][0].focus()
           })
         } else {
           event.preventDefault()
           this.editable = false
+
           this.$nextTick(() => {
+            this.$refs['desc_div' + id][0].style.display = 'block'
             this.$refs['textarea_task' + id][0].blur()
+            this.$refs['textarea_task' + id][0].style.display = 'none'
           })
         }
 
@@ -379,6 +391,8 @@
 
       async onBlurInput(name, id, event) {
         this.editable = false
+        this.$refs['desc_div' + id][0].style.display = 'block'
+        this.$refs['textarea_task' + id][0].style.display = 'none'
         event.path[0].nextElementSibling.classList.remove('flex')
 
         if (name !== this.currentTaskName) {
@@ -579,14 +593,18 @@
 
   #list .selectResponsible:hover~#close {
     display: none !important;
+
   }
+  #list #ss-select:hover {section {
+    right: -25% !important;
+  }}
 
   .selectResponsible {
     display: flex;
     padding-left: 10px;
 
     section {
-      right: -68% !important;
+      right: -69% !important;
       top: 102%;
     }
 
@@ -614,6 +632,7 @@
         min-width: max-content;
         padding-right: 10px;
       }
+
     }
 
     select {
@@ -768,6 +787,7 @@
     section {
       top: 104%;
     }
+
     .selectResponsible {
       section {
         top: -634%;
@@ -779,10 +799,11 @@
     section {
       top: -447%;
     }
+
     .selectResponsible {
       section {
-      top: -643%;
-    }
+        top: -624%;
+      }
     }
   }
 

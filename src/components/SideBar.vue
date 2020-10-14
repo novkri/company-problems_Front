@@ -232,8 +232,7 @@
   }
 
   .links_groups {
-        max-width: 65%;
-
+    max-width: 70%;
     min-height: 10px;
     max-height: 215px;
     overflow-y: scroll;
@@ -417,6 +416,7 @@
   .btnMain:hover,
   .btn-secondary:hover {
     background-color: #76DFC7 !important;
+    color: #fff !important;
   }
 
 
