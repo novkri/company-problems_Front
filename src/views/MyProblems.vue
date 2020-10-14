@@ -543,6 +543,7 @@
         } else {
           this.$refs['cardSol' + problem.id][0].style.paddingBottom = '0px'
           this.$refs['cardSol' + problem.id][0].style.overflowY = 'scroll'
+          this.$refs['cardPlan' + problem.id][0].style.height = 'fit-content'
         }
       },
 

@@ -6,7 +6,7 @@
     <div class="container" v-if="_isMounted">
       <div id="accordion">
         <div class="card" id="card" v-for="(problem, idx) in problems" :key="idx">
-          {{problem.status}}
+          <!-- {{problem.status}} -->
           <div class="card-header row" @click="event => clickOnCard(problem.id, event)" :id="'heading'+problem.id"
             ref="collapsed-header">
             <div class="name col-4">
@@ -513,6 +513,7 @@
         } else {
           this.$refs['cardSol' + problem.id][0].style.paddingBottom = '0px'
           this.$refs['cardSol' + problem.id][0].style.overflowY = 'scroll'
+          this.$refs['cardPlan' + problem.id][0].style.height = 'fit-content'
         }
       },
       onClickPlan(id) {

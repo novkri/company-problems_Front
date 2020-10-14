@@ -24,10 +24,8 @@
 </script>
 <style lang="scss">
 
-  h5.mb-0 {
-    p:hover {
-      text-decoration: none;
-    }
+  button {
+    text-decoration: none !important;
   }
   .close-popover {
     display: flex;
