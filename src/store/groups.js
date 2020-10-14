@@ -40,6 +40,9 @@ export default {
     },
     usersNoGroup: (state, rootState) => {
       state.usersNoGroup = rootState.allUsers.filter(u => u.group_id == null)
+      state.usersNoGroup = state.usersNoGroup.sort(function (a, b) {
+        return (a.surname.toLowerCase() > b.surname.toLowerCase()) ? 1 : -1
+      })
       return state.usersNoGroup
     }
   },

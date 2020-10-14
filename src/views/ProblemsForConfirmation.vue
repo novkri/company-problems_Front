@@ -6,21 +6,22 @@
     <div class="container" v-if="_isMounted">
       <div id="accordion">
         <div class="card" id="card" v-for="(problem, idx) in problems" :key="idx">
-          <!-- {{problem.status}} -->
-          <div class="card-header row" :id="'heading'+problem.id" ref="collapsed-header">
+          {{problem.status}}
+          <div class="card-header row" @click="event => clickOnCard(problem.id, event)" :id="'heading'+problem.id"
+            ref="collapsed-header">
             <div class="name col-4">
-              <button class="btn btn-link collapsed" @click="onClickShow(problem)" data-toggle="collapse"
-                :data-target="'#collapseOne'+problem.id" aria-expanded="false"
+              <button class="btn btn-link collapsed" :ref="'button_card'+problem.id" @click="onClickShow(problem)"
+                data-toggle="collapse" :data-target="'#collapseOne'+problem.id" aria-expanded="false"
                 :aria-controls="'collapseOne'+problem.id">
                 <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
               </button>
 
-              <h5 class="mb-0" style="display: flex; width: 92%;">
-                <div style="width: inherit;"
+              <h5 class="mb-0" style="display: flex; width: 80%;">
+                <span style="width: fit-content;max-width: 100%;"
                   :style="[problem.creator_id == currentUid || user.is_admin ? {'cursor': 'pointer'} : {'cursor': 'default'}]"
                   :ref="'name-div'+problem.id" @click="event => {onClickInput(problem.id, problem.creator_id, event)}">
                   {{ problem.name}}
-                </div>
+                </span>
                 <input class="form-control" style="display: none;" :id="'problem-name'+problem.id"
                   :disabled="isCreatorOrAdmin" v-model="problem.name" :ref="'problem-name' + problem.id"
                   @keyup.enter="event => {editProblemName(problem.name, problem.id, event)}"
@@ -142,12 +143,13 @@
               <div class="card" style="padding-top: 34px;" v-if="mounted">
                 <div class="row" style="display: flex; flex-direction: row; margin-bottom: 8px;">
                   <div class="accordion col-9" id="tasks">
-                    <div class="card" :ref="'cardSol'+problem.id">
+                    <div class="card" :ref="'cardSol'+problem.id" style="padding-bottom: 13px; overflow-y: auto;">
                       <div class="card-header" id="headingTasks">
                         <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" @click="onClickSol(problem.id)"
-                            id="collapseTasks_btn" data-target="#collapseTasks" aria-expanded="false" aria-controls="collapseTasks">
-                            <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
+                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                            @click="onClickSol(problem)" id="collapseTasks_btn" data-target="#collapseTasks"
+                            aria-expanded="false" aria-controls="collapseTasks">
+                            <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                             <p>
                               Решение
                             </p>
@@ -155,7 +157,7 @@
                         </h5>
                       </div>
 
-                      <div id="collapseTasks" class="collapse show" aria-labelledby="headingTasks" data-parent="#tasks"
+                      <div id="collapseTasks" class="collapse" aria-labelledby="headingTasks" data-parent="#tasks"
                         style="width: 100%;">
                         <div class="card-body" :val="solutions" style="padding-bottom: 0;">
                           <PopupShow v-if="openShow" :val="paramsModal" />
@@ -173,7 +175,7 @@
                           <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
                             data-target="#collapsePlan" aria-expanded="false" aria-controls="collapsePlan"
                             @click="onClickPlan(problem.id)">
-                            <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
+                            <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                             <p>
                               План решения
                             </p>
@@ -181,7 +183,7 @@
                         </h5>
                       </div>
 
-                      <div id="collapsePlan" class="collapse show" aria-labelledby="headingPlan" data-parent="#plan"
+                      <div id="collapsePlan" class="collapse" aria-labelledby="headingPlan" data-parent="#plan"
                         style="width: 100%;">
                         <div class="card-body p-0" :ref="'cardBody'+problem.id" style="height: 100%;">
                           <!-- plan,  -->
@@ -221,8 +223,8 @@
                         </h5>
                       </div>
 
-                      <div id="collapseResults" class="collapse" aria-labelledby="headingResults" style="width: 100%;"
-                        data-parent="#results" ref="collapsed-results">
+                      <div id="collapseResults" class="collapse show" aria-labelledby="headingResults"
+                        style="width: 100%;" data-parent="#results" ref="collapsed-results">
                         <div class="card-body row p-0" style="flex-direction: row;">
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
@@ -305,32 +307,38 @@
                           <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
                             data-target="#collapseGroups" aria-expanded="false" aria-controls="collapseGroups">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
-                            <p>
+                            <p v-show="!isCreatorLeaderOrAdmin">
                               Направить в подразделение
                             </p>
+                            <p v-show="isCreatorLeaderOrAdmin">Направлена в подразделения:</p>
                           </button>
                         </h5>
                       </div>
 
-                      <div id="collapseGroups" class="collapse" aria-labelledby="headingGroups" style="width: 100%;"
-                        data-parent="#groups" ref="collapsed-groups">
-                        <div class="card-body p-0">
+                      <div id="collapseGroups" class="collapse show" aria-labelledby="headingGroups"
+                        style="width: 100%;" data-parent="#groups" ref="collapsed-groups">
+                        <div class="card-body p-0" v-show="!isCreatorLeaderOrAdmin">
                           <div class="check-inputs">
                             <div class="custom-control custom-checkbox">
                               <input type="checkbox" class="custom-control-input" id="groupCheckAll"
-                                @click="checkAll(problem)" v-model="all" :disabled="isCreatorLeaderOrAdmin">
+                                @click="checkAll(problem)" v-model="all">
                               <label class="custom-control-label" for="groupCheckAll">Все</label>
                             </div>
 
                             <div class="custom-control custom-checkbox" v-for="(group, idx) in groups" :key="idx">
                               <input type="checkbox" class="custom-control-input" :id="'groupCheck'+group.id"
-                                :value="group.id" v-model="checkedGroups" :disabled="isCreatorLeaderOrAdmin">
+                                :value="group.id" v-model="checkedGroups">
                               <label class="custom-control-label" :for="'groupCheck'+group.id">{{group.name}}</label>
                             </div>
                           </div>
 
                           <button class="btn btnMain btn-to-groups" v-show="!isCreatorLeaderOrAdmin"
                             @click="sendToGroup(problem.id, checkedGroups)">Направить</button>
+                        </div>
+
+                        <div class="card-body p-0" v-show="isCreatorLeaderOrAdmin">
+                          <span style="padding-bottom: 5px;" v-for="(group, idx) in problem.groups"
+                            :key="idx">{{idx+1}}. {{group.name}}</span>
                         </div>
                       </div>
                     </div>
@@ -379,6 +387,7 @@
     TrashIcon,
     PlusIcon,
     ChevronUpIcon,
+    ChevronDownIcon,
     FileTextIcon,
     ClockIcon,
     CheckIcon,
@@ -420,6 +429,7 @@
       TrashIcon,
       PlusIcon,
       ChevronUpIcon,
+      ChevronDownIcon,
       FileTextIcon,
       ClockIcon,
       CheckIcon,
@@ -479,13 +489,20 @@
     },
 
     methods: {
-      onClickSol(id) {
+      clickOnCard(id, e) {
+        if (e.target.tagName == 'DIV' && !e.target.classList.contains('name_div') || e.target.tagName == 'BUTTON' || e
+          .target.tagName == 'H5') {
+          this.$refs['button_card' + id][0].click()
+        }
+      },
+
+      onClickSol(problem) {
         if (document.getElementById('collapseTasks').classList.contains('show')) {
-          this.$refs['cardSol' + id][0].style.paddingBottom = '18px'
-          this.$refs['cardSol' + id][0].style.overflowY = 'auto'
+          this.$refs['cardSol' + problem.id][0].style.paddingBottom = '18px'
+          this.$refs['cardSol' + problem.id][0].style.overflowY = 'auto'
         } else {
-          this.$refs['cardSol' + id][0].style.paddingBottom = '0px'
-          this.$refs['cardSol' + id][0].style.overflowY = 'scroll'
+          this.$refs['cardSol' + problem.id][0].style.paddingBottom = '0px'
+          this.$refs['cardSol' + problem.id][0].style.overflowY = 'scroll'
         }
       },
       onClickPlan(id) {
@@ -638,72 +655,62 @@
       },
 
       async onClickShow(problem) {
-        this.checkedGroups = []
-        problem.groups ? problem.groups.forEach(element => {
-          this.checkedGroups.push(element.id)
-        }) : this.checkedGroups = []
-        this.checkedGroups.length < this.groups.length ? this.all = false : this.all = true
+          this.checkedGroups = []
+          problem.groups ? problem.groups.forEach(element => {
+            this.checkedGroups.push(element.id)
+          }) : this.checkedGroups = []
+          this.checkedGroups.length < this.groups.length ? this.all = false : this.all = true
 
-this.currentProblemCreator = problem.creator_id
+          this.currentProblemCreator = problem.creator_id
 
-        this.$refs['collapsed-header'].forEach(element => {
-          element.classList.contains('collapsed-header') && element.id !== 'heading' + problem.id ? element
-            .classList.remove('collapsed-header') : ''
-        });
+          this.$refs['collapsed-header'].forEach(element => {
+            element.classList.contains('collapsed-header') && element.id !== 'heading' + problem.id ? element
+              .classList.remove('collapsed-header') : ''
+          });
 
-        document.getElementById('heading' + problem.id).classList.contains('collapsed-header') ? document
-          .getElementById('heading' + problem.id).classList.remove('collapsed-header') : document.getElementById(
-            'heading' + problem.id).classList.add('collapsed-header')
+          document.getElementById('heading' + problem.id).classList.contains('collapsed-header') ? document
+            .getElementById('heading' + problem.id).classList.remove('collapsed-header') : document.getElementById(
+              'heading' + problem.id).classList.add('collapsed-header')
 
-        if (this.paramsModal !== problem) {
-          this.openDelete = false
-          this.openShow = true
-          this.paramsModal = problem
+          if (this.paramsModal !== problem) {
+            this.openDelete = false
+            this.openShow = true
+            this.paramsModal = problem
 
-          this.$store.commit('setError', '')
-          await this.$store.dispatch('getSolutions', problem.id).then(response => {
-              this.$store.dispatch('getTasks', response.id)
-              this.$store.dispatch('getCurrentSolution', '')
-              this.$store.dispatch('getCurrentSolution', response.id)
-              this.mounted = true
-            })
-            .then(() => {
-              document.getElementById('collapseTasks').classList.contains('show') ? '' : document.getElementById('collapseTasks_btn').click()
-
-              this.$refs['collapsed-results'].forEach(element => {
-                element.classList.contains('show') ? this.$refs['collapseResultsBtn'].forEach(element => {
-                  element.click()
-                }) : ''
-              });
-              this.$refs['collapsed-groups'].forEach(element => {
-                element.classList.contains('show') ? this.$refs['collapseGroupsBtn'].forEach(element => {
-                  element.click()
-                }) : ''
+            this.$store.commit('setError', '')
+            await this.$store.dispatch('getSolutions', problem.id).then(response => {
+                this.$store.dispatch('getTasks', response.id)
+                this.$store.dispatch('getCurrentSolution', '')
+                this.$store.dispatch('getCurrentSolution', response.id)
+                this.mounted = true
               })
-              if (this.members.find(m => m.id == problem.creator_id) && this.isLeader) {
-                this.isLeaderOgUser = true
-                console.log(this.isLeader);
-              } else {
-                this.isLeaderOgUser = false
-              }
-            })
-            .catch(() => {
-              this.$store.dispatch('clearTasks')
-            })
-        }
-      },
-
-      async sendToGroup(id, groupsArray) {
-        await this.$store.dispatch('sendToGroup', {
-          id,
-          groupsArray
-        }).then(() => {
-          this.$toast.success("Проблема направлена в подразделения");
+              .then(() => {
+                document.getElementById('collapseTasks').classList.contains('show') ? document.getElementById(
+                  'collapseTasks').classList.remove('show') : ''
+            if (this.members.find(m => m.id == problem.creator_id) && this.isLeader) {
+              this.isLeaderOgUser = true
+              console.log(this.isLeader);
+            } else {
+              this.isLeaderOgUser = false
+            }
+          })
+        .catch(() => {
+          this.$store.dispatch('clearTasks')
         })
-      },
+    }
+  },
+
+  async sendToGroup(id, groupsArray) {
+      await this.$store.dispatch('sendToGroup', {
+        id,
+        groupsArray
+      }).then(() => {
+        this.$toast.success("Проблема направлена в подразделения");
+      })
+    },
 
 
-      async onClickInput(id, creator_id, event) {
+    async onClickInput(id, creator_id, event) {
         await this.$store.commit('setError404', '')
         this.currentProblemCreator = creator_id
         if (creator_id == this.currentUid || this.user.is_admin) {
@@ -719,167 +726,167 @@ this.currentProblemCreator = problem.creator_id
       },
 
       async onBlurInput(name, id, event) {
-        await this.$store.commit('setError404', '')
-        if (name !== this.currentProblemName) {
-          await this.$store.dispatch('editProblemName', {
-            name,
-            id
-          }).catch(() => {
+          await this.$store.commit('setError404', '')
+          if (name !== this.currentProblemName) {
+            await this.$store.dispatch('editProblemName', {
+              name,
+              id
+            }).catch(() => {
+              this.$store.commit('editProblemName', {
+                name: this.currentProblemName,
+                id
+              })
+            })
+            event.target.style.display = 'none'
+            this.$refs['name-div' + id][0].style.display = 'initial'
+          } else {
             this.$store.commit('editProblemName', {
               name: this.currentProblemName,
               id
             })
-          })
-          event.target.style.display = 'none'
-          this.$refs['name-div' + id][0].style.display = 'initial'
-        } else {
-          this.$store.commit('editProblemName', {
-            name: this.currentProblemName,
-            id
-          })
-          event.target.style.display = 'none'
-          this.$refs['name-div' + id][0].style.display = 'initial'
-        }
+            event.target.style.display = 'none'
+            this.$refs['name-div' + id][0].style.display = 'initial'
+          }
 
-      },
-      onFocusInput(event) {
-        this.currentProblemName = event.target.value
-      },
+        },
+        onFocusInput(event) {
+          this.currentProblemName = event.target.value
+        },
 
-      async editProblemName(name, id, event) {
-        await this.$store.commit('setError404', '')
-        event.target.blur()
-      },
+        async editProblemName(name, id, event) {
+            await this.$store.commit('setError404', '')
+            event.target.blur()
+          },
 
 
-      onFocusTextarea(event) {
-        this.currentTextarea = event.target.value
-      },
+          onFocusTextarea(event) {
+            this.currentTextarea = event.target.value
+          },
 
-      onBlurTextarea(event, type) {
-        switch (type) {
-          case 'exp':
-            // console.log('blur');
-            // console.log(this.currentSolutionName);
-            // this.$store.commit('editSolutionOther', {
-            //   name: this.currentSolutionName,
-            //   id
-            // })
-            break;
-          case 'plan':
-            // console.log(this.currentTextarea);
-            break;
-          case 'team':
-            // console.log(this.currentTextarea);
-            break;
-          case 'result':
-            // console.log(this.currentTextarea);
-            break;
-          default:
-            alert("Нет таких значений");
-        }
-      },
+          onBlurTextarea(event, type) {
+            switch (type) {
+              case 'exp':
+                // console.log('blur');
+                // console.log(this.currentSolutionName);
+                // this.$store.commit('editSolutionOther', {
+                //   name: this.currentSolutionName,
+                //   id
+                // })
+                break;
+              case 'plan':
+                // console.log(this.currentTextarea);
+                break;
+              case 'team':
+                // console.log(this.currentTextarea);
+                break;
+              case 'result':
+                // console.log(this.currentTextarea);
+                break;
+              default:
+                alert("Нет таких значений");
+            }
+          },
 
-      onClear(event, id, type) {
-        event.preventDefault()
-        switch (type) {
-          case 'exp':
-            this.$refs['textarea_exp' + id][0].value = this.currentTextarea
-            break;
-          case 'plan':
-            this.$refs['textarea_plan' + id][0].value = this.currentTextarea
-            break;
-          case 'team':
-            this.$refs['textarea_team' + id][0].value = this.currentTextarea
-            break;
-          case 'result':
-            this.$refs['textarea_result' + id][0].value = this.currentTextarea
-            break;
-          default:
-            alert("Нет таких значений");
-        }
-      },
+          onClear(event, id, type) {
+            event.preventDefault()
+            switch (type) {
+              case 'exp':
+                this.$refs['textarea_exp' + id][0].value = this.currentTextarea
+                break;
+              case 'plan':
+                this.$refs['textarea_plan' + id][0].value = this.currentTextarea
+                break;
+              case 'team':
+                this.$refs['textarea_team' + id][0].value = this.currentTextarea
+                break;
+              case 'result':
+                this.$refs['textarea_result' + id][0].value = this.currentTextarea
+                break;
+              default:
+                alert("Нет таких значений");
+            }
+          },
 
-      newLine(e) {
-        let caret = e.target.selectionStart;
-        e.target.setRangeText("\n", caret, caret, "end");
-        this.text = e.target.value;
-      },
-      async editPlan(id, plan, event) {
-        event.target.blur()
-        await this.$store.commit('setError404', '')
-        if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
-          await this.$store.dispatch('editPlan', {
-              plan,
-              id
-            })
-            .catch(() => {
-              this.$store.commit('editPlan', {
-                plan: this.currentTextarea,
-                id
-              })
-            })
-        } else {
-          //
-        }
-      },
-      async editTeam(id, team, event) {
-        event.target.blur()
-        await this.$store.commit('setError404', '')
-        if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid) {
-          await this.$store.dispatch('editTeam', {
-              team,
-              id
-            })
-            .catch(() => {
-              this.$store.commit('editTeam', {
-                team: this.currentTextarea,
-                id
-              })
-            })
-        } else {
-          //
-        }
-      },
-      async editExp(id, experience, event) {
-        event.target.blur()
-        await this.$store.commit('setError404', '')
-        if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
-          await this.$store.dispatch('editExp', {
-              experience,
-              id
-            })
-            .catch(() => {
-              this.$store.commit('editExp', {
-                experience: this.currentTextarea,
-                id
-              })
-            })
-        } else {
-          //
-        }
+          newLine(e) {
+            let caret = e.target.selectionStart;
+            e.target.setRangeText("\n", caret, caret, "end");
+            this.text = e.target.value;
+          },
+          async editPlan(id, plan, event) {
+              event.target.blur()
+              await this.$store.commit('setError404', '')
+              if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
+                await this.$store.dispatch('editPlan', {
+                    plan,
+                    id
+                  })
+                  .catch(() => {
+                    this.$store.commit('editPlan', {
+                      plan: this.currentTextarea,
+                      id
+                    })
+                  })
+              } else {
+                //
+              }
+            },
+            async editTeam(id, team, event) {
+                event.target.blur()
+                await this.$store.commit('setError404', '')
+                if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid) {
+                  await this.$store.dispatch('editTeam', {
+                      team,
+                      id
+                    })
+                    .catch(() => {
+                      this.$store.commit('editTeam', {
+                        team: this.currentTextarea,
+                        id
+                      })
+                    })
+                } else {
+                  //
+                }
+              },
+              async editExp(id, experience, event) {
+                  event.target.blur()
+                  await this.$store.commit('setError404', '')
+                  if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
+                    await this.$store.dispatch('editExp', {
+                        experience,
+                        id
+                      })
+                      .catch(() => {
+                        this.$store.commit('editExp', {
+                          experience: this.currentTextarea,
+                          id
+                        })
+                      })
+                  } else {
+                    //
+                  }
 
-      },
-      async editResult(id, result, event) {
-        event.target.blur()
-        await this.$store.commit('setError404', '')
-        if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
-          await this.$store.dispatch('editResult', {
-              result,
-              id
-            })
-            .catch(() => {
-              this.$store.commit('editResult', {
-                result: this.currentTextarea,
-                id
-              })
-            })
-        } else {
-          //
-        }
-      },
+                },
+                async editResult(id, result, event) {
+                    event.target.blur()
+                    await this.$store.commit('setError404', '')
+                    if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
+                      await this.$store.dispatch('editResult', {
+                          result,
+                          id
+                        })
+                        .catch(() => {
+                          this.$store.commit('editResult', {
+                            result: this.currentTextarea,
+                            id
+                          })
+                        })
+                    } else {
+                      //
+                    }
+                  },
 
-    }
+  }
   };
 </script>
 
@@ -1575,7 +1582,7 @@ this.currentProblemCreator = problem.creator_id
     font-family: 'GothamPro';
     cursor: pointer;
   }
-  
+
   @media (max-width: 1300px) {
     * {
       font-size: 12px;

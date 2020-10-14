@@ -211,7 +211,6 @@ export default {
         commit('editStatusTask', response.data)
         resolve(response.data)
       }).catch((error) => {
-        console.log(error.response);
         if (error.response.status == 404 || error.response.status == 403) {
           commit('setError404', error.response.data.message)
           reject(error.response.data.message)

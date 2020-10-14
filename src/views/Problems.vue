@@ -7,9 +7,9 @@
 
       <div id="accordion">
         <div class="card" id="card" v-for="(problem, idx) in problems" :key="idx"
-          @click="event => clickOnCard(problem.id, event)">
+          >
           <!-- {{problem.status}} -->
-          <div class="card-header row" :id="'heading'+problem.id" ref="collapsed-header">
+          <div class="card-header row" @click="event => clickOnCard(problem.id, event)" :id="'heading'+problem.id" ref="collapsed-header">
             <div class="name col-4">
               <button class="btn btn-link collapsed" :ref="'button_card'+problem.id" @click="onClickShow(problem)"
                 data-toggle="collapse" :data-target="'#collapseOne'+problem.id" aria-expanded="false"
@@ -17,12 +17,12 @@
                 <chevron-up-icon size="1.5x" class="custom-class arrow"></chevron-up-icon>
               </button>
 
-              <h5 class="mb-0" style="display: flex; width: 92%;">
-                <div style="width: fit-content;max-width: 90%;" class="name_div"
+              <h5 class="mb-0" style="display: flex; width: 80%;">
+                <span style="width: fit-content;max-width: 100%;" class="name_div"
                   :style="[problem.creator_id == currentUid || user.is_admin ? {'cursor': 'pointer'} : {'cursor': 'default'}]"
                   :ref="'name-div'+problem.id" @click="event => {onClickInput(problem.id, problem.creator_id, event)}">
                   {{ problem.name}}
-                </div>
+                </span>
                 <input class="form-control" style="display: none;" :id="'problem-name'+problem.id"
                   :disabled="isCreatorOrAdmin" v-model="problem.name" :ref="'problem-name' + problem.id"
                   @keyup.enter="event => {editProblemName(problem.name, problem.id, event)}"
@@ -343,13 +343,13 @@
                           <div class="check-inputs">
                             <div class="custom-control custom-checkbox">
                               <input type="checkbox" class="custom-control-input" id="groupCheckAll"
-                                @click="checkAll(problem)" v-model="all" :disabled="isCreatorLeaderOrAdmin">
+                                @click="checkAll(problem)" v-model="all">
                               <label class="custom-control-label" for="groupCheckAll">Все</label>
                             </div>
 
                             <div class="custom-control custom-checkbox" v-for="(group, idx) in groups" :key="idx">
                               <input type="checkbox" class="custom-control-input" :id="'groupCheck'+group.id"
-                                :value="group.id" v-model="checkedGroups" :disabled="isCreatorLeaderOrAdmin">
+                                :value="group.id" v-model="checkedGroups">
                               <label class="custom-control-label" :for="'groupCheck'+group.id">{{group.name}}</label>
                             </div>
                           </div>
@@ -357,6 +357,7 @@
                           <button class="btn btnMain btn-to-groups" v-show="!isCreatorLeaderOrAdmin"
                             @click="sendToGroup(problem.id, checkedGroups)">Направить</button>
                         </div>
+
                       </div>
                     </div>
                   </div>
@@ -493,7 +494,7 @@
 
     methods: {
       change() {
-        console.log('dgfdg');
+        // console.log('');
       },
       onClickSol(id) {
         if (document.getElementById('collapseTasks').classList.contains('show')) {
@@ -506,14 +507,10 @@
       },
 
       clickOnCard(id, e) {
-        // console.log(this.$refs['button_card'+id][0]);
-        console.log(e.target);
         if (e.target.tagName == 'DIV' && !e.target.classList.contains('name_div') || e.target.tagName == 'BUTTON' || e
           .target.tagName == 'H5') {
           this.$refs['button_card' + id][0].click()
-          console.log('d');
         }
-
       },
 
 

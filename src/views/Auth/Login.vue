@@ -76,6 +76,7 @@
           email: this.email,
           password: this.password,
         }
+
         await this.$store.dispatch('login', formData).then(() => {
           if (!this.errorU) {
             this.$store.dispatch('countAmountOfProblemsForExecution', {
@@ -101,11 +102,9 @@
             this.$router.push('/my-problems')
 
 
-
             this.$store.dispatch('checkIsLeader').then(() => {
-              this.$store.dispatch('getMembers', this.groups.find(g => g.leader_id == this.currentUid).id)
+              this.isLeader ? this.$store.dispatch('getMembers', this.groups.find(g => g.leader_id == this.currentUid).id) : ''
             })
-
 
           }
         })

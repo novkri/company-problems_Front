@@ -286,7 +286,6 @@
 
       async changeStatusTask(id, status, executor_id) {
         await this.$store.commit('setError404', '')
-        console.log(id);
         if (executor_id == this.currentUid || this.user.is_admin) {
           await this.$store.dispatch('changeStatusTask', {
             status: status.name,

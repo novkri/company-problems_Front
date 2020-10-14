@@ -254,8 +254,6 @@
       ChevronDownIcon,
       AwardIcon,
 
-
-
       SsSelect,
       SsSelectToggle,
       SsSelectOption,

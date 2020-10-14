@@ -314,7 +314,6 @@ export default {
     editPlan: async ({
       commit
     }, param) => {
-      console.log(param);
       return new Promise((resolve, reject) => {
       axios.put(process.env.VUE_APP_ROOT_URL  + `/solution/${param.id}/set-plan`, {
         plan: param.plan

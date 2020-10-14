@@ -6,20 +6,22 @@
     <div class="container" v-if="_isMounted">
       <div id="accordion">
         <div class="card" id="card" v-for="(problem, idx) in problems" :key="idx">
-          <div class="card-header row" :id="'heading'+problem.id" ref="collapsed-header">
+          <!-- {{problem.status}} -->
+          <div class="card-header row" @click="event => clickOnCard(problem.id, event)" :id="'heading'+problem.id"
+            ref="collapsed-header">
             <div class="name col-4">
-              <button class="btn btn-link collapsed" @click="onClickShow(problem)" data-toggle="collapse"
-                :data-target="'#collapseOne'+problem.id" aria-expanded="false"
+              <button class="btn btn-link collapsed" :ref="'button_card'+problem.id" @click="onClickShow(problem)"
+                data-toggle="collapse" :data-target="'#collapseOne'+problem.id" aria-expanded="false"
                 :aria-controls="'collapseOne'+problem.id">
                 <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
               </button>
 
-              <h5 class="mb-0" style="display: flex; width: 92%;">
-                <div style="width: inherit;"
+              <h5 class="mb-0" style="display: flex; width: 80%;">
+                <span style="width: fit-content;max-width: 100%;"
                   :style="[problem.creator_id == currentUid || user.is_admin ? {'cursor': 'pointer'} : {'cursor': 'default'}]"
                   :ref="'name-div'+problem.id" @click="event => {onClickInput(problem.id, problem.creator_id, event)}">
                   {{ problem.name}}
-                </div>
+                </span>
                 <input class="form-control" style="display: none;" :id="'problem-name'+problem.id"
                   :disabled="isCreatorOrAdmin" v-model="problem.name" :ref="'problem-name' + problem.id"
                   @keyup.enter="event => {editProblemName(problem.name, problem.id, event)}"
@@ -141,13 +143,17 @@
               <div class="card" style="padding-top: 34px;" v-if="mounted">
                 <div class="row" style="display: flex; flex-direction: row; margin-bottom: 8px;">
                   <div class="accordion col-9" id="tasks">
-                    <div class="card" :ref="'cardSol'+problem.id">
+                    <div class="card" :ref="'cardSol'+problem.id"
+                      :style="[problem.status == 'На проверке заказчика' ? {'padding-bottom': '13px', 'overflow-y': 'auto'} : {'padding-bottom': '0px'}]">
                       <div class="card-header" id="headingTasks">
                         <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" id="collapseTasks_btn"
-                            @click="onClickSol(problem.id)" data-target="#collapseTasks" aria-expanded="false"
-                            aria-controls="collapseTasks">
-                            <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
+                          <button class="btn btn-link btn-block text-left"
+                            :class="[problem.status == 'На проверке заказчика' ? 'collapsed' : '']" type="button"
+                            data-toggle="collapse" id="collapseTasks_btn" @click="onClickSol(problem)"
+                            data-target="#collapseTasks" aria-expanded="false" aria-controls="collapseTasks">
+                            <chevron-up-icon v-if="problem.status == 'На проверке заказчика'" size="1.5x"
+                              class="custom-class"></chevron-up-icon>
+                            <chevron-down-icon v-else size="1.5x" class="custom-class"></chevron-down-icon>
                             <p>
                               Решение
                             </p>
@@ -155,8 +161,9 @@
                         </h5>
                       </div>
 
-                      <div id="collapseTasks" class="collapse show" aria-labelledby="headingTasks" data-parent="#tasks"
-                        style="width: 100%;">
+                      <div id="collapseTasks" class="collapse"
+                        :class="[problem.status == 'На проверке заказчика' ? '' : 'show']"
+                        aria-labelledby="headingTasks" data-parent="#tasks" style="width: 100%;">
                         <div class="card-body" :val="solutions" style="padding-bottom: 0;">
                           <PopupShow v-if="openShow" :val="paramsModal" />
                           <Tasks v-if="solutions[0]" :val="solutions[0]" />
@@ -170,10 +177,12 @@
                     <div class="card" :ref="'cardPlan'+problem.id" style="height: 100%;padding-bottom: 18px;">
                       <div class="card-header" id="headingPlan" style="width: 100%;">
                         <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+                          <button class="btn btn-link btn-block text-left" :class="[problem.status == 'На проверке заказчика' ? 'collapsed' : '']" type="button" data-toggle="collapse"
                             data-target="#collapsePlan" aria-expanded="false" aria-controls="collapsePlan"
                             @click="onClickPlan(problem.id)">
-                            <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
+                            <chevron-up-icon v-if="problem.status == 'На проверке заказчика'" size="1.5x"
+                              class="custom-class"></chevron-up-icon>
+                            <chevron-down-icon v-else size="1.5x" class="custom-class"></chevron-down-icon>
                             <p>
                               План решения
                             </p>
@@ -181,7 +190,7 @@
                         </h5>
                       </div>
 
-                      <div id="collapsePlan" class="collapse show" aria-labelledby="headingPlan" data-parent="#plan"
+                      <div id="collapsePlan" class="collapse" :class="[problem.status == 'На проверке заказчика' ? '' : 'show']" aria-labelledby="headingPlan" data-parent="#plan"
                         style="width: 100%;">
                         <div class="card-body p-0" :ref="'cardBody'+problem.id" style="height: 100%;">
                           <!-- plan,  -->
@@ -211,9 +220,13 @@
                     <div class="card">
                       <div class="card-header" id="headingResults" style="width: 100%;">
                         <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                            data-target="#collapseResults" aria-expanded="false" aria-controls="collapseResults">
-                            <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
+                          <button class="btn btn-link btn-block text-left"
+                             type="button"
+                            data-toggle="collapse" data-target="#collapseResults" aria-expanded="false"
+                            aria-controls="collapseResults">
+                            <chevron-up-icon v-if="problem.status == 'На проверке заказчика'" size="1.5x"
+                              class="custom-class"></chevron-up-icon>
+                            <chevron-down-icon v-else size="1.5x" class="custom-class"></chevron-down-icon>
                             <p>
                               Команда, опыт, результат
                             </p>
@@ -221,8 +234,10 @@
                         </h5>
                       </div>
 
-                      <div id="collapseResults" class="collapse" aria-labelledby="headingResults" style="width: 100%;"
-                        data-parent="#results" ref="collapsed-results">
+                      <div id="collapseResults" class="collapse"
+                        :class="problem.status == 'На проверке заказчика' ? 'show' : ''"
+                        aria-labelledby="headingResults" style="width: 100%;" data-parent="#results"
+                        ref="collapsed-results">
                         <div class="card-body row p-0" style="flex-direction: row;">
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
@@ -316,26 +331,27 @@
                           <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
                             data-target="#collapseGroups" aria-expanded="false" aria-controls="collapseGroups">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
-                            <p>
+                            <p v-show="!isCreatorLeaderOrAdmin">
                               Направить в подразделение
                             </p>
+                            <p v-show="isCreatorLeaderOrAdmin">Направлена в подразделения:</p>
                           </button>
                         </h5>
                       </div>
 
                       <div id="collapseGroups" class="collapse" aria-labelledby="headingGroups" style="width: 100%;"
                         data-parent="#groups" ref="collapsed-groups">
-                        <div class="card-body p-0">
+                        <div class="card-body p-0" v-show="!isCreatorLeaderOrAdmin">
                           <div class="check-inputs">
                             <div class="custom-control custom-checkbox">
                               <input type="checkbox" class="custom-control-input" id="groupCheckAll"
-                                @click="checkAll(problem)" v-model="all" :disabled="isCreatorLeaderOrAdmin">
+                                @click="checkAll(problem)" v-model="all">
                               <label class="custom-control-label" for="groupCheckAll">Все</label>
                             </div>
 
                             <div class="custom-control custom-checkbox" v-for="(group, idx) in groups" :key="idx">
                               <input type="checkbox" class="custom-control-input" :id="'groupCheck'+group.id"
-                                :value="group.id" v-model="checkedGroups" :disabled="isCreatorLeaderOrAdmin">
+                                :value="group.id" v-model="checkedGroups">
                               <label class="custom-control-label" :for="'groupCheck'+group.id">{{group.name}}</label>
                             </div>
                           </div>
@@ -343,6 +359,12 @@
                           <button class="btn btnMain btn-to-groups" v-show="!isCreatorLeaderOrAdmin"
                             @click="sendToGroup(problem.id, checkedGroups)">Направить</button>
                         </div>
+
+                        <div class="card-body p-0" v-show="isCreatorLeaderOrAdmin">
+                          <span style="padding-bottom: 5px;" v-for="(group, idx) in problem.groups"
+                            :key="idx">{{idx+1}}. {{group.name}}</span>
+                        </div>
+
                       </div>
                     </div>
                   </div>
@@ -390,6 +412,7 @@
     TrashIcon,
     PlusIcon,
     ChevronUpIcon,
+    ChevronDownIcon,
     FileTextIcon,
     ClockIcon,
     CheckIcon,
@@ -433,6 +456,7 @@
       TrashIcon,
       PlusIcon,
       ChevronUpIcon,
+      ChevronDownIcon,
       FileTextIcon,
       ClockIcon,
       CheckIcon,
@@ -459,6 +483,8 @@
       })
       await this.$store.dispatch('getGroups').catch(() => this.$router.push('/login'))
       await this.$store.dispatch('getAllUsers')
+
+
     },
     watch: {
       error404() {
@@ -491,13 +517,22 @@
     },
 
     methods: {
-      onClickSol(id) {
-        if (document.getElementById('collapseTasks').classList.contains('show')) {
-          this.$refs['cardSol' + id][0].style.paddingBottom = '13px'
-          this.$refs['cardSol' + id][0].style.overflowY = 'auto'
+      clickOnCard(id, e) {
+        console.log(e);
+        if (e.target.tagName == 'DIV' && !e.target.classList.contains('name_div') || e.target.tagName == 'BUTTON' || e
+          .target.tagName == 'H5') {
+          this.$refs['button_card' + id][0].click()
+        }
+      },
+
+      onClickSol(problem) {
+        if (document.getElementById('collapseTasks').classList.contains('show') || problem.status ==
+          'На проверке заказчика') {
+          this.$refs['cardSol' + problem.id][0].style.paddingBottom = '13px'
+          this.$refs['cardSol' + problem.id][0].style.overflowY = 'auto'
         } else {
-          this.$refs['cardSol' + id][0].style.paddingBottom = '0px'
-          this.$refs['cardSol' + id][0].style.overflowY = 'scroll'
+          this.$refs['cardSol' + problem.id][0].style.paddingBottom = '0px'
+          this.$refs['cardSol' + problem.id][0].style.overflowY = 'scroll'
         }
       },
 
@@ -672,7 +707,8 @@
               this.mounted = true
             })
             .then(() => {
-              document.getElementById('collapseTasks').classList.contains('show') ? '' : document.getElementById('collapseTasks_btn').click()
+              document.getElementById('collapseTasks').classList.contains('show') ? '' : document.getElementById(
+                'collapseTasks_btn').click()
 
               this.$refs['collapsed-results'].forEach(element => {
                 element.classList.contains('show') ? this.$refs['collapseResultsBtn'].forEach(element => {

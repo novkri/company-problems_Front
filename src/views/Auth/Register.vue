@@ -77,8 +77,6 @@
           <div class="errorAuth" v-if="errorUReg.password">{{errorUReg.password[1]}} </div>
         </div>
 
-       
-
       </form>
       <button type="submit" class="btn" @click.prevent="register">Зарегистрироваться</button>
       <div class="to-login">Уже зарегистрированы? <router-link to="/login">Вход</router-link>

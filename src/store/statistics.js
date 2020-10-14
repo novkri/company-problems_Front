@@ -68,7 +68,6 @@ export default {
       state.statisticQuantitativeIndicators = payload
     },
     statisticCategories: (state, payload) => {
-      console.log(payload, 'ddd');
       state.statisticCategories = payload
     },
     statisticQuarterly1: (state, payload) => {
@@ -98,7 +97,6 @@ export default {
             resolve(response.data)
           })
           .catch((error) => {
-            console.log(error.response);
             commit('setError404', error.response.data.error)
             reject(error.response.data.error)
           })
@@ -115,7 +113,6 @@ export default {
             resolve(response.data)
           })
           .catch((error) => {
-            console.log(error.response);
             commit('setError404', error.response.data.error)
             reject(error.response.data.error)
           })
@@ -133,11 +130,9 @@ export default {
             commit('statisticQuarterly2', response.data[2])
             commit('statisticQuarterly3', response.data[1])
             commit('statisticQuarterly4', response.data[0])
-            console.log(response.data);
             resolve(response.data)
           })
           .catch((error) => {
-            console.log(error.response);
             commit('setError404', error.response.data.error)
             reject(error.response.data.error)
           })

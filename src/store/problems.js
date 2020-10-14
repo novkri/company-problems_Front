@@ -47,7 +47,6 @@ export default {
     },
 
     amountOfMyProblems: state => {
-      console.log(state.amountOfMyProblems);
       return state.amountOfMyProblems
     },
     amountOfProblemsForExecution: state => {
@@ -123,9 +122,7 @@ export default {
 
 
     amountOfMyProblems: (state, payload) => {
-      console.log(payload);
       state.amountOfMyProblems = payload
-      console.log(state.amountOfMyProblems);
     },
     amountOfProblemsForExecution: (state, payload) => {
       state.amountOfProblemsForExecution = payload
@@ -161,7 +158,6 @@ export default {
         status: param.status
       }})
         .then(response => {
-          console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('amountOfMyProblems', response.data.length)
@@ -321,7 +317,6 @@ export default {
         status: param.status
       }})
         .then(response => {
-          console.log(response.data);
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
@@ -352,7 +347,6 @@ export default {
         status: param.status
       }})
         .then(response => {
-          console.log(response.data);
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
@@ -470,7 +464,6 @@ export default {
         status: param.status
       }})
         .then(response => {
-          console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
@@ -496,7 +489,6 @@ export default {
         .then(response => {
             commit('setError', '')
             commit('setError404', '')
-            console.log(response.data);
             commit('setProblems', response.data.filter(p => p.status !== "Удалена" && p.status !== "Решена"))
         })
         .catch(error => {
