@@ -181,6 +181,7 @@
       },
 
       async getProblemsByGroups(group, groupName) {
+        this.$store.commit('currentGroup', group)
         await this.$store.dispatch('getProblemsByGroups', {
           group,
           groupName,

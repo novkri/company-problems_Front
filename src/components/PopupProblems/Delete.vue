@@ -4,14 +4,15 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
- 
+
             <h5 class="modal-title" id="exampleModalLabel">Вы точно хотите удалить проблему?</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <button type="submit" class="btn btn-secondary yes" data-dismiss="modal" @click="deleteProblem()">Да</button>
+            <button type="submit" class="btn btn-secondary yes" data-dismiss="modal"
+              @click="deleteProblem()">Да</button>
             <button type="reset" class="btn btn-secondary" data-dismiss="modal">Нет</button>
           </div>
         </div>
@@ -21,7 +22,9 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
+  import {
+    mapGetters
+  } from 'vuex'
 
   export default {
     name: 'popup',
@@ -35,15 +38,31 @@
     methods: {
       async deleteProblem() {
         await this.$store.commit('setError404', '')
-          await this.$store.dispatch('checkIfExists', {id: this.val.id})
+        await this.$store.dispatch('checkIfExists', {
+            id: this.val.id
+          })
           .then(async () => {
-              await this.$store.dispatch('deleteProblem', {id: this.val.id})
-              await this.$store.dispatch('countAmountOfMyProblems', {
-                urgency: '',
-                importance: '',
-                deadline: '',
-                status: 'На проверке заказчика'
-              })
+            await this.$store.dispatch('deleteProblem', {
+              id: this.val.id
+            })
+            this.$store.dispatch('countAmountOfMyProblems', {
+              urgency: '',
+              importance: '',
+              deadline: '',
+              status: 'На проверке заказчика'
+            })
+            this.$store.dispatch('countAmountOfProblemsForConfirmation', {
+              urgency: '',
+              importance: '',
+              deadline: '',
+              status: ''
+            })
+            this.$store.dispatch('countAmountOfProblemsForExecution', {
+              urgency: '',
+              importance: '',
+              deadline: '',
+              status: ''
+            })
           })
           .catch(() => this.$store.commit('setError404', ''))
       },

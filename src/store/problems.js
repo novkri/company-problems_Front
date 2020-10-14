@@ -23,6 +23,7 @@ export default {
     error404: '',
     token: localStorage.getItem('user-token') || '',
     statusesProblem: [],
+    currentGroup: '',
 
     amountOfMyProblems: '',
     amountOfProblemsForExecution: '',
@@ -30,6 +31,11 @@ export default {
     amountOfProblemsForConfirmationAdmin: ''
   },
   getters: {
+    currentGroup: state => {
+      return state.currentGroup
+    },
+
+
     statusesProblem: state => {
       return state.statusesProblem
     },
@@ -60,12 +66,16 @@ export default {
     },
   },
   mutations: {
+    currentGroup: (state, payload) => {
+      state.currentGroup = payload
+    },
+
+
     statusesProblem: (state, payload) => {
       state.statusesProblem = payload
     },
     setProblems: (state, payload) => {
-      payload ? state.problems = payload : state.problems = []
-      
+      payload ? state.problems = payload : state.problems = []  
     },
 
     setThisProblem: (state, payload) => {
@@ -128,6 +138,7 @@ export default {
       state.amountOfProblemsForExecution = payload
     },
     amountOfProblemsForConfirmation: (state, payload) => {
+      console.log(payload);
       state.amountOfProblemsForConfirmation = payload
     },
     amountOfProblemsForConfirmationAdmin: (state, payload) => {
@@ -550,19 +561,23 @@ export default {
     deleteProblem: async ({
       commit
     }, param) => {
-      await axios.delete(process.env.VUE_APP_ROOT_URL + `/problem/${param.id}`).then(() => {
+      return new Promise((resolve, reject) => {
+        axios.delete(process.env.VUE_APP_ROOT_URL + `/problem/${param.id}`).then(() => {
           commit('setError', '')
           commit('setError404', '')
           commit('deleteProblem', param.id)
+          resolve('ok')
         })
         .catch(error => {
           if (error.response.status !== 422) {
             commit('setError404', error.response.data.message)
+            reject()
           } else {
             commit('setError404', error.response.data.error)
+            reject()
           }
         })
-
+      })
     },
     checkIfExists: async ({
       commit

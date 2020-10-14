@@ -7,10 +7,11 @@
       <div id="accordion">
         <div class="card" id="card" v-for="(problem, idx) in problems" :key="idx">
 
-          <div class="card-header row" @click="event => clickOnCard(problem.id, event)" :id="'heading'+problem.id" ref="collapsed-header">
+          <div class="card-header row" @click="event => clickOnCard(problem.id, event)" :id="'heading'+problem.id"
+            ref="collapsed-header">
             <div class="name col-4">
-              <button class="btn btn-link collapsed" :ref="'button_card'+problem.id" @click="onClickShow(problem)" data-toggle="collapse"
-                :data-target="'#collapseOne'+problem.id" aria-expanded="false"
+              <button class="btn btn-link collapsed" :ref="'button_card'+problem.id" @click="onClickShow(problem)"
+                data-toggle="collapse" :data-target="'#collapseOne'+problem.id" aria-expanded="false"
                 :aria-controls="'collapseOne'+problem.id">
                 <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
               </button>
@@ -144,16 +145,18 @@
                   <div class="accordion col-9" id="tasks">
                     <div class="card" :ref="'cardSol'+problem.id">
                       <div class="card-header" id="headingTasks">
-                        <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                            @click="onClickSol(problem.id)" id="collapseTasks_btn" data-target="#collapseTasks"
-                            aria-expanded="false" aria-controls="collapseTasks">
+
+                        <button class="btn btn-link btn-block text-left" style="width: 100%;" type="button"
+                          data-toggle="collapse" @click="onClickSol(problem.id)" id="collapseTasks_btn"
+                          data-target="#collapseTasks" aria-expanded="false" aria-controls="collapseTasks">
+                          <h5 class="mb-0">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                             <p>
                               Решение
                             </p>
-                          </button>
-                        </h5>
+                          </h5>
+                        </button>
+
                       </div>
 
                       <div id="collapseTasks" class="collapse show" aria-labelledby="headingTasks" data-parent="#tasks"
@@ -170,16 +173,18 @@
                   <div class="accordion col-3" id="plan">
                     <div class="card" :ref="'cardPlan'+problem.id" style="height: 100%;">
                       <div class="card-header" id="headingPlan" style="width: 100%;">
-                        <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                            data-target="#collapsePlan" aria-expanded="false" aria-controls="collapsePlan"
-                            @click="onClickPlan(problem.id)">
+
+                        <button class="btn btn-link btn-block text-left" style="width:100%;" type="button"
+                          data-toggle="collapse" data-target="#collapsePlan" aria-expanded="false"
+                          aria-controls="collapsePlan" @click="onClickPlan(problem.id)">
+                          <h5 class="mb-0">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                             <p>
                               План решения
                             </p>
-                          </button>
-                        </h5>
+                          </h5>
+                        </button>
+
                       </div>
 
                       <div id="collapsePlan" class="collapse show" aria-labelledby="headingPlan" data-parent="#plan"
@@ -211,15 +216,18 @@
                   <div class="accordion col-9" id="results">
                     <div class="card">
                       <div class="card-header" id="headingResults" style="width: 100%;">
-                        <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                            data-target="#collapseResults" aria-expanded="false" aria-controls="collapseResults">
+
+                        <button class="btn btn-link btn-block text-left" style="width: 100%;" type="button"
+                          data-toggle="collapse" data-target="#collapseResults" aria-expanded="false"
+                          aria-controls="collapseResults">
+                          <h5 class="mb-0">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                             <p>
                               Команда, опыт, результат
                             </p>
-                          </button>
-                        </h5>
+                          </h5>
+                        </button>
+
                       </div>
 
                       <div id="collapseResults" class="collapse" aria-labelledby="headingResults" style="width: 100%;"
@@ -325,16 +333,19 @@
                   <div class="accordion col-3" id="groups">
                     <div class="card">
                       <div class="card-header" id="headingGroups" style="width: 100%;">
-                        <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                            data-target="#collapseGroups" aria-expanded="false" aria-controls="collapseGroups">
+
+                        <button class="btn btn-link btn-block text-left" style="width: 100%;" type="button"
+                          data-toggle="collapse" data-target="#collapseGroups" aria-expanded="false"
+                          aria-controls="collapseGroups">
+                          <h5 class="mb-0">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                             <p v-show="!isCreatorLeaderOrAdmin">
                               Направить в подразделение
                             </p>
                             <p v-show="isCreatorLeaderOrAdmin">Направлена в подразделения:</p>
-                          </button>
-                        </h5>
+                          </h5>
+                        </button>
+
                       </div>
 
                       <div id="collapseGroups" class="collapse" aria-labelledby="headingGroups" style="width: 100%;"
@@ -359,7 +370,8 @@
                         </div>
 
                         <div class="card-body p-0" v-show="isCreatorLeaderOrAdmin">
-                          <span style="padding-bottom: 5px;" v-for="(group, idx) in problem.groups" :key="idx">{{idx+1}}. {{group.name}}</span>
+                          <span style="padding-bottom: 5px;" v-for="(group, idx) in problem.groups"
+                            :key="idx">{{idx+1}}. {{group.name}}</span>
                         </div>
 
                       </div>
@@ -459,6 +471,13 @@
     },
 
     async mounted() {
+      await this.$store.dispatch('getProblemsByGroups', {
+          group: this.currentGroup,
+          urgency: '',
+          importance: '',
+          deadline: '',
+          status: ''
+        })
       await this.$store.dispatch('getGroups').catch(() => this.$router.push('/login'))
       await this.$store.dispatch('getAllUsers')
     },
@@ -474,7 +493,7 @@
     },
     computed: {
       ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', 'user',
-        'currentUid', 'user', 'isLeader', 'members'
+        'currentUid', 'user', 'isLeader', 'members', 'currentGroup'
       ]),
       validatedExecutorAndAdmin: function () {
         return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : this
@@ -493,7 +512,7 @@
     },
 
     methods: {
-            clickOnCard(id, e) {
+      clickOnCard(id, e) {
         if (e.target.tagName == 'DIV' && !e.target.classList.contains('name_div') || e.target.tagName == 'BUTTON' || e
           .target.tagName == 'H5') {
           this.$refs['button_card' + id][0].click()
@@ -1589,13 +1608,6 @@
   }
 
 
-  .close-popover {
-    display: flex;
-    justify-content: flex-end;
-    font-size: 28px;
-    font-family: 'GothamPro';
-    cursor: pointer;
-  }
 
   @media (max-width: 1300px) {
     * {

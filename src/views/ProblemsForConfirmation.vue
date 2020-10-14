@@ -145,16 +145,18 @@
                   <div class="accordion col-9" id="tasks">
                     <div class="card" :ref="'cardSol'+problem.id" style="padding-bottom: 13px; overflow-y: auto;">
                       <div class="card-header" id="headingTasks">
-                        <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                            @click="onClickSol(problem)" id="collapseTasks_btn" data-target="#collapseTasks"
-                            aria-expanded="false" aria-controls="collapseTasks">
+
+                        <button class="btn btn-link btn-block text-left" style="width: 100%;" type="button"
+                          data-toggle="collapse" @click="onClickSol(problem)" id="collapseTasks_btn"
+                          data-target="#collapseTasks" aria-expanded="false" aria-controls="collapseTasks">
+                          <h5 class="mb-0">
                             <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                             <p>
                               Решение
                             </p>
-                          </button>
-                        </h5>
+                          </h5>
+                        </button>
+
                       </div>
 
                       <div id="collapseTasks" class="collapse" aria-labelledby="headingTasks" data-parent="#tasks"
@@ -171,16 +173,18 @@
                   <div class="accordion col-3" id="plan">
                     <div class="card" :ref="'cardPlan'+problem.id" style="height: 100%;">
                       <div class="card-header" id="headingPlan" style="width: 100%;">
-                        <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                            data-target="#collapsePlan" aria-expanded="false" aria-controls="collapsePlan"
-                            @click="onClickPlan(problem.id)">
+
+                        <button class="btn btn-link btn-block text-left" style="width:100%;" type="button"
+                          data-toggle="collapse" data-target="#collapsePlan" aria-expanded="false"
+                          aria-controls="collapsePlan" @click="onClickPlan(problem.id)">
+                          <h5 class="mb-0">
                             <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                             <p>
                               План решения
                             </p>
-                          </button>
-                        </h5>
+                          </h5>
+                        </button>
+
                       </div>
 
                       <div id="collapsePlan" class="collapse" aria-labelledby="headingPlan" data-parent="#plan"
@@ -212,15 +216,18 @@
                   <div class="accordion col-9" id="results">
                     <div class="card">
                       <div class="card-header" id="headingResults" style="width: 100%;">
-                        <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                            data-target="#collapseResults" aria-expanded="false" aria-controls="collapseResults">
+
+                        <button class="btn btn-link btn-block text-left" style="width: 100%;" type="button"
+                          data-toggle="collapse" data-target="#collapseResults" aria-expanded="false"
+                          aria-controls="collapseResults">
+                          <h5 class="mb-0">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                             <p>
                               Команда, опыт, результат
                             </p>
-                          </button>
-                        </h5>
+                          </h5>
+                        </button>
+
                       </div>
 
                       <div id="collapseResults" class="collapse show" aria-labelledby="headingResults"
@@ -303,16 +310,19 @@
                   <div class="accordion col-3" id="groups">
                     <div class="card">
                       <div class="card-header" id="headingGroups" style="width: 100%;">
-                        <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                            data-target="#collapseGroups" aria-expanded="false" aria-controls="collapseGroups">
+
+                        <button class="btn btn-link btn-block text-left" style="width: 100%;" type="button"
+                          data-toggle="collapse" data-target="#collapseGroups" aria-expanded="false"
+                          aria-controls="collapseGroups">
+                          <h5 class="mb-0">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                             <p v-show="!isCreatorLeaderOrAdmin">
                               Направить в подразделение
                             </p>
                             <p v-show="isCreatorLeaderOrAdmin">Направлена в подразделения:</p>
-                          </button>
-                        </h5>
+                          </h5>
+                        </button>
+
                       </div>
 
                       <div id="collapseGroups" class="collapse show" aria-labelledby="headingGroups"
@@ -470,7 +480,7 @@
     },
     computed: {
       ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', 'user',
-        'currentUid', 'user', 'isLeader', 'members'
+        'currentUid', 'user', 'isLeader', 'members', 'amountOfProblemsForConfirmation'
       ]),
       validatedExecutorAndAdmin: function () {
         return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : this
@@ -655,62 +665,62 @@
       },
 
       async onClickShow(problem) {
-          this.checkedGroups = []
-          problem.groups ? problem.groups.forEach(element => {
-            this.checkedGroups.push(element.id)
-          }) : this.checkedGroups = []
-          this.checkedGroups.length < this.groups.length ? this.all = false : this.all = true
+        this.checkedGroups = []
+        problem.groups ? problem.groups.forEach(element => {
+          this.checkedGroups.push(element.id)
+        }) : this.checkedGroups = []
+        this.checkedGroups.length < this.groups.length ? this.all = false : this.all = true
 
-          this.currentProblemCreator = problem.creator_id
+        this.currentProblemCreator = problem.creator_id
 
-          this.$refs['collapsed-header'].forEach(element => {
-            element.classList.contains('collapsed-header') && element.id !== 'heading' + problem.id ? element
-              .classList.remove('collapsed-header') : ''
-          });
+        this.$refs['collapsed-header'].forEach(element => {
+          element.classList.contains('collapsed-header') && element.id !== 'heading' + problem.id ? element
+            .classList.remove('collapsed-header') : ''
+        });
 
-          document.getElementById('heading' + problem.id).classList.contains('collapsed-header') ? document
-            .getElementById('heading' + problem.id).classList.remove('collapsed-header') : document.getElementById(
-              'heading' + problem.id).classList.add('collapsed-header')
+        document.getElementById('heading' + problem.id).classList.contains('collapsed-header') ? document
+          .getElementById('heading' + problem.id).classList.remove('collapsed-header') : document.getElementById(
+            'heading' + problem.id).classList.add('collapsed-header')
 
-          if (this.paramsModal !== problem) {
-            this.openDelete = false
-            this.openShow = true
-            this.paramsModal = problem
+        if (this.paramsModal !== problem) {
+          this.openDelete = false
+          this.openShow = true
+          this.paramsModal = problem
 
-            this.$store.commit('setError', '')
-            await this.$store.dispatch('getSolutions', problem.id).then(response => {
-                this.$store.dispatch('getTasks', response.id)
-                this.$store.dispatch('getCurrentSolution', '')
-                this.$store.dispatch('getCurrentSolution', response.id)
-                this.mounted = true
-              })
-              .then(() => {
-                document.getElementById('collapseTasks').classList.contains('show') ? document.getElementById(
-                  'collapseTasks').classList.remove('show') : ''
-            if (this.members.find(m => m.id == problem.creator_id) && this.isLeader) {
-              this.isLeaderOgUser = true
-              console.log(this.isLeader);
-            } else {
-              this.isLeaderOgUser = false
-            }
-          })
-        .catch(() => {
-          this.$store.dispatch('clearTasks')
+          this.$store.commit('setError', '')
+          await this.$store.dispatch('getSolutions', problem.id).then(response => {
+              this.$store.dispatch('getTasks', response.id)
+              this.$store.dispatch('getCurrentSolution', '')
+              this.$store.dispatch('getCurrentSolution', response.id)
+              this.mounted = true
+            })
+            .then(() => {
+              document.getElementById('collapseTasks').classList.contains('show') ? document.getElementById(
+                'collapseTasks').classList.remove('show') : ''
+              if (this.members.find(m => m.id == problem.creator_id) && this.isLeader) {
+                this.isLeaderOgUser = true
+                console.log(this.isLeader);
+              } else {
+                this.isLeaderOgUser = false
+              }
+            })
+            .catch(() => {
+              this.$store.dispatch('clearTasks')
+            })
+        }
+      },
+
+      async sendToGroup(id, groupsArray) {
+        await this.$store.dispatch('sendToGroup', {
+          id,
+          groupsArray
+        }).then(() => {
+          this.$toast.success("Проблема направлена в подразделения");
         })
-    }
-  },
-
-  async sendToGroup(id, groupsArray) {
-      await this.$store.dispatch('sendToGroup', {
-        id,
-        groupsArray
-      }).then(() => {
-        this.$toast.success("Проблема направлена в подразделения");
-      })
-    },
+      },
 
 
-    async onClickInput(id, creator_id, event) {
+      async onClickInput(id, creator_id, event) {
         await this.$store.commit('setError404', '')
         this.currentProblemCreator = creator_id
         if (creator_id == this.currentUid || this.user.is_admin) {
@@ -726,167 +736,167 @@
       },
 
       async onBlurInput(name, id, event) {
-          await this.$store.commit('setError404', '')
-          if (name !== this.currentProblemName) {
-            await this.$store.dispatch('editProblemName', {
-              name,
-              id
-            }).catch(() => {
-              this.$store.commit('editProblemName', {
-                name: this.currentProblemName,
-                id
-              })
-            })
-            event.target.style.display = 'none'
-            this.$refs['name-div' + id][0].style.display = 'initial'
-          } else {
+        await this.$store.commit('setError404', '')
+        if (name !== this.currentProblemName) {
+          await this.$store.dispatch('editProblemName', {
+            name,
+            id
+          }).catch(() => {
             this.$store.commit('editProblemName', {
               name: this.currentProblemName,
               id
             })
-            event.target.style.display = 'none'
-            this.$refs['name-div' + id][0].style.display = 'initial'
-          }
+          })
+          event.target.style.display = 'none'
+          this.$refs['name-div' + id][0].style.display = 'initial'
+        } else {
+          this.$store.commit('editProblemName', {
+            name: this.currentProblemName,
+            id
+          })
+          event.target.style.display = 'none'
+          this.$refs['name-div' + id][0].style.display = 'initial'
+        }
 
-        },
-        onFocusInput(event) {
-          this.currentProblemName = event.target.value
-        },
+      },
+      onFocusInput(event) {
+        this.currentProblemName = event.target.value
+      },
 
-        async editProblemName(name, id, event) {
-            await this.$store.commit('setError404', '')
-            event.target.blur()
-          },
+      async editProblemName(name, id, event) {
+        await this.$store.commit('setError404', '')
+        event.target.blur()
+      },
 
 
-          onFocusTextarea(event) {
-            this.currentTextarea = event.target.value
-          },
+      onFocusTextarea(event) {
+        this.currentTextarea = event.target.value
+      },
 
-          onBlurTextarea(event, type) {
-            switch (type) {
-              case 'exp':
-                // console.log('blur');
-                // console.log(this.currentSolutionName);
-                // this.$store.commit('editSolutionOther', {
-                //   name: this.currentSolutionName,
-                //   id
-                // })
-                break;
-              case 'plan':
-                // console.log(this.currentTextarea);
-                break;
-              case 'team':
-                // console.log(this.currentTextarea);
-                break;
-              case 'result':
-                // console.log(this.currentTextarea);
-                break;
-              default:
-                alert("Нет таких значений");
-            }
-          },
+      onBlurTextarea(event, type) {
+        switch (type) {
+          case 'exp':
+            // console.log('blur');
+            // console.log(this.currentSolutionName);
+            // this.$store.commit('editSolutionOther', {
+            //   name: this.currentSolutionName,
+            //   id
+            // })
+            break;
+          case 'plan':
+            // console.log(this.currentTextarea);
+            break;
+          case 'team':
+            // console.log(this.currentTextarea);
+            break;
+          case 'result':
+            // console.log(this.currentTextarea);
+            break;
+          default:
+            alert("Нет таких значений");
+        }
+      },
 
-          onClear(event, id, type) {
-            event.preventDefault()
-            switch (type) {
-              case 'exp':
-                this.$refs['textarea_exp' + id][0].value = this.currentTextarea
-                break;
-              case 'plan':
-                this.$refs['textarea_plan' + id][0].value = this.currentTextarea
-                break;
-              case 'team':
-                this.$refs['textarea_team' + id][0].value = this.currentTextarea
-                break;
-              case 'result':
-                this.$refs['textarea_result' + id][0].value = this.currentTextarea
-                break;
-              default:
-                alert("Нет таких значений");
-            }
-          },
+      onClear(event, id, type) {
+        event.preventDefault()
+        switch (type) {
+          case 'exp':
+            this.$refs['textarea_exp' + id][0].value = this.currentTextarea
+            break;
+          case 'plan':
+            this.$refs['textarea_plan' + id][0].value = this.currentTextarea
+            break;
+          case 'team':
+            this.$refs['textarea_team' + id][0].value = this.currentTextarea
+            break;
+          case 'result':
+            this.$refs['textarea_result' + id][0].value = this.currentTextarea
+            break;
+          default:
+            alert("Нет таких значений");
+        }
+      },
 
-          newLine(e) {
-            let caret = e.target.selectionStart;
-            e.target.setRangeText("\n", caret, caret, "end");
-            this.text = e.target.value;
-          },
-          async editPlan(id, plan, event) {
-              event.target.blur()
-              await this.$store.commit('setError404', '')
-              if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
-                await this.$store.dispatch('editPlan', {
-                    plan,
-                    id
-                  })
-                  .catch(() => {
-                    this.$store.commit('editPlan', {
-                      plan: this.currentTextarea,
-                      id
-                    })
-                  })
-              } else {
-                //
-              }
-            },
-            async editTeam(id, team, event) {
-                event.target.blur()
-                await this.$store.commit('setError404', '')
-                if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid) {
-                  await this.$store.dispatch('editTeam', {
-                      team,
-                      id
-                    })
-                    .catch(() => {
-                      this.$store.commit('editTeam', {
-                        team: this.currentTextarea,
-                        id
-                      })
-                    })
-                } else {
-                  //
-                }
-              },
-              async editExp(id, experience, event) {
-                  event.target.blur()
-                  await this.$store.commit('setError404', '')
-                  if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
-                    await this.$store.dispatch('editExp', {
-                        experience,
-                        id
-                      })
-                      .catch(() => {
-                        this.$store.commit('editExp', {
-                          experience: this.currentTextarea,
-                          id
-                        })
-                      })
-                  } else {
-                    //
-                  }
+      newLine(e) {
+        let caret = e.target.selectionStart;
+        e.target.setRangeText("\n", caret, caret, "end");
+        this.text = e.target.value;
+      },
+      async editPlan(id, plan, event) {
+        event.target.blur()
+        await this.$store.commit('setError404', '')
+        if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
+          await this.$store.dispatch('editPlan', {
+              plan,
+              id
+            })
+            .catch(() => {
+              this.$store.commit('editPlan', {
+                plan: this.currentTextarea,
+                id
+              })
+            })
+        } else {
+          //
+        }
+      },
+      async editTeam(id, team, event) {
+        event.target.blur()
+        await this.$store.commit('setError404', '')
+        if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid) {
+          await this.$store.dispatch('editTeam', {
+              team,
+              id
+            })
+            .catch(() => {
+              this.$store.commit('editTeam', {
+                team: this.currentTextarea,
+                id
+              })
+            })
+        } else {
+          //
+        }
+      },
+      async editExp(id, experience, event) {
+        event.target.blur()
+        await this.$store.commit('setError404', '')
+        if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
+          await this.$store.dispatch('editExp', {
+              experience,
+              id
+            })
+            .catch(() => {
+              this.$store.commit('editExp', {
+                experience: this.currentTextarea,
+                id
+              })
+            })
+        } else {
+          //
+        }
 
-                },
-                async editResult(id, result, event) {
-                    event.target.blur()
-                    await this.$store.commit('setError404', '')
-                    if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
-                      await this.$store.dispatch('editResult', {
-                          result,
-                          id
-                        })
-                        .catch(() => {
-                          this.$store.commit('editResult', {
-                            result: this.currentTextarea,
-                            id
-                          })
-                        })
-                    } else {
-                      //
-                    }
-                  },
+      },
+      async editResult(id, result, event) {
+        event.target.blur()
+        await this.$store.commit('setError404', '')
+        if (this.user.is_admin || this.solutions[0].executor_id == this.currentUid || this.isLeader) {
+          await this.$store.dispatch('editResult', {
+              result,
+              id
+            })
+            .catch(() => {
+              this.$store.commit('editResult', {
+                result: this.currentTextarea,
+                id
+              })
+            })
+        } else {
+          //
+        }
+      },
 
-  }
+    }
   };
 </script>
 
@@ -1575,13 +1585,7 @@
     cursor: pointer;
   }
 
-  .close-popover {
-    display: flex;
-    justify-content: flex-end;
-    font-size: 28px;
-    font-family: 'GothamPro';
-    cursor: pointer;
-  }
+
 
   @media (max-width: 1300px) {
     * {

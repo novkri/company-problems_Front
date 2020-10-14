@@ -32,7 +32,7 @@
           <div class="card-header row" id="heading">
             <div class="name col-5">
               <h5 class="mb-0" style="height: 100%;">
-                <button class="btn btn-link collapsed" data-toggle="collapse" :data-target="'#collapseOne'+group.id"
+                <button class="btn btn-link collapsed" style="width: 100%;" data-toggle="collapse" :data-target="'#collapseOne'+group.id"
                   @click="showOnClickUsers(group.id)" aria-expanded="false" :aria-controls="'collapseOne'+group.id">
                   <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                 </button>
@@ -466,6 +466,12 @@
 </script>
 
 <style scoped lang="scss">
+  h5 {
+    .btn {
+      padding-right: 16px;
+      padding-left: 16px;
+    }
+  }
   .container {
     width: 95%;
     height: inherit;
@@ -529,6 +535,7 @@
     display: flex;
     height: fit-content;
   }
+
 
   .flex {
     display: flex;

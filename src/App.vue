@@ -23,6 +23,25 @@
   }
 </script>
 <style lang="scss">
+
+  h5.mb-0 {
+    p:hover {
+      text-decoration: none;
+    }
+  }
+  .close-popover {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 28px;
+    font-family: 'GothamPro';
+    cursor: pointer;
+    color: #000;
+  }
+  .close-popover:hover {
+    text-decoration: none;
+    color: #000;
+  }
+
   .spinner-border {
     margin: auto;
     color: #92D2C3;

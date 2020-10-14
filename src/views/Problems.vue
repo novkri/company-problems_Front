@@ -6,10 +6,9 @@
     <div class="container" v-if="_isMounted">
 
       <div id="accordion">
-        <div class="card" id="card" v-for="(problem, idx) in problems" :key="idx"
-          >
-          <!-- {{problem.status}} -->
-          <div class="card-header row" @click="event => clickOnCard(problem.id, event)" :id="'heading'+problem.id" ref="collapsed-header">
+        <div class="card" id="card" v-for="(problem, idx) in problems" :key="idx">
+          <div class="card-header row" @click="event => clickOnCard(problem.id, event)" :id="'heading'+problem.id"
+            ref="collapsed-header">
             <div class="name col-4">
               <button class="btn btn-link collapsed" :ref="'button_card'+problem.id" @click="onClickShow(problem)"
                 data-toggle="collapse" :data-target="'#collapseOne'+problem.id" aria-expanded="false"
@@ -149,16 +148,17 @@
                   <div class="accordion col-9" id="tasks">
                     <div class="card" :ref="'cardSol'+problem.id">
                       <div class="card-header" id="headingTasks">
-                        <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" id="collapseTasks_btn"
-                            @click="onClickSol(problem.id)" data-target="#collapseTasks" aria-expanded="false"
-                            aria-controls="collapseTasks">
+                        <button class="btn btn-link btn-block text-left" style="width: 100%;" type="button"
+                          data-toggle="collapse" id="collapseTasks_btn" @click="onClickSol(problem.id)"
+                          data-target="#collapseTasks" aria-expanded="false" aria-controls="collapseTasks">
+                          <h5 class="mb-0">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                             <p>
                               Решение
                             </p>
-                          </button>
-                        </h5>
+                          </h5>
+                        </button>
+
                       </div>
 
                       <div id="collapseTasks" class="collapse show" aria-labelledby="headingTasks" data-parent="#tasks"
@@ -175,16 +175,18 @@
                   <div class="accordion col-3" id="plan">
                     <div class="card" :ref="'cardPlan'+problem.id" style="height: 100%;">
                       <div class="card-header" id="headingPlan" style="width: 100%;">
-                        <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                            data-target="#collapsePlan" aria-expanded="false" aria-controls="collapsePlan"
-                            @click="onClickPlan(problem.id)">
+
+                        <button class="btn btn-link btn-block text-left" style="width:100%;" type="button"
+                          data-toggle="collapse" data-target="#collapsePlan" aria-expanded="false"
+                          aria-controls="collapsePlan" @click="onClickPlan(problem.id)">
+                          <h5 class="mb-0">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                             <p>
                               План решения
                             </p>
-                          </button>
-                        </h5>
+                          </h5>
+                        </button>
+
                       </div>
 
                       <div id="collapsePlan" class="collapse show" aria-labelledby="headingPlan" data-parent="#plan"
@@ -216,15 +218,18 @@
                   <div class="accordion col-9" id="results">
                     <div class="card">
                       <div class="card-header" id="headingResults" style="width: 100%;">
-                        <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                            data-target="#collapseResults" aria-expanded="false" aria-controls="collapseResults">
+
+                        <button class="btn btn-link btn-block text-left" style="width: 100%;" type="button"
+                          data-toggle="collapse" data-target="#collapseResults" aria-expanded="false"
+                          aria-controls="collapseResults">
+                          <h5 class="mb-0">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                             <p>
                               Команда, опыт, результат
                             </p>
-                          </button>
-                        </h5>
+                          </h5>
+                        </button>
+
                       </div>
 
                       <div id="collapseResults" class="collapse" aria-labelledby="headingResults" style="width: 100%;"
@@ -672,7 +677,7 @@
 
         this.currentProblemCreator = problem.creator_id
 
-       
+
 
         this.$refs['collapsed-header'].forEach(element => {
           element.classList.contains('collapsed-header') && element.id !== 'heading' + problem.id ? element
@@ -697,7 +702,8 @@
               this.mounted = true
             })
             .then(() => {
-              document.getElementById('collapseTasks').classList.contains('show') ? '' : document.getElementById('collapseTasks_btn').click()
+              document.getElementById('collapseTasks').classList.contains('show') ? '' : document.getElementById(
+                'collapseTasks_btn').click()
 
               this.$refs['collapsed-results'].forEach(element => {
                 element.classList.contains('show') ? this.$refs['collapseResultsBtn'].forEach(element => {
@@ -1620,14 +1626,6 @@
   }
 
   .custom-control-label {
-    cursor: pointer;
-  }
-
-  .close-popover {
-    display: flex;
-    justify-content: flex-end;
-    font-size: 28px;
-    font-family: 'GothamPro';
     cursor: pointer;
   }
 

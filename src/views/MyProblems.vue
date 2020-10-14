@@ -146,19 +146,21 @@
                     <div class="card" :ref="'cardSol'+problem.id"
                       :style="[problem.status == 'На проверке заказчика' ? {'padding-bottom': '13px', 'overflow-y': 'auto'} : {'padding-bottom': '0px'}]">
                       <div class="card-header" id="headingTasks">
-                        <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left"
-                            :class="[problem.status == 'На проверке заказчика' ? 'collapsed' : '']" type="button"
-                            data-toggle="collapse" id="collapseTasks_btn" @click="onClickSol(problem)"
-                            data-target="#collapseTasks" aria-expanded="false" aria-controls="collapseTasks">
+
+                        <button class="btn btn-link btn-block text-left" style="width: 100%;"
+                          :class="[problem.status == 'На проверке заказчика' ? 'collapsed' : '']" type="button"
+                          data-toggle="collapse" id="collapseTasks_btn" @click="onClickSol(problem)"
+                          data-target="#collapseTasks" aria-expanded="false" aria-controls="collapseTasks">
+                          <h5 class="mb-0">
                             <chevron-up-icon v-if="problem.status == 'На проверке заказчика'" size="1.5x"
                               class="custom-class"></chevron-up-icon>
                             <chevron-down-icon v-else size="1.5x" class="custom-class"></chevron-down-icon>
                             <p>
                               Решение
                             </p>
-                          </button>
-                        </h5>
+                          </h5>
+                        </button>
+
                       </div>
 
                       <div id="collapseTasks" class="collapse"
@@ -176,22 +178,26 @@
                   <div class="accordion col-3" id="plan">
                     <div class="card" :ref="'cardPlan'+problem.id" style="height: 100%;padding-bottom: 18px;">
                       <div class="card-header" id="headingPlan" style="width: 100%;">
-                        <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left" :class="[problem.status == 'На проверке заказчика' ? 'collapsed' : '']" type="button" data-toggle="collapse"
-                            data-target="#collapsePlan" aria-expanded="false" aria-controls="collapsePlan"
-                            @click="onClickPlan(problem.id)">
+
+                        <button class="btn btn-link btn-block text-left" style="width:100%;"
+                          :class="[problem.status == 'На проверке заказчика' ? 'collapsed' : '']" type="button"
+                          data-toggle="collapse" data-target="#collapsePlan" aria-expanded="false"
+                          aria-controls="collapsePlan" @click="onClickPlan(problem.id)">
+                          <h5 class="mb-0">
                             <chevron-up-icon v-if="problem.status == 'На проверке заказчика'" size="1.5x"
                               class="custom-class"></chevron-up-icon>
                             <chevron-down-icon v-else size="1.5x" class="custom-class"></chevron-down-icon>
                             <p>
                               План решения
                             </p>
-                          </button>
-                        </h5>
+                          </h5>
+                        </button>
+
                       </div>
 
-                      <div id="collapsePlan" class="collapse" :class="[problem.status == 'На проверке заказчика' ? '' : 'show']" aria-labelledby="headingPlan" data-parent="#plan"
-                        style="width: 100%;">
+                      <div id="collapsePlan" class="collapse"
+                        :class="[problem.status == 'На проверке заказчика' ? '' : 'show']" aria-labelledby="headingPlan"
+                        data-parent="#plan" style="width: 100%;">
                         <div class="card-body p-0" :ref="'cardBody'+problem.id" style="height: 100%;">
                           <!-- plan,  -->
                           <textarea placeholder="Опишите ваш план решения..." rows="6" :ref="'textarea_plan'+problem.id"
@@ -219,19 +225,20 @@
                   <div class="accordion col-9" id="results">
                     <div class="card">
                       <div class="card-header" id="headingResults" style="width: 100%;">
-                        <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left"
-                             type="button"
-                            data-toggle="collapse" data-target="#collapseResults" aria-expanded="false"
-                            aria-controls="collapseResults">
+
+                        <button class="btn btn-link btn-block text-left" style="width: 100%;" type="button"
+                          data-toggle="collapse" data-target="#collapseResults" aria-expanded="false"
+                          aria-controls="collapseResults">
+                          <h5 class="mb-0">
                             <chevron-up-icon v-if="problem.status == 'На проверке заказчика'" size="1.5x"
                               class="custom-class"></chevron-up-icon>
                             <chevron-down-icon v-else size="1.5x" class="custom-class"></chevron-down-icon>
                             <p>
                               Команда, опыт, результат
                             </p>
-                          </button>
-                        </h5>
+                          </h5>
+                        </button>
+
                       </div>
 
                       <div id="collapseResults" class="collapse"
@@ -327,16 +334,19 @@
                   <div class="accordion col-3" id="groups">
                     <div class="card">
                       <div class="card-header" id="headingGroups" style="width: 100%;">
-                        <h5 class="mb-0">
-                          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-                            data-target="#collapseGroups" aria-expanded="false" aria-controls="collapseGroups">
+
+                        <button class="btn btn-link btn-block text-left" style="width: 100%;" type="button"
+                          data-toggle="collapse" data-target="#collapseGroups" aria-expanded="false"
+                          aria-controls="collapseGroups">
+                          <h5 class="mb-0">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                             <p v-show="!isCreatorLeaderOrAdmin">
                               Направить в подразделение
                             </p>
                             <p v-show="isCreatorLeaderOrAdmin">Направлена в подразделения:</p>
-                          </button>
-                        </h5>
+                          </h5>
+                        </button>
+
                       </div>
 
                       <div id="collapseGroups" class="collapse" aria-labelledby="headingGroups" style="width: 100%;"
@@ -1612,13 +1622,7 @@
     cursor: pointer;
   }
 
-  .close-popover {
-    display: flex;
-    justify-content: flex-end;
-    font-size: 28px;
-    font-family: 'GothamPro';
-    cursor: pointer;
-  }
+
 
   @media (max-width: 1300px) {
     * {
