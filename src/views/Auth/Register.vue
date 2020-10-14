@@ -78,7 +78,7 @@
         </div>
 
       </form>
-      <button type="submit" class="btn" @click.prevent="register">Зарегистрироваться</button>
+      <button type="submit" v-show="!success" class="btn" @click.prevent="register">Зарегистрироваться</button>
       <div class="to-login">Уже зарегистрированы? <router-link to="/login">Вход</router-link>
       </div>
     </div>
@@ -86,7 +86,7 @@
     <div v-else class="successfully">
       <span>Вы успешно зарегистрированы</span>
       <thumbs-up-icon size="3x" class="custom-class" style="color: #92D2C3; margin: 73px 0;"></thumbs-up-icon>
-      <button type="button" class="btn" @click="goToLogin">
+      <button type="button" class="btn" @click="goToLogin" v-show="success">
         На страницу авторизации
       </button>
     </div>
