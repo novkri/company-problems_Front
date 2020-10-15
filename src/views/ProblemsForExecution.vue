@@ -192,7 +192,7 @@
                         <div class="card-body p-0" :ref="'cardBody'+problem.id" style="height: 100%;">
                           <!-- plan,  -->
                           <textarea placeholder="Опишите ваш план решения..." rows="6" :ref="'textarea_plan'+problem.id"
-                            style="height: 100%;" v-model="solutions[0].plan" :disabled="isResponsibleAndAdmin"
+                            style="height: 100%;min-height: 418px;" v-model="solutions[0].plan" :disabled="isResponsibleAndAdmin"
                             @keydown.enter.prevent.exact="event => {editPlan(solutions[0].id, solutions[0].plan, event)}"
                             @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id, 'plan')"
                             @blur="event => {onBlurTextarea(event, 'plan', problem.id)}"></textarea>
@@ -1491,8 +1491,8 @@
   }
 
   .check-inputs {
-    max-height: 231px;
-    min-height: 231px;
+    max-height: 323px;
+    min-height: 323px;
     overflow-y: scroll;
     padding-right: 10px;
   }

@@ -143,7 +143,7 @@
               <div class="card" style="padding-top: 34px;" v-if="mounted">
                 <div class="row" style="display: flex; flex-direction: row; margin-bottom: 8px;">
                   <div class="accordion col-9" id="tasks">
-                    <div class="card" :ref="'cardSol'+problem.id" style="padding-bottom: 13px; overflow-y: auto;">
+                    <div class="card" :ref="'cardSol'+problem.id" style="padding-bottom: 13px; overflow-y: auto; min-height: auto;">
                       <div class="card-header" id="headingTasks">
 
                         <button class="btn btn-link btn-block text-left" style="width: 100%;" type="button"
@@ -171,7 +171,7 @@
 
                   <!-- План -->
                   <div class="accordion col-3" id="plan">
-                    <div class="card" :ref="'cardPlan'+problem.id" style="height: 100%;">
+                    <div class="card" :ref="'cardPlan'+problem.id" style="padding-bottom: 18px;">
                       <div class="card-header" id="headingPlan" style="width: 100%;">
 
                         <button class="btn btn-link btn-block text-left" style="width:100%;" type="button"
@@ -192,7 +192,7 @@
                         <div class="card-body p-0" :ref="'cardBody'+problem.id" style="height: 100%;">
                           <!-- plan,  -->
                           <textarea placeholder="Опишите ваш план решения..." rows="6" :ref="'textarea_plan'+problem.id"
-                            style="height: 100%;" v-model="solutions[0].plan" :disabled="isResponsibleAndAdmin"
+                            style="height: 100%;min-height: 418px;" v-model="solutions[0].plan" :disabled="isResponsibleAndAdmin"
                             @keydown.enter.prevent.exact="event => {editPlan(solutions[0].id, solutions[0].plan, event)}"
                             @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id, 'plan')"
                             @blur="event => {onBlurTextarea(event, 'plan', problem.id)}"></textarea>
@@ -510,15 +510,18 @@
         if (document.getElementById('collapseTasks').classList.contains('show')) {
           this.$refs['cardSol' + problem.id][0].style.paddingBottom = '18px'
           this.$refs['cardSol' + problem.id][0].style.overflowY = 'auto'
+          this.$refs['cardSol' + problem.id][0].style.minHeight = 'auto'
         } else {
           this.$refs['cardSol' + problem.id][0].style.paddingBottom = '0px'
           this.$refs['cardSol' + problem.id][0].style.overflowY = 'scroll'
-          this.$refs['cardPlan' + problem.id][0].style.height = 'fit-content'
+          this.$refs['cardSol' + problem.id][0].style.minHeight = '344px'
         }
+          // this.$refs['cardPlan' + problem.id][0].style.height = 'fit-content'
+
       },
       onClickPlan(id) {
         document.getElementById('collapsePlan').classList.contains('show') ? this.$refs['cardPlan' + id][0].style
-          .height = 'fit-content' : this.$refs['cardPlan' + id][0].style.height = '100%'
+          .height = 'fit-content' : this.$refs['cardPlan' + id][0].style.height = 'auto'
         document.getElementById('collapsePlan').classList.contains('show') ? this.$refs['textarea_plan' + id][0].style
           .height = 'fit-content' : this.$refs['textarea_plan' + id][0].style.height = '100%'
         document.getElementById('collapsePlan').classList.contains('show') ? this.$refs['cardBody' + id][0].style
@@ -1446,8 +1449,8 @@
   }
 
   .check-inputs {
-    max-height: 231px;
-    min-height: 231px;
+    max-height: 323px;
+    min-height: 323px;
     overflow-y: scroll;
     padding-right: 10px;
   }
