@@ -4,7 +4,6 @@
     <div class="filters">
     </div>
     <div class="container" v-if="_isMounted">
-
       <div id="accordion">
         <div class="card" id="card" v-for="(problem, idx) in problems" :key="idx">
           <div class="card-header row" @click="event => clickOnCard(problem.id, event)" :id="'heading'+problem.id"
@@ -257,7 +256,7 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Опыт</label>
-                            <textarea rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_exp'+problem.id"
+                            <textarea placeholder="Заполните опыт по решению проблемы..." rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_exp'+problem.id"
                               v-model="problem.experience"
                               @keydown.enter.prevent.exact="event => {editExp(problem.id, problem.experience, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id, 'exp')"
@@ -276,7 +275,7 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Результат</label>
-                            <textarea rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_result'+problem.id"
+                            <textarea placeholder="Заполните результат решения проблемы..." rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_result'+problem.id"
                               v-model="problem.result"
                               @keydown.enter.prevent.exact="event => {editResult(problem.id, problem.result, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id, 'result')"
@@ -359,7 +358,7 @@
                             </div>
                           </div>
 
-                          <button class="btn btnMain btn-to-groups" v-show="!isCreatorLeaderOrAdmin"
+                          <button class="btn btnMain btn-to-groups" v-show="!validatedExecutorAndAdmin"
                             @click="sendToGroup(problem.id, checkedGroups)">Направить</button>
                         </div>
 
@@ -459,11 +458,14 @@
     },
 
     async mounted() {
+      await this.$store.dispatch('checkIsLeader')
+
       await this.$store.dispatch('getProblems').catch(() => {
         this.$store.commit('setProblems', '')
       })
       await this.$store.dispatch('getGroups').catch(() => this.$router.push('/login'))
       await this.$store.dispatch('getAllUsers')
+
     },
     watch: {
       error404() {
@@ -507,7 +509,7 @@
         } else {
           this.$refs['cardSol' + id][0].style.paddingBottom = '0px'
           this.$refs['cardSol' + id][0].style.overflowY = 'scroll'
-          this.$refs['cardSol' + id][0].style.minHeight = '344px'
+          this.$refs['cardSol' + id][0].style.minHeight = '500px'
         }
       },
 
@@ -717,9 +719,8 @@
               })
 
 
-              if (this.members.find(m => m.id == problem.creator_id) && this.isLeader) {
+              if (this.members.find(m => m.id == problem.creator_id) && this.isLeader || problem.creator_id == this.currentUid && this.isLeader) {
                 this.isLeaderOgUser = true
-                console.log(this.isLeader);
               } else {
                 this.isLeaderOgUser = false
               }
@@ -1533,7 +1534,7 @@
       max-height: 500px;
       overflow-y: scroll;
       padding-bottom: 0;
-      min-height: 344px;
+      min-height: 500px;
     }
 
     .card-header {
@@ -1587,7 +1588,6 @@
 
   }
 
-  .middle-icons,
   .middle-icons_text {
     align-items: center;
 

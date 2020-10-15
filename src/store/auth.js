@@ -110,6 +110,7 @@ export default {
     }) => {
       axios.get(process.env.VUE_APP_ROOT_URL + '/is-group-leader')
         .then(response => {
+          console.log(response);
           commit('isLeader', response.data)
         })
     },

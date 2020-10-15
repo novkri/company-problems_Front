@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 68vh;padding-top: 45px;">
+  <div style="height: 83vh;padding-top: 45px;">
     <div class="subtitle row">
       <span class="col-4">Название подразделения</span>
       <span class="col-4">Название подразделения (сокращенно)</span>
@@ -32,8 +32,9 @@
           <div class="card-header row" id="heading">
             <div class="name col-5">
               <h5 class="mb-0" style="height: 100%;">
-                <button class="btn btn-link collapsed" style="width: 100%;" data-toggle="collapse" :data-target="'#collapseOne'+group.id"
-                  @click="showOnClickUsers(group.id)" aria-expanded="false" :aria-controls="'collapseOne'+group.id">
+                <button class="btn btn-link collapsed" style="width: 100%;" data-toggle="collapse"
+                  :data-target="'#collapseOne'+group.id" @click="showOnClickUsers(group.id)" aria-expanded="false"
+                  :aria-controls="'collapseOne'+group.id">
                   <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                 </button>
                 <div class="name_div" style="width: 83%;">
@@ -80,7 +81,7 @@
             </div>
 
             <div class="selectResponsible col-3">
-              <ss-select v-model="group.leader_id" :options="allUsersReduced.filter(u => u.group_id == group.id)" 
+              <ss-select v-model="group.leader_id" :options="allUsersReduced.filter(u => u.group_id == group.id)"
                 track-by="name" search-by="surname" @change="selectExecutorGroup(group, $event)" disable-by="disabled"
                 id="ss-select" style="width: fit-content;height: fit-content;">
                 <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
@@ -112,8 +113,8 @@
               </ss-select>
             </div>
             <div style="width: 50px;height: 100%;" class="icons col-1">
-              <button type="button" class="close" id="remove" data-toggle="modal" data-target="#groupDelete" v-show="user.is_admin"
-                @click="deleteGroup(group)">
+              <button type="button" class="close" id="remove" data-toggle="modal" data-target="#groupDelete"
+                v-show="user.is_admin" @click="deleteGroup(group)">
                 <trash-icon size="1x" class="custom-class"></trash-icon>
               </button>
             </div>
@@ -128,11 +129,11 @@
 
                     <div>
                       <ss-select :options="usersNoGroup" track-by="name" search-by="surname" disable-by="disabled"
-                        id="ss-select" style="width: fit-content;" @change="putUserToGroup(group.id, $event)" >
+                        id="ss-select" style="width: fit-content;" @change="putUserToGroup(group.id, $event)">
                         <div
                           slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                           style="cursor: pointer; width: 100%;">
-                          <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between" 
+                          <ss-select-toggle class="pl-1 pr-4 py-1 flex items-center justify-between"
                             style="width: 100%; padding: 13px;">
                             <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
                             <plus-icon size="1x" class="custom-class" id="plusIcon"></plus-icon>
@@ -173,8 +174,8 @@
     </div>
 
 
-    <button v-show="user.is_admin" type="button" class="btn btnMain" @click="createG" data-toggle="modal" data-target="#groupCreate"
-      style="margin: 100px auto 30px;">
+    <button v-show="user.is_admin" type="button" class="btn btnMain" @click="createG" data-toggle="modal"
+      data-target="#groupCreate" style="margin: 37px auto 30px;">
       <plus-icon size="1.5x" class="custom-class" style="color: white; margin-right: 5px;"></plus-icon><span>Добавить
         подразделение</span>
     </button>
@@ -261,11 +262,15 @@
 
     },
     async mounted() {
+      await this.$store.dispatch('checkIsLeader')
+
       await this.$store.dispatch('getGroups')
       await this.$store.dispatch('getAllUsers')
     },
     computed: {
-      ...mapGetters(['groups', 'error', 'error404', 'allUsers', 'members', 'usersNoGroup',  'allUsersReduced', 'user']),
+      ...mapGetters(['groups', 'error', 'error404', 'allUsers', 'members', 'usersNoGroup', 'allUsersReduced', 'user',
+        'leader'
+      ]),
 
       pageCount() {
         let l = this.groups.length,
@@ -289,25 +294,25 @@
       onClickInput(id, type, event) {
         if (this.user.is_admin) {
           event.target.style.display = 'none'
-        this.$nextTick(() => {
-          if (type == 'name') {
-            this.$refs['group-name' + id][0].style.display = 'flex'
-            this.$refs['group-name' + id][0].focus()
-          } else {
-            this.$refs['group-name-short' + id][0].style.display = 'flex'
-            this.$refs['group-name-short' + id][0].focus()
-          }
-        })
+          this.$nextTick(() => {
+            if (type == 'name') {
+              this.$refs['group-name' + id][0].style.display = 'flex'
+              this.$refs['group-name' + id][0].focus()
+            } else {
+              this.$refs['group-name-short' + id][0].style.display = 'flex'
+              this.$refs['group-name-short' + id][0].focus()
+            }
+          })
         } else {
           this.$nextTick(() => {
-          if (type == 'name') {
-            this.$refs['group-name' + id][0].style.display = 'none'
-          } else {
-            this.$refs['group-name-short' + id][0].style.display = 'none'
-          }
-        })
+            if (type == 'name') {
+              this.$refs['group-name' + id][0].style.display = 'none'
+            } else {
+              this.$refs['group-name-short' + id][0].style.display = 'none'
+            }
+          })
         }
-        
+
       },
 
       showOnClickUsers(id) {
@@ -405,6 +410,7 @@
           groupId: group.id,
           leader_id: event
         }
+
       },
       async setNewLeader(param) {
         await this.$store.commit('setError404', '')
@@ -472,9 +478,10 @@
       padding-left: 16px;
     }
   }
+
   .container {
     width: 95%;
-    height: inherit;
+    height: 75%;
     overflow-y: scroll;
     margin-top: 10px;
   }
@@ -482,7 +489,7 @@
   #accordion {
     width: inherit;
     margin: auto;
-    height: auto;
+    height: 100%;
   }
 
   .name_div,
@@ -629,7 +636,7 @@
         svg {
           color: #92D2C3;
         }
-        
+
       }
     }
   }
@@ -642,7 +649,7 @@
   }
 
   section {
-    top: 62%;
+    top: 100%;
     font-family: 'GothamPro';
   }
 
@@ -935,7 +942,9 @@
   }
 
   @media (min-width: 1400px) {
-    .container, .subtitle {
+
+    .container,
+    .subtitle {
       max-width: 1350px;
     }
 

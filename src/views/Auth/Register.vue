@@ -328,7 +328,6 @@
 
  .form-control--valid {
     border: transparent;
-    border-radius: 6px;
     background-color: #FAFAFA;
     color: #2D453F;
     caret-color: #92D2C3;
@@ -343,7 +342,6 @@
 
   .form-control--error {
     border: transparent;
-    border-radius: 6px;
     background-color: #FAFAFA;
     color: #2D453F;
     caret-color: #92D2C3;

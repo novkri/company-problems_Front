@@ -5,7 +5,7 @@
         <div class="card-header" id="statisticQuantitativeIndicators"
           @click="clickCard('statisticQuantitativeIndicators')">
           <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+            <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse"
               data-target="#collapse_statisticQuantitativeIndicators" aria-expanded="true"
               aria-controls="collapse_statisticQuantitativeIndicators">
               <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon> Количественные показатели по
@@ -14,7 +14,7 @@
           </h2>
         </div>
 
-        <div id="collapse_statisticQuantitativeIndicators" class="collapse show"
+        <div id="collapse_statisticQuantitativeIndicators" class="collapse"
           aria-labelledby="statisticQuantitativeIndicators" data-parent="#accordionStatistics">
           <div class="card-body">
             <div class="container-list">
@@ -49,7 +49,7 @@
       <div class="card">
         <div class="card-header" id="statisticCategories" @click="clickCard('statisticCategories')">
           <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
+            <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse"
               data-target="#collapse_statisticCategories" aria-expanded="true"
               aria-controls="collapse_statisticCategories">
               <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon> Динамика выявления и решения проблем
@@ -147,8 +147,8 @@
       <div class="card">
         <div class="card-header" id="statisticQuarterly1" @click="clickCard('statisticQuarterly1')">
           <h2 class="mb-0">
-            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
-              @click="clickCard('statisticQuarterly1')" data-target="#collapse_statisticQuarterly1" aria-expanded="true"
+            <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse"
+               data-target="#collapse_statisticQuarterly1" aria-expanded="true"
               aria-controls="collapse_statisticQuarterly1">
               <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon> Отдельные категории проблем
             </button>
@@ -244,9 +244,6 @@
       await this.$store.dispatch('getStatisticQuantitativeIndicators')
       await this.$store.dispatch('getStatisticCategories')
       await this.$store.dispatch('getStatisticQuarterly')
-
-
-
     },
     methods: {
       clickCard(id_string) {

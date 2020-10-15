@@ -23,10 +23,28 @@
   }
 </script>
 <style lang="scss">
+  .container__groups_list {
+    max-height: 393px;
+    min-height: 393px;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .groups_list {
+    font-family: 'GothamPro';
+    font-size: 14px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    color: #4F4F4F;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 
   button {
     text-decoration: none !important;
   }
+
   .close-popover {
     display: flex;
     justify-content: flex-end;
@@ -35,6 +53,7 @@
     cursor: pointer;
     color: #000;
   }
+
   .close-popover:hover {
     text-decoration: none;
     color: #000;
@@ -44,6 +63,7 @@
     margin: auto;
     color: #92D2C3;
   }
+
   .yes {
     background-color: #4EAD96 !important;
     color: #fff !important;
@@ -101,35 +121,36 @@
         margin-bottom: 0;
       }
     }
- &[x-placement^="right"] {
-    margin-left: 5px;
 
-    .tooltip-arrow {
-      border-width: 5px 5px 5px 0;
-      border-left-color: transparent !important;
-      border-top-color: transparent !important;
-      border-bottom-color: transparent !important;
-      left: -5px;
-      top: calc(50% - 5px);
-      margin-left: 0;
-      margin-right: 0;
+    &[x-placement^="right"] {
+      margin-left: 5px;
+
+      .tooltip-arrow {
+        border-width: 5px 5px 5px 0;
+        border-left-color: transparent !important;
+        border-top-color: transparent !important;
+        border-bottom-color: transparent !important;
+        left: -5px;
+        top: calc(50% - 5px);
+        margin-left: 0;
+        margin-right: 0;
+      }
     }
-  }
 
-  &[x-placement^="left"] {
-    margin-right: 5px;
+    &[x-placement^="left"] {
+      margin-right: 5px;
 
-    .tooltip-arrow {
-      border-width: 5px 0 5px 5px;
-      border-top-color: transparent !important;
-      border-right-color: transparent !important;
-      border-bottom-color: transparent !important;
-      right: -5px;
-      top: calc(50% - 5px);
-      margin-left: 0;
-      margin-right: 0;
+      .tooltip-arrow {
+        border-width: 5px 0 5px 5px;
+        border-top-color: transparent !important;
+        border-right-color: transparent !important;
+        border-bottom-color: transparent !important;
+        right: -5px;
+        top: calc(50% - 5px);
+        margin-left: 0;
+        margin-right: 0;
+      }
     }
-  }
 
     &.popover {
       $color: #f9f9f9;
@@ -183,16 +204,23 @@
   }
 
   @media (max-width: 1500px) {
-    *, span, textarea, input {
+
+    *,
+    span,
+    textarea,
+    input {
       font-size: 13px;
     }
 
-    span, textarea, input {
-      font-size: 13px ;
+    span,
+    textarea,
+    input {
+      font-size: 13px;
     }
 
     .close {
       font-size: 20px !important;
+
       span {
         font-size: 20px !important;
       }

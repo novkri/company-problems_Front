@@ -1,5 +1,6 @@
 <template>
   <div class="sidebar col"> 
+
     <div class="links">
       <div class="addProblem">
         <button type="button" class="btn btnMainAdd" @click="create" data-toggle="modal" data-target="#popupCreate">

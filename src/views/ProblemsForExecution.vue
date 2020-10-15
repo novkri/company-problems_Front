@@ -192,9 +192,11 @@
                         <div class="card-body p-0" :ref="'cardBody'+problem.id" style="height: 100%;">
                           <!-- plan,  -->
                           <textarea placeholder="Опишите ваш план решения..." rows="6" :ref="'textarea_plan'+problem.id"
-                            style="height: 100%;min-height: 418px;" v-model="solutions[0].plan" :disabled="isResponsibleAndAdmin"
+                            style="height: 100%;min-height: 418px;" v-model="solutions[0].plan"
+                            :disabled="isResponsibleAndAdmin"
                             @keydown.enter.prevent.exact="event => {editPlan(solutions[0].id, solutions[0].plan, event)}"
-                            @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id, 'plan')"
+                            @keyup.shift.enter.prevent="newLine"
+                            @focus="event => onFocusTextarea(event, problem.id, 'plan')"
                             @blur="event => {onBlurTextarea(event, 'plan', problem.id)}"></textarea>
                           <div class="hidden" :ref="'hidden_area-plan'+problem.id">
                             <button class="input-btn confirm"
@@ -229,7 +231,7 @@
                         </button>
 
                       </div>
- 
+
                       <div id="collapseResults" class="collapse" aria-labelledby="headingResults" style="width: 100%;"
                         data-parent="#results" ref="collapsed-results">
                         <div class="card-body row p-0" style="flex-direction: row;">
@@ -255,10 +257,11 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Опыт</label>
-                            <textarea rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_exp'+problem.id"
+                            <textarea placeholder="Заполните опыт по решению проблемы..." rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_exp'+problem.id"
                               v-model="problem.experience"
                               @keydown.enter.prevent.exact="event => {editExp(problem.id, problem.experience, event)}"
-                              @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id, 'exp')"
+                              @keyup.shift.enter.prevent="newLine"
+                              @focus="event => onFocusTextarea(event, problem.id, 'exp')"
                               @blur="event => {onBlurTextarea( event, 'exp', problem.id)}"></textarea>
                             <div class="hidden" :ref="'hidden_area-exp'+problem.id">
                               <button class="input-btn confirm"
@@ -276,10 +279,11 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Результат</label>
-                            <textarea rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_result'+problem.id"
+                            <textarea placeholder="Заполните результат решения проблемы..." rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_result'+problem.id"
                               v-model="problem.result"
                               @keydown.enter.prevent.exact="event => {editResult(problem.id, problem.result, event)}"
-                              @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id, 'result')"
+                              @keyup.shift.enter.prevent="newLine"
+                              @focus="event => onFocusTextarea(event, problem.id, 'result')"
                               @blur="event => {onBlurTextarea(event, 'result', problem.id)}"></textarea>
                             <div class="hidden" :ref="'hidden_area-result'+problem.id">
                               <button class="input-btn confirm"
@@ -340,10 +344,10 @@
                           aria-controls="collapseGroups">
                           <h5 class="mb-0">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
-                            <p v-show="!isCreatorLeaderOrAdmin">
+                            <p v-show="!validatedExecutorAndAdmin">
                               Направить в подразделение
                             </p>
-                            <p v-show="isCreatorLeaderOrAdmin">Направлена в подразделения:</p>
+                            <p v-show="validatedExecutorAndAdmin">Направлена в подразделения:</p>
                           </h5>
                         </button>
 
@@ -351,7 +355,7 @@
 
                       <div id="collapseGroups" class="collapse" aria-labelledby="headingGroups" style="width: 100%;"
                         data-parent="#groups" ref="collapsed-groups">
-                        <div class="card-body p-0" v-show="!isCreatorLeaderOrAdmin">
+                        <div class="card-body p-0" v-show="!validatedExecutorAndAdmin">
                           <div class="check-inputs">
                             <div class="custom-control custom-checkbox">
                               <input type="checkbox" class="custom-control-input" id="groupCheckAll"
@@ -366,13 +370,16 @@
                             </div>
                           </div>
 
-                          <button class="btn btnMain btn-to-groups" v-show="!isCreatorLeaderOrAdmin"
+                          <button class="btn btnMain btn-to-groups" v-show="!validatedExecutorAndAdmin"
                             @click="sendToGroup(problem.id, checkedGroups)">Направить</button>
                         </div>
 
-                        <div class="card-body p-0" v-show="isCreatorLeaderOrAdmin">
-                          <span style="padding-bottom: 5px;" v-for="(group, idx) in problem.groups"
+                        <div class="card-body p-0" v-show="validatedExecutorAndAdmin">
+                          <span class="groups_list" v-show="problem.groups.length == 0">Проблема не направлена ни в одно подразделение</span>
+                          <div class="container__groups_list">
+                          <span class="groups_list" style="padding-bottom: 5px;" v-for="(group, idx) in problem.groups"
                             :key="idx">{{idx+1}}. {{group.name}}</span>
+                          </div>
                         </div>
 
                       </div>
@@ -472,6 +479,7 @@
     },
 
     async mounted() {
+      await this.$store.dispatch('checkIsLeader')
 
       await this.$store.dispatch('getProblemsForExecution', {
           urgency: '',
@@ -534,7 +542,7 @@
         } else {
           this.$refs['cardSol' + id][0].style.paddingBottom = '0px'
           this.$refs['cardSol' + id][0].style.overflowY = 'scroll'
-          this.$refs['cardSol' + id][0].style.minHeight = '344px'
+          this.$refs['cardSol' + id][0].style.minHeight = '500px'
         }
       },
       onClickPlan(id) {
@@ -745,7 +753,7 @@
                   element.click()
                 }) : ''
               })
-              if (this.members.find(m => m.id == problem.creator_id) && this.isLeader) {
+              if (this.members.find(m => m.id == problem.creator_id) && this.isLeader || problem.creator_id == this.currentUid && this.isLeader) {
                 this.isLeaderOgUser = true
                 console.log(this.isLeader);
               } else {
@@ -819,16 +827,16 @@
 
       onFocusTextarea(event, id, type) {
         this.currentTextarea = event.target.value
-      
+
         event.target.style.borderRadius = '9px 9px 0px 0px';
-        this.$refs['hidden_area-'+type+id].forEach(element => {
+        this.$refs['hidden_area-' + type + id].forEach(element => {
           element.style.display = 'flex'
         });
       },
 
       onBlurTextarea(event, type, id) {
         event.target.style.borderRadius = '9px';
-        this.$refs['hidden_area-'+type+id].forEach(element => {
+        this.$refs['hidden_area-' + type + id].forEach(element => {
           element.style.display = 'none'
         });
 
@@ -1119,7 +1127,8 @@
     display: none;
     align-items: center;
     padding-right: 10px;
-    bottom: 13%; right: 11%;
+    bottom: 13%;
+    right: 11%;
     border: 4px solid #F6F6F6;
     border-top: none;
 
@@ -1172,7 +1181,8 @@
     line-height: 24px;
     letter-spacing: 0.15px;
   }
-   textarea:focus {
+
+  textarea:focus {
     background-color: #fff;
     border: 4px solid #F6F6F6;
     border-bottom: none;
@@ -1539,7 +1549,7 @@
       max-height: 500px;
       overflow-y: scroll;
       padding-bottom: 0;
-      min-height: 344px;
+      min-height: 500px;
     }
 
     .card-header {
@@ -1592,7 +1602,7 @@
 
   }
 
-  .middle-icons,
+
   .middle-icons_text {
     align-items: center;
 

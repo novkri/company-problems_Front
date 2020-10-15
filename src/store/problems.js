@@ -446,11 +446,11 @@ export default {
         status: param.status
       }})
         .then(response => {
+          console.log(response.data);
           commit('setProblems', '')
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
-            // commit('amountOfProblemsForConfirmationAdmin', response.data.length)
             resolve(response.data)
         })
         .catch(error => {

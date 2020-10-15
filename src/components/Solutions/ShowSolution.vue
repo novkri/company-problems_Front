@@ -1,5 +1,6 @@
 <template>
   <div class="row container-row">
+    
     <div class="modal-body">
       <div>
         <div class="subtitle row subt">
@@ -17,7 +18,6 @@
 
         </div>
         <div>
-
           <ol>
             <li v-for="(solution, idx) in solutions" :key="idx" id="list" class="row">
               <div class="list-item col-4">
@@ -72,7 +72,7 @@
 
               <div class="dateDiv col-3">
                 <input type="date" id="start" name="trip-start" class="date" v-model="solution.deadline"
-                  @change="changeDeadline(solution.deadline, solution.id)" @click="onClickDate($event)">
+                  @change="changeDeadline(solution.executor_id, solution.deadline, solution.id)" @click="onClickDate($event)">
               </div>
 
               <div class="selectResponsible col-2">
@@ -259,9 +259,9 @@
         this.currentDateInput = event.target
       },
 
-      async changeDeadline(deadline, id) {
+      async changeDeadline(executor_id, deadline, id) {
         await this.$store.commit('setError404', '')
-        if (this.solutions[0].executor_id == this.currentUid || this.user.is_admin) {
+        if (executor_id == this.currentUid || this.user.is_admin) {
           await this.$store.dispatch('changeDeadline', {
             deadline,
             id
@@ -271,6 +271,12 @@
               id
             })
           })
+        } else {
+          this.$store.commit('setError404', 'У вас недостаточно прав')
+          this.$store.commit('editDeadline', {
+              deadline: this.currentDate,
+              id
+            })
         }
       },
 

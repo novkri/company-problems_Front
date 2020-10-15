@@ -143,7 +143,8 @@
               <div class="card" style="padding-top: 34px;" v-if="mounted">
                 <div class="row" style="display: flex; flex-direction: row; margin-bottom: 8px;">
                   <div class="accordion col-9" id="tasks">
-                    <div class="card" :ref="'cardSol'+problem.id" style="padding-bottom: 13px; overflow-y: auto; min-height: auto;">
+                    <div class="card" :ref="'cardSol'+problem.id"
+                      style="padding-bottom: 13px; overflow-y: auto; min-height: auto;">
                       <div class="card-header" id="headingTasks">
 
                         <button class="btn btn-link btn-block text-left" style="width: 100%;" type="button"
@@ -192,11 +193,13 @@
                         <div class="card-body p-0" :ref="'cardBody'+problem.id" style="height: 100%;">
                           <!-- plan,  -->
                           <textarea placeholder="Опишите ваш план решения..." rows="6" :ref="'textarea_plan'+problem.id"
-                            style="height: 100%;min-height: 418px;" v-model="solutions[0].plan" :disabled="isResponsibleAndAdmin"
+                            style="height: 100%;min-height: 418px;" v-model="solutions[0].plan"
+                            :disabled="isResponsibleAndAdmin"
                             @keydown.enter.prevent.exact="event => {editPlan(solutions[0].id, solutions[0].plan, event)}"
-                            @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id, 'plan')"
+                            @keyup.shift.enter.prevent="newLine"
+                            @focus="event => onFocusTextarea(event, problem.id, 'plan')"
                             @blur="event => {onBlurTextarea(event, 'plan', problem.id)}"></textarea>
-                          <div class="hidden"  :ref="'hidden_area-plan'+problem.id">
+                          <div class="hidden" :ref="'hidden_area-plan'+problem.id">
                             <button class="input-btn confirm"
                               @mousedown="event => {editPlan(solutions[0].id,solutions[0].plan, event)}">
                               <check-icon size="1.4x" class="custom-class"></check-icon>
@@ -241,7 +244,7 @@
                               @keydown.enter.prevent.exact="event => {editTeam(solutions[0].id, solutions[0].team, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id)"
                               @blur="event => {onBlurTextarea(event, 'team', problem.id)}"></textarea>
-                            <div class="hidden"  :ref="'hidden_area'+problem.id">
+                            <div class="hidden" :ref="'hidden_area'+problem.id">
                               <button class="input-btn confirm"
                                 @mousedown="event => {editTeam(solutions[0].id, solutions[0].team, event)}">
                                 <check-icon size="1.4x" class="custom-class"></check-icon>
@@ -254,7 +257,7 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Опыт</label>
-                            <textarea rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_exp'+problem.id"
+                            <textarea placeholder="Заполните опыт по решению проблемы..." rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_exp'+problem.id"
                               v-model="problem.experience"
                               @keydown.enter.prevent.exact="event => {editExp(problem.id, problem.experience, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id)"
@@ -272,7 +275,7 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Результат</label>
-                            <textarea rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_result'+problem.id"
+                            <textarea placeholder="Заполните результат решения проблемы..." rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_result'+problem.id"
                               v-model="problem.result"
                               @keydown.enter.prevent.exact="event => {editResult(problem.id, problem.result, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id)"
@@ -316,10 +319,9 @@
                           aria-controls="collapseGroups">
                           <h5 class="mb-0">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
-                            <p v-show="!isCreatorLeaderOrAdmin">
+                            <p>
                               Направить в подразделение
                             </p>
-                            <p v-show="isCreatorLeaderOrAdmin">Направлена в подразделения:</p>
                           </h5>
                         </button>
 
@@ -327,7 +329,7 @@
 
                       <div id="collapseGroups" class="collapse show" aria-labelledby="headingGroups"
                         style="width: 100%;" data-parent="#groups" ref="collapsed-groups">
-                        <div class="card-body p-0" v-show="!isCreatorLeaderOrAdmin">
+                        <div class="card-body p-0">
                           <div class="check-inputs">
                             <div class="custom-control custom-checkbox">
                               <input type="checkbox" class="custom-control-input" id="groupCheckAll"
@@ -342,14 +344,10 @@
                             </div>
                           </div>
 
-                          <button class="btn btnMain btn-to-groups" v-show="!isCreatorLeaderOrAdmin"
+                          <button class="btn btnMain btn-to-groups"
                             @click="sendToGroup(problem.id, checkedGroups)">Направить</button>
                         </div>
 
-                        <div class="card-body p-0" v-show="isCreatorLeaderOrAdmin">
-                          <span style="padding-bottom: 5px;" v-for="(group, idx) in problem.groups"
-                            :key="idx">{{idx+1}}. {{group.name}}</span>
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -448,6 +446,8 @@
     },
 
     async mounted() {
+      await this.$store.dispatch('checkIsLeader')
+
       await this.$store.dispatch('problemsForConfirmation', {
         urgency: '',
         importance: '',
@@ -514,9 +514,8 @@
         } else {
           this.$refs['cardSol' + problem.id][0].style.paddingBottom = '0px'
           this.$refs['cardSol' + problem.id][0].style.overflowY = 'scroll'
-          this.$refs['cardSol' + problem.id][0].style.minHeight = '344px'
+          this.$refs['cardSol' + problem.id][0].style.minHeight = '500px'
         }
-          // this.$refs['cardPlan' + problem.id][0].style.height = 'fit-content'
 
       },
       onClickPlan(id) {
@@ -701,7 +700,7 @@
             .then(() => {
               document.getElementById('collapseTasks').classList.contains('show') ? document.getElementById(
                 'collapseTasks').classList.remove('show') : ''
-              if (this.members.find(m => m.id == problem.creator_id) && this.isLeader) {
+              if (this.members.find(m => m.id == problem.creator_id) && this.isLeader || problem.creator_id == this.currentUid && this.isLeader) {
                 this.isLeaderOgUser = true
                 console.log(this.isLeader);
               } else {
@@ -775,16 +774,16 @@
 
       onFocusTextarea(event, id, type) {
         this.currentTextarea = event.target.value
-      
+
         event.target.style.borderRadius = '9px 9px 0px 0px';
-        this.$refs['hidden_area-'+type+id].forEach(element => {
+        this.$refs['hidden_area-' + type + id].forEach(element => {
           element.style.display = 'flex'
         });
       },
 
       onBlurTextarea(event, type, id) {
         event.target.style.borderRadius = '9px';
-        this.$refs['hidden_area-'+type+id].forEach(element => {
+        this.$refs['hidden_area-' + type + id].forEach(element => {
           element.style.display = 'none'
         });
 
@@ -1075,7 +1074,8 @@
     display: none;
     align-items: center;
     padding-right: 10px;
-    bottom: 13%; right: 11%;
+    bottom: 13%;
+    right: 11%;
     border: 4px solid #F6F6F6;
     border-top: none;
 
@@ -1128,7 +1128,8 @@
     line-height: 24px;
     letter-spacing: 0.15px;
   }
-   textarea:focus {
+
+  textarea:focus {
     background-color: #fff;
     border: 4px solid #F6F6F6;
     border-bottom: none;
@@ -1498,7 +1499,7 @@
       max-height: 500px;
       overflow-y: scroll;
       padding-bottom: 0;
-      min-height: 344px;
+      min-height: 500px;
     }
 
     .card-header {
@@ -1550,7 +1551,6 @@
 
   }
 
-  .middle-icons,
   .middle-icons_text {
     align-items: center;
 
