@@ -49,9 +49,9 @@
                   @change="changeStatus(solution.id, solution.status, solution.executor_id)" disable-by="disabled"
                   :class="[solution.status == 'Выполнено' ? 'green' : 'blue']" id="ss-select"
                   style="width: 87%; margin: auto;">
-                  <div
+                  <div @click="onClickStatus(solution.status)"
                     slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                    style="cursor: pointer; width: 100%;" @click="onClickStatus(selectedOption)">
+                    style="cursor: pointer; width: 100%;" >
                     <ss-select-toggle id="select-toggle">
                       {{ $get(selectedOption, 'name') || `${solution.status ? solution.status : 'Выбрать'}`}}
                       <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
@@ -234,6 +234,7 @@
 
       async changeStatus(id, status, executor_id) {
         await this.$store.commit('setError404', '')
+
         if (executor_id == this.currentUid || this.user.is_admin) {
           await this.$store.dispatch('changeStatus', {
             status: status.name,
@@ -241,7 +242,7 @@
           }).catch(() => {
             this.$store.commit('editStatus', {
               id,
-              status: this.currentSolStatus
+              status: 'В процессе'
             })
           })
         } else {

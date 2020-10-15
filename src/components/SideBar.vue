@@ -11,6 +11,7 @@
         <a style="font-family: 'GothamPro';font-size: 16px; cursor: default;">
           Списки проблем:
         </a>
+
         <a>
           <router-link to="/my-problems" exact>
             <user-plus-icon size="1.5x" class="custom-class"></user-plus-icon>Предложенные мной
@@ -45,8 +46,10 @@
             <a>
               <router-link to="/problems-of-all-groups" exact>Все</router-link>
             </a>
+
             <a @click="getProblemsByGroups(group.id, group.name)" v-for="(group, idx) in groups" :key="idx">
               <router-link :to="'/problems-by-groups/'+group.id">{{group.name}}</router-link>
+             
             </a>
           </div>
         </transition>
@@ -244,6 +247,9 @@
     direction: rtl;
     padding-left: 25px;
 
+    a {
+      direction: ltr;
+    }
   }
 
   .btnMainAdd {
@@ -520,7 +526,7 @@
     }
   }
 
-  @media (max-width: 1300px) {
+  @media (max-width: 480px) {
     .sidebar {
       display: none;
     }

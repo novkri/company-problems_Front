@@ -5,17 +5,15 @@
         <span>Задачи:</span>
       </div>
       <div class="subt col-3" style="justify-content: center;display: flex;"><span>Статус выполнения</span></div>
-      <div class="subt col-2" style="display: flex;"><span style="text-align: center;">Срок
+      <div class="subt col-3" style="display: flex;justify-content: center;"><span style="text-align: center;">Срок
           исполнения</span></div>
       <div class="subt col-2" style="justify-content: center;display: flex;"><span>Исполнитель</span></div>
-      <div style="width: 54px" class="col">
-      </div>
     </div>
 
     <div class="container row" ref="containerTask">
       <ol ref="olTask">
         <li id="list" v-for="(task, idx) in tasks" :key="idx">
-          <div class="task-title col-4"
+          <div class="task-title col-4" style="margin-right: -2%;"
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">
             <div style="width: 100%;" @click="onClickInput(task.id, val.executor_id)" :ref="'desc_div'+task.id">
               {{task.description}}</div>
@@ -35,7 +33,7 @@
             </div>
           </div>
 
-          <div class="select col-3" ref="select">
+          <div class="select col-3" ref="select" style="margin-right: 4.5%;">
             <ss-select v-model="task.status" :options="statusesT" track-by="name" class="form-control"
               @change="changeStatusTask(task.id, task.status, task.executor_id, val.executor_id)" disable-by="disabled"
               :class="[task.status == 'Выполнено' ? 'green' : task.status == 'В процессе' ? 'blue' : 'gray']"
@@ -61,7 +59,7 @@
             </ss-select>
           </div>
 
-          <div class="dateDiv col-2">
+          <div class="dateDiv col-2" style="margin-right: 2%;">
             <input type="date" id="start" name="trip-start" class="date" onkeypress="return false"
               @click="onClickDate($event)" @change="changeDeadlineTask(task.deadline, task.id, val.executor_id)"
               v-model="task.deadline">
@@ -75,7 +73,7 @@
                 @click="onClickExecutor(selectedOption, task.id)" style="cursor: pointer; width: 100%;">
                 <ss-select-toggle class="flex items-center justify-between"
                   style="margin: auto;max-height: 30px;overflow-y: hidden;">
-                  <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
+                  <user-icon size="1.5x" class="custom-class" id="iconUser" style="flex-shrink: 0;"></user-icon>
                   {{ $get(selectedOption, 'name') ||  `${allUsersReduced.find(u => u.id == task.executor_id) ? allUsersReduced.find(u => u.id == task.executor_id).surname + ' ' 
                     + allUsersReduced.find(u => u.id == task.executor_id).name + ' ' 
                     + allUsersReduced.find(u => u.id == task.executor_id).father_name : 'Выбрать'}`}}
@@ -103,7 +101,7 @@
           <div style="width: 54px" id="close" class="col">
             <button type="button" v-show="val.executor_id == currentUid || user.is_admin || isLeader" class="close"
               id="remove" @click="showDelete(task.id)" data-toggle="modal" data-target="#popupDeleteSolution">
-              <trash-icon size="1x" class="custom-class"></trash-icon>
+              <trash-icon size="1x" class="custom-class" style="margin-bottom: 5px;"></trash-icon>
             </button>
           </div>
         </li>
@@ -511,7 +509,9 @@
     align-items: center;
     max-width: inherit;
     width: -webkit-fill-available;
+    width: -mox-fill-available;
     padding-left: 26px;
+    margin-right: 26px;
     font-style: normal;
     font-weight: normal;
     background-color: #fff;
@@ -689,7 +689,7 @@
     position: relative;
     height: 81%;
     color: #828282;
-    padding-left: 28px;
+    padding-left: 34px;
     padding-bottom: 5px;
     padding-top: 5px;
     border-radius: 10px;
@@ -725,22 +725,22 @@
   }
 
   input[class="date"]::-webkit-calendar-picker-indicator {
-    background: url('~@/assets/calendar.png') left;
+    background: url('~@/assets/calendar.png') center;
     background-size: 80%;
     background-repeat: no-repeat;
     cursor: pointer;
     position: absolute;
-    left: -14%;
+    left: -10%;
     top: 20%;
   }
 
   input[class="date"]:focus::-webkit-calendar-picker-indicator {
-    background: url('~@/assets/calendarW.png') left;
+    background: url('~@/assets/calendarW.png') center;
     background-size: 80%;
     background-repeat: no-repeat;
     cursor: pointer;
     position: absolute;
-    left: -14%;
+    left: -10%;
     top: 20%;
   }
 
@@ -1088,7 +1088,14 @@
     }
   }
 
-
+@media (max-width: 1500px) {
+  .select {
+    margin-right: 0.5%;
+  }
+  .dateDiv {
+    margin-right: 4%;
+  }
+}
 
   @media (max-width: 500px) {
     .header {

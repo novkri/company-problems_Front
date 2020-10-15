@@ -96,6 +96,15 @@ const routes = [
       }
   },
   {
+    path: "/success",
+    name: "Success",
+    component: () =>
+      import("../views/Auth/Success.vue"),
+      meta: { 
+        layout: 'none'
+      }
+  },
+  {
     path: "/groups",
     name: "Groups",
     component: () =>  import("../views/Groups.vue"),

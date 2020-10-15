@@ -1,5 +1,14 @@
 <template>
-  <nav class="navbar navbar-light" :class="[this.$route.path === '/' || this.$route.path == '/groups' || this.$route.path == '/statistics' ? 'main' : '']">
+  <nav class="navbar navbar-light"
+    :class="[this.$route.path === '/' || this.$route.path == '/groups' || this.$route.path == '/statistics' ? 'main' : '']">
+    <div class="arrow">',,,'</div>
+    <div class="burger" ref="burger" @click="clickOnBurger"> <span></span></div>
+    <nav class="burger_menu" ref="burger_menu">
+      dfgdfg
+    </nav>
+
+
+
     <div class="logo" @click="allProblems">
       <router-link to="/" exact style="font-family: 'GothamPro-Medium';font-size: 16px;"><img src="@/assets/logo.png"
           alt="PSS Software">
@@ -249,6 +258,12 @@
     },
 
     methods: {
+      clickOnBurger() {
+        console.log(this.$refs['burger']);
+        this.$refs['burger'].classList.toggle('active')
+        this.$refs['burger_menu'].classList.toggle('active')
+      },
+
       async allProblems() {
         await this.$store.dispatch('getProblems')
       },
@@ -456,6 +471,10 @@
     }
   }
 
+  .arrow,
+  .burger, .burger_menu {
+    display: none;
+  }
 
   nav {
     background-color: #fff;
@@ -662,8 +681,90 @@
     }
 
   }
-</style>
 
-<style>
 
+
+  @media (max-width: 500px) {
+
+    .logo,
+    .filter {
+      display: none;
+    }
+
+    .arrow,
+    .burger {
+      display: flex;
+    }
+    .burger {
+        display: block;
+        position: relative;
+        width: 30px;
+        height: 21px;
+        position: relative;
+        z-index: 3;
+    }
+
+    .burger:before,
+    .burger:after {
+        content: '';
+        background-color: #4F4F4F;
+        position: absolute;
+        width: 100%;
+        height: 3px;
+        left: 0;
+        transition: all 0.3s ease 0s;
+    }
+
+    .burger span {
+        position: absolute;
+        background-color: #4F4F4F;
+        left: 0;
+        top: 9px;
+        width: 100%;
+        height: 3px;
+        transition: all 0.3s ease 0s;
+    }
+
+    .burger:before {
+        top: 0;
+    }
+
+    .burger:after {
+        bottom: 0;
+    }
+
+    .burger.active:before {
+        transform:rotate(45deg);
+        top: 9px;
+    }
+    .burger.active:after {
+        transform:rotate(-45deg);
+        bottom: 9px;
+    }
+    
+    .burger.active span {
+        transform: scale(0);
+    }
+    .burger_menu {
+        display: flex;
+        position: fixed;
+        top: -100%;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: aqua;
+        padding: 70px 10px 20px 10px;
+        transition: all 0.3s ease 0s;
+    }
+    .burger_menu.active {
+        top: 0;
+    }
+
+
+
+    .navbar {
+      justify-content: space-between !important;
+    }
+  }
 </style>

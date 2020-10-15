@@ -103,6 +103,7 @@
 
 
             this.$store.dispatch('checkIsLeader').then(() => {
+              console.log(this.isLeader ? 'ok' : 'not ok');
               this.isLeader ? this.$store.dispatch('getMembers', this.groups.find(g => g.leader_id == this.currentUid).id) : ''
             })
 

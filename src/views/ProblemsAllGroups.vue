@@ -192,11 +192,11 @@
                         <div class="card-body p-0" :ref="'cardBody'+problem.id" style="height: 100%;">
                           <!-- plan,  -->
                           <textarea placeholder="Опишите ваш план решения..." rows="6" :ref="'textarea_plan'+problem.id"
-                            style="height: 100%;" v-model="solutions[0].plan" :disabled="validatedExecutorAndAdmin"
+                            style="height: 100%;" v-model="solutions[0].plan" :disabled="isResponsibleAndAdmin"
                             @keydown.enter.prevent.exact="event => {editPlan(solutions[0].id, solutions[0].plan, event)}"
-                            @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
-                            @blur="event => {onBlurTextarea(event, 'plan')}"></textarea>
-                          <div class="hidden" style="bottom: 13%; right: 11%;">
+                            @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id, 'plan')"
+                            @blur="event => {onBlurTextarea(event, 'plan', problem.id)}"></textarea>
+                          <div class="hidden" :ref="'hidden_area-plan'+problem.id">
                             <button class="input-btn confirm"
                               @mousedown="event => {editPlan(solutions[0].id,solutions[0].plan, event)}">
                               <check-icon size="1.4x" class="custom-class"></check-icon>
@@ -234,14 +234,14 @@
                         data-parent="#results" ref="collapsed-results">
                         <div class="card-body row p-0" style="flex-direction: row;">
 
-                          <div class="col-4 p-2" style="flex-direction: column;display: flex;">
+                          <div class="col-4 p-2" style="flex-direction: column;display: flex;min-height: 417px;">
                             <label style="width: 100%;">Команда</label>
                             <textarea rows="6" :disabled="isResponsibleAndAdmin" :ref="'textarea_team'+problem.id"
                               v-model="solutions[0].team"
                               @keydown.enter.prevent.exact="event => {editTeam(solutions[0].id, solutions[0].team, event)}"
-                              @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
-                              @blur="event => {onBlurTextarea(event, 'team')}"></textarea>
-                            <div class="hidden">
+                              @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id)"
+                              @blur="event => {onBlurTextarea(event, 'team', problem.id)}"></textarea>
+                            <div class="hidden"  :ref="'hidden_area'+problem.id">
                               <button class="input-btn confirm"
                                 @mousedown="event => {editTeam(solutions[0].id, solutions[0].team, event)}">
                                 <check-icon size="1.4x" class="custom-class"></check-icon>
@@ -257,9 +257,9 @@
                             <textarea rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_exp'+problem.id"
                               v-model="problem.experience"
                               @keydown.enter.prevent.exact="event => {editExp(problem.id, problem.experience, event)}"
-                              @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
-                              @blur="event => {onBlurTextarea( event, 'exp')}"></textarea>
-                            <div class="hidden">
+                              @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id, 'exp')"
+                              @blur="event => {onBlurTextarea( event, 'exp', problem.id)}"></textarea>
+                            <div class="hidden"  :ref="'hidden_area-exp'+problem.id">
                               <button class="input-btn confirm"
                                 @mousedown="event => {editExp(problem.id, problem.experience, event)}">
                                 <check-icon size="1.4x" class="custom-class"></check-icon>
@@ -275,9 +275,9 @@
                             <textarea rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_result'+problem.id"
                               v-model="problem.result"
                               @keydown.enter.prevent.exact="event => {editResult(problem.id, problem.result, event)}"
-                              @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event)"
-                              @blur="event => {onBlurTextarea(event, 'result')}"></textarea>
-                            <div class="hidden">
+                              @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id, 'result')"
+                              @blur="event => {onBlurTextarea(event, 'result', problem.id)}"></textarea>
+                            <div class="hidden"  :ref="'hidden_area-result'+problem.id">
                               <button class="input-btn confirm"
                                 @mousedown="event => {editResult(problem.id, problem.result, event)}">
                                 <check-icon size="1.4x" class="custom-class"></check-icon>
@@ -525,9 +525,11 @@
         if (document.getElementById('collapseTasks').classList.contains('show')) {
           this.$refs['cardSol' + id][0].style.paddingBottom = '18px'
           this.$refs['cardSol' + id][0].style.overflowY = 'auto'
+          this.$refs['cardSol' + id][0].style.minHeight = 'auto'
         } else {
           this.$refs['cardSol' + id][0].style.paddingBottom = '0px'
           this.$refs['cardSol' + id][0].style.overflowY = 'scroll'
+          this.$refs['cardSol' + id][0].style.minHeight = '344px'
         }
       },
       onClickPlan(id) {
@@ -792,11 +794,21 @@
       },
 
 
-      onFocusTextarea(event) {
+      onFocusTextarea(event, id, type) {
         this.currentTextarea = event.target.value
+      
+        event.target.style.borderRadius = '9px 9px 0px 0px';
+        this.$refs['hidden_area-'+type+id].forEach(element => {
+          element.style.display = 'flex'
+        });
       },
 
-      onBlurTextarea(event, type) {
+      onBlurTextarea(event, type, id) {
+        event.target.style.borderRadius = '9px';
+        this.$refs['hidden_area-'+type+id].forEach(element => {
+          element.style.display = 'none'
+        });
+
         switch (type) {
           case 'exp':
             // console.log('blur');
@@ -1076,14 +1088,17 @@
   }
 
   .hidden {
-    visibility: visible;
+    // visibility: visible;
     justify-content: flex-end;
     border-radius: 0 0 9px 9px;
-    background-color: #F7F7F7;
+    background-color: #fff;
     height: 69px;
-    display: flex;
+    display: none;
     align-items: center;
     padding-right: 10px;
+    bottom: 13%; right: 11%;
+    border: 4px solid #F6F6F6;
+    border-top: none;
 
     &>div {
       border-top: 2px solid #E7E5F1;
@@ -1119,18 +1134,25 @@
   }
 
   textarea {
+    min-height: 300px;
+    height: 100%;
     width: 100%;
     outline: none;
     border: none;
     resize: none;
     background-color: #F7F7F7;
-    border-radius: 9px 9px 0 0;
+    border-radius: 9px;
     padding: 26px 24px;
 
     font-family: 'GothamPro';
     font-size: 16px;
     line-height: 24px;
     letter-spacing: 0.15px;
+  }
+   textarea:focus {
+    background-color: #fff;
+    border: 4px solid #F6F6F6;
+    border-bottom: none;
   }
 
   .spinner-border {
@@ -1187,9 +1209,9 @@
       height: -webkit-fill-available;
     }
 
-    textarea {
-      height: 84% !important;
-    }
+    // textarea {
+    //   height: 84% !important;
+    // }
   }
 
   #collapseTasks {
@@ -1496,6 +1518,7 @@
       max-height: 500px;
       overflow-y: scroll;
       padding-bottom: 0;
+      min-height: 344px;
     }
 
     .card-header {
@@ -1628,6 +1651,12 @@
   @media (min-width: 500px) {
     h2 {
       width: 75%;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .container {
+      overflow-y: visible;
     }
   }
 </style>

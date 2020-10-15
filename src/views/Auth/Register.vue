@@ -83,13 +83,13 @@
       </div>
     </div>
 
-    <div v-else class="successfully">
+    <!-- <div v-else class="successfully">
       <span>Вы успешно зарегистрированы</span>
       <thumbs-up-icon size="3x" class="custom-class" style="color: #92D2C3; margin: 73px 0;"></thumbs-up-icon>
       <button type="button" class="btn" @click="goToLogin" v-show="success">
         На страницу авторизации
       </button>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -97,13 +97,13 @@
   import {
     EyeIcon,
     EyeOffIcon,
-    ThumbsUpIcon
+    // ThumbsUpIcon
   } from 'vue-feather-icons'
   import {
     maxLength,
     minLength,
     sameAs,
-
+    email,
   } from 'vuelidate/lib/validators'
   import {
     mapGetters
@@ -127,7 +127,7 @@
     components: {
       EyeIcon,
       EyeOffIcon,
-      ThumbsUpIcon
+      // ThumbsUpIcon
     },
     validations: {
       name: {
@@ -152,6 +152,7 @@
         sameAsPassword: sameAs('password')
       },
       email: {
+        email,
         minLength: minLength(3),
         maxLength: maxLength(255)
       }
@@ -191,6 +192,7 @@
         await this.$store.dispatch('register', formData).then(() => {
           if (this.errorUReg == '') {
             this.success = true
+            this.$router.push('/success')
           }
         })
       }
@@ -393,28 +395,27 @@
     }
   }
 
-  .successfully {
+  // .successfully {
+  //   display: flex;
+  //   flex-direction: column;
+  //   justify-content: center;
+  //   text-align: center;
+  //   margin: auto;
+  //   align-items: center;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    margin: auto;
-    align-items: center;
+  //   span {
+  //     font-family: 'GothamPro-Medium';
+  //     font-size: 24px;
+  //     line-height: 24px;
+  //     letter-spacing: 0.15px;
+  //     color: #2D453F;
+  //   }
 
-    span {
-      font-family: 'GothamPro-Medium';
-      font-size: 24px;
-      line-height: 24px;
-      letter-spacing: 0.15px;
-      color: #2D453F;
-    }
-
-    .btn {
-      margin: 0;
-      width: 294px;
-    }
-  }
+  //   .btn {
+  //     margin: 0;
+  //     width: 294px;
+  //   }
+  // }
 
   .to-login {
     justify-content: center;
