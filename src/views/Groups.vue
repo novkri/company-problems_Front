@@ -49,7 +49,7 @@
                     <button class="input-btn" @mousedown="event => {editGroupName(group.name, group.id, event)}">
                       <check-icon size="1x" class="custom-class"></check-icon>
                     </button>
-                    <div @mousedown="event => onClear(event, group.id, 'name')">
+                    <div @mousedown="event => onClear(event, group, 'name')">
                       <button class="input-btn">
                         <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
                       </button>
@@ -71,7 +71,7 @@
                   <button class="input-btn" @mousedown="event => {editGroupShort(group.short_name, group.id, event)}">
                     <check-icon size="1x" class="custom-class"></check-icon>
                   </button>
-                  <div @mousedown="event => onClear(event, group.id, 'short')">
+                  <div @mousedown="event => onClear(event, group, 'short')">
                     <button class="input-btn">
                       <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
                     </button>
@@ -330,6 +330,16 @@
 
 
       async onBlurInput(name, id, event, type) {
+        if (type == 'name') {
+          this.$refs['group-name' + id][0].style.display = 'none'
+          this.$refs['name-div' + id][0].style.display = 'initial'
+          this.$refs['hidden' + id][0].classList.remove('flex')
+        } else {
+          this.$refs['group-name-short' + id][0].style.display = 'none'
+          this.$refs['short-name-div' + id][0].style.display = 'initial'
+          this.$refs['hidden-short' + id][0].classList.remove('flex')
+        }
+
         if (name !== this.currentGroupName) {
           type === 'name' ? this.$store.dispatch('editGroup', {
             id,
@@ -349,16 +359,6 @@
             })
           })
         }
-
-        if (type == 'name') {
-          this.$refs['group-name' + id][0].style.display = 'none'
-          this.$refs['name-div' + id][0].style.display = 'initial'
-          this.$refs['hidden' + id][0].classList.remove('flex')
-        } else {
-          this.$refs['group-name-short' + id][0].style.display = 'none'
-          this.$refs['short-name-div' + id][0].style.display = 'initial'
-          this.$refs['hidden-short' + id][0].classList.remove('flex')
-        }
       },
 
       onFocusInput(event, id, type) {
@@ -369,15 +369,22 @@
           .classList.add('flex')
       },
 
-      onClear(event, id, type) {
+      onClear(event, group, type) {
         event.preventDefault()
-        type === 'name' ? this.$store.commit('editGroup', {
-          name: this.currentGroupName,
-          id
-        }) : this.$store.commit('editGroupShort', {
-          short_name: this.currentGroupName,
-          id
-        })
+        event.stopPropagation()
+
+        if (type === 'name' && group.name != this.currentGroupName) {
+          this.$store.commit('editGroup', {
+            name: this.currentGroupName,
+            id: group.id
+          })
+        } else if (type === 'name' && group.name != this.currentGroupName) {
+          this.$store.commit('editGroupShort', {
+            short_name: this.currentGroupName,
+            id: group.id
+          })
+        }
+
       },
 
       async editGroupShort(short_name, id, event) {

@@ -3,7 +3,8 @@ module.exports = {
     '@vue/cli-plugin-babel/preset',
     ["@babel/preset-env",
     {
-      "debug": true,
+    
+      
     }]
   ]
 }

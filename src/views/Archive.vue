@@ -54,7 +54,7 @@
 
               <div>
                 <div class="like" :class="[problem.is_liked ? 'liked' : '']">
-                  <button class="likeBtn" @click="likeProblem(problem.id)">
+                  <button class="likeBtn" @click="event => likeProblem(problem.id, event)">
                     <span>
                       {{ problem.likes_count }}
                     </span>
@@ -104,7 +104,7 @@
               <div>
                 <span style="color: #828282;">У меня такая же проблема: </span>
                 <div class="like" :class="[problem.is_liked ? 'liked' : '']">
-                  <button class="likeBtn" @click="likeProblem(problem.id)">
+                  <button class="likeBtn" @click="event => likeProblem(problem.id, event)">
                     <span>
                       {{ problem.likes_count }}
                     </span>
@@ -223,7 +223,7 @@
                           <h5 class="mb-0">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                             <p>
-                              Команда, опыт, результат
+                              Команда, опыт, результат решения
                             </p>
                           </h5>
                         </button>
@@ -273,7 +273,7 @@
                           </div>
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
-                            <label style="width: 100%;">Результат</label>
+                            <label style="width: 100%;">Результат решения</label>
                             <textarea placeholder="Заполните результат решения проблемы..." rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_result'+problem.id"
                               v-model="problem.result"
                               @keydown.enter.prevent.exact="event => {editResult(problem.id, problem.result, event)}"
@@ -307,10 +307,9 @@
                           aria-controls="collapseGroups">
                           <h5 class="mb-0">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
-                            <p v-show="!validatedExecutorAndAdmin">
-                              Направить в подразделение
+                            <p>
+                              Направление в подразделения
                             </p>
-                            <p v-show="validatedExecutorAndAdmin">Направлена в подразделения:</p>
                           </h5>
                         </button>
 
@@ -623,7 +622,8 @@
         await this.$store.dispatch('deleteProblem', param)
       },
 
-      async likeProblem(id) {
+      async likeProblem(id, e) {
+        e.stopPropagation()
         await this.$store.dispatch('problemLike', id)
       },
 

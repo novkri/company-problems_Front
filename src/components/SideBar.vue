@@ -9,7 +9,7 @@
       </div>
 
       <div class="main">
-        <a style="font-family: 'GothamPro';font-size: 16px; cursor: default;">
+        <a style="font-family: 'GothamPro-Medium';font-size: 16px; cursor: default;">
           Списки проблем:
         </a>
 
@@ -68,7 +68,7 @@
 
         <a>
           <archive-icon size="1.5x" class="custom-class"></archive-icon>
-          <router-link to="/problems-user-archive" exact>Архив проблем</router-link>
+          <router-link to="/problems-archive" exact>Архив проблем</router-link>
         </a>
       </div>
 

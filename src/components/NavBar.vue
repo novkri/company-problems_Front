@@ -83,7 +83,7 @@
       v-show="this.$route.path !== '/group-problems' && this.$route.path !== '/'">
       <span>Статус:</span>
       <ss-select v-model="statusProblem" :options="statusesProblem" track-by="name" class="form-control"
-        :class="[this.$route.path == '/problems-user-archive' ? 'archive' : '' ]"
+        :class="[this.$route.path == '/problems-archive' ? 'archive' : '' ]"
         @change="filterProblemStatus(statusProblem)" disable-by="disabled" id="ss-select" style="width: fit-content;">
         <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
           style="cursor: pointer; width: 100%;">
@@ -225,7 +225,7 @@
             ])
             this.$store.dispatch('changeCurrentGroupName', "Все")
             break;
-          case "/problems-user-archive":
+          case "/problems-archive":
             this.$store.dispatch('changeStatusesProblem', [{
                 name: "Решена"
               },
@@ -421,7 +421,7 @@
 
   #filterStatus {
     top: 69%;
-    left: 80%;
+    left: 88%;
   }
 
   .archive {

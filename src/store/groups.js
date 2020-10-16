@@ -27,6 +27,7 @@ export default {
       return state.currentGroupName
     },
     groups: state => {
+      // console.log(state.groups);
       return state.groups
     },
     leader: state => {

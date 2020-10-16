@@ -224,7 +224,7 @@
                           <h5 class="mb-0">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                             <p>
-                              Команда, опыт, результат
+                              Команда, опыт, результат решения
                             </p>
                           </h5>
                         </button>
@@ -274,7 +274,7 @@
                           </div>
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
-                            <label style="width: 100%;">Результат</label>
+                            <label style="width: 100%;">Результат решения</label>
                             <textarea placeholder="Заполните результат решения проблемы..." rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_result'+problem.id"
                               v-model="problem.result"
                               @keydown.enter.prevent.exact="event => {editResult(problem.id, problem.result, event)}"
@@ -304,7 +304,7 @@
 
 
                               <div style="display: flex;" v-else>
-                                <span class="problem-send" v-if="problem.status == 'Решена'">Проблема решена</span>
+                                <span class="problem-send" v-if="problem.status == 'Решена'">Отправить на согласование</span>
                                 <button v-else
                                   v-show="problem.creator_id == currentUid && problem.status == 'На проверке заказчика' || user.is_admin && problem.status == 'На проверке заказчика'"
                                   class="btn btnMain problem-confirm y" style="margin-right: 11px;"
@@ -335,7 +335,7 @@
                             data-target="#collapseGroups" aria-expanded="false" aria-controls="collapseGroups">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                             <p>
-                              Направить в подразделение
+                              Направление в подразделения
                             </p>
                           </button>
                         </h5>
@@ -666,7 +666,8 @@
         await this.$store.dispatch('deleteProblem', param)
       },
 
-      async likeProblem(id) {
+      async likeProblem(id, e) {
+        e.stopPropagation()
         await this.$store.dispatch('problemLike', id)
       },
 

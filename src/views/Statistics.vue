@@ -1,5 +1,6 @@
 <template>
-  <div class="main-statistics">
+<!--  -->
+  <div class="main-statistics" v-show="_isMounted">
     <div class="accordion" id="accordionStatistics">
       <div class="card">
         <div class="card-header" id="statisticQuantitativeIndicators"
@@ -170,7 +171,7 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td class="with_border">1. Проблема (проблемы) с наибольшим кол-во “лайков”</td>
+                    <td class="with_border">1. Проблема (проблемы) с наибольшим кол-во “лайков” </td>
                     <td><span v-for="(problem, idx) in statisticCategories[0][1]" :key="idx">
                         {{problem.name}},
                       </span>

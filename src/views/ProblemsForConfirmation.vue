@@ -55,7 +55,7 @@
 
               <div>
                 <div class="like" :class="[problem.is_liked ? 'liked' : '']">
-                  <button class="likeBtn" @click="likeProblem(problem.id)">
+                  <button class="likeBtn" @click="event => likeProblem(problem.id, event)">
                     <span>
                       {{ problem.likes_count }}
                     </span>
@@ -105,7 +105,7 @@
               <div>
                 <span style="color: #828282;">У меня такая же проблема: </span>
                 <div class="like" :class="[problem.is_liked ? 'liked' : '']">
-                  <button class="likeBtn" @click="likeProblem(problem.id)">
+                  <button class="likeBtn" @click="event => likeProblem(problem.id, event)">
                     <span>
                       {{ problem.likes_count }}
                     </span>
@@ -226,7 +226,7 @@
                           <h5 class="mb-0">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                             <p>
-                              Команда, опыт, результат
+                              Команда, опыт, результат решения
                             </p>
                           </h5>
                         </button>
@@ -260,9 +260,9 @@
                             <textarea placeholder="Заполните опыт по решению проблемы..." rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_exp'+problem.id"
                               v-model="problem.experience"
                               @keydown.enter.prevent.exact="event => {editExp(problem.id, problem.experience, event)}"
-                              @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id)"
+                              @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id, 'exp')"
                               @blur="event => {onBlurTextarea( event, 'exp', problem.id)}"></textarea>
-                            <div class="hidden" :ref="'hidden_area'+problem.id">
+                            <div class="hidden" :ref="'hidden_area-exp'+problem.id">
                               <button class="input-btn confirm"
                                 @mousedown="event => {editExp(problem.id, problem.experience, event)}">
                                 <check-icon size="1.4x" class="custom-class"></check-icon>
@@ -274,13 +274,13 @@
                           </div>
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
-                            <label style="width: 100%;">Результат</label>
+                            <label style="width: 100%;">Результат решения</label>
                             <textarea placeholder="Заполните результат решения проблемы..." rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_result'+problem.id"
                               v-model="problem.result"
                               @keydown.enter.prevent.exact="event => {editResult(problem.id, problem.result, event)}"
-                              @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id)"
+                              @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id, 'result')"
                               @blur="event => {onBlurTextarea(event, 'result', problem.id)}"></textarea>
-                            <div class="hidden" :ref="'hidden_area'+problem.id">
+                            <div class="hidden" :ref="'hidden_area-result'+problem.id">
                               <button class="input-btn confirm"
                                 @mousedown="event => {editResult(problem.id, problem.result, event)}">
                                 <check-icon size="1.4x" class="custom-class"></check-icon>
@@ -320,7 +320,7 @@
                           <h5 class="mb-0">
                             <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                             <p>
-                              Направить в подразделение
+                              Направление в подразделения
                             </p>
                           </h5>
                         </button>
@@ -500,6 +500,7 @@
 
     methods: {
       clickOnCard(id, e) {
+        console.log(e.target.tagName);
         if (e.target.tagName == 'DIV' && !e.target.classList.contains('name_div') || e.target.tagName == 'BUTTON' || e
           .target.tagName == 'H5') {
           this.$refs['button_card' + id][0].click()
@@ -663,7 +664,8 @@
         await this.$store.dispatch('deleteProblem', param)
       },
 
-      async likeProblem(id) {
+      async likeProblem(id, e) {
+        e.stopPropagation()
         await this.$store.dispatch('problemLike', id)
       },
 
@@ -774,7 +776,8 @@
 
       onFocusTextarea(event, id, type) {
         this.currentTextarea = event.target.value
-
+console.log(this.$refs);
+console.log(this.$refs['hidden_area-' + type + id]);
         event.target.style.borderRadius = '9px 9px 0px 0px';
         this.$refs['hidden_area-' + type + id].forEach(element => {
           element.style.display = 'flex'

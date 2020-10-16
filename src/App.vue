@@ -23,6 +23,11 @@
   }
 </script>
 <style lang="scss">
+  .v-popover, .middle-icons {
+    div {
+      margin: auto;
+    }
+  }
   .container__groups_list {
     max-height: 393px;
     min-height: 393px;

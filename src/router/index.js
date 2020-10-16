@@ -47,7 +47,7 @@ const routes = [
     }
   },
   {
-    path: "/problems-user-archive",
+    path: "/problems-archive",
     name: "ProblemsArchive",
     component: () =>  import("../views/Archive.vue"),
     props: true,
