@@ -104,7 +104,7 @@
           description: this.formData.description,
           possible_solution: this.formData.solution,
         }).then((r) => {
-          
+
           this.$route.path != '/my-problems' ? this.$router.push('/my-problems') : ''
           if (!this.error) {
             this.$store.dispatch('getThisProblem', r.id)

@@ -3,420 +3,426 @@
     <span class="empty" v-show="problems.length == 0 && _isMounted">Список проблем пуст...</span>
 
     <div class="container" v-if="_isMounted">
-      <div>
-        <span class="problem_subtitle" v-for="(problemsPack, title) in sortedData" :key="title">
-          {{title}}
+      <div class="inner-container" v-for="(problemsPack, title) in sortedData" :key="title">
+        <span class="problem_subtitle" v-show="problemsPack.length != 0">
+          {{title}} 
         </span>
-        <div id="accordion">
-          <div class="card" id="card"
-            v-for="(problem, idx) in problemsPack" :key="idx">
-            <!-- {{problem.status}} -->
-            <div class="card-header row" @click="event => clickOnCard(problem.id, event)" :id="'heading'+problem.id"
-              ref="collapsed-header">
-              <div class="name col-4">
-                <button class="btn btn-link collapsed" :ref="'button_card'+problem.id" @click="onClickShow(problem)"
-                  data-toggle="collapse" :data-target="'#collapseOne'+problem.id" aria-expanded="false"
-                  :aria-controls="'collapseOne'+problem.id">
-                  <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
-                </button>
 
-                <h5 class="mb-0" style="display: flex; width: 80%;">
-                  <span style="width: fit-content;max-width: 100%;"
-                    :style="[problem.creator_id == currentUid || user.is_admin ? {'cursor': 'pointer'} : {'cursor': 'default'}]"
-                    :ref="'name-div'+problem.id"
-                    @click="event => {onClickInput(problem.id, problem.creator_id, event)}">
-                    {{ problem.name}}
-                  </span>
-                  <input class="form-control" style="display: none;" :id="'problem-name'+problem.id"
-                    :disabled="isCreatorOrAdmin" v-model="problem.name" :ref="'problem-name' + problem.id"
-                    @keyup.enter="event => {editProblemName(problem.name, problem.id, event)}"
-                    @focus="onFocusInput($event)" @blur="event => {onBlurInput(problem.name, problem.id, event)}" />
-                </h5>
-              </div>
+        <div v-if="problemsPack.length == 0"></div>
 
-              <div class="middle-icons col-6">
-                <div>
-                  <v-popover offset="16">
-                    <file-text-icon size="1.5x" class="custom-class details tooltip-target b3">
-                    </file-text-icon>
+        <div v-else>
+          <div id="accordion">
+            <div class="card" id="card" v-for="(problem, idx) in problemsPack" :key="idx">
+              <!-- {{problem.status}} -->
+              <div class="card-header row" @click="event => clickOnCard(problem.id, event)" :id="'heading'+problem.id"
+                ref="collapsed-header">
+                <div class="name col-4">
+                  <button class="btn btn-link collapsed" :ref="'button_card'+problem.id" @click="onClickShow(problem)"
+                    data-toggle="collapse" :data-target="'#collapseOne'+problem.id" aria-expanded="false"
+                    :aria-controls="'collapseOne'+problem.id">
+                    <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
+                  </button>
 
-                    <template slot="popover">
-                      <TooltipProblem char="=" :val="problem" />
-                      <a v-close-popover class="close-popover">&times;</a>
-                    </template>
-                  </v-popover>
-                </div>
-                <div style="width: 21px;">
-                  <clock-icon size="1.5x" class="custom-class details" :ref="'urgency'+problem.id"
-                    v-show="problem.urgency === 'Срочная'"
-                    :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"></clock-icon>
-                </div>
-                <div style="width: 21px;">
-                  <alert-circle-icon size="1.5x" class="custom-class details" :ref="'importance'+problem.id"
-                    v-show="problem.importance === 'Важная'"
-                    :style="[problem.importance == isImportnant ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]">
-                  </alert-circle-icon>
+                  <h5 class="mb-0" style="display: flex; width: 80%;">
+                    <span style="width: fit-content;max-width: 100%;"
+                      :style="[problem.creator_id == currentUid || user.is_admin ? {'cursor': 'pointer'} : {'cursor': 'default'}]"
+                      :ref="'name-div'+problem.id"
+                      @click="event => {onClickInput(problem.id, problem.creator_id, event)}">
+                      {{ problem.name}}
+                    </span>
+                    <input class="form-control" style="display: none;" :id="'problem-name'+problem.id"
+                      :disabled="isCreatorOrAdmin" v-model="problem.name" :ref="'problem-name' + problem.id"
+                      @keyup.enter="event => {editProblemName(problem.name, problem.id, event)}"
+                      @focus="onFocusInput($event)" @blur="event => {onBlurInput(problem.name, problem.id, event)}" />
+                  </h5>
                 </div>
 
-                <div>
-                  <div class="like" :class="[problem.is_liked ? 'liked' : '']">
-                    <button class="likeBtn" @click="event => likeProblem(problem.id, event)">
-                      <span>
-                        {{ problem.likes_count }}
-                      </span>
-                      <thumbs-up-icon size="1.5x" class="custom-class"></thumbs-up-icon>
-                    </button>
+                <div class="middle-icons col-6">
+                  <div>
+                    <v-popover offset="16">
+                      <file-text-icon size="1.5x" class="custom-class details tooltip-target b3">
+                      </file-text-icon>
+
+                      <template slot="popover">
+                        <TooltipProblem char="=" :val="problem" />
+                        <a v-close-popover class="close-popover">&times;</a>
+                      </template>
+                    </v-popover>
                   </div>
-                </div>
-                <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=45 :thickness="3">
-                  <span slot="legend-value" :ref="'legend-value'+problem.id"
-                    @click="event => clickProgress(problem.id, event)">{{problem.progress}}%</span>
-                  <input :ref="'progress-bar'+problem.id" class="progress-input" type="text" style="display: none;"
-                    v-model="problem.progress" @blur="editProgress(problem.id, problem.progress)"
-                    @keyup.enter="editProgress(problem.id, problem.progress)">
-                </vue-ellipse-progress>
-              </div>
-
-              <div class="middle-icons_text col-8">
-                <div>
-                  <span style="color: #828282;">
-                    Подробнее:
-                  </span>
-                  <v-popover offset="16">
-                    <file-text-icon size="1.3x" class="custom-class details tooltip-target b3">
-                    </file-text-icon>
-
-                    <template slot="popover">
-                      <TooltipProblem char="=" :val="problem" />
-                      <a v-close-popover class="close-popover">&times;</a>
-                    </template>
-                  </v-popover>
-                </div>
-                <div>
-                  <span :style="[problem.urgency == isUrgent ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]">
-                    Срочная:
-                  </span>
-                  <clock-icon size="1.3x" class="custom-class details" :ref="'urgency'+problem.id"
-                    :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
-                    @click="changeUrgency(problem.id, problem.urgency)"></clock-icon>
-                </div>
-                <div>
-                  <span
-                    :style="[problem.importance == `Важная` ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]">Важная:</span>
-                  <alert-circle-icon size="1.3x" class="custom-class details" :ref="'importance'+problem.id"
-                    :style="[problem.importance == isImportnant ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
-                    @click="changeImportance(problem.id, problem.importance)"></alert-circle-icon>
-                </div>
-                <div>
-                  <span style="color: #828282;">У меня такая же проблема: </span>
-                  <div class="like" :class="[problem.is_liked ? 'liked' : '']">
-                    <button class="likeBtn" @click="event => likeProblem(problem.id, event)">
-                      <span>
-                        {{ problem.likes_count }}
-                      </span>
-                      <thumbs-up-icon size="1.5x" class="custom-class"></thumbs-up-icon>
-                    </button>
+                  <div style="width: 21px;">
+                    <clock-icon size="1.5x" class="custom-class details" :ref="'urgency'+problem.id"
+                      v-show="problem.urgency === 'Срочная'"
+                      :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"></clock-icon>
                   </div>
-                </div>
-                <div>
-                  <span style="color: #828282;">
-                    Прогресс решения:
-                  </span>
-                  <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=35 :thickness="2">
-                    <span :ref="'legend-value'+problem.id" slot="legend-value"
-                      style="padding: 0;font-size: 11px !important; display: flex;"
+                  <div style="width: 21px;">
+                    <alert-circle-icon size="1.5x" class="custom-class details" :ref="'importance'+problem.id"
+                      v-show="problem.importance === 'Важная'"
+                      :style="[problem.importance == isImportnant ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]">
+                    </alert-circle-icon>
+                  </div>
+
+                  <div>
+                    <div class="like" :class="[problem.is_liked ? 'liked' : '']">
+                      <button class="likeBtn" @click="event => likeProblem(problem.id, event)">
+                        <span>
+                          {{ problem.likes_count }}
+                        </span>
+                        <thumbs-up-icon size="1.5x" class="custom-class"></thumbs-up-icon>
+                      </button>
+                    </div>
+                  </div>
+                  <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=45 :thickness="3">
+                    <span slot="legend-value" :ref="'legend-value'+problem.id"
                       @click="event => clickProgress(problem.id, event)">{{problem.progress}}%</span>
                     <input :ref="'progress-bar'+problem.id" class="progress-input" type="text" style="display: none;"
                       v-model="problem.progress" @blur="editProgress(problem.id, problem.progress)"
                       @keyup.enter="editProgress(problem.id, problem.progress)">
                   </vue-ellipse-progress>
                 </div>
-              </div>
 
-              <div class="icons col-1">
-                <div class="trash-icon">
-                  <trash-icon size="1.3x" class="custom-class" style="margin: auto;"
-                    v-show="problem.creator_id == currentUid || user.is_admin"
-                    @click="deleteP(problem.id, problem.name)" data-toggle="modal" data-target="#popupDelete">
-                  </trash-icon>
-                </div>
-              </div>
-            </div>
+                <div class="middle-icons_text col-8">
+                  <div>
+                    <span style="color: #828282;">
+                      Подробнее:
+                    </span>
+                    <v-popover offset="16">
+                      <file-text-icon size="1.3x" class="custom-class details tooltip-target b3">
+                      </file-text-icon>
 
-            <div :id="'collapseOne'+problem.id" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-              <div class="card-body">
-                <div class="card" style="padding-top: 34px;" v-if="mounted">
-                  <div class="row" style="display: flex; flex-direction: row; margin-bottom: 8px;">
-                    <div class="accordion col-9" id="tasks">
-                      <div class="card" :ref="'cardSol'+problem.id"
-                        :style="[problem.status == 'На проверке заказчика' ? {'padding-bottom': '13px', 'overflow-y': 'auto', 'min-height': 'auto'} : {'padding-bottom': '0px','min-height': '500px' }]">
-                        <div class="card-header" id="headingTasks">
-
-                          <button class="btn btn-link btn-block text-left" style="width: 100%;"
-                            :class="[problem.status == 'На проверке заказчика' ? 'collapsed' : '']" type="button"
-                            data-toggle="collapse" id="collapseTasks_btn" @click="onClickSol(problem)"
-                            data-target="#collapseTasks" aria-expanded="false" aria-controls="collapseTasks">
-                            <h5 class="mb-0">
-                              <chevron-up-icon v-if="problem.status == 'На проверке заказчика'" size="1.5x"
-                                class="custom-class"></chevron-up-icon>
-                              <chevron-down-icon v-else size="1.5x" class="custom-class"></chevron-down-icon>
-                              <p>
-                                Решение
-                              </p>
-                            </h5>
-                          </button>
-
-                        </div>
-
-                        <div id="collapseTasks" class="collapse"
-                          :class="[problem.status == 'На проверке заказчика' ? '' : 'show']"
-                          aria-labelledby="headingTasks" data-parent="#tasks" style="width: 100%;">
-                          <div class="card-body" :val="solutions" style="padding-bottom: 0;">
-                            <PopupShow v-if="openShow" :val="paramsModal" />
-                            <Tasks v-if="solutions[0]" :val="solutions[0]" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- План -->
-                    <div class="accordion col-3" id="plan">
-                      <div class="card" :ref="'cardPlan'+problem.id" style="padding-bottom: 18px;">
-                        <div class="card-header" id="headingPlan" style="width: 100%;">
-
-                          <button class="btn btn-link btn-block text-left" style="width:100%;"
-                            :class="[problem.status == 'На проверке заказчика' ? 'collapsed' : '']" type="button"
-                            data-toggle="collapse" data-target="#collapsePlan" aria-expanded="false"
-                            aria-controls="collapsePlan" @click="onClickPlan(problem.id)">
-                            <h5 class="mb-0">
-                              <chevron-up-icon v-if="problem.status == 'На проверке заказчика'" size="1.5x"
-                                class="custom-class"></chevron-up-icon>
-                              <chevron-down-icon v-else size="1.5x" class="custom-class"></chevron-down-icon>
-                              <p>
-                                План решения
-                              </p>
-                            </h5>
-                          </button>
-
-                        </div>
-
-                        <div id="collapsePlan" class="collapse"
-                          :class="[problem.status == 'На проверке заказчика' ? '' : 'show']"
-                          aria-labelledby="headingPlan" data-parent="#plan" style="width: 100%;">
-                          <div class="card-body p-0" :ref="'cardBody'+problem.id" style="height: 100%;">
-                            <!-- plan,  -->
-                            <textarea placeholder="Опишите ваш план решения..." rows="6"
-                              :ref="'textarea_plan'+problem.id" style="height: 100%;min-height: 418px;"
-                              v-model="solutions[0].plan" :disabled="isResponsibleAndAdmin"
-                              @keydown.enter.prevent.exact="event => {editPlan(solutions[0].id, solutions[0].plan, event)}"
-                              @keyup.shift.enter.prevent="newLine"
-                              @focus="event => onFocusTextarea(event, problem.id, 'plan')"
-                              @blur="event => {onBlurTextarea(event, 'plan', problem.id)}"></textarea>
-                            <div class="hidden" :ref="'hidden_area-plan'+problem.id">
-                              <button class="input-btn confirm"
-                                @mousedown="event => {editPlan(solutions[0].id,solutions[0].plan, event)}">
-                                <check-icon size="1.4x" class="custom-class"></check-icon>
-                              </button>
-                              <button class="input-btn cancel" @mousedown="event => onClear(event, problem.id, 'plan')">
-                                <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      <template slot="popover">
+                        <TooltipProblem char="=" :val="problem" />
+                        <a v-close-popover class="close-popover">&times;</a>
+                      </template>
+                    </v-popover>
+                  </div>
+                  <div>
+                    <span :style="[problem.urgency == isUrgent ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]">
+                      Срочная:
+                    </span>
+                    <clock-icon size="1.3x" class="custom-class details" :ref="'urgency'+problem.id"
+                      :style="[problem.urgency == isUrgent ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
+                      @click="changeUrgency(problem.id, problem.urgency)"></clock-icon>
+                  </div>
+                  <div>
+                    <span
+                      :style="[problem.importance == `Важная` ? { 'color': '#4EAD96'} : { 'color': '#BDBDBD'}]">Важная:</span>
+                    <alert-circle-icon size="1.3x" class="custom-class details" :ref="'importance'+problem.id"
+                      :style="[problem.importance == isImportnant ? {'color': '#4EAD96'} : {'color': '#AFAFAF'}]"
+                      @click="changeImportance(problem.id, problem.importance)"></alert-circle-icon>
+                  </div>
+                  <div>
+                    <span style="color: #828282;">У меня такая же проблема: </span>
+                    <div class="like" :class="[problem.is_liked ? 'liked' : '']">
+                      <button class="likeBtn" @click="event => likeProblem(problem.id, event)">
+                        <span>
+                          {{ problem.likes_count }}
+                        </span>
+                        <thumbs-up-icon size="1.5x" class="custom-class"></thumbs-up-icon>
+                      </button>
                     </div>
                   </div>
+                  <div>
+                    <span style="color: #828282;">
+                      Прогресс решения:
+                    </span>
+                    <vue-ellipse-progress :progress="+problem.progress" color="#56CCF2" :size=35 :thickness="2">
+                      <span :ref="'legend-value'+problem.id" slot="legend-value"
+                        style="padding: 0;font-size: 11px !important; display: flex;"
+                        @click="event => clickProgress(problem.id, event)">{{problem.progress}}%</span>
+                      <input :ref="'progress-bar'+problem.id" class="progress-input" type="text" style="display: none;"
+                        v-model="problem.progress" @blur="editProgress(problem.id, problem.progress)"
+                        @keyup.enter="editProgress(problem.id, problem.progress)">
+                    </vue-ellipse-progress>
+                  </div>
+                </div>
 
-                  <div class="row" style="display: flex; flex-direction: row; margin-bottom: 8px;">
-                    <!-- Команда -->
-                    <div class="accordion col-9" id="results">
-                      <div class="card">
-                        <div class="card-header" id="headingResults" style="width: 100%;">
+                <div class="icons col-1">
+                  <div class="trash-icon">
+                    <trash-icon size="1.3x" class="custom-class" style="margin: auto;"
+                      v-show="problem.creator_id == currentUid || user.is_admin"
+                      @click="deleteP(problem.id, problem.name)" data-toggle="modal" data-target="#popupDelete">
+                    </trash-icon>
+                  </div>
+                </div>
+              </div>
 
-                          <button class="btn btn-link btn-block text-left" style="width: 100%;" type="button"
-                            data-toggle="collapse" data-target="#collapseResults" aria-expanded="false"
-                            aria-controls="collapseResults">
-                            <h5 class="mb-0">
-                              <chevron-up-icon v-if="problem.status == 'На проверке заказчика'" size="1.5x"
-                                class="custom-class"></chevron-up-icon>
-                              <chevron-down-icon v-else size="1.5x" class="custom-class"></chevron-down-icon>
-                              <p>
-                                Команда, опыт, результат решения
-                              </p>
-                            </h5>
-                          </button>
+              <div :id="'collapseOne'+problem.id" class="collapse" aria-labelledby="headingOne"
+                data-parent="#accordion">
+                <div class="card-body">
+                  <div class="card" style="padding-top: 34px;" v-if="mounted">
+                    <div class="row" style="display: flex; flex-direction: row; margin-bottom: 8px;">
+                      <div class="accordion col-9" id="tasks">
+                        <div class="card" :ref="'cardSol'+problem.id"
+                          :style="[problem.status == 'На проверке заказчика' ? {'padding-bottom': '13px', 'overflow-y': 'auto', 'min-height': 'auto'} : {'padding-bottom': '0px','min-height': '500px' }]">
+                          <div class="card-header" id="headingTasks">
 
+                            <button class="btn btn-link btn-block text-left" style="width: 100%;"
+                              :class="[problem.status == 'На проверке заказчика' ? 'collapsed' : '']" type="button"
+                              data-toggle="collapse" id="collapseTasks_btn" @click="onClickSol(problem)"
+                              data-target="#collapseTasks" aria-expanded="false" aria-controls="collapseTasks">
+                              <h5 class="mb-0">
+                                <chevron-up-icon v-if="problem.status == 'На проверке заказчика'" size="1.5x"
+                                  class="custom-class"></chevron-up-icon>
+                                <chevron-down-icon v-else size="1.5x" class="custom-class"></chevron-down-icon>
+                                <p>
+                                  Решение
+                                </p>
+                              </h5>
+                            </button>
+
+                          </div>
+
+                          <div id="collapseTasks" class="collapse"
+                            :class="[problem.status == 'На проверке заказчика' ? '' : 'show']"
+                            aria-labelledby="headingTasks" data-parent="#tasks" style="width: 100%;">
+                            <div class="card-body" :val="solutions" style="padding-bottom: 0;">
+                              <PopupShow v-if="openShow" :val="paramsModal" />
+                              <Tasks v-if="solutions[0]" :val="solutions[0]" />
+                            </div>
+                          </div>
                         </div>
+                      </div>
 
-                        <div id="collapseResults" class="collapse"
-                          :class="problem.status == 'На проверке заказчика' ? 'show' : ''"
-                          aria-labelledby="headingResults" style="width: 100%;" data-parent="#results"
-                          ref="collapsed-results">
-                          <div class="card-body row p-0" style="flex-direction: row;">
+                      <!-- План -->
+                      <div class="accordion col-3" id="plan">
+                        <div class="card" :ref="'cardPlan'+problem.id" style="padding-bottom: 18px;">
+                          <div class="card-header" id="headingPlan" style="width: 100%;">
 
-                            <div class="col-4 p-2" style="flex-direction: column;display: flex;min-height: 417px;">
-                              <label style="width: 100%;">Команда</label>
-                              <textarea rows="6" :disabled="isResponsibleAndAdmin" :ref="'textarea_team'+problem.id"
-                                v-model="solutions[0].team"
-                                @keydown.enter.prevent.exact="event => {editTeam(solutions[0].id, solutions[0].team, event)}"
+                            <button class="btn btn-link btn-block text-left" style="width:100%;"
+                              :class="[problem.status == 'На проверке заказчика' ? 'collapsed' : '']" type="button"
+                              data-toggle="collapse" data-target="#collapsePlan" aria-expanded="false"
+                              aria-controls="collapsePlan" @click="onClickPlan(problem.id)">
+                              <h5 class="mb-0">
+                                <chevron-up-icon v-if="problem.status == 'На проверке заказчика'" size="1.5x"
+                                  class="custom-class"></chevron-up-icon>
+                                <chevron-down-icon v-else size="1.5x" class="custom-class"></chevron-down-icon>
+                                <p>
+                                  План решения
+                                </p>
+                              </h5>
+                            </button>
+
+                          </div>
+
+                          <div id="collapsePlan" class="collapse"
+                            :class="[problem.status == 'На проверке заказчика' ? '' : 'show']"
+                            aria-labelledby="headingPlan" data-parent="#plan" style="width: 100%;">
+                            <div class="card-body p-0" :ref="'cardBody'+problem.id" style="height: 100%;">
+                              <!-- plan,  -->
+                              <textarea placeholder="Опишите ваш план решения..." rows="6"
+                                :ref="'textarea_plan'+problem.id" style="height: 100%;min-height: 418px;"
+                                v-model="solutions[0].plan" :disabled="isResponsibleAndAdmin"
+                                @keydown.enter.prevent.exact="event => {editPlan(solutions[0].id, solutions[0].plan, event)}"
                                 @keyup.shift.enter.prevent="newLine"
-                                @focus="event => onFocusTextarea(event, problem.id, 'team')"
-                                @blur="event => {onBlurTextarea(event, 'team', problem.id)}"></textarea>
-                              <div class="hidden" :ref="'hidden_area-team'+problem.id">
+                                @focus="event => onFocusTextarea(event, problem.id, 'plan')"
+                                @blur="event => {onBlurTextarea(event, 'plan', problem.id)}"></textarea>
+                              <div class="hidden" :ref="'hidden_area-plan'+problem.id">
                                 <button class="input-btn confirm"
-                                  @mousedown="event => {editTeam(solutions[0].id, solutions[0].team, event)}">
+                                  @mousedown="event => {editPlan(solutions[0].id,solutions[0].plan, event)}">
                                   <check-icon size="1.4x" class="custom-class"></check-icon>
                                 </button>
                                 <button class="input-btn cancel"
-                                  @mousedown="event => onClear(event, problem.id, 'team')">
+                                  @mousedown="event => onClear(event, problem.id, 'plan')">
                                   <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
                                 </button>
                               </div>
                             </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
-                            <div class="col-4 p-2" style="flex-direction: column;display: flex;">
-                              <label style="width: 100%;">Опыт</label>
-                              <textarea placeholder="Заполните опыт по решению проблемы..." rows="6"
-                                :disabled="validatedExecutorAndAdmin" :ref="'textarea_exp'+problem.id"
-                                v-model="problem.experience"
-                                @keydown.enter.prevent.exact="event => {editExp(problem.id, problem.experience, event)}"
-                                @keyup.shift.enter.prevent="newLine"
-                                @focus="event => onFocusTextarea(event, problem.id, 'exp')"
-                                @blur="event => {onBlurTextarea( event, 'exp', problem.id)}"></textarea>
-                              <div class="hidden" :ref="'hidden_area-exp'+problem.id">
-                                <button class="input-btn confirm"
-                                  @mousedown="event => {editExp(problem.id, problem.experience, event)}">
-                                  <check-icon size="1.4x" class="custom-class"></check-icon>
-                                </button>
-                                <button class="input-btn cancel"
-                                  @mousedown="event => onClear(event, problem.id, 'exp')">
-                                  <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
-                                </button>
+                    <div class="row" style="display: flex; flex-direction: row; margin-bottom: 8px;">
+                      <!-- Команда -->
+                      <div class="accordion col-9" id="results">
+                        <div class="card">
+                          <div class="card-header" id="headingResults" style="width: 100%;">
+
+                            <button class="btn btn-link btn-block text-left" style="width: 100%;" type="button"
+                              data-toggle="collapse" data-target="#collapseResults" aria-expanded="false"
+                              aria-controls="collapseResults">
+                              <h5 class="mb-0">
+                                <chevron-up-icon v-if="problem.status == 'На проверке заказчика'" size="1.5x"
+                                  class="custom-class"></chevron-up-icon>
+                                <chevron-down-icon v-else size="1.5x" class="custom-class"></chevron-down-icon>
+                                <p>
+                                  Команда, опыт, результат решения
+                                </p>
+                              </h5>
+                            </button>
+
+                          </div>
+
+                          <div id="collapseResults" class="collapse"
+                            :class="problem.status == 'На проверке заказчика' ? 'show' : ''"
+                            aria-labelledby="headingResults" style="width: 100%;" data-parent="#results"
+                            ref="collapsed-results">
+                            <div class="card-body row p-0" style="flex-direction: row;">
+
+                              <div class="col-4 p-2" style="flex-direction: column;display: flex;min-height: 417px;">
+                                <label style="width: 100%;">Команда</label>
+                                <textarea rows="6" :disabled="isResponsibleAndAdmin" :ref="'textarea_team'+problem.id"
+                                  v-model="solutions[0].team"
+                                  @keydown.enter.prevent.exact="event => {editTeam(solutions[0].id, solutions[0].team, event)}"
+                                  @keyup.shift.enter.prevent="newLine"
+                                  @focus="event => onFocusTextarea(event, problem.id, 'team')"
+                                  @blur="event => {onBlurTextarea(event, 'team', problem.id)}"></textarea>
+                                <div class="hidden" :ref="'hidden_area-team'+problem.id">
+                                  <button class="input-btn confirm"
+                                    @mousedown="event => {editTeam(solutions[0].id, solutions[0].team, event)}">
+                                    <check-icon size="1.4x" class="custom-class"></check-icon>
+                                  </button>
+                                  <button class="input-btn cancel"
+                                    @mousedown="event => onClear(event, problem.id, 'team')">
+                                    <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
+                                  </button>
+                                </div>
                               </div>
-                            </div>
 
-                            <div class="col-4 p-2" style="flex-direction: column;display: flex;">
-                              <label style="width: 100%;">Результат решения</label>
-                              <textarea placeholder="Заполните результат решения проблемы..." rows="6"
-                                :disabled="validatedExecutorAndAdmin" :ref="'textarea_result'+problem.id"
-                                v-model="problem.result"
-                                @keydown.enter.prevent.exact="event => {editResult(problem.id, problem.result, event)}"
-                                @keyup.shift.enter.prevent="newLine"
-                                @focus="event => onFocusTextarea(event, problem.id, 'result')"
-                                @blur="event => {onBlurTextarea(event, 'result', problem.id)}"></textarea>
-                              <div class="hidden" :ref="'hidden_area-result'+problem.id">
-                                <button class="input-btn confirm"
-                                  @mousedown="event => {editResult(problem.id, problem.result, event)}">
-                                  <check-icon size="1.4x" class="custom-class"></check-icon>
-                                </button>
-                                <button class="input-btn cancel"
-                                  @mousedown="event => onClear(event, problem.id, 'result')">
-                                  <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
-                                </button>
-                                <!-- </div>
-                              </div> -->
+                              <div class="col-4 p-2" style="flex-direction: column;display: flex;">
+                                <label style="width: 100%;">Опыт</label>
+                                <textarea placeholder="Заполните опыт по решению проблемы..." rows="6"
+                                  :disabled="validatedExecutorAndAdmin" :ref="'textarea_exp'+problem.id"
+                                  v-model="problem.experience"
+                                  @keydown.enter.prevent.exact="event => {editExp(problem.id, problem.experience, event)}"
+                                  @keyup.shift.enter.prevent="newLine"
+                                  @focus="event => onFocusTextarea(event, problem.id, 'exp')"
+                                  @blur="event => {onBlurTextarea( event, 'exp', problem.id)}"></textarea>
+                                <div class="hidden" :ref="'hidden_area-exp'+problem.id">
+                                  <button class="input-btn confirm"
+                                    @mousedown="event => {editExp(problem.id, problem.experience, event)}">
+                                    <check-icon size="1.4x" class="custom-class"></check-icon>
+                                  </button>
+                                  <button class="input-btn cancel"
+                                    @mousedown="event => onClear(event, problem.id, 'exp')">
+                                    <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
+                                  </button>
+                                </div>
                               </div>
 
-                              <div
-                                :style="[solutions[0].executor_id == currentUid || problem.creator_id == currentUid || user.is_admin? {'display': 'flex'} : {'display': 'none'}]"
-                                style="margin-bottom: -37px; margin-top: 14px; justify-content: space-evenly; flex-direction: row;flex-wrap:wrap; align-items: center;">
-                                <div style="display: flex;">
-                                  <span class="problem-send" v-if="problem.status == 'Решена'">Отправить на
-                                    согласование</span>
-                                  <button v-else
-                                    v-show="problem.creator_id == currentUid && problem.status == 'На проверке заказчика' || user.is_admin && problem.status == 'На проверке заказчика'"
-                                    class="btn btnMain problem-confirm y" style="margin-right: 11px;"
-                                    @click="problemConfirm(problem.id)">Подтвердить
-                                    решение</button>
+                              <div class="col-4 p-2" style="flex-direction: column;display: flex;">
+                                <label style="width: 100%;">Результат решения</label>
+                                <textarea placeholder="Заполните результат решения проблемы..." rows="6"
+                                  :disabled="validatedExecutorAndAdmin" :ref="'textarea_result'+problem.id"
+                                  v-model="problem.result"
+                                  @keydown.enter.prevent.exact="event => {editResult(problem.id, problem.result, event)}"
+                                  @keyup.shift.enter.prevent="newLine"
+                                  @focus="event => onFocusTextarea(event, problem.id, 'result')"
+                                  @blur="event => {onBlurTextarea(event, 'result', problem.id)}"></textarea>
+                                <div class="hidden" :ref="'hidden_area-result'+problem.id">
+                                  <button class="input-btn confirm"
+                                    @mousedown="event => {editResult(problem.id, problem.result, event)}">
+                                    <check-icon size="1.4x" class="custom-class"></check-icon>
+                                  </button>
+                                  <button class="input-btn cancel"
+                                    @mousedown="event => onClear(event, problem.id, 'result')">
+                                    <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
+                                  </button>
+                                </div>
 
-                                  <span class="problem-send" v-if="problem.status == 'На рассмотрении'">Проблема
-                                    направлена руководителю для рассмотрения</span>
-                                  <button v-else
-                                    v-show="problem.creator_id == currentUid && problem.status == 'На проверке заказчика' || user.is_admin && problem.status == 'На проверке заказчика'"
-                                    class="btn btnMain problem-confirm"
-                                    style="background-color: #EBEBEB;color: #4F4F4F;"
-                                    @click="problemReject(problem.id)">Отклонить</button>
+                                <div
+                                  :style="[solutions[0].executor_id == currentUid || problem.creator_id == currentUid || user.is_admin? {'display': 'flex'} : {'display': 'none'}]"
+                                  style="margin-bottom: -37px; margin-top: 14px; justify-content: space-evenly; flex-direction: row;flex-wrap:wrap; align-items: center;">
+                                  <div style="display: flex;">
+                                    <span class="problem-send" v-if="problem.status == 'Решена'">Отправить на
+                                      согласование</span>
+                                    <button v-else
+                                      v-show="problem.creator_id == currentUid && problem.status == 'На проверке заказчика' || user.is_admin && problem.status == 'На проверке заказчика'"
+                                      class="btn btnMain problem-confirm y" style="margin-right: 11px;"
+                                      @click="problemConfirm(problem.id)">Подтвердить
+                                      решение</button>
+
+                                    <span class="problem-send" v-if="problem.status == 'На рассмотрении'">Проблема
+                                      направлена руководителю для рассмотрения</span>
+                                    <button v-else
+                                      v-show="problem.creator_id == currentUid && problem.status == 'На проверке заказчика' || user.is_admin && problem.status == 'На проверке заказчика'"
+                                      class="btn btnMain problem-confirm"
+                                      style="background-color: #EBEBEB;color: #4F4F4F;"
+                                      @click="problemReject(problem.id)">Отклонить</button>
+                                  </div>
+
                                 </div>
 
                               </div>
-
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
 
-                    <!-- Подразделения -->
-                    <div class="accordion col-3" id="groups">
-                      <div class="card">
-                        <div class="card-header" id="headingGroups" style="width: 100%;">
+                      <!-- Подразделения -->
+                      <div class="accordion col-3" id="groups">
+                        <div class="card">
+                          <div class="card-header" id="headingGroups" style="width: 100%;">
 
-                          <button class="btn btn-link btn-block text-left" style="width: 100%;" type="button"
-                            data-toggle="collapse" data-target="#collapseGroups" aria-expanded="false"
-                            aria-controls="collapseGroups">
-                            <h5 class="mb-0">
-                              <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
-                              <p>
-                                Направление в подразделения
-                              </p>
-                            </h5>
-                          </button>
-
-                        </div>
-
-                        <div id="collapseGroups" class="collapse" aria-labelledby="headingGroups" style="width: 100%;"
-                          data-parent="#groups" ref="collapsed-groups">
-                          <div class="card-body p-0" v-show="!validatedExecutorAndAdmin">
-                            <div class="check-inputs">
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="groupCheckAll"
-                                  @click="checkAll(problem)" v-model="all">
-                                <label class="custom-control-label" for="groupCheckAll">Все</label>
-                              </div>
-
-                              <div class="custom-control custom-checkbox" v-for="(group, idx) in groups" :key="idx">
-                                <input type="checkbox" class="custom-control-input" :id="'groupCheck'+group.id"
-                                  :value="group.id" v-model="checkedGroups">
-                                <label class="custom-control-label" :for="'groupCheck'+group.id">{{group.name}}</label>
-                              </div>
-                            </div>
-
-                            <button class="btn btnMain btn-to-groups" v-show="!validatedExecutorAndAdmin"
-                              @click="sendToGroup(problem.id, checkedGroups)">Направить</button>
-                          </div>
-
-                          <div class="card-body p-0" v-show="validatedExecutorAndAdmin">
-                            <span class="groups_list" v-show="problem.groups.length == 0">Проблема не направлена ни в
-                              одно подразделение</span>
-                            <div class="container__groups_list">
-                              <span class="groups_list" style="padding-bottom: 5px;"
-                                v-for="(group, idx) in problem.groups" :key="idx">{{idx+1}}. {{group.name}}</span>
-                            </div>
+                            <button class="btn btn-link btn-block text-left" style="width: 100%;" type="button"
+                              data-toggle="collapse" data-target="#collapseGroups" aria-expanded="false"
+                              aria-controls="collapseGroups">
+                              <h5 class="mb-0">
+                                <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
+                                <p>
+                                  Направление в подразделения
+                                </p>
+                              </h5>
+                            </button>
 
                           </div>
 
+                          <div id="collapseGroups" class="collapse" aria-labelledby="headingGroups" style="width: 100%;"
+                            data-parent="#groups" ref="collapsed-groups">
+                            <div class="card-body p-0" v-show="!validatedExecutorAndAdmin">
+                              <div class="check-inputs">
+                                <div class="custom-control custom-checkbox">
+                                  <input type="checkbox" class="custom-control-input" id="groupCheckAll"
+                                    @click="checkAll(problem)" v-model="all">
+                                  <label class="custom-control-label" for="groupCheckAll">Все</label>
+                                </div>
+
+                                <div class="custom-control custom-checkbox" v-for="(group, idx) in groups" :key="idx">
+                                  <input type="checkbox" class="custom-control-input" :id="'groupCheck'+group.id"
+                                    :value="group.id" v-model="checkedGroups">
+                                  <label class="custom-control-label"
+                                    :for="'groupCheck'+group.id">{{group.name}}</label>
+                                </div>
+                              </div>
+
+                              <button class="btn btnMain btn-to-groups" v-show="!validatedExecutorAndAdmin"
+                                @click="sendToGroup(problem.id, checkedGroups)">Направить</button>
+                            </div>
+
+                            <div class="card-body p-0" v-show="validatedExecutorAndAdmin">
+                              <span class="groups_list" v-show="problem.groups.length == 0">Проблема не направлена ни в
+                                одно подразделение</span>
+                              <div class="container__groups_list">
+                                <span class="groups_list" style="padding-bottom: 5px;"
+                                  v-for="(group, idx) in problem.groups" :key="idx">{{idx+1}}. {{group.name}}</span>
+                              </div>
+
+                            </div>
+
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div v-else class="d-flex justify-content-center" style="margin-top: 20px;">
-                  <div class="d-flex justify-content-center">
-                    <div class="spinner-border" role="status">
-                      <span class="sr-only">Loading...</span>
+                  <div v-else class="d-flex justify-content-center" style="margin-top: 20px;">
+                    <div class="d-flex justify-content-center">
+                      <div class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                      </div>
                     </div>
+
                   </div>
 
                 </div>
-
               </div>
             </div>
           </div>
+
         </div>
       </div>
-
-
     </div>
+
+
     <div v-else class="d-flex justify-content-center" style="margin-top: 20px;">
       <div class="d-flex justify-content-center">
         <div class="spinner-border" role="status">
@@ -535,26 +541,33 @@
       ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', 'user',
         'currentUid', 'user', 'isLeader', 'members'
       ]),
-      validatedExecutorAndAdmin: function () {
+      validatedExecutorAndAdmin() {
         return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : this
           .isLeaderOgUser ? false : true
       },
-      isCreatorOrAdmin: function () {
+      isCreatorOrAdmin() {
         return this.currentProblemCreator == this.currentUid ? false : this.user.is_admin ? false : true
       },
-      isCreatorLeaderOrAdmin: function () {
+      isCreatorLeaderOrAdmin() {
         return this.currentProblemCreator == this.currentUid ? false : this.user.is_admin ? false : this
           .isLeaderOgUser ? false : true
       },
-      isResponsibleAndAdmin: function () {
+      isResponsibleAndAdmin() {
         return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : true
       },
 
       sortedData() {
+        console.log(this.problems);
         let arrnew0 = this.problems.filter(p => p.status == "В работе")
         let arrnew1 = this.problems.filter(p => p.status == "На рассмотрении")
         let arrnew2 = this.problems.filter(p => p.status == "На проверке заказчика")
-        let allTogehter = {'В процессе решения': arrnew0, 'На рассмотрении': arrnew1, 'Требуют подтверждения факта решения:': arrnew2}
+
+        let allTogehter = {
+          'В процессе решения': arrnew0,
+          'На рассмотрении': arrnew1,
+          'Требуют подтверждения факта решения:': arrnew2
+        }
+        console.log(allTogehter);
         return allTogehter
       }
     },
@@ -980,6 +993,9 @@
 </script>
 
 <style scoped lang="scss">
+  .inner-container {
+    margin-top: 30px;
+  }
   .problem_subtitle {
     font-family: 'GothamPro-Medium';
     font-size: 16px;

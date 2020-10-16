@@ -28,7 +28,7 @@
             <div class="close">
               <button type="button" id="close" class="close" data-dismiss="modal" v-show="user.is_admin"
                 @click="removeUserFromGroup(member.id, val)" data-toggle="modal" data-target="#groupDeleteUser">
-                <span aria-hidden="true" style="font-size: 20px;">&times;</span>
+                <span aria-hidden="true" style="font-size: 24px;">&times;</span>
               </button>
             </div>
           </li>

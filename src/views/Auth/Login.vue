@@ -102,8 +102,8 @@
             this.$router.push('/my-problems')
 
 
-            this.$store.dispatch('checkIsLeader').then(() => {
-              this.isLeader == true ? this.$store.dispatch('getMembers', this.groups.find(g => g.leader_id == this.currentUid).id) : ''
+            this.$store.dispatch('checkIsLeader').then((response) => {
+              response ? this.$store.dispatch('getMembers', this.groups.find(g => g.leader_id == this.currentUid).id) : ''
             })
 
           }

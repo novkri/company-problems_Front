@@ -236,7 +236,11 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;min-height: 417px;">
                             <label style="width: 100%;">Команда</label>
-                            <textarea rows="6" :disabled="isResponsibleAndAdmin" :ref="'textarea_team'+problem.id"
+
+
+
+
+                            <!-- <textarea rows="6" :disabled="isResponsibleAndAdmin" :ref="'textarea_team'+problem.id"
                               v-model="solutions[0].team"
                               @keydown.enter.prevent.exact="event => {editTeam(solutions[0].id, solutions[0].team, event)}"
                               @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id, 'team')"
@@ -250,7 +254,8 @@
                                 <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
                               </button>
 
-                            </div>
+                            </div> -->
+
                           </div>
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
@@ -292,18 +297,17 @@
                             <div
                               :style="[solutions[0].executor_id == currentUid || problem.creator_id == currentUid || user.is_admin || isLeaderOgUser ? {'display': 'flex'} : {'display': 'none'}]"
                               style="margin-bottom: -37px; margin-top: 14px; justify-content: space-evenly; flex-direction: row;flex-wrap:wrap; align-items: center;">
-                              <div v-if="problem.status == 'На рассмотрении' || problem.status == 'В работе'">
+                              <div v-if="problem.status == 'На рассмотрении' || problem.status == 'В работе'" @mousedown="event => {editResult(problem.id, problem.result, event)}">
                                 <span v-if="problem.status == 'На проверке заказчика'" class="problem-send">Проблема
                                   отправлена для подтверждения решения</span>
-                                <button v-else
+                                <button v-else style="padding: 10px 17px;"
                                   v-show="user.is_admin || isLeader || solutions[0].executor_id == currentUid || isLeaderOgUser"
-                                  class="btn btnMain problem-solved" @click="problemSolved(problem.id)">Проблема
-                                  решена</button>
+                                  class="btn btnMain problem-solved" @click="problemSolved(problem.id)">Отправить на согласование</button>
                               </div>
 
 
                               <div style="display: flex;" v-else>
-                                <span class="problem-send" v-if="problem.status == 'Решена'">Отправить на согласование</span>
+                                <span class="problem-send" v-if="problem.status == 'Решена'">Проблема решена</span>
                                 <button v-else
                                   v-show="problem.creator_id == currentUid && problem.status == 'На проверке заказчика' || user.is_admin && problem.status == 'На проверке заказчика'"
                                   class="btn btnMain problem-confirm y" style="margin-right: 11px;"

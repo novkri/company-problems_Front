@@ -1,9 +1,9 @@
 <template>
   <div style="height: 83vh;padding-top: 45px;">
     <div class="subtitle row">
-      <span class="col-4">Название подразделения</span>
-      <span class="col-4">Название подразделения (сокращенно)</span>
-      <span class="col-2">Руководитель</span>
+      <span class="col-8">Название подразделения</span>
+      <!-- <span class="col-4">Название подразделения (сокращенно)</span> -->
+      <span class="col-2" style="text-align: center;">Руководитель</span>
       <div class="pagination col-2">
         <nav>
           <ul class="pagination">
@@ -30,9 +30,9 @@
       <div id="accordion">
         <div class="card" id="card" v-for="(group, idx) in paginatedDataGroups" :key="idx">
           <div class="card-header row" id="heading">
-            <div class="name col-5">
+            <div class="name col-8">
               <h5 class="mb-0" style="height: 100%;">
-                <button class="btn btn-link collapsed" style="width: 100%;" data-toggle="collapse"
+                <button class="btn btn-link collapsed" data-toggle="collapse"
                   :data-target="'#collapseOne'+group.id" @click="showOnClickUsers(group.id)" aria-expanded="false"
                   :aria-controls="'collapseOne'+group.id">
                   <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
@@ -58,7 +58,8 @@
                 </div>
               </h5>
             </div>
-            <div class="short-name col-3">
+
+            <!-- <div class="short-name col-3">
               <div class="short-name_div">
                 <span :ref="'short-name-div'+group.id"
                   @click="event => {onClickInput(group.id, 'short', event)}">{{group.short_name}}</span>
@@ -78,7 +79,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
 
             <div class="selectResponsible col-3">
               <ss-select v-model="group.leader_id" :options="allUsersReduced.filter(u => u.group_id == group.id)"
@@ -479,6 +480,10 @@
 </script>
 
 <style scoped lang="scss">
+  .col-8, .col-2, .col-3 {
+    padding-left: 0;
+    padding-right: 0;
+  }
   h5 {
     .btn {
       padding-right: 16px;
@@ -559,7 +564,7 @@
   #remove {
     display: none;
     margin: 0;
-    justify-content: flex-end;
+    justify-content: center;
     margin-top: 5px;
   }
 
@@ -581,6 +586,7 @@
     padding-left: 68px;
     height: auto;
     margin: 0 auto 15px;
+    width: 89%;
   }
 
 
@@ -971,9 +977,9 @@
       width: 64%;
     }
 
-    .subtitle {
-      padding-left: 68px !important;
-    }
+    // .subtitle {
+    //   padding-left: 68px !important;
+    // }
   }
 
   .col-3 {

@@ -170,7 +170,9 @@
             this.$store.dispatch('changeCurrentGroupName', "Все")
             break;
           case '/my-problems':
-            this.$store.dispatch('changeStatusesProblem', [{
+            this.$store.dispatch('changeStatusesProblem', [
+              
+              {
                 name: "На рассмотрении"
               },
               {
@@ -407,7 +409,7 @@
   }
 
   #filterStatus {
-    top: 69%;
+    top: 72%;
     left: 88%;
   }
 
@@ -623,7 +625,8 @@
     padding: 0;
     position: absolute;
     max-height: 257px;
-    top: 102%;
+    top: 93%;
+    left: -17%;
     width: 193px;
 
     border-radius: 10px;
@@ -640,8 +643,10 @@
   @media (max-width: 1500px) {
     * {
       font-size: 14px !important;
-
     }
+     #filterStatus {
+    left: -37% !important;
+  }
   }
 
 

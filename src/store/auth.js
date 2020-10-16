@@ -108,10 +108,13 @@ export default {
     checkIsLeader: async ({
       commit
     }) => {
+      return new Promise((resolve) => {
       axios.get(process.env.VUE_APP_ROOT_URL + '/is-group-leader')
         .then(response => {
           commit('isLeader', response.data)
+          resolve(response.data)
         })
+      })
     },
 
     login: async ({
