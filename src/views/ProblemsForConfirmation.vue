@@ -1,8 +1,7 @@
 <template>
   <div>
     <span class="empty" v-show="problems.length == 0 && _isMounted">Список проблем пуст...</span>
-    <div class="filters">
-    </div>
+
     <div class="container" v-if="_isMounted">
       <div id="accordion">
         <div class="card" id="card" v-for="(problem, idx) in problems" :key="idx">
@@ -257,10 +256,12 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Опыт</label>
-                            <textarea placeholder="Заполните опыт по решению проблемы..." rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_exp'+problem.id"
+                            <textarea placeholder="Заполните опыт по решению проблемы..." rows="6"
+                              :disabled="validatedExecutorAndAdmin" :ref="'textarea_exp'+problem.id"
                               v-model="problem.experience"
                               @keydown.enter.prevent.exact="event => {editExp(problem.id, problem.experience, event)}"
-                              @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id, 'exp')"
+                              @keyup.shift.enter.prevent="newLine"
+                              @focus="event => onFocusTextarea(event, problem.id, 'exp')"
                               @blur="event => {onBlurTextarea( event, 'exp', problem.id)}"></textarea>
                             <div class="hidden" :ref="'hidden_area-exp'+problem.id">
                               <button class="input-btn confirm"
@@ -275,10 +276,12 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Результат решения</label>
-                            <textarea placeholder="Заполните результат решения проблемы..." rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_result'+problem.id"
+                            <textarea placeholder="Заполните результат решения проблемы..." rows="6"
+                              :disabled="validatedExecutorAndAdmin" :ref="'textarea_result'+problem.id"
                               v-model="problem.result"
                               @keydown.enter.prevent.exact="event => {editResult(problem.id, problem.result, event)}"
-                              @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id, 'result')"
+                              @keyup.shift.enter.prevent="newLine"
+                              @focus="event => onFocusTextarea(event, problem.id, 'result')"
                               @blur="event => {onBlurTextarea(event, 'result', problem.id)}"></textarea>
                             <div class="hidden" :ref="'hidden_area-result'+problem.id">
                               <button class="input-btn confirm"
@@ -462,7 +465,6 @@
           deadline: '',
           status: ''
         })
-        // console.log(r);
         // this.$store.commit('amountOfProblemsForConfirmation', r.length)
       })
       await this.$store.dispatch('getGroups').catch(() => this.$router.push('/login'))
@@ -500,7 +502,6 @@
 
     methods: {
       clickOnCard(id, e) {
-        console.log(e.target.tagName);
         if (e.target.tagName == 'DIV' && !e.target.classList.contains('name_div') || e.target.tagName == 'BUTTON' || e
           .target.tagName == 'H5') {
           this.$refs['button_card' + id][0].click()
@@ -702,9 +703,9 @@
             .then(() => {
               document.getElementById('collapseTasks').classList.contains('show') ? document.getElementById(
                 'collapseTasks').classList.remove('show') : ''
-              if (this.members.find(m => m.id == problem.creator_id) && this.isLeader || problem.creator_id == this.currentUid && this.isLeader) {
+              if (this.members.find(m => m.id == problem.creator_id) && this.isLeader || problem.creator_id == this
+                .currentUid && this.isLeader) {
                 this.isLeaderOgUser = true
-                console.log(this.isLeader);
               } else {
                 this.isLeaderOgUser = false
               }
@@ -776,8 +777,6 @@
 
       onFocusTextarea(event, id, type) {
         this.currentTextarea = event.target.value
-console.log(this.$refs);
-console.log(this.$refs['hidden_area-' + type + id]);
         event.target.style.borderRadius = '9px 9px 0px 0px';
         this.$refs['hidden_area-' + type + id].forEach(element => {
           element.style.display = 'flex'

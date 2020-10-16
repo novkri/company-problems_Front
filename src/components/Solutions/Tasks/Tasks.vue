@@ -1,5 +1,6 @@
 <template>
   <div ref="mainTask">
+
     <div class="header row" style="position: relative;">
       <div class="col-4">
         <span>Задачи:</span>

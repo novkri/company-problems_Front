@@ -1,8 +1,7 @@
 <template>
   <div>
     <span class="empty" v-show="problems.length == 0 && _isMounted">Список проблем пуст...</span>
-    <div class="filters">
-    </div>
+
     <div class="container" v-if="_isMounted">
       <div id="accordion">
         <div class="card" id="card" v-for="(problem, idx) in problems" :key="idx">

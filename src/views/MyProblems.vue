@@ -1,8 +1,7 @@
 <template>
   <div>
     <span class="empty" v-show="problems.length == 0 && _isMounted">Список проблем пуст...</span>
-    <div class="filters">
-    </div>
+
     <div class="container" v-if="_isMounted">
       <div>
         <span class="problem_subtitle" v-for="(problemsPack, title) in sortedData" :key="title">
@@ -562,7 +561,6 @@
 
     methods: {
       clickOnCard(id, e) {
-        console.log(e);
         if (e.target.tagName == 'DIV' && !e.target.classList.contains('name_div') || e.target.tagName == 'BUTTON' || e
           .target.tagName == 'H5') {
           this.$refs['button_card' + id][0].click()
@@ -721,7 +719,6 @@
 
       async likeProblem(id, e) {
         e.stopPropagation()
-        console.log(id);
         await this.$store.dispatch('problemLike', id)
       },
 
@@ -773,7 +770,6 @@
               if (this.members.find(m => m.id == problem.creator_id) && this.isLeader || problem.creator_id == this
                 .currentUid && this.isLeader) {
                 this.isLeaderOgUser = true
-                console.log(this.isLeader);
               } else {
                 this.isLeaderOgUser = false
               }

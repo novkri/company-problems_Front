@@ -82,27 +82,6 @@ export default {
     setProblems: (state, payload) => {
       payload ? state.problems = payload : state.problems = []
     },
-    // setMyProblems: (state, payload) => {
-    //   let oldPayload = payload
-
-    //   payload = {
-    //     "Требуется подтвердить факт решения:": payload['На проверке заказчика'],
-    //     "В процессе решения:": payload['В работе'],
-    //     "На рассмотрении:": payload['На рассмотрении']
-    //   }
-
-    //   state.myProblems = payload
-
-    //   console.log(state.myProblems);
-    //   console.log(payload);
-
-
-    //   state.problems = [...oldPayload['На проверке заказчика'], ...oldPayload['В работе'], ...oldPayload['На рассмотрении']]
-    //   console.log(state.problems);
-    //   console.log(oldPayload);
-
-    // },
-
 
     setThisProblem: (state, payload) => {
       let problemIdx = state.problems.findIndex(p => p.id == payload.id)
@@ -164,7 +143,6 @@ export default {
       state.amountOfProblemsForExecution = payload
     },
     amountOfProblemsForConfirmation: (state, payload) => {
-      console.log(payload);
       state.amountOfProblemsForConfirmation = payload
     },
     amountOfProblemsForConfirmationAdmin: (state, payload) => {
@@ -372,7 +350,6 @@ export default {
             }
           })
           .then(response => {
-            console.log(response.data);
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
@@ -475,7 +452,6 @@ export default {
             resolve(response.data)
           })
           .catch(error => {
-            console.log(error.response);
             commit('setProblems', '')
             if (error.response.status == 401) {
               commit('setError404', error.response.data.errors)
@@ -500,7 +476,6 @@ export default {
             }
           })
           .then(response => {
-            console.log(response.data);
             commit('setProblems', '')
             commit('setError', '')
             commit('setError404', '')
@@ -927,7 +902,6 @@ export default {
           commit('changePossible', response.data)
           resolve(response.data)
         }).catch((error) => {
-          console.log(error.response);
           if (error.response.status == 404) {
             commit('setError404', error.response.data.error)
             reject(error.response.data.error)

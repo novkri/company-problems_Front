@@ -1,8 +1,7 @@
 <template>
   <div>
     <span class="empty" v-show="problems.length == 0 && _isMounted">Список проблем пуст...</span>
-    <div class="filters">
-    </div>
+
     <div class="container" v-if="_isMounted">
       <div id="accordion">
         <div class="card" id="card" v-for="(problem, idx) in problems" :key="idx">
@@ -746,7 +745,6 @@
         await this.$store.commit('setError404', '')
         this.currentProblemCreator = creator_id
         if (creator_id == this.currentUid || this.user.is_admin) {
-          console.log('click');
           event.target.style.display = 'none'
           this.$nextTick(() => {
             this.$refs['problem-name' + id][0].style.display = 'initial'
@@ -784,7 +782,6 @@
       },
       onFocusInput(event) {
         this.currentProblemName = event.target.value
-        console.log('onFocusInput');
       },
 
       async editProblemName(name, id, event) {

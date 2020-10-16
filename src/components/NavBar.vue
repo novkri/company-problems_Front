@@ -1,13 +1,6 @@
 <template>
   <nav class="navbar navbar-light"
     :class="[this.$route.path === '/' || this.$route.path == '/groups' || this.$route.path == '/statistics' ? 'main' : '']">
-    <div class="arrow">',,,'</div>
-    <div class="burger" ref="burger" @click="clickOnBurger"> <span></span></div>
-    <nav class="burger_menu" ref="burger_menu">
-      dfgdfg
-    </nav>
-
-
 
     <div class="logo" @click="allProblems">
       <router-link to="/" exact style="font-family: 'GothamPro-Medium';font-size: 16px;"><img src="@/assets/logo.png"
@@ -258,12 +251,6 @@
     },
 
     methods: {
-      clickOnBurger() {
-        console.log(this.$refs['burger']);
-        this.$refs['burger'].classList.toggle('active')
-        this.$refs['burger_menu'].classList.toggle('active')
-      },
-
       async allProblems() {
         await this.$store.dispatch('getProblems')
       },
@@ -471,10 +458,6 @@
     }
   }
 
-  .arrow,
-  .burger, .burger_menu {
-    display: none;
-  }
 
   nav {
     background-color: #fff;
