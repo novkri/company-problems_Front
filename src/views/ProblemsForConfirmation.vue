@@ -236,21 +236,59 @@
                         style="width: 100%;" data-parent="#results" ref="collapsed-results">
                         <div class="card-body row p-0" style="flex-direction: row;">
 
-                          <div class="col-4 p-2" style="flex-direction: column;display: flex;min-height: 417px;">
+                          <div class="col-4 p-2"
+                            style="flex-direction: column;display: flex;max-height: 417px;min-height: 417px;">
                             <label style="width: 100%;">Команда</label>
-                            <textarea rows="6" :disabled="isResponsibleAndAdmin" :ref="'textarea_team'+problem.id"
-                              v-model="solutions[0].team"
-                              @keydown.enter.prevent.exact="event => {editTeam(solutions[0].id, solutions[0].team, event)}"
-                              @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id)"
-                              @blur="event => {onBlurTextarea(event, 'team', problem.id)}"></textarea>
-                            <div class="hidden" :ref="'hidden_area'+problem.id">
-                              <button class="input-btn confirm"
-                                @mousedown="event => {editTeam(solutions[0].id, solutions[0].team, event)}">
-                                <check-icon size="1.4x" class="custom-class"></check-icon>
-                              </button>
-                              <button class="input-btn cancel" @mousedown="event => onClear(event, problem.id, 'team')">
-                                <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
-                              </button>
+                            <div>
+                              <ss-select :options="teamExecutors" track-by="name" search-by="surname" v-show="user.is_admin || solutions[0].executor_id == currentUid"
+                                disable-by="disabled" class="team" id="ss-select"
+                                @change="putUserToTeam(solutions[0], $event)">
+                                <div
+                                  slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+                                  style="cursor: pointer; width: 100%;">
+                                  <ss-select-toggle class="pl-1 py-1" style="width: 100%;">
+                                    <user-icon size="1.3x" class="custom-class" id="iconUser"></user-icon>
+                                    <plus-icon size="1.5x" class="custom-class" id="plusIcon"
+                                      style="padding-right: 10px;vertical-align: baseline;"></plus-icon>
+                                    {{ $get(selectedOption, 'name') || 'Добавить сотрудника'}}
+                                    <chevron-down-icon size="1.8x" class="custom-class"
+                                      style="padding-left: 10px;align-self: center;"></chevron-down-icon>
+                                  </ss-select-toggle>
+
+                                  <section v-show="isOpen" class="absolute border-l border-r min-w-full"
+                                    style="top: 17%;left: 0;">
+                                    <div class="px-px">
+                                      <ss-select-search-input class="w-full px-3 py-2 search"
+                                        placeholder="Впишите фамилию">
+                                      </ss-select-search-input>
+                                    </div>
+                                    <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id"
+                                      :index="index" :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
+                                pointerIndex == index ? 'bg-light text-dark' : '',
+                                $selected(option) ? 'bg-light text-dark' : '',
+                                $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
+                              ]">{{ option.surname }} {{ option.name }} {{option.father_name}} </ss-select-option>
+                                  </section>
+                                </div>
+                              </ss-select>
+
+                              <div class="current-team">
+                                <div>
+                                  <li class="team-members" v-for="(user, idx) in currentTeam" :key="idx">
+                                    <div class="member" v-if="user">
+                                      {{idx+1}}. {{user.surname}}
+                                      {{user.name}} {{user.father_name}}
+                                    </div>
+                                    <div class="close">
+                                      <button type="button" id="close" class="close"
+                                        @click="removeUserFromTeam(user.id, solutions[0].id)">
+                                        <span aria-hidden="true" style="font-size: 24px;">&times;</span>
+                                      </button>
+                                    </div>
+                                  </li>
+                                </div>
+                              </div>
+
                             </div>
                           </div>
 
@@ -390,6 +428,12 @@
   import PopupShow from '@/components/Solutions/ShowSolution'
   import Tasks from '@/components/Solutions/Tasks/Tasks'
 
+  import {
+    SsSelect,
+    SsSelectToggle,
+    SsSelectOption,
+    SsSelectSearchInput
+  } from 'ss-select'
 
   import {
     mapGetters
@@ -403,7 +447,8 @@
     ClockIcon,
     CheckIcon,
     ThumbsUpIcon,
-    AlertCircleIcon
+    AlertCircleIcon,
+    UserIcon,
   } from 'vue-feather-icons'
 
   export default {
@@ -446,6 +491,12 @@
       CheckIcon,
       ThumbsUpIcon,
       AlertCircleIcon,
+      UserIcon,
+
+      SsSelect,
+      SsSelectToggle,
+      SsSelectOption,
+      SsSelectSearchInput
     },
 
     async mounted() {
@@ -482,7 +533,7 @@
     },
     computed: {
       ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', 'user',
-        'currentUid', 'user', 'isLeader', 'members', 'amountOfProblemsForConfirmation'
+        'currentUid', 'user', 'isLeader', 'members', 'amountOfProblemsForConfirmation', 'currentTeam', 'teamExecutors'
       ]),
       validatedExecutorAndAdmin: function () {
         return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : this
@@ -501,6 +552,22 @@
     },
 
     methods: {
+       async removeUserFromTeam(id, solution) {
+        await this.$store.commit('setError404', '')
+        this.$store.dispatch('removeUserFromTeam', {
+          id,
+          solution
+        })
+      },
+      async putUserToTeam(sol, selectedOption) {
+        await this.$store.dispatch('putUserToTeam', {
+          id: sol.id,
+          uid: selectedOption
+        }).then(() => {
+
+        })
+      },
+      
       clickOnCard(id, e) {
         if (e.target.tagName == 'DIV' && !e.target.classList.contains('name_div') || e.target.tagName == 'BUTTON' || e
           .target.tagName == 'H5') {
@@ -695,6 +762,11 @@
 
           this.$store.commit('setError', '')
           await this.$store.dispatch('getSolutions', problem.id).then(response => {
+            // console.log(response);
+              this.$store.commit('editTeam', '')
+              this.$store.dispatch('getSol', response.id)
+
+              this.$store.dispatch('getCurrentTeam', response.id)
               this.$store.dispatch('getTasks', response.id)
               this.$store.dispatch('getCurrentSolution', '')
               this.$store.dispatch('getCurrentSolution', response.id)

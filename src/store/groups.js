@@ -82,13 +82,13 @@ export default {
     },
     editGroup: (state, payload) => {
       state.groups.find(group => group.id == payload.id).name = payload.name
+    },
+    sortGroup: (state) => {
       state.groups = state.groups.sort(function (a, b) {
         return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1
       })
     },
-    editGroupShort: (state, payload) => {
-      state.groups.find(group => group.id == payload.id).short_name = payload.short_name
-    },
+
     editExecutorGroup: (state, payload) => {
       state.groups.find(group => group.id == payload.id).leader_id = payload.leader_id
     },
@@ -114,6 +114,7 @@ export default {
             commit('setError', '')
             commit('setError404', '')
             commit('setGroups', response.data)
+            commit('sortGroup')
             resolve(response.data)
           })
           .catch(error => {
@@ -176,6 +177,7 @@ export default {
             commit('setError', '')
             commit('setError404', '')
             commit('addGroup', response.data)
+            commit('sortGroup')
             resolve(response.data)
           })
           .catch(error => {
@@ -199,6 +201,7 @@ export default {
             commit('setError', '')
             commit('setError404', '')
             commit('deleteGroup', param.id)
+            commit('sortGroup')
             resolve(response.data)
           })
           .catch(error => {
@@ -224,6 +227,7 @@ export default {
           commit('setError', '')
           commit('setError404', '')
           commit('editGroup', response.data)
+          commit('sortGroup')
           resolve(response)
         }).catch((error) => {
           if (error.response.status !== 422) {
@@ -237,28 +241,6 @@ export default {
       })
     },
 
-    editGroupShort: async ({
-      commit
-    }, param) => {
-      return new Promise((resolve, reject) => {
-        axios.put(process.env.VUE_APP_ROOT_URL + `/group/${param.id}/change-short-name`, {
-          short_name: param.short_name
-        }).then(response => {
-          commit('setError', '')
-          commit('setError404', '')
-          commit('editGroupShort', response.data)
-          resolve(response)
-        }).catch((error) => {
-          if (error.response.status !== 422) {
-            error.response.data.message ? commit('setError404', error.response.data.message) : commit('setError404', error.response.data.errors)
-            reject(error.response.data.message)
-          } else {
-            commit('setError404', error.response.data.errors.short_name[0])
-            reject(error.response.data.errors.short_name[0])
-          }
-        })
-      })
-    },
 
     changeExecutorGroup: async ({
       commit

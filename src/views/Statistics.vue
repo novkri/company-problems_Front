@@ -162,7 +162,7 @@
 
             <div class="container-list">
 
-              <table>
+              <table v-if="statisticCategories">
                 <thead>
                   <tr class="header_li">
                     <td class="with_border">Категория</td>
@@ -231,7 +231,9 @@
 
   export default {
     name: 'statistics',
-
+    data: () => ({
+      // statisticCategories: []
+    }),
     components: {
       ChevronUpIcon
     },

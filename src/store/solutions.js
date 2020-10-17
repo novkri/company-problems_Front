@@ -23,11 +23,19 @@ export default {
     solutionsOther: [],
     allUsers: [],
     allUsersReduced: [],
+    currentTeam: [],
+    teamExecutors: [],
     token: localStorage.getItem('user-token') || '',
   },
   getters: {
     solutions: state => {
       return state.solutions
+    },
+    currentTeam: state => {
+      return state.currentTeam
+    },
+    teamExecutors: state => {
+      return state.teamExecutors
     },
 
     allUsers: state => {
@@ -102,13 +110,57 @@ export default {
     editPlan: (state, payload) => {
       state.solutions.find(solution => solution.id == payload.id).plan = payload.plan
     },
-    editTeam: (state, payload) => {
-      state.solutions.find(solution => solution.id == payload.id).team = payload.team
+    teamExecutors: (state, payload) => {
+      state.teamExecutors = payload
+      state.teamExecutors.forEach(el => {
+      el.name = el.name[0] + '.'
+      el.father_name ? el.father_name = el.father_name[0] + '.' : ' '
+      })
     },
 
-
+    setTeam: (state, payload) => {
+      state.currentTeam = payload
+      if (payload) {
+        state.currentTeam.forEach(element => {
+          element.name = element.name[0] + '.'
+          element.father_name ? element.father_name = element.father_name[0] + '.' : ' '
+        });
+      } else {
+        state.currentTeam = []
+      }
+      
+    },
+    editTeam: (state, payload) => {
+      if (payload) {
+        let user = state.teamExecutors.filter(u => u.id == payload)
+        state.currentTeam.push(user[0])
+      } else {
+        state.currentTeam = []
+      }
+    },
+    deleteFromTeam: (state, payload) => {
+      state.currentTeam = state.currentTeam.filter(u => u.id != payload)
+    },
   },
   actions: {
+    getCurrentTeam: async ({
+      commit
+    }, id) => {
+      return await new Promise((resolve, reject) => {
+        axios.get(process.env.VUE_APP_ROOT_URL + `/solution/${id}/potential-executors`) 
+          .then(response => {
+              commit('setError', '')
+              commit('setError404', '')
+              commit('teamExecutors', response.data)
+              resolve(response.data)
+          })
+          .catch(error => {
+            commit('setError', error.response.data.errors)
+            reject(error.response.data.message)
+          })
+      })
+    },
+
     getSolutions: async ({
       commit
     }, problemId) => {
@@ -126,6 +178,25 @@ export default {
           })
       })
     },
+
+    getSol: async ({
+      commit
+    }, problemId) => {
+      return await new Promise((resolve, reject) => {
+        axios.get(process.env.VUE_APP_ROOT_URL + `/solution/${problemId}`) 
+          .then(response => {
+              commit('setError', '')
+              commit('setError404', '')
+              commit('setTeam', response.data.team)
+              resolve(response.data.team)
+          })
+          .catch(error => {
+            commit('setError', error.response.data.errors)
+            reject(error.response.data.message)
+          })
+      })
+    },
+
     postSolution: async ({
       commit
     }, param) => {
@@ -333,16 +404,35 @@ export default {
       })
     })
     },
-    editTeam: async ({
+    putUserToTeam: async ({
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-      axios.put(process.env.VUE_APP_ROOT_URL  + `/solution/${param.id}/set-team`, {
-        team: param.team
-      }).then(response => {
+      axios.put(process.env.VUE_APP_ROOT_URL  + `/solution/${param.id}/add-user-to-team/${param.uid}`).then(response => {
         commit('setError', '')
         commit('setError404', '')
-        commit('editTeam', response.data)
+        commit('editTeam', param.uid)
+        resolve(response.data)
+      }).catch((error) => {
+        if (error.response.status == 404) {
+          commit('setError404', error.response.data.message)
+          reject(error.response.data.message)
+        } else if (error.response.status == 422) {
+          commit('setError404', error.response.data.errors.team[0])
+          reject(error.response.data.errors.team[0])
+        }
+      })
+    })
+    },
+
+    removeUserFromTeam: async ({
+      commit
+    }, param) => {
+      return new Promise((resolve, reject) => {
+      axios.put(process.env.VUE_APP_ROOT_URL  + `/solution/${param.solution}/remove-user-from-team/${param.id}`).then(response => {
+        commit('setError', '')
+        commit('setError404', '')
+        commit('deleteFromTeam', param.id)
         resolve(response.data)
       }).catch((error) => {
         if (error.response.status == 404) {

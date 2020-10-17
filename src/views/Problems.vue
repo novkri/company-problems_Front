@@ -192,9 +192,10 @@
                         <div class="card-body p-0" :ref="'cardBody'+problem.id" style="height: 100%;">
                           <!-- plan,  -->
                           <textarea placeholder="Опишите ваш план решения..." rows="6" :ref="'textarea_plan'+problem.id"
-                             v-model="solutions[0].plan" :disabled="isResponsibleAndAdmin" style="min-height: 418px;"
+                            v-model="solutions[0].plan" :disabled="isResponsibleAndAdmin" style="min-height: 418px;"
                             @keydown.enter.prevent.exact="event => {editPlan(solutions[0].id, solutions[0].plan, event)}"
-                            @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id, 'plan')"
+                            @keyup.shift.enter.prevent="newLine"
+                            @focus="event => onFocusTextarea(event, problem.id, 'plan')"
                             @blur="event => {onBlurTextarea(event, 'plan', problem.id)}"></textarea>
                           <div class="hidden" :ref="'hidden_area-plan'+problem.id">
                             <button class="input-btn confirm"
@@ -234,36 +235,72 @@
                         data-parent="#results" ref="collapsed-results">
                         <div class="card-body row p-0" style="flex-direction: row;">
 
-                          <div class="col-4 p-2" style="flex-direction: column;display: flex;min-height: 417px;">
+                          <div class="col-4 p-2" style="flex-direction: column;display: flex;min-height: 417px;
+                              max-height: 417px;">
                             <label style="width: 100%;">Команда</label>
+                            <div>
+                              <ss-select :options="teamExecutors" track-by="name" search-by="surname" v-show="user.is_admin || solutions[0].executor_id == currentUid"
+                                disable-by="disabled" class="team" id="ss-select"
+                                @change="putUserToTeam(solutions[0], $event)">
+                                <div
+                                  slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
+                                  style="cursor: pointer; width: 100%;">
+                                  <ss-select-toggle class="pl-1 py-1" style="width: 100%;">
+                                    <user-icon size="1.3x" class="custom-class" id="iconUser"></user-icon>
+                                    <plus-icon size="1.5x" class="custom-class" id="plusIcon"
+                                      style="padding-right: 10px;vertical-align: baseline;"></plus-icon>
+                                    {{ $get(selectedOption, 'name') || 'Добавить сотрудника'}}
+                                    <chevron-down-icon size="1.8x" class="custom-class"
+                                      style="padding-left: 10px;align-self: center;"></chevron-down-icon>
+                                  </ss-select-toggle>
 
+                                  <section v-show="isOpen" class="absolute border-l border-r min-w-full"
+                                    style="top: 17%;left: 0;">
+                                    <div class="px-px">
+                                      <ss-select-search-input class="w-full px-3 py-2 search"
+                                        placeholder="Впишите фамилию">
+                                      </ss-select-search-input>
+                                    </div>
+                                    <ss-select-option v-for="(option, index) in filteredOptions" :value="option.id"
+                                      :index="index" :key="index" class="px-4 py-2 border-b cursor-pointer" :class="[
+                                pointerIndex == index ? 'bg-light text-dark' : '',
+                                $selected(option) ? 'bg-light text-dark' : '',
+                                $disabled(option) ? 'opacity-50 cursor-not-allowed' : ''
+                              ]">{{ option.surname }} {{ option.name }} {{option.father_name}} </ss-select-option>
+                                  </section>
+                                </div>
+                              </ss-select>
 
+                              <div class="current-team">
+                                <div>
+                                  <li class="team-members" v-for="(user, idx) in currentTeam" :key="idx">
+                                    <div class="member">
+                                      {{idx+1}}. {{user.surname}}
+                                      {{user.name}} {{user.father_name}}
+                                    </div>
+                                    <div class="close">
+                                      <button type="button" id="close" class="close"
+                                        @click="removeUserFromTeam(user.id, solutions[0].id)">
+                                        <span aria-hidden="true" style="font-size: 24px;">&times;</span>
+                                      </button>
+                                    </div>
+                                  </li>
+                                </div>
+                              </div>
 
+                            </div>
 
-                            <!-- <textarea rows="6" :disabled="isResponsibleAndAdmin" :ref="'textarea_team'+problem.id"
-                              v-model="solutions[0].team"
-                              @keydown.enter.prevent.exact="event => {editTeam(solutions[0].id, solutions[0].team, event)}"
-                              @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id, 'team')"
-                              @blur="event => {onBlurTextarea(event, 'team', problem.id)}"></textarea>
-                            <div class="hidden" :ref="'hidden_area-team'+problem.id">
-                              <button class="input-btn confirm"
-                                @mousedown="event => {editTeam(solutions[0].id, solutions[0].team, event)}">
-                                <check-icon size="1.4x" class="custom-class"></check-icon>
-                              </button>
-                              <button class="input-btn cancel" @mousedown="event => onClear(event, problem.id, 'team')">
-                                <plus-icon size="1.6x" class="custom-class" id="closeIcon"></plus-icon>
-                              </button>
-
-                            </div> -->
 
                           </div>
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Опыт</label>
-                            <textarea placeholder="Заполните опыт по решению проблемы..." rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_exp'+problem.id"
+                            <textarea placeholder="Заполните опыт по решению проблемы..." rows="6"
+                              :disabled="validatedExecutorAndAdmin" :ref="'textarea_exp'+problem.id"
                               v-model="problem.experience"
                               @keydown.enter.prevent.exact="event => {editExp(problem.id, problem.experience, event)}"
-                              @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id, 'exp')"
+                              @keyup.shift.enter.prevent="newLine"
+                              @focus="event => onFocusTextarea(event, problem.id, 'exp')"
                               @blur="event => {onBlurTextarea( event, 'exp', problem.id)}"></textarea>
                             <div class="hidden" :ref="'hidden_area-exp'+problem.id">
                               <button class="input-btn confirm"
@@ -279,10 +316,12 @@
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">
                             <label style="width: 100%;">Результат решения</label>
-                            <textarea placeholder="Заполните результат решения проблемы..." rows="6" :disabled="validatedExecutorAndAdmin" :ref="'textarea_result'+problem.id"
+                            <textarea placeholder="Заполните результат решения проблемы..." rows="6"
+                              :disabled="validatedExecutorAndAdmin" :ref="'textarea_result'+problem.id"
                               v-model="problem.result"
                               @keydown.enter.prevent.exact="event => {editResult(problem.id, problem.result, event)}"
-                              @keyup.shift.enter.prevent="newLine" @focus="event => onFocusTextarea(event, problem.id, 'result')"
+                              @keyup.shift.enter.prevent="newLine"
+                              @focus="event => onFocusTextarea(event, problem.id, 'result')"
                               @blur="event => {onBlurTextarea(event, 'result', problem.id)}"></textarea>
                             <div class="hidden" :ref="'hidden_area-result'+problem.id">
                               <button class="input-btn confirm"
@@ -297,12 +336,14 @@
                             <div
                               :style="[solutions[0].executor_id == currentUid || problem.creator_id == currentUid || user.is_admin || isLeaderOgUser ? {'display': 'flex'} : {'display': 'none'}]"
                               style="margin-bottom: -37px; margin-top: 14px; justify-content: space-evenly; flex-direction: row;flex-wrap:wrap; align-items: center;">
-                              <div v-if="problem.status == 'На рассмотрении' || problem.status == 'В работе'" @mousedown="event => {editResult(problem.id, problem.result, event)}">
+                              <div v-if="problem.status == 'На рассмотрении' || problem.status == 'В работе'"
+                                @mousedown="event => {editResult(problem.id, problem.result, event)}">
                                 <span v-if="problem.status == 'На проверке заказчика'" class="problem-send">Проблема
                                   отправлена для подтверждения решения</span>
                                 <button v-else style="padding: 10px 17px;"
                                   v-show="user.is_admin || isLeader || solutions[0].executor_id == currentUid || isLeaderOgUser"
-                                  class="btn btnMain problem-solved" @click="problemSolved(problem.id)">Отправить на согласование</button>
+                                  class="btn btnMain problem-solved" @click="problemSolved(problem.id)">Отправить на
+                                  согласование</button>
                               </div>
 
 
@@ -403,6 +444,12 @@
   import PopupShow from '@/components/Solutions/ShowSolution'
   import Tasks from '@/components/Solutions/Tasks/Tasks'
 
+  import {
+    SsSelect,
+    SsSelectToggle,
+    SsSelectOption,
+    SsSelectSearchInput
+  } from 'ss-select'
 
   import {
     mapGetters
@@ -415,7 +462,9 @@
     ClockIcon,
     CheckIcon,
     ThumbsUpIcon,
-    AlertCircleIcon
+    AlertCircleIcon,
+    UserIcon,
+    ChevronDownIcon,
   } from 'vue-feather-icons'
 
   export default {
@@ -458,6 +507,13 @@
       CheckIcon,
       ThumbsUpIcon,
       AlertCircleIcon,
+      UserIcon,
+      ChevronDownIcon,
+
+      SsSelect,
+      SsSelectToggle,
+      SsSelectOption,
+      SsSelectSearchInput
     },
 
     async mounted() {
@@ -482,7 +538,7 @@
     },
     computed: {
       ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', 'user',
-        'currentUid', 'isLeader', 'members'
+        'currentUid', 'isLeader', 'members', 'currentTeam', 'teamExecutors'
       ]),
       validatedExecutorAndAdmin: function () {
         return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : this
@@ -501,9 +557,22 @@
     },
 
     methods: {
-      change() {
-        // console.log('');
+      async removeUserFromTeam(id, solution) {
+        await this.$store.commit('setError404', '')
+        this.$store.dispatch('removeUserFromTeam', {
+          id,
+          solution
+        })
       },
+      async putUserToTeam(sol, selectedOption) {
+        await this.$store.dispatch('putUserToTeam', {
+          id: sol.id,
+          uid: selectedOption
+        }).then(() => {
+
+        })
+      },
+
       onClickSol(id) {
         if (document.getElementById('collapseTasks').classList.contains('show')) {
           this.$refs['cardSol' + id][0].style.paddingBottom = '18px'
@@ -702,6 +771,10 @@
 
           this.$store.commit('setError', '')
           await this.$store.dispatch('getSolutions', problem.id).then(response => {
+              this.$store.commit('editTeam', '')
+              this.$store.dispatch('getSol', response.id)
+
+              this.$store.dispatch('getCurrentTeam', response.id)
               this.$store.dispatch('getTasks', response.id)
               this.$store.dispatch('getCurrentSolution', '')
               this.$store.dispatch('getCurrentSolution', response.id)
@@ -723,7 +796,8 @@
               })
 
 
-              if (this.members.find(m => m.id == problem.creator_id) && this.isLeader || problem.creator_id == this.currentUid && this.isLeader) {
+              if (this.members.find(m => m.id == problem.creator_id) && this.isLeader || problem.creator_id == this
+                .currentUid && this.isLeader) {
                 this.isLeaderOgUser = true
               } else {
                 this.isLeaderOgUser = false
@@ -796,16 +870,16 @@
 
       onFocusTextarea(event, id, type) {
         this.currentTextarea = event.target.value
-      
+
         event.target.style.borderRadius = '9px 9px 0px 0px';
-        this.$refs['hidden_area-'+type+id].forEach(element => {
+        this.$refs['hidden_area-' + type + id].forEach(element => {
           element.style.display = 'flex'
         });
       },
 
       onBlurTextarea(event, type, id) {
         event.target.style.borderRadius = '9px';
-        this.$refs['hidden_area-'+type+id].forEach(element => {
+        this.$refs['hidden_area-' + type + id].forEach(element => {
           element.style.display = 'none'
         });
 
@@ -1096,7 +1170,7 @@
     display: none;
     align-items: center;
     padding-right: 10px;
-    bottom: 13%; 
+    bottom: 13%;
     right: 11%;
     border: 4px solid #F6F6F6;
     border-top: none;
@@ -1150,6 +1224,7 @@
     line-height: 24px;
     letter-spacing: 0.15px;
   }
+
   textarea:focus {
     background-color: #fff;
     border: 4px solid #F6F6F6;
@@ -1682,13 +1757,15 @@
       height: 75vh;
       overflow-y: scroll;
     }
+
     .middle-icons {
       display: none;
     }
+
     .col-4 {
-    -ms-flex: 0 0 87% !important;
-    flex: 0 0 87% !important;
-    max-width: 87% !important;
-  }
+      -ms-flex: 0 0 87% !important;
+      flex: 0 0 87% !important;
+      max-width: 87% !important;
+    }
   }
 </style>

@@ -39,7 +39,7 @@
           uid: this.val.uid
         })
         this.$store.dispatch('getAllUsers')
-        this.allUsers.find(u => u.id == this.val.uid).group_id == null
+        this.allUsers.find(u => u.id == this.val.uid).group_id = null
       },
     }
   }

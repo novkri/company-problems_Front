@@ -40,7 +40,7 @@
                 <div class="name_div" style="width: 83%;">
                   <span :ref="'name-div'+group.id"
                     @click="event => {onClickInput(group.id, 'name',event)}">{{group.name}}</span>
-                  <input class="form-control input-name" :id="'groupname'+group.id" style="display: none;"
+                  <input class="form-control input-name" :id="'groupname'+group.id" style="display: none;width: fit-content;"
                     :ref="'group-name' + group.id" @keyup.enter="event => {editGroupName(group.name, group.id, event)}"
                     v-model="group.name" @focus="event => onFocusInput(event, group.id, 'name')"
                     @blur="event => {onBlurInput(group.name, group.id, event, 'name')}">
@@ -58,28 +58,6 @@
                 </div>
               </h5>
             </div>
-
-            <!-- <div class="short-name col-3">
-              <div class="short-name_div">
-                <span :ref="'short-name-div'+group.id"
-                  @click="event => {onClickInput(group.id, 'short', event)}">{{group.short_name}}</span>
-                <input class="form-control input-name" :id="'groupshort'+group.id" style="display: none;"
-                  :ref="'group-name-short' + group.id"
-                  @keyup.enter="event => {editGroupShort(group.short_name, group.id, event)}" v-model="group.short_name"
-                  @focus="event => onFocusInput(event, group.id, 'short')"
-                  @blur="event => {onBlurInput(group.short_name, group.id, event, 'short')}">
-                <div class="hidden" :ref="'hidden-short' + group.id">
-                  <button class="input-btn" @mousedown="event => {editGroupShort(group.short_name, group.id, event)}">
-                    <check-icon size="1x" class="custom-class"></check-icon>
-                  </button>
-                  <div @mousedown="event => onClear(event, group, 'short')">
-                    <button class="input-btn">
-                      <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div> -->
 
             <div class="selectResponsible col-3">
               <ss-select v-model="group.leader_id" :options="allUsersReduced.filter(u => u.group_id == group.id)"
@@ -330,19 +308,14 @@
       },
 
 
-      async onBlurInput(name, id, event, type) {
-        if (type == 'name') {
+      async onBlurInput(name, id) {
           this.$refs['group-name' + id][0].style.display = 'none'
           this.$refs['name-div' + id][0].style.display = 'initial'
           this.$refs['hidden' + id][0].classList.remove('flex')
-        } else {
-          this.$refs['group-name-short' + id][0].style.display = 'none'
-          this.$refs['short-name-div' + id][0].style.display = 'initial'
-          this.$refs['hidden-short' + id][0].classList.remove('flex')
-        }
+        
 
         if (name !== this.currentGroupName) {
-          type === 'name' ? this.$store.dispatch('editGroup', {
+          this.$store.dispatch('editGroup', {
             id,
             name
           }).catch(() => {
@@ -350,19 +323,13 @@
               id,
               name: this.currentGroupName
             })
-          }) : this.$store.dispatch('editGroupShort', {
-            id,
-            short_name: name
-          }).catch(() => {
-            this.$store.commit('editGroupShort', {
-              id,
-              short_name: this.currentGroupName
-            })
-          })
+          }) 
+          
         }
       },
 
       onFocusInput(event, id, type) {
+        console.log('focus');
         this.currentGroupName = event.target.value
         this.currentGroupInput = event.target
 
@@ -373,28 +340,20 @@
       onClear(event, group, type) {
         event.preventDefault()
         event.stopPropagation()
-
+console.log(group.name,  this.currentGroupName);
         if (type === 'name' && group.name != this.currentGroupName) {
           this.$store.commit('editGroup', {
             name: this.currentGroupName,
-            id: group.id
-          })
-        } else if (type === 'name' && group.name != this.currentGroupName) {
-          this.$store.commit('editGroupShort', {
-            short_name: this.currentGroupName,
             id: group.id
           })
         }
 
       },
 
-      async editGroupShort(short_name, id, event) {
-        await this.$store.commit('setError404', '')
-        event.target.blur()
-      },
 
       async editGroupName(name, id, event) {
         await this.$store.commit('setError404', '')
+        console.log('edit');
         event.target.blur()
       },
 

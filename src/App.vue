@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <component :is="layout">
+    {{layout}}
+    <component :is="layout" >
       <router-view />
     </component>
   </div>
@@ -23,6 +24,48 @@
   }
 </script>
 <style lang="scss">
+ .search {
+    outline: none;
+    border: none;
+    background-color: #F7F7F7;
+    border-radius: 8px;
+  }
+
+
+.team {
+  color: #4EAD96;
+  font-family: 'GothamPro';
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.15px;
+  svg {color: #92D2C3 !important;}
+}
+.current-team {
+  border-top: 2px solid #DEDEDE;
+  margin-top: 5px;
+  padding-top: 5px;
+  > div {
+    margin-top: 10px;
+    max-height: 327px;
+    height: 327px;
+    overflow-y: scroll;
+  }
+
+      
+}
+.team-members {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 5px;
+  padding-right: 10px;
+  font-family: 'GothamPro';
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.15px;
+  color: #828282;
+}
+
   .v-popover, .middle-icons {
     div {
       margin: auto;

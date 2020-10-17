@@ -419,7 +419,11 @@
     font-family: 'GothamPro';
   }
 
-
+  @media (max-width: 1500px) {
+    h5 {
+      font-size: 18px !important;
+    }
+  }
 
   @media (min-width: 576px) {
     .modal-dialog {
