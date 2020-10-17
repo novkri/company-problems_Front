@@ -111,11 +111,16 @@ export default {
       state.solutions.find(solution => solution.id == payload.id).plan = payload.plan
     },
     teamExecutors: (state, payload) => {
-      state.teamExecutors = payload
-      state.teamExecutors.forEach(el => {
-      el.name = el.name[0] + '.'
-      el.father_name ? el.father_name = el.father_name[0] + '.' : ' '
-      })
+      if (payload.length > 0) {
+        state.teamExecutors = payload
+        state.teamExecutors.forEach(el => {
+        el.name = el.name[0] + '.'
+        el.father_name ? el.father_name = el.father_name[0] + '.' : ' '
+        })
+      } else {
+        state.teamExecutors = []
+      }
+      
     },
 
     setTeam: (state, payload) => {
