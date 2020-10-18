@@ -1,5 +1,4 @@
 <template>
-<!--  -->
   <div class="main-statistics" v-show="_isMounted">
     <div class="accordion" id="accordionStatistics">
       <div class="card">
@@ -7,7 +6,7 @@
           @click="clickCard('statisticQuantitativeIndicators')">
           <h2 class="mb-0">
             <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse"
-              data-target="#collapse_statisticQuantitativeIndicators" aria-expanded="true"
+              data-target="#collapse_statisticQuantitativeIndicators" aria-expanded="true" ref="statisticQuantitativeIndicators"
               aria-controls="collapse_statisticQuantitativeIndicators">
               <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon> Количественные показатели по
               проблемам
@@ -51,7 +50,7 @@
         <div class="card-header" id="statisticCategories" @click="clickCard('statisticCategories')">
           <h2 class="mb-0">
             <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse"
-              data-target="#collapse_statisticCategories" aria-expanded="true"
+              data-target="#collapse_statisticCategories" aria-expanded="true" ref="statisticCategories"
               aria-controls="collapse_statisticCategories">
               <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon> Динамика выявления и решения проблем
               за 4 последних квартала
@@ -149,7 +148,7 @@
         <div class="card-header" id="statisticQuarterly1" @click="clickCard('statisticQuarterly1')">
           <h2 class="mb-0">
             <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse"
-               data-target="#collapse_statisticQuarterly1" aria-expanded="true"
+               data-target="#collapse_statisticQuarterly1" aria-expanded="true" ref="statisticQuarterly1"
               aria-controls="collapse_statisticQuarterly1">
               <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon> Отдельные категории проблем
             </button>
@@ -251,6 +250,7 @@
     methods: {
       clickCard(id_string) {
         document.getElementById(id_string).style.borderRadius = '9px 9px 0px 0px';
+        this.$refs[id_string].click()
       }
     },
   }

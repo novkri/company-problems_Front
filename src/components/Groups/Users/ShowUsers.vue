@@ -12,7 +12,7 @@
           <div class="close">
             <button type="button" id="close" class="close" data-dismiss="modal" v-show="user.is_admin"
               @click="removeLeader(leaderReduced.id, val)">
-              <span aria-hidden="true" style="font-size: 20px;">&times;</span>
+              <span aria-hidden="true"><x-icon size="1.5x" class="custom-class"></x-icon></span>
             </button>
           </div>
         </li>
@@ -28,7 +28,7 @@
             <div class="close">
               <button type="button" id="close" class="close" data-dismiss="modal" v-show="user.is_admin"
                 @click="removeUserFromGroup(member.id, val)" data-toggle="modal" data-target="#groupDeleteUser">
-                <span aria-hidden="true" style="font-size: 24px;">&times;</span>
+                <span aria-hidden="true"><x-icon size="1.5x" class="custom-class"></x-icon></span>
               </button>
             </div>
           </li>
@@ -56,6 +56,7 @@
   import {
     UserIcon,
     AwardIcon,
+    XIcon 
   } from 'vue-feather-icons'
 
   export default {
@@ -69,6 +70,7 @@
     components: {
       UserIcon,
       AwardIcon,
+      XIcon,
 
       GroupDeleteUser,
 

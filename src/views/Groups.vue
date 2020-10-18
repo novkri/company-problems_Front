@@ -2,7 +2,6 @@
   <div style="height: 83vh;padding-top: 45px;">
     <div class="subtitle row">
       <span class="col-8">Название подразделения</span>
-      <!-- <span class="col-4">Название подразделения (сокращенно)</span> -->
       <span class="col-2" style="text-align: center;">Руководитель</span>
       <div class="pagination col-2">
         <nav>
@@ -26,18 +25,22 @@
       </div>
     </div>
 
+
     <div class="container">
       <div id="accordion">
         <div class="card" id="card" v-for="(group, idx) in paginatedDataGroups" :key="idx">
-          <div class="card-header row" id="heading">
+
+          
+          <div class="card-header row" id="heading" @click.self="event => clickOnCard(group.id, event)">
             <div class="name col-8">
               <h5 class="mb-0" style="height: 100%;">
-                <button class="btn btn-link collapsed" data-toggle="collapse"
+                <button class="btn btn-link collapsed" data-toggle="collapse" :ref="'btn'+group.id"
                   :data-target="'#collapseOne'+group.id" @click="showOnClickUsers(group.id)" aria-expanded="false"
                   :aria-controls="'collapseOne'+group.id">
                   <chevron-up-icon size="1.5x" class="custom-class"></chevron-up-icon>
                 </button>
-                <div class="name_div" style="width: 83%;">
+
+                <div class="name_div" style="width: fit-content;">
                   <span :ref="'name-div'+group.id"
                     @click="event => {onClickInput(group.id, 'name',event)}">{{group.name}}</span>
                   <input class="form-control input-name" :id="'groupname'+group.id" style="display: none;width: fit-content;"
@@ -50,7 +53,7 @@
                       <check-icon size="1x" class="custom-class"></check-icon>
                     </button>
                     <div @mousedown="event => onClear(event, group, 'name')">
-                      <button class="input-btn">
+                      <button class="input-btn" style="align-items: center;display: flex;">
                         <plus-icon size="1x" class="custom-class" id="closeIcon"></plus-icon>
                       </button>
                     </div>
@@ -59,13 +62,13 @@
               </h5>
             </div>
 
-            <div class="selectResponsible col-3">
+            <div class="selectResponsible col-3" @click.self="event => clickOnCard(group.id, event)">
               <ss-select v-model="group.leader_id" :options="allUsersReduced.filter(u => u.group_id == group.id)"
                 track-by="name" search-by="surname" @change="selectExecutorGroup(group, $event)" disable-by="disabled"
                 id="ss-select" style="width: fit-content;height: fit-content;">
                 <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                   @click="event => onClickExecutor(group.leader_id, event)" style="cursor: pointer; width: 100%;">
-                  <ss-select-toggle class="flex justify-between"
+                  <ss-select-toggle class="flex justify-between" id="select-div"
                     style="width: 100%; padding: 2px 5px; align-items: center;">
                     <award-icon size="1.5x" class="custom-class"></award-icon>
                     {{ $get(selectedOption, 'name') || 
@@ -242,7 +245,6 @@
     },
     async mounted() {
       await this.$store.dispatch('checkIsLeader')
-
       await this.$store.dispatch('getGroups')
       await this.$store.dispatch('getAllUsers')
     },
@@ -270,7 +272,12 @@
       },
     },
     methods: {
+      clickOnCard(id) {
+        this.$refs['btn'+id][0].click()
+      },
+      
       onClickInput(id, type, event) {
+        event.stopPropagation()
         if (this.user.is_admin) {
           event.target.style.display = 'none'
           this.$nextTick(() => {
@@ -329,7 +336,6 @@
       },
 
       onFocusInput(event, id, type) {
-        console.log('focus');
         this.currentGroupName = event.target.value
         this.currentGroupInput = event.target
 
@@ -340,7 +346,7 @@
       onClear(event, group, type) {
         event.preventDefault()
         event.stopPropagation()
-console.log(group.name,  this.currentGroupName);
+
         if (type === 'name' && group.name != this.currentGroupName) {
           this.$store.commit('editGroup', {
             name: this.currentGroupName,
@@ -352,8 +358,10 @@ console.log(group.name,  this.currentGroupName);
 
 
       async editGroupName(name, id, event) {
+        // event.preventDefault()
+        // event.stopPropagation()
+
         await this.$store.commit('setError404', '')
-        console.log('edit');
         event.target.blur()
       },
 
@@ -369,6 +377,7 @@ console.log(group.name,  this.currentGroupName);
       },
 
       onClickExecutor(leader, event) {
+        event.stopPropagation()
         event.target.classList.contains('ss-select-option') ? '' : this.currentExecutor = leader
       },
       selectExecutorGroup(group, event) {
@@ -463,8 +472,7 @@ console.log(group.name,  this.currentGroupName);
     height: 100%;
   }
 
-  .name_div,
-  .short-name_div {
+  .name_div{
     font-family: 'GothamPro';
     font-size: 18px;
     line-height: 24px;
@@ -474,15 +482,14 @@ console.log(group.name,  this.currentGroupName);
     height: fit-content;
     flex: 0 0 auto;
     width: auto;
+    display: flex;
+    align-items: center;
 
     span {
       flex: 0 0 auto;
-      width: 100%;
+      // width: 100%;
+      width: fit-content;
     }
-  }
-
-  .short-name_div {
-    justify-content: center;
   }
 
   .name {
@@ -524,7 +531,6 @@ console.log(group.name,  this.currentGroupName);
     display: none;
     margin: 0;
     justify-content: center;
-    margin-top: 5px;
   }
 
   #card:hover #remove {
@@ -711,23 +717,25 @@ console.log(group.name,  this.currentGroupName);
 
   }
 
-  .selectResponsible:hover {
-    #ss-select {
+  .selectResponsible{
+    #ss-select:hover  {
       background-color: #e5e9f1;
     }
   }
 
   .selectResponsible:focus,
   .selectResponsible:active {
-    color: #fff;
+    // color: #fff;
 
-    #ss-select {
+    #ss-select:focus,#ss-select:active {
       background-color: #4EAD96;
-    }
-
-    svg {
+color: #fff;
+      svg {
       color: #fff !important;
     }
+    }
+
+    
 
   }
 

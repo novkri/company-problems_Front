@@ -890,28 +890,6 @@
         this.$refs['hidden_area-' + type + id].forEach(element => {
           element.style.display = 'none'
         });
-
-        switch (type) {
-          case 'exp':
-            // console.log('blur');
-            // console.log(this.currentSolutionName);
-            // this.$store.commit('editSolutionOther', {
-            //   name: this.currentSolutionName,
-            //   id
-            // })
-            break;
-          case 'plan':
-            // console.log(this.currentTextarea);
-            break;
-          case 'team':
-            // console.log(this.currentTextarea);
-            break;
-          case 'result':
-            // console.log(this.currentTextarea);
-            break;
-          default:
-            alert("Нет таких значений");
-        }
       },
 
       onClear(event, id, type) {
