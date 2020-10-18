@@ -239,9 +239,9 @@
                             style="flex-direction: column;display: flex;max-height: 417px;min-height: 417px;">
                             <label style="width: 100%;">Команда</label>
                             <div>
-                              <ss-select :options="teamExecutors" track-by="name" search-by="surname" v-show="user.is_admin || solutions[0].executor_id == currentUid"
-                                disable-by="disabled" class="team" id="ss-select"
-                                @change="putUserToTeam(solutions[0], $event)">
+                              <ss-select :options="currentTeamUsers" track-by="name" search-by="surname"
+                                v-show="user.is_admin || solutions[0].executor_id == currentUid" disable-by="disabled"
+                                class="team" id="ss-select" @change="putUserToTeam(solutions[0], $event)">
                                 <div
                                   slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                                   style="cursor: pointer; width: 100%;">
@@ -272,12 +272,13 @@
                               </ss-select>
 
                               <div class="current-team">
-                                <div>
+                                <div v-if="currentTeam.length > 0">
                                   <li class="team-members" v-for="(user, idx) in currentTeam" :key="idx">
-                                    <div class="member" v-if="user">
+                                    <div class="member">
                                       {{idx+1}}. {{user.surname}}
                                       {{user.name}} {{user.father_name}}
                                     </div>
+
                                     <div class="close">
                                       <button type="button" id="close" class="close"
                                         @click="removeUserFromTeam(user.id, solutions[0].id)">
@@ -285,6 +286,10 @@
                                       </button>
                                     </div>
                                   </li>
+                                </div>
+
+                                <div v-else style="color: #4F4F4F;text-align: center;">
+                                  Список команды пуст...
                                 </div>
                               </div>
 
@@ -557,7 +562,8 @@
     },
     computed: {
       ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', 'user',
-        'currentUid', 'user', 'isLeader', 'members', 'currentGroup', 'currentTeam', 'teamExecutors'
+        'currentUid', 'user', 'isLeader', 'members', 'currentGroup', 'currentTeam', 'teamExecutors',
+        'currentTeamUsers'
       ]),
       validatedExecutorAndAdmin: function () {
         return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : this
@@ -576,7 +582,7 @@
     },
 
     methods: {
-       async removeUserFromTeam(id, solution) {
+      async removeUserFromTeam(id, solution) {
         await this.$store.commit('setError404', '')
         this.$store.dispatch('removeUserFromTeam', {
           id,
@@ -591,7 +597,7 @@
 
         })
       },
-      
+
       clickOnCard(id, e) {
         if (e.target.tagName == 'DIV' && !e.target.classList.contains('name_div') || e.target.tagName == 'BUTTON' || e
           .target.tagName == 'H5') {
@@ -804,8 +810,9 @@
                   element.click()
                 }) : ''
               })
-              if (this.members.find(m => m.id == problem.creator_id) && this.isLeader || problem.creator_id == this
-                .currentUid && this.isLeader) {
+              if ((this.members.find(m => m.id == problem.creator_id) && this.isLeader) || (problem.creator_id ==
+                  this
+                  .currentUid && this.isLeader)) {
                 this.isLeaderOgUser = true
               } else {
                 this.isLeaderOgUser = false

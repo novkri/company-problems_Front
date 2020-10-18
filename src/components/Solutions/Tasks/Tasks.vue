@@ -12,8 +12,9 @@
     </div>
 
     <div class="container row" ref="containerTask">
-      <ol ref="olTask" v-show="tasks">
+      <ol ref="olTask">
         <li id="list" v-for="(task, idx) in tasks" :key="idx">
+          
           <div class="task-title col-4" style="margin-right: -2%;"
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">
             <div style="width: 100%;" @click="onClickInput(task.id, val.executor_id)" :ref="'desc_div'+task.id">
@@ -67,7 +68,7 @@
           </div>
 
           <div class="selectResponsible col-2">
-            <ss-select v-model="task.executor_id" :options="allUsersReduced" track-by="name" search-by="surname"
+            <ss-select v-model="task.executor_id" :options="teamExecutors" track-by="name" search-by="surname"
               @change="selectExecutorTask(task, val.executor_id)" disable-by="disabled" id="ss-select"
               style="width: 100%;">
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
@@ -75,9 +76,9 @@
                 <ss-select-toggle class="flex items-center justify-between"
                   style="margin: auto;max-height: 30px;overflow-y: hidden;">
                   <user-icon size="1.5x" class="custom-class" id="iconUser" style="flex-shrink: 0;"></user-icon>
-                  {{ $get(selectedOption, 'name') ||  `${allUsersReduced.find(u => u.id == task.executor_id) ? allUsersReduced.find(u => u.id == task.executor_id).surname + ' ' 
-                    + allUsersReduced.find(u => u.id == task.executor_id).name + ' ' 
-                    + allUsersReduced.find(u => u.id == task.executor_id).father_name : 'Выбрать'}`}}
+                  {{ $get(selectedOption, 'name') ||  `${teamExecutors.find(u => u.id == task.executor_id) ? teamExecutors.find(u => u.id == task.executor_id).surname + ' ' 
+                    + teamExecutors.find(u => u.id == task.executor_id).name + ' ' 
+                    + teamExecutors.find(u => u.id == task.executor_id).father_name : 'Выбрать' }`}}
                 </ss-select-toggle>
 
                 <section
@@ -102,7 +103,7 @@
           <div style="width: 54px" id="close" class="col">
             <button type="button" v-show="val.executor_id == currentUid || user.is_admin || isLeader" class="close"
               id="remove" @click="showDelete(task.id)" data-toggle="modal" data-target="#popupDeleteSolution">
-              <trash-icon size="1x" class="custom-class" style="margin-bottom: 5px;"></trash-icon>
+              <trash-icon size="1x" class="custom-class" style="margin-bottom: 5px; margin-right: 0;"></trash-icon>
             </button>
           </div>
         </li>
@@ -128,17 +129,20 @@
             </div>
 
             <div class="selectResponsible" style="background-color: #fff;">
-              <ss-select v-model="formInput.executor" :options="allUsersReduced" track-by="name" search-by="surname"
+              <ss-select v-model="formInput.executor" :options="teamExecutors" track-by="name" search-by="surname"
                 disable-by="disabled" id="ss-select" style="width: fit-content; position: relative;">
                 <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                   style="cursor: pointer; width: 100%;">
 
+<!--${teamExecutors.find(u => u.id == formInput.executor) ? teamExecutors.find(u => u.id == formInput.executor).surname + ' ' 
+                    + teamExecutors.find(u => u.id == formInput.executor).name + ' ' 
+                    + teamExecutors.find(u => u.id == formInput.executor).father_name  -->
                   <ss-select-toggle class="pl-1 pr-4 py-0 flex items-center justify-between"
                     style="width: 100%; padding: 13px; font-family: 'GothamPro';" id="select-toggle">
                     <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
-                    {{ $get(selectedOption, 'name') ||  `${allUsersReduced.find(u => u.id == formInput.executor) ? allUsersReduced.find(u => u.id == formInput.executor).surname + ' ' 
-                    + allUsersReduced.find(u => u.id == formInput.executor).name + ' ' 
-                    + allUsersReduced.find(u => u.id == formInput.executor).father_name : 'Выбрать'}`}}
+                    {{ $get(selectedOption, 'name') ||  `${teamExecutors.find(u => u.id == formInput.executor) ? teamExecutors.find(u => u.id == formInput.executor).surname + ' ' 
+                    + teamExecutors.find(u => u.id == formInput.executor).name + ' ' 
+                    + teamExecutors.find(u => u.id == formInput.executor).father_name  : 'Выбрать'}`}}
                   </ss-select-toggle>
 
                   <section v-show="isOpen" class="absolute border-l border-r min-w-full"
@@ -242,10 +246,10 @@
       SsSelectOption,
       SsSelectSearchInput
     },
-
+    
     computed: {
       ...mapGetters(['tasks', 'error', 'error404', 'allUsers', 'allUsersReduced', 'currentSolution', 'solutions',
-        'currentUid', 'user', 'isLeader'
+        'currentUid', 'user', 'isLeader', 'teamExecutors'
       ]),
       validatedExecutorAndAdmin: function () {
         return this.val.executor_id == this.currentUid ? false : this.user.is_admin ? false : this
@@ -1091,10 +1095,10 @@
 
 @media (max-width: 1500px) {
   .select {
-    margin-right: 0.5%;
+    margin-right: 1% !important;
   }
   .dateDiv {
-    margin-right: 4%;
+    margin-right: 4% !important;
   }
 }
 

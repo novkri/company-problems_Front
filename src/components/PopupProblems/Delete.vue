@@ -33,7 +33,7 @@
       name: ''
     }),
     computed: {
-      ...mapGetters(['error', 'error404']),
+      ...mapGetters(['error', 'error404', 'user', 'isLeader']),
     },
     methods: {
       async deleteProblem() {
@@ -51,12 +51,18 @@
               deadline: '',
               status: 'На проверке заказчика'
             })
-            this.$store.dispatch('countAmountOfProblemsForConfirmation', {
+            this.isLeader ? this.$store.dispatch('countAmountOfProblemsForConfirmation', {
               urgency: '',
               importance: '',
               deadline: '',
               status: ''
-            })
+            }) : ''
+            this.user.is_admin ? this.$store.dispatch('countAmountOfProblemsForConfirmationAdmin', {
+              urgency: '',
+              importance: '',
+              deadline: '',
+              status: ''
+            }) : ''
             this.$store.dispatch('countAmountOfProblemsForExecution', {
               urgency: '',
               importance: '',

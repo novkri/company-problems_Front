@@ -449,7 +449,6 @@ export default {
             resolve(response.data)
           })
           .catch(error => {
-            console.log(error.response);
             commit('setProblems', '')
             if (error.response.status == 401) {
               commit('setError404', error.response.data.errors)

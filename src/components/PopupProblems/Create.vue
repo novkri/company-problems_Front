@@ -84,7 +84,7 @@
       }
     },
     computed: {
-      ...mapGetters(['error', 'groups'])
+      ...mapGetters(['error', 'groups', 'user', 'isLeader'])
     },
 
     methods: {
@@ -115,6 +115,22 @@
               status: 'На проверке заказчика'
             })
             this.formData = []
+
+
+          this.isLeader ? this.$store.dispatch('countAmountOfProblemsForConfirmation', {
+          urgency: '',
+          importance: '',
+          deadline: '',
+          status: ''
+        }) : ''
+        this.user.is_admin ? this.$store.dispatch('countAmountOfProblemsForConfirmationAdmin', {
+          urgency: '',
+          importance: '',
+          deadline: '',
+          status: ''
+        }) : ''
+
+
             document.getElementById('close').click()
           } 
         })

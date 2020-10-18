@@ -24,6 +24,7 @@ export default {
     allUsers: [],
     allUsersReduced: [],
     currentTeam: [],
+    currentTeamUsers: [],
     teamExecutors: [],
     token: localStorage.getItem('user-token') || '',
   },
@@ -32,7 +33,15 @@ export default {
       return state.solutions
     },
     currentTeam: state => {
-      return state.currentTeam
+      return state.currentTeam= state.currentTeam.sort(function (a, b) {
+        return (a.surname.toLowerCase() > b.surname.toLowerCase()) ? 1 : -1
+      })
+    },
+    currentTeamUsers: state => {
+      return state.currentTeamUsers 
+      = state.currentTeamUsers.sort(function (a, b) {
+        return (a.surname.toLowerCase() > b.surname.toLowerCase()) ? 1 : -1
+      })
     },
     teamExecutors: state => {
       return state.teamExecutors
@@ -110,6 +119,21 @@ export default {
     editPlan: (state, payload) => {
       state.solutions.find(solution => solution.id == payload.id).plan = payload.plan
     },
+
+
+    setCurrentTeamUsers: (state, payload) => {
+      payload.forEach(element => {
+        element.father_name ? element.father_name = element.father_name[0] + '.' :  element.father_name = ' '
+        element.name = element.name[0]+ '.'
+      });
+      let usersPayload = Object.values(payload)
+      state.currentTeamUsers = usersPayload
+
+      state.currentTeam.forEach(element => {
+        state.currentTeamUsers = state.currentTeamUsers.filter(u => u.id != element.id)
+      });
+    },
+
     teamExecutors: (state, payload) => {
       if (payload.length > 0) {
         state.teamExecutors = payload
@@ -120,7 +144,6 @@ export default {
       } else {
         state.teamExecutors = []
       }
-      
     },
 
     setTeam: (state, payload) => {
@@ -137,13 +160,17 @@ export default {
     },
     editTeam: (state, payload) => {
       if (payload) {
-        let user = state.teamExecutors.filter(u => u.id == payload)
+        let user = state.currentTeamUsers.filter(u => u.id == payload)
+        state.currentTeamUsers = state.currentTeamUsers.filter(u => u.id != payload)
         state.currentTeam.push(user[0])
       } else {
         state.currentTeam = []
       }
     },
     deleteFromTeam: (state, payload) => {
+      let user = state.currentTeam.filter(u => u.id == payload)
+
+      state.currentTeamUsers.push(user[0])
       state.currentTeam = state.currentTeam.filter(u => u.id != payload)
     },
   },
@@ -357,6 +384,7 @@ export default {
             commit('setError404', '')
             commit('setAllUsers', response.data)
             commit('setAllUsersReduced', response.data)
+            commit('setCurrentTeamUsers', response.data)
             commit('setSolution', response.data)
         })
         .catch(error => {

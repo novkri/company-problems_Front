@@ -27,7 +27,9 @@
                   { 'font-size': '16px', 'border-radius': '10px', 'padding': '6px 14px',
                     'margin-right': '-43px'} ]">
                     {{solution.name ? solution.name : "Введите решение..."}}</div>
-                  <input v-show="editable" class="form-control" :id="'textarea'+val.id" v-model="solution.name"
+
+                    <!-- :id="'textarea'+val.id" -->
+                  <input v-show="editable" class="form-control" v-model="solution.name"
                     :ref="'textarea' + val.id" @keyup.enter="event => {editSolClick(solution.name, solution.id, event)}"
                     @focus="event => onFocusInput(event, val.id)"
                     @blur="event => {onBlurInput(solution.name, solution.id, event)}" />

@@ -163,6 +163,7 @@
           this.nameShort = ''
           this.leader_id = ''
           this.$store.dispatch('getAllUsers')
+
           document.getElementById('close').click()
         })
       },
