@@ -14,7 +14,7 @@
             <div>
               <form class="form-group">
                 <div class="input-group">
-                  <label for="new-group-title">Название подразделения (полностью) *</label>
+                  <label for="new-group-title">Название подразделения (полностью) <span class="error">*</span></label>
                   <input type="text" ref="input" class="form-control" id="new-group-title"
                     :class="{ 'form-control--error': $v.name.$invalid, 'form-control--valid': name && !$v.name.$invalid}"
                     placeholder="Название подразделения..." @blur="onBlur($event)" @focus="onFocus($event)"
@@ -39,7 +39,7 @@
                 </div>
 
                 <div class="input-group">
-                  <label>Выбрать руководителя *</label>
+                  <label>Выбрать руководителя <span class="error">*</span></label>
                   <div class="selectResponsible" style="background-color: transparent;" @click="clearError">
                     <ss-select v-model="leader_id" :options="usersNoGroup" track-by="name" search-by="name"
                       disable-by="disabled" id="ss-select" style="width: fit-content;">
@@ -130,8 +130,7 @@
       }
     },
     watch: {
-      error() {
-      }
+      error() {}
     },
     computed: {
       ...mapGetters(['error', 'allUsers', 'usersNoGroup']),
@@ -288,7 +287,7 @@
   .modal-content {
     border-radius: 12px;
     border: none;
-    padding: 30px 20px 40px 20px;
+    padding: 22px 20px 40px 20px;
 
     min-height: 638px;
     height: fit-content;
@@ -343,6 +342,12 @@
   #new-group-title__short {
     border-radius: 9px;
     width: fit-content;
+
+    font-family: 'GothamPro';
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 0.15px;
+    color: #9C9C9C;
   }
 
   #new-group-title:focus,
@@ -354,10 +359,19 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    padding-bottom: 51px;
+    padding-bottom: 30px;
     position: relative;
-        input {
+
+    input {
       background-color: #F0F0F0;
+    }
+
+    label {
+      font-family: 'GothamPro';
+      font-size: 16px;
+      line-height: 24px;
+      letter-spacing: 0.15px;
+      color: #4F4F4F;
     }
   }
 

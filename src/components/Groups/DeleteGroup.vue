@@ -33,7 +33,8 @@
     },
     methods: {
       async deleteGroup() {
-              await this.$store.dispatch('deleteGroup', {id: this.val.group.id}).then(() => {
+              await this.$store.dispatch('deleteGroup', {id: this.val.group.id}).then((r) => {
+                console.log(r);
                 this.$store.dispatch('getAllUsers')
 
                 this.allUsers.find(u => u.id == this.val.group.leader_id).group_id == null

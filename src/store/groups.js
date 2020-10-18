@@ -36,7 +36,7 @@ export default {
       return state.leaderReduced
     },
     members: state => {
-      return state.members 
+      return state.members
     },
     usersNoGroup: (state, rootState) => {
       state.usersNoGroup = rootState.allUsers.filter(u => u.group_id == null)
@@ -198,10 +198,16 @@ export default {
     }, param) => {
       return new Promise((resolve, reject) => {
         axios.delete(process.env.VUE_APP_ROOT_URL + `/group/${param.id}`).then(response => {
+            console.log(response);
             commit('setError', '')
             commit('setError404', '')
-            commit('deleteGroup', param.id)
-            commit('sortGroup')
+            if (response.data.message == 'Подразделение успешно удалено') {
+              commit('deleteGroup', param.id)
+              commit('sortGroup')
+            } else {
+              commit('setError404', response.data.message)
+            }
+
             resolve(response.data)
           })
           .catch(error => {

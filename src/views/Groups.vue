@@ -30,7 +30,6 @@
       <div id="accordion">
         <div class="card" id="card" v-for="(group, idx) in paginatedDataGroups" :key="idx">
 
-          
           <div class="card-header row" id="heading" @click.self="event => clickOnCard(group.id, event)">
             <div class="name col-8">
               <h5 class="mb-0" style="height: 100%;">
@@ -358,9 +357,6 @@
 
 
       async editGroupName(name, id, event) {
-        // event.preventDefault()
-        // event.stopPropagation()
-
         await this.$store.commit('setError404', '')
         event.target.blur()
       },
@@ -377,17 +373,17 @@
       },
 
       onClickExecutor(leader) {
-        // event.stopPropagation()
         event.target.classList.contains('ss-select-option') ? '' : this.currentExecutor = leader
       },
+
       selectExecutorGroup(group, event) {
         this.openConfirm = true
         this.newLeader = {
           groupId: group.id,
           leader_id: event
         }
-
       },
+
       async setNewLeader(param) {
         await this.$store.commit('setError404', '')
 
