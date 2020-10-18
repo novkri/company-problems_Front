@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="myproblems_main">
     <span class="empty" v-show="problems.length == 0 && _isMounted">Список проблем пуст...</span>
 
     <div class="container" v-if="_isMounted">
@@ -560,6 +560,9 @@
 
     async mounted() {
       await this.$store.dispatch('checkIsLeader')
+
+
+
 
       await this.$store.dispatch('getMyProblems', {
         urgency: '',

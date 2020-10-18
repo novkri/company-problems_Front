@@ -1,8 +1,8 @@
 <template>
-  <nav class="navbar navbar-light"
+  <nav class="navbar navbar-light" id="nav_main"
     :class="[this.$route.path === '/' || this.$route.path == '/groups' || this.$route.path == '/statistics' ? 'main' : '']">
 
-<!--  -->
+    <!--  -->
     <div class="logo" @click="allProblems">
       <router-link to="/" exact style="font-family: 'GothamPro-Medium';font-size: 16px;"><img src="@/assets/logo.png"
           alt="PSS Software">
@@ -150,6 +150,16 @@
         },
       ],
     }),
+    mounted() {
+      setTimeout(() => {
+        var element = document.getElementById("nav_main");
+        element.scrollIntoView({
+          block: "start",
+          inline: "start",
+          behavior: "smooth"
+        });
+      })
+    },
     components: {
       ChevronDownIcon,
 
@@ -172,7 +182,7 @@
             break;
           case '/my-problems':
             this.$store.dispatch('changeStatusesProblem', [
-              
+
               {
                 name: "На рассмотрении"
               },
@@ -645,9 +655,10 @@
     * {
       font-size: 14px !important;
     }
-     #filterStatus {
-    left: -37% !important;
-  }
+
+    #filterStatus {
+      left: -37% !important;
+    }
   }
 
 
@@ -684,70 +695,74 @@
     .burger {
       display: flex;
     }
+
     .burger {
-        display: block;
-        position: relative;
-        width: 30px;
-        height: 21px;
-        position: relative;
-        z-index: 3;
+      display: block;
+      position: relative;
+      width: 30px;
+      height: 21px;
+      position: relative;
+      z-index: 3;
     }
 
     .burger:before,
     .burger:after {
-        content: '';
-        background-color: #4F4F4F;
-        position: absolute;
-        width: 100%;
-        height: 3px;
-        left: 0;
-        transition: all 0.3s ease 0s;
+      content: '';
+      background-color: #4F4F4F;
+      position: absolute;
+      width: 100%;
+      height: 3px;
+      left: 0;
+      transition: all 0.3s ease 0s;
     }
 
     .burger span {
-        position: absolute;
-        background-color: #4F4F4F;
-        left: 0;
-        top: 9px;
-        width: 100%;
-        height: 3px;
-        transition: all 0.3s ease 0s;
+      position: absolute;
+      background-color: #4F4F4F;
+      left: 0;
+      top: 9px;
+      width: 100%;
+      height: 3px;
+      transition: all 0.3s ease 0s;
     }
 
     .burger:before {
-        top: 0;
+      top: 0;
     }
 
     .burger:after {
-        bottom: 0;
+      bottom: 0;
     }
 
     .burger.active:before {
-        transform:rotate(45deg);
-        top: 9px;
+      transform: rotate(45deg);
+      top: 9px;
     }
+
     .burger.active:after {
-        transform:rotate(-45deg);
-        bottom: 9px;
+      transform: rotate(-45deg);
+      bottom: 9px;
     }
-    
+
     .burger.active span {
-        transform: scale(0);
+      transform: scale(0);
     }
+
     .burger_menu {
-        display: flex;
-        position: fixed;
-        top: -100%;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: aqua;
-        padding: 70px 10px 20px 10px;
-        transition: all 0.3s ease 0s;
+      display: flex;
+      position: fixed;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: aqua;
+      padding: 70px 10px 20px 10px;
+      transition: all 0.3s ease 0s;
     }
+
     .burger_menu.active {
-        top: 0;
+      top: 0;
     }
 
 
