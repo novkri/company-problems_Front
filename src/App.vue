@@ -23,6 +23,9 @@
   }
 </script>
 <style lang="scss">
+body {
+  overflow-x: scroll !important;
+}
  .search {
     outline: none;
     border: none;
