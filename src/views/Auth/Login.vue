@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <div class="header">Вход в систему</div>
+  <div class="container" id="container">
+    <div class="header" >Вход в систему</div>
     <form>
       <div class="form-group">
         <label for="email">Адрес электронной почты<span
@@ -64,6 +64,10 @@
     mounted() {
       this.$store.commit('setError401', '')
       this.$store.commit('setErrorU', '')
+      setTimeout(() => {
+        var element = document.getElementById("container");
+        element.scrollIntoView({block: "start", inline: "start"});
+      })
     },
     watch: {
       errorU() {},
@@ -149,6 +153,7 @@
   }
 
   .container {
+    max-height: 1080px;
     flex-direction: column;
     width: 344px;
     display: flex;
