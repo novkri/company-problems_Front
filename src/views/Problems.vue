@@ -292,10 +292,7 @@
                                   Список команды пуст...
                                 </div>
                               </div>
-
                             </div>
-
-
                           </div>
 
                           <div class="col-4 p-2" style="flex-direction: column;display: flex;">

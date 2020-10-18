@@ -385,7 +385,7 @@ export default {
             commit('setAllUsers', response.data)
             commit('setAllUsersReduced', response.data)
             commit('setCurrentTeamUsers', response.data)
-            commit('setSolution', response.data)
+            // commit('setSolution', response.data)
         })
         .catch(error => {
           commit('setError404', '')

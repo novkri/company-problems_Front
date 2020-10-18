@@ -198,7 +198,6 @@ export default {
     }, param) => {
       return new Promise((resolve, reject) => {
         axios.delete(process.env.VUE_APP_ROOT_URL + `/group/${param.id}`).then(response => {
-            console.log(response);
             commit('setError', '')
             commit('setError404', '')
             if (response.data.message == 'Подразделение успешно удалено') {

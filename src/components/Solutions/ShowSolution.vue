@@ -18,7 +18,7 @@
 
         </div>
         <div>
-          <ol v-show="solutions">
+          <ol>
             <li v-for="(solution, idx) in solutions" :key="idx" id="list" class="row">
               <div class="list-item col-4">
                 <div class="desc" ref="desc">

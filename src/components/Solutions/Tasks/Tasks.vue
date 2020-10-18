@@ -14,7 +14,6 @@
     <div class="container row" ref="containerTask">
       <ol ref="olTask">
         <li id="list" v-for="(task, idx) in tasks" :key="idx">
-          
           <div class="task-title col-4" style="margin-right: -2%;"
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">
             <div style="width: 100%;" @click="onClickInput(task.id, val.executor_id)" :ref="'desc_div'+task.id">
