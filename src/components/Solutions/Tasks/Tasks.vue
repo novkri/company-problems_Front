@@ -12,7 +12,7 @@
     </div>
 
     <div class="container row" ref="containerTask">
-      <ol ref="olTask">
+      <ol ref="olTask" v-show="tasks">
         <li id="list" v-for="(task, idx) in tasks" :key="idx">
           <div class="task-title col-4" style="margin-right: -2%;"
             :class="[task.status == 'Выполнено' ? 'greenTitle' : task.status == 'В процессе' ? 'blueTitle' : '']">

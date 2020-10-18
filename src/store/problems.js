@@ -434,9 +434,6 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
-        // axios.get(process.env.VUE_APP_ROOT_URL+'/problem/problems-user-archive')
-        // axios.get(process.env.VUE_APP_ROOT_URL+'/problem/problems-group-archive')
-        // 0:  axios.get(process.env.VUE_APP_ROOT_URL+'/problem/problems-archive'
         axios.get(process.env.VUE_APP_ROOT_URL + '/problem/problems-archive', {
             params: {
               urgency: param.urgency,
@@ -452,6 +449,7 @@ export default {
             resolve(response.data)
           })
           .catch(error => {
+            console.log(error.response);
             commit('setProblems', '')
             if (error.response.status == 401) {
               commit('setError404', error.response.data.errors)
