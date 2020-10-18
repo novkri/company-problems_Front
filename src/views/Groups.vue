@@ -62,7 +62,7 @@
               </h5>
             </div>
 
-            <div class="selectResponsible col-3" @click.self="event => clickOnCard(group.id, event)">
+            <div class="selectResponsible col-3">
               <ss-select v-model="group.leader_id" :options="allUsersReduced.filter(u => u.group_id == group.id)"
                 track-by="name" search-by="surname" @change="selectExecutorGroup(group, $event)" disable-by="disabled"
                 id="ss-select" style="width: fit-content;height: fit-content;">
@@ -376,8 +376,8 @@
         });
       },
 
-      onClickExecutor(leader, event) {
-        event.stopPropagation()
+      onClickExecutor(leader) {
+        // event.stopPropagation()
         event.target.classList.contains('ss-select-option') ? '' : this.currentExecutor = leader
       },
       selectExecutorGroup(group, event) {
