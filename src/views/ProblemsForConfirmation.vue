@@ -345,8 +345,8 @@
 
                               <button v-else
                                 v-show="user.is_admin || isLeader || solutions[0].executor_id == currentUid || isLeaderOgUser "
-                                class="btn btnMain problem-solved" @click="problemSolved(problem.id)">Проблема
-                                решена</button>
+                                class="btn btnMain problem-solved" @click="problemSolved(problem.id)">Отправить на
+                                  согласование</button>
                             </div>
 
                           </div>
