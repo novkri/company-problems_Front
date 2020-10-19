@@ -58,9 +58,7 @@ export default {
   },
   mutations: {
     setSolution: (state, payload) => {
-      
       state.solutions = {0: payload}
-      console.log(state.solutions);
     },
     addSolution: (state, payload) => {
       payload.in_work = false
@@ -201,7 +199,6 @@ export default {
       return await new Promise((resolve, reject) => {
         axios.get(process.env.VUE_APP_ROOT_URL + `/problem/${problemId}/solution`) 
           .then(response => {
-            console.log(response);
               commit('setError', '')
               commit('setError404', '')
               commit('setSolution', response.data)
@@ -220,7 +217,6 @@ export default {
       return await new Promise((resolve, reject) => {
         axios.get(process.env.VUE_APP_ROOT_URL + `/solution/${problemId}`) 
           .then(response => {
-            console.log(response);
               commit('setError', '')
               commit('setError404', '')
               commit('setTeam', response.data.team)
