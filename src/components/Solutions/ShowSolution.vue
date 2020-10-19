@@ -27,9 +27,9 @@
                     'margin-right': '-43px'} ]">
                     {{solution.name ? solution.name : "Введите решение..."}}</div>
 
-                    <!-- :id="'textarea'+val.id" -->
-                  <input v-show="editable" class="form-control" v-model="solution.name"
-                    :ref="'textarea' + val.id" @keyup.enter="event => {editSolClick(solution.name, solution.id, event)}"
+                  <!-- :id="'textarea'+val.id" -->
+                  <input v-show="editable" class="form-control" v-model="solution.name" :ref="'textarea' + val.id"
+                    @keyup.enter="event => {editSolClick(solution.name, solution.id, event)}"
                     @focus="event => onFocusInput(event, val.id)"
                     @blur="event => {onBlurInput(solution.name, solution.id, event)}" />
                   <div class="hidden" :ref="'hidden'+val.id">
@@ -52,7 +52,7 @@
                   style="width: 87%; margin: auto;">
                   <div @click="onClickStatus(solution.status)"
                     slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
-                    style="cursor: pointer; width: 100%;" >
+                    style="cursor: pointer; width: 100%;">
                     <ss-select-toggle id="select-toggle">
                       {{ $get(selectedOption, 'name') || `${solution.status ? solution.status : 'Выбрать'}`}}
                       <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
@@ -73,7 +73,8 @@
 
               <div class="dateDiv col-3">
                 <input type="date" id="start" name="trip-start" class="date" v-model="solution.deadline"
-                  @change="changeDeadline(solution.executor_id, solution.deadline, solution.id)" @click="onClickDate($event)">
+                  @change="changeDeadline(solution.executor_id, solution.deadline, solution.id)"
+                  @click="onClickDate($event)">
               </div>
 
               <div class="selectResponsible col-2">
@@ -275,9 +276,9 @@
         } else {
           this.$store.commit('setError404', 'У вас недостаточно прав')
           this.$store.commit('editDeadline', {
-              deadline: this.currentDate,
-              id
-            })
+            deadline: this.currentDate,
+            id
+          })
         }
       },
 
@@ -624,7 +625,8 @@
     }
 
     section {
-      left: -56% !important;
+      left: -110% !important;
+      width: fit-content !important;
     }
   }
 

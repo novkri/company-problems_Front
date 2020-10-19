@@ -20,7 +20,8 @@
           </router-link>
         </a>
 
-        <a v-show="isLeader && !userHasNoGroup || isLeader && user.is_admin && !userHasNoGroup || user.is_admin && !userHasNoGroup">
+        <a
+          v-show="isLeader && !userHasNoGroup || isLeader && user.is_admin && !userHasNoGroup || user.is_admin && !userHasNoGroup">
           <router-link to="/group-problems" exact>
             <eye-icon size="1.5x" class="custom-class"></eye-icon>На рассмотрении
             <span class="amount"
@@ -65,7 +66,7 @@
           <bar-chart-2-icon size="1.5x" class="custom-class"></bar-chart-2-icon>Статистика
         </router-link>
 
-<!-- v-show="!userHasNoGroup" -->
+        <!-- v-show="!userHasNoGroup" -->
         <a>
           <archive-icon size="1.5x" class="custom-class"></archive-icon>
           <router-link to="/problems-archive" exact>Архив проблем</router-link>

@@ -46,7 +46,8 @@
                   <chevron-down-icon size="1.5x" class="custom-class"></chevron-down-icon>
                 </ss-select-toggle>
 
-                <section v-show="isOpen && user.is_admin || isOpen && task.executor_id == currentUid"
+                <section
+                  v-show="isOpen && user.is_admin && val.status != 'Выполнено' || isOpen && task.executor_id == currentUid && val.status != 'Выполнено'"
                   :ref="'slot-scope'+task.id" class="absolute border-l border-r min-w-full"
                   style="height: fit-content;">
                   <ss-select-option v-for="(option, index) in filteredOptions" :value="option" :index="index"
@@ -132,10 +133,6 @@
                 disable-by="disabled" id="ss-select" style="width: fit-content; position: relative;">
                 <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                   style="cursor: pointer; width: 100%;">
-
-<!--${teamExecutors.find(u => u.id == formInput.executor) ? teamExecutors.find(u => u.id == formInput.executor).surname + ' ' 
-                    + teamExecutors.find(u => u.id == formInput.executor).name + ' ' 
-                    + teamExecutors.find(u => u.id == formInput.executor).father_name  -->
                   <ss-select-toggle class="pl-1 pr-4 py-0 flex items-center justify-between"
                     style="width: 100%; padding: 13px; font-family: 'GothamPro';" id="select-toggle">
                     <user-icon size="1.5x" class="custom-class" id="iconUser"></user-icon>
@@ -245,7 +242,7 @@
       SsSelectOption,
       SsSelectSearchInput
     },
-    
+
     computed: {
       ...mapGetters(['tasks', 'error', 'error404', 'allUsers', 'allUsersReduced', 'currentSolution', 'solutions',
         'currentUid', 'user', 'isLeader', 'teamExecutors'
@@ -599,9 +596,12 @@
     display: none !important;
 
   }
-  #list #ss-select:hover {section {
-    right: -25% !important;
-  }}
+
+  #list #ss-select:hover {
+    section {
+      right: -25% !important;
+    }
+  }
 
   .selectResponsible {
     display: flex;
@@ -1018,7 +1018,7 @@
       cursor: pointer;
       color: #92D2C3;
       font-family: 'GothamPro-Medium';
-      font-size: 14px;
+      font-size: 16px;
       line-height: 24px;
       letter-spacing: 0.15px;
     }
@@ -1039,9 +1039,6 @@
   }
 
   @media (max-width: 1200px) {
-
-
-
     #list {
       display: flex;
       flex-direction: initial;
@@ -1094,14 +1091,15 @@
     }
   }
 
-@media (max-width: 1500px) {
-  .select {
-    margin-right: 1% !important;
+  @media (max-width: 1500px) {
+    .select {
+      margin-right: 2% !important;
+    }
+
+    .dateDiv {
+      margin-right: 4% !important;
+    }
   }
-  .dateDiv {
-    margin-right: 4% !important;
-  }
-}
 
   @media (max-width: 500px) {
     .header {

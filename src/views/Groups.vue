@@ -42,9 +42,10 @@
                 <div class="name_div" style="width: fit-content;">
                   <span :ref="'name-div'+group.id"
                     @click="event => {onClickInput(group.id, 'name',event)}">{{group.name}}</span>
-                  <input class="form-control input-name" :id="'groupname'+group.id" style="display: none;width: fit-content;"
-                    :ref="'group-name' + group.id" @keyup.enter="event => {editGroupName(group.name, group.id, event)}"
-                    v-model="group.name" @focus="event => onFocusInput(event, group.id, 'name')"
+                  <input class="form-control input-name" :id="'groupname'+group.id"
+                    style="display: none;width: fit-content;" :ref="'group-name' + group.id"
+                    @keyup.enter="event => {editGroupName(group.name, group.id, event)}" v-model="group.name"
+                    @focus="event => onFocusInput(event, group.id, 'name')"
                     @blur="event => {onBlurInput(group.name, group.id, event, 'name')}">
 
                   <div class="hidden" :ref="'hidden'+group.id">
@@ -272,9 +273,9 @@
     },
     methods: {
       clickOnCard(id) {
-        this.$refs['btn'+id][0].click()
+        this.$refs['btn' + id][0].click()
       },
-      
+
       onClickInput(id, type, event) {
         event.stopPropagation()
         if (this.user.is_admin) {
@@ -315,10 +316,10 @@
 
 
       async onBlurInput(name, id) {
-          this.$refs['group-name' + id][0].style.display = 'none'
-          this.$refs['name-div' + id][0].style.display = 'initial'
-          this.$refs['hidden' + id][0].classList.remove('flex')
-        
+        this.$refs['group-name' + id][0].style.display = 'none'
+        this.$refs['name-div' + id][0].style.display = 'initial'
+        this.$refs['hidden' + id][0].classList.remove('flex')
+
 
         if (name !== this.currentGroupName) {
           this.$store.dispatch('editGroup', {
@@ -329,8 +330,8 @@
               id,
               name: this.currentGroupName
             })
-          }) 
-          
+          })
+
         }
       },
 
@@ -444,10 +445,13 @@
 </script>
 
 <style scoped lang="scss">
-  .col-8, .col-2, .col-3 {
+  .col-8,
+  .col-2,
+  .col-3 {
     padding-left: 0;
     padding-right: 0;
   }
+
   h5 {
     .btn {
       padding-right: 16px;
@@ -468,7 +472,7 @@
     height: 100%;
   }
 
-  .name_div{
+  .name_div {
     font-family: 'GothamPro';
     font-size: 18px;
     line-height: 24px;
@@ -713,8 +717,8 @@
 
   }
 
-  .selectResponsible{
-    #ss-select:hover  {
+  .selectResponsible {
+    #ss-select:hover {
       background-color: #e5e9f1;
     }
   }
@@ -723,15 +727,17 @@
   .selectResponsible:active {
     // color: #fff;
 
-    #ss-select:focus,#ss-select:active {
+    #ss-select:focus,
+    #ss-select:active {
       background-color: #4EAD96;
-color: #fff;
+      color: #fff;
+
       svg {
-      color: #fff !important;
-    }
+        color: #fff !important;
+      }
     }
 
-    
+
 
   }
 

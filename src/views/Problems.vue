@@ -622,6 +622,7 @@
       },
 
       async problemReject(id) {
+        this.isProblemDeclined = true
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('problemReject', id)
       },
@@ -631,7 +632,7 @@
         await this.$store.dispatch('problemConfirm', id)
       },
       async problemSolved(id) {
-        this.isProblemDeclined = true
+        
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('problemSolved', id)
       },

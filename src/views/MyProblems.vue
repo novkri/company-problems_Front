@@ -141,8 +141,7 @@
 
                   <div class="icons col-1">
                     <div class="trash-icon">
-                      <trash-icon size="1.3x" class="custom-class" style="margin: auto;"
-                        v-show="isCreatorOrAdmin"
+                      <trash-icon size="1.3x" class="custom-class" style="margin: auto;" v-show="isCreatorOrAdmin"
                         @click="deleteP(problem.id, problem.name)" data-toggle="modal" data-target="#popupDelete">
                       </trash-icon>
                     </div>
@@ -389,6 +388,10 @@
 
                                   </div>
 
+
+
+
+
                                 </div>
                               </div>
                             </div>
@@ -437,8 +440,7 @@
 
                               <div class="card-body p-0" v-show="validatedExecutorAndAdmin">
                                 <span class="groups_list" v-show="problem.groups.length == 0">Проблема не направлена ни
-                                  в
-                                  одно подразделение</span>
+                                  в одно подразделение</span>
                                 <div class="container__groups_list">
                                   <span class="groups_list" style="padding-bottom: 5px;"
                                     v-for="(group, idx) in problem.groups" :key="idx">{{idx+1}}. {{group.name}}</span>
@@ -703,6 +705,10 @@
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('problemConfirm', id)
       },
+      async problemSolved(id) {
+        await this.$store.commit('setError404', '')
+        await this.$store.dispatch('problemSolved', id)
+      },
 
 
       async changeUrgency(id, urgency) {
@@ -815,7 +821,7 @@
       },
 
       async onClickShow(problem) {
-        
+
 
         this.checkedGroups = []
         problem.groups ? problem.groups.forEach(element => {

@@ -128,7 +128,6 @@
             </div>
 
             <div class="icons col-1">
-              {{ user.is_admin}}
               <div class="trash-icon">
                 <trash-icon size="1.3x" class="custom-class" style="margin: auto;"
                   v-show="isCreatorOrAdmin" @click="deleteP(problem.id, problem.name)"

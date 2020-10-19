@@ -8,9 +8,9 @@
       </router-link>
     </div> -->
 
-    <div class="logo" >
-      <router-link to="/my-problems" exact style="font-family: 'GothamPro-Medium';font-size: 16px;"><img src="@/assets/logo.png"
-          alt="PSS Software">
+    <div class="logo">
+      <router-link to="/my-problems" exact style="font-family: 'GothamPro-Medium';font-size: 16px;"><img
+          src="@/assets/logo.png" alt="PSS Software">
       </router-link>
     </div>
     <div v-tooltip="currentGroupName.length > 30 ? currentGroupName : ''" class="group_selected"
