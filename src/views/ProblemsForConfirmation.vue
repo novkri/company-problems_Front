@@ -794,12 +794,12 @@
       },
 
       async sendToGroup(id, groupsArray) {
-        await this.$store.dispatch('sendToGroup', {
+        groupsArray.length > 0 ? await this.$store.dispatch('sendToGroup', {
           id,
           groupsArray
         }).then(() => {
           this.$toast.success("Проблема направлена в подразделения");
-        })
+        }) : ''
       },
 
 
