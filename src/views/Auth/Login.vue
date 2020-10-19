@@ -79,13 +79,24 @@
         }
 
         await this.$store.dispatch('login', formData).then(() => {
+          // console.log(r);
+          // console.log(this.isLeader);
+
+          this.$store.dispatch('checkIsLeader').then((response) => {
+              response ? this.$store.dispatch('getMembers', this.groups.find(g => g.leader_id == this.currentUid).id) : ''
+            })
+
+
           if (!this.errorU) {
+             
+
             this.$store.dispatch('countAmountOfProblemsForExecution', {
               urgency: '',
               importance: '',
               deadline: '',
               status: ''
             })
+
             this.isLeader || this.user.is_admin ? this.$store.dispatch('countAmountOfProblemsForConfirmation', {
               urgency: '',
               importance: '',
@@ -103,9 +114,7 @@
             this.$router.push('/my-problems')
 
 
-            this.$store.dispatch('checkIsLeader').then((response) => {
-              response ? this.$store.dispatch('getMembers', this.groups.find(g => g.leader_id == this.currentUid).id) : ''
-            })
+           
 
           }
         })

@@ -81,7 +81,7 @@
                 </ss-select-toggle>
 
                 <section
-                  v-show="isOpen && user.is_admin || isOpen && task.executor_id == currentUid || isOpen && isLeader"
+                  v-show="isOpen && user.is_admin || isOpen && val.executor_id == currentUid || isOpen && isLeader"
                   class="absolute border-l border-r min-w-full" :ref="'slot-scopeExec'+task.id" style="height: 188px;">
                   <div class="px-px">
                     <ss-select-search-input class="w-full px-3 py-2 search" autofocus="false"

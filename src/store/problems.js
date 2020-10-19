@@ -207,6 +207,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve) => {
+
         axios.get(process.env.VUE_APP_ROOT_URL + '/problem/group-problems', {
             params: {
               urgency: param.urgency,
@@ -404,6 +405,7 @@ export default {
       commit
     }, param) => {
       return new Promise((resolve, reject) => {
+
         axios.get(process.env.VUE_APP_ROOT_URL + '/problem/group-problems', {
             params: {
               urgency: param.urgency,
