@@ -1,5 +1,5 @@
 <template>
-  <div class="container" >
+  <div class="container">
     <div class="header">Вход в систему</div>
     <form>
       <div class="form-group">
@@ -64,7 +64,7 @@
     mounted() {
       this.$store.commit('setError401', '')
       this.$store.commit('setErrorU', '')
-      
+
     },
     watch: {
       errorU() {},
@@ -82,13 +82,29 @@
           // console.log(r);
           // console.log(this.isLeader);
 
-          this.$store.dispatch('checkIsLeader').then((response) => {
-              response ? this.$store.dispatch('getMembers', this.groups.find(g => g.leader_id == this.currentUid).id) : ''
-            })
-
 
           if (!this.errorU) {
-             
+
+            // this.$store.dispatch('checkIsLeader').then((response) => {
+            //   console.log(response);
+            //     // response ? this.$store.dispatch('getMembers', this.groups.find(g => g.leader_id == this.currentUid).id) : ''
+            //     if (response) {
+            //       this.$store.dispatch('getMembers', this.groups.find(g => g.leader_id == this.currentUid).id)
+            //        this.$store.dispatch('countAmountOfProblemsForConfirmation', {
+            //     urgency: '',
+            //     importance: '',
+            //     deadline: '',
+            //     status: ''
+            //   })
+            //     }
+            //   })
+
+            this.$store.dispatch('checkIsLeader').then((response) => {
+
+              response ? this.$store.dispatch('getMembers', this.groups.find(g => g.leader_id == this
+                .currentUid).id) : ''
+
+            })
 
             this.$store.dispatch('countAmountOfProblemsForExecution', {
               urgency: '',
@@ -114,7 +130,7 @@
             this.$router.push('/my-problems')
 
 
-           
+
 
           }
         })
@@ -277,9 +293,6 @@
   @media (max-width: 1500px) {
     .btn {
       height: 41px;
-    }
-    * {
-      color: red !important;
     }
   }
 </style>
