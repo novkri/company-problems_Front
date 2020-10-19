@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" >
     <div class="header">Вход в систему</div>
     <form>
       <div class="form-group">
@@ -64,7 +64,7 @@
     mounted() {
       this.$store.commit('setError401', '')
       this.$store.commit('setErrorU', '')
-
+      
     },
     watch: {
       errorU() {},
@@ -84,27 +84,21 @@
 
 
           if (!this.errorU) {
-
-            // this.$store.dispatch('checkIsLeader').then((response) => {
-            //   console.log(response);
-            //     // response ? this.$store.dispatch('getMembers', this.groups.find(g => g.leader_id == this.currentUid).id) : ''
-            //     if (response) {
-            //       this.$store.dispatch('getMembers', this.groups.find(g => g.leader_id == this.currentUid).id)
-            //        this.$store.dispatch('countAmountOfProblemsForConfirmation', {
-            //     urgency: '',
-            //     importance: '',
-            //     deadline: '',
-            //     status: ''
-            //   })
-            //     }
-            //   })
-
-            this.$store.dispatch('checkIsLeader').then((response) => {
-
-              response ? this.$store.dispatch('getMembers', this.groups.find(g => g.leader_id == this
-                .currentUid).id) : ''
-
+             
+          this.$store.dispatch('checkIsLeader').then((response) => {
+            // console.log(response);
+              // response ? this.$store.dispatch('getMembers', this.groups.find(g => g.leader_id == this.currentUid).id) : ''
+              if (response) {
+                this.$store.dispatch('getMembers', this.groups.find(g => g.leader_id == this.currentUid).id)
+                 this.$store.dispatch('countAmountOfProblemsForConfirmation', {
+              urgency: '',
+              importance: '',
+              deadline: '',
+              status: ''
             })
+              }
+            })
+
 
             this.$store.dispatch('countAmountOfProblemsForExecution', {
               urgency: '',
@@ -113,12 +107,12 @@
               status: ''
             })
 
-            this.isLeader || this.user.is_admin ? this.$store.dispatch('countAmountOfProblemsForConfirmation', {
-              urgency: '',
-              importance: '',
-              deadline: '',
-              status: ''
-            }) : ''
+            // this.isLeader || this.user.is_admin ? this.$store.dispatch('countAmountOfProblemsForConfirmation', {
+            //   urgency: '',
+            //   importance: '',
+            //   deadline: '',
+            //   status: ''
+            // }) : ''
 
 
             this.$store.dispatch('getMyProblems', {
@@ -130,7 +124,7 @@
             this.$router.push('/my-problems')
 
 
-
+           
 
           }
         })
@@ -295,4 +289,5 @@
       height: 41px;
     }
   }
+ 
 </style>
