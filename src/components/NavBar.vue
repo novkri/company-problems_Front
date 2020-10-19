@@ -2,8 +2,8 @@
   <nav class="navbar navbar-light" id="nav_main"
     :class="[this.$route.path === '/' || this.$route.path == '/groups' || this.$route.path == '/statistics' ? 'main' : '']">
 
-    <!--  -->
-    <div class="logo" @click="allProblems">
+    <!-- @click="allProblems" -->
+    <div class="logo" >
       <router-link to="/" exact style="font-family: 'GothamPro-Medium';font-size: 16px;"><img src="@/assets/logo.png"
           alt="PSS Software">
       </router-link>
