@@ -1,5 +1,6 @@
 <template>
-  <div class="main-statistics" v-show="_isMounted">
+<div>
+<div class="main-statistics" v-if="mounted">
     <div class="accordion" id="accordionStatistics">
       <div class="card">
         <div class="card-header" id="statisticQuantitativeIndicators"
@@ -178,7 +179,8 @@
                         {{ statisticCategories[0][1].reduce((acc, curr) => acc.likes_count > curr.likes_count ? acc.likes_count : curr.likes_count) }}
                         лайка(ов)
                       </span>
-                      <span v-else> {{ statisticCategories[0][1][0].likes_count }} лайка(ов)</span>
+                      <span v-else>
+                         {{ statisticCategories[0][1][0].likes_count }} лайка(ов)</span>
                       </td>
                   </tr>
                   <tr>
@@ -210,6 +212,15 @@
       </div>
     </div>
   </div>
+  <div v-else class="d-flex justify-content-center" style="margin-top: 20px;">
+      <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+    </div>
+</div>
+  
 </template>
 
 <script>
@@ -225,6 +236,7 @@
     name: 'statistics',
     data: () => ({
       // statisticCategories: []
+      mounted: false
     }),
     components: {
       ChevronUpIcon
@@ -239,6 +251,7 @@
       await this.$store.dispatch('getStatisticQuantitativeIndicators')
       await this.$store.dispatch('getStatisticCategories')
       await this.$store.dispatch('getStatisticQuarterly')
+      this.mounted = true
     },
     methods: {
       clickCard(id_string) {
