@@ -138,8 +138,9 @@ export default {
       if (payload.length > 0) {
         state.teamExecutors = payload
         state.teamExecutors.forEach(el => {
+          // console.log( el.father_name );
         el.name = el.name[0] + '.'
-        el.father_name ? el.father_name = el.father_name[0] + '.' : ' '
+        el.father_name ? el.father_name = el.father_name[0] + '.' : 'jjj'
         })
       } else {
         state.teamExecutors = []
