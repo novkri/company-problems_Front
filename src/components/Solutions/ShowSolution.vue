@@ -586,6 +586,7 @@
 
   .selectResponsible {
     display: flex;
+    justify-content: center;
 
     #ss-select {
       align-items: center;

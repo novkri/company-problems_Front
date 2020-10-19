@@ -64,24 +64,15 @@ export default {
       payload.in_work = false
       state.solutionsOther.push(payload)
     },
-    deleteSolution: (state, payload) => {
-      state.solutions = state.solutions.filter(s => s.id !== payload)
-      state.solutionsOther = state.solutionsOther.filter(s => s.id !== payload)
-    },
-    sortSolutions: state => {
-      state.solutions = state.solutions.sort(function (a, b) {
-        return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1
-      })
-    },
 
     editSolutionOther: (state, {
       id,
       name
     }) => {
       if (state.solutionsOther.find(solution => solution.id == id)) {
-        state.solutionsOther.find(solution => solution.id == id).name = name
+        state.solutions[0].id == id ? state.solutions[0].name = name : ''
       } else {
-        state.solutions.find(solution => solution.id == id).name = name
+        state.solutions[0].id == id ? state.solutions[0].name = name : ''
       }
 
     },
@@ -95,10 +86,10 @@ export default {
       }
     },
     editStatus: (state, payload) => {
-      state.solutions.find(solution => solution.id == payload.id).status = payload.status
+      state.solutions[0].id == payload.id ? state.solutions[0].status = payload.status : ''
     },
     editDeadline: (state, payload) => {
-      state.solutions.find(solution => solution.id == payload.id).deadline = payload.deadline
+      state.solutions[0].id == payload.id ? state.solutions[0].deadline = payload.deadline : ''
     },
     setAllUsers: (state, payload) => {
       let usersPayload = Object.values(payload)
@@ -113,11 +104,11 @@ export default {
       state.allUsersReduced = usersPayload
     },
     editExecutor: (state, payload) => {
-      state.solutions.find(solution => solution.id == payload.id).executor_id = payload.executor_id
+      state.solutions[0].id == payload.id ? state.solutions[0].executor_id = payload.executor_id : ''
     },
 
     editPlan: (state, payload) => {
-      state.solutions.find(solution => solution.id == payload.id).plan = payload.plan
+      state.solutions[0].id == payload.id ? state.solutions[0].plan = payload.plan : ''
     },
 
 
@@ -279,7 +270,6 @@ export default {
           commit('setError', '')
           commit('setError404', '')
           commit('editSolutionOther', response.data)
-          commit('sortSolutions')
           resolve(response)
         }).catch((error) => {
           if (error.response.status == 422) {
@@ -294,19 +284,7 @@ export default {
         })
       })
     },
-    checkAmountSolInWork: async ({
-      state
-    }, obj) => {
-      return new Promise((resolve, reject) => {
-        if (state.solutions.find(s => s.id == obj.id) && obj.in_work.name == "В работе") {
-          reject('false')
-        } else if (state.solutionsOther.find(s => s.id == obj.id) && obj.in_work.name == "Не в работе") {
-          reject('false')
-        } else {
-          resolve('true')
-        }
-      })
-    },
+
 
     changeinWork: async ({
       commit
@@ -317,7 +295,6 @@ export default {
         }).then(response => {
           commit('setError', '')
           commit('editinWork', response.data)
-          commit('sortSolutions')
           resolve(response)
         }).catch((error) => {
 

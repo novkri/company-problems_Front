@@ -273,7 +273,7 @@
       },
 
       async addTask() {
-        let solutionId = this.solutions.id
+        let solutionId = this.solutions[0].id
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('postTask', {
           solutionId: solutionId,
@@ -605,6 +605,7 @@
 
   .selectResponsible {
     display: flex;
+    justify-content: center;
     padding-left: 10px;
 
     section {

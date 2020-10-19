@@ -131,7 +131,7 @@
             <div class="icons col-1">
               <div class="trash-icon">
                 <trash-icon size="1.3x" class="custom-class" style="margin: auto;"
-                  v-show="problem.creator_id == currentUid || user.is_admin"
+                  v-show="isCreatorOrAdmin"
                   @click="event => deleteP(problem.id, problem.name, event)" data-toggle="modal"
                   data-target="#popupDelete">
                 </trash-icon>
