@@ -140,7 +140,7 @@ export default {
         state.teamExecutors.forEach(el => {
           // console.log( el.father_name );
         el.name = el.name[0] + '.'
-        el.father_name ? el.father_name = el.father_name[0] + '.' : 'jjj'
+        el.father_name ? el.father_name = el.father_name[0] + '.' : ''
         })
       } else {
         state.teamExecutors = []
