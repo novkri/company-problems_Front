@@ -128,11 +128,8 @@ export default {
             if (error.response.status == 422) {
               if (error.response.data.errors.description) {
                 commit('setError', error.response.data.errors.description[0])
-              } else 
+              } else if (error.response.data.errors || error.response.data.errors.deadline)
                 error.response.data.errors ? commit('setError404', error.response.data.errors.deadline[0]) : commit('setError404', error.response.data.error)
-              // } else {
-              //   commit('setError404', error.response.data.errors)
-              // }
             } else {
               commit('setError404', error.response.data.message)
             }
