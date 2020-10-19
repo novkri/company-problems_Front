@@ -815,6 +815,8 @@
       },
 
       async onClickShow(problem) {
+        
+
         this.checkedGroups = []
         problem.groups ? problem.groups.forEach(element => {
           this.checkedGroups.push(element.id)
@@ -838,6 +840,7 @@
           this.paramsModal = problem
 
           this.$store.commit('setError', '')
+
           await this.$store.dispatch('getSolutions', problem.id).then(response => {
               this.$store.commit('editTeam', '')
               this.$store.dispatch('getSol', response.id)

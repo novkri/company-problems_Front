@@ -1,5 +1,5 @@
 <template>
-  <div class="container" >
+  <div class="container">
     <div class="header">Вход в систему</div>
     <form>
       <div class="form-group">
@@ -64,7 +64,7 @@
     mounted() {
       this.$store.commit('setError401', '')
       this.$store.commit('setErrorU', '')
-      
+
     },
     watch: {
       errorU() {},
@@ -79,24 +79,20 @@
         }
 
         await this.$store.dispatch('login', formData).then((res) => {
-          console.log(res.user.group_id);
-
-
 
           if (!this.errorU && res.user.group_id) {
-             this.$store.commit('userHasNoGroup', false)
+            this.$store.commit('userHasNoGroup', false)
 
-             console.log(this.userHasNoGroup);
-          this.$store.dispatch('checkIsLeader').then((response) => {
+            this.$store.dispatch('checkIsLeader').then((response) => {
               if (response) {
-                
+
                 this.$store.dispatch('getMembers', this.groups.find(g => g.leader_id == this.currentUid).id)
-                 this.$store.dispatch('countAmountOfProblemsForConfirmation', {
-              urgency: '',
-              importance: '',
-              deadline: '',
-              status: ''
-            })
+                this.$store.dispatch('countAmountOfProblemsForConfirmation', {
+                  urgency: '',
+                  importance: '',
+                  deadline: '',
+                  status: ''
+                })
               }
             })
 
@@ -118,7 +114,6 @@
           } else {
             this.$store.commit('userHasNoGroup', true)
             this.$router.push('/my-problems')
-            console.log(this.userHasNoGroup);
           }
         })
       },
@@ -282,5 +277,4 @@
       height: 41px;
     }
   }
- 
 </style>

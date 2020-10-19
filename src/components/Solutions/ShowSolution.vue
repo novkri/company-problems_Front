@@ -1,6 +1,5 @@
 <template>
   <div class="row container-row">
-    
     <div class="modal-body">
       <div>
         <div class="subtitle row subt">

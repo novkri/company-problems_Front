@@ -445,7 +445,6 @@ export default {
             }
           })
           .then(response => {
-            console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('setProblems', response.data)
@@ -548,6 +547,7 @@ export default {
       return new Promise((resolve, reject) => {
         axios.get(process.env.VUE_APP_ROOT_URL + `/problem/${id}`)
           .then(response => {
+            console.log(response);
             commit('setError', '')
             commit('setError404', '')
             commit('setThisProblem', response.data)

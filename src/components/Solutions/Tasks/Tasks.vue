@@ -273,7 +273,7 @@
       },
 
       async addTask() {
-        let solutionId = this.solutions[0].id
+        let solutionId = this.solutions.id
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('postTask', {
           solutionId: solutionId,
