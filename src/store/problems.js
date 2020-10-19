@@ -878,8 +878,6 @@ export default {
           commit('changeProblemDescription', response.data)
           resolve(response.data)
         }).catch((error) => {
-          console.log(error.response);
-          console.log(error.response);
           if (error.response.status == 404) {
             commit('setError404', error.response.data.error)
             reject(error.response.data.error)

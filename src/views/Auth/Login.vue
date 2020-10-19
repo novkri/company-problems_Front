@@ -79,15 +79,9 @@
         }
 
         await this.$store.dispatch('login', formData).then(() => {
-          // console.log(r);
-          // console.log(this.isLeader);
-
-
           if (!this.errorU) {
              
           this.$store.dispatch('checkIsLeader').then((response) => {
-            // console.log(response);
-              // response ? this.$store.dispatch('getMembers', this.groups.find(g => g.leader_id == this.currentUid).id) : ''
               if (response) {
                 this.$store.dispatch('getMembers', this.groups.find(g => g.leader_id == this.currentUid).id)
                  this.$store.dispatch('countAmountOfProblemsForConfirmation', {

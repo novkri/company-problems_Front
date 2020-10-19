@@ -138,7 +138,6 @@ export default {
       if (payload.length > 0) {
         state.teamExecutors = payload
         state.teamExecutors.forEach(el => {
-          console.log( el.father_name );
         el.name = el.name[0] + '.'
         el.father_name ? el.father_name = el.father_name[0] + '.' : ''
         })
@@ -182,14 +181,12 @@ export default {
       return await new Promise((resolve, reject) => {
         axios.get(process.env.VUE_APP_ROOT_URL + `/solution/${id}/potential-executors`) 
           .then(response => {
-            console.log(response);
               commit('setError', '')
               commit('setError404', '')
               commit('teamExecutors', response.data)
               resolve(response.data)
           })
           .catch(error => {
-            console.log(error.response);
             commit('setError', error.response.data.errors)
             reject(error.response.data.message)
           })
