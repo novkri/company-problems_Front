@@ -233,11 +233,13 @@ export default {
           commit('editDeadlineTask', response.data)
           resolve(response)
         }).catch((error) => {
+          console.log(error.response);
           if (error.response.status == 404 || error.response.status == 403) {
             commit('setError404', error.response.data.message)
             reject(error.response.data.errors)
           } else if (error.response.status == 422) {
-            commit('setError404', error.response.data.errors.deadline[0])
+
+            error.response.data.errors ? commit('setError404', error.response.data.errors.deadline[0]) : commit('setError404', error.response.data.error)
             reject(error.response.data.errors)
           }
         })

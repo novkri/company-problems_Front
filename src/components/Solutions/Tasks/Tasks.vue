@@ -73,11 +73,11 @@
               <div slot-scope="{ filteredOptions, selectedOption, isOpen, pointerIndex, $get, $selected, $disabled }"
                 @click="onClickExecutor(selectedOption, task.id)" style="cursor: pointer; width: 100%;">
                 <ss-select-toggle class="flex items-center justify-between"
-                  style="margin: auto;max-height: 30px;overflow-y: hidden;">
+                  style="margin: auto;max-height: 27px;overflow-y: hidden;">
                   <user-icon size="1.5x" class="custom-class" id="iconUser" style="flex-shrink: 0;"></user-icon>
-                  {{ $get(selectedOption, 'name') ||  `${teamExecutors.find(u => u.id == task.executor_id) ? teamExecutors.find(u => u.id == task.executor_id).surname + ' ' 
-                    + teamExecutors.find(u => u.id == task.executor_id).name + ' ' 
-                    + teamExecutors.find(u => u.id == task.executor_id).father_name : 'Выбрать' }`}}
+                  {{ $get(selectedOption, 'name') ||  `${allUsersReduced.find(u => u.id == task.executor_id) ? allUsersReduced.find(u => u.id == task.executor_id).surname + ' ' 
+                    + allUsersReduced.find(u => u.id == task.executor_id).name + ' ' 
+                    + allUsersReduced.find(u => u.id == task.executor_id).father_name : 'Выбрать' }`}}
                 </ss-select-toggle>
 
                 <section
@@ -311,23 +311,25 @@
       onClickDate(event) {
         this.currentDate = event.target.value
         this.currentDateInput = event.target
+        console.log(this.currentDate );
       },
       async changeDeadlineTask(deadline, id, executor_id) {
         await this.$store.commit('setError404', '')
+
         if (executor_id == this.currentUid || this.user.is_admin || this.isLeader) {
           await this.$store.dispatch('changeDeadlineTask', {
             deadline,
             id
           }).catch(() => {
             this.$store.commit('editDeadlineTask', {
-              description: this.currentDate,
+              deadline: this.currentDate,
               id
             })
           })
         } else {
           this.$store.commit('setError404', 'У вас недостаточно прав')
           this.$store.commit('editDeadlineTask', {
-            description: this.currentDate,
+            deadline: this.currentDate,
             id
           })
         }
