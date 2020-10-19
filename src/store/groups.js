@@ -170,7 +170,6 @@ export default {
     postGroup: async ({
       commit
     }, param) => {
-      param.short_name == '' ? delete param.short_name : param.short_name
       return new Promise((resolve, reject) => {
         axios.post(process.env.VUE_APP_ROOT_URL + '/group', param)
           .then(response => {

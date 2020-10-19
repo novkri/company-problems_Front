@@ -27,18 +27,6 @@
                 </div>
 
                 <div class="input-group">
-                  <label for="new-group-title">Название подразделения (сокращенно)</label>
-                  <input type="text" ref="input" class="form-control" id="new-group-title__short"
-                    :class="{ 'form-control--error': $v.nameShort.$invalid, 'form-control--valid': nameShort && !$v.nameShort.$invalid}"
-                    placeholder="Название сокращения..." @blur="onBlur($event)" @focus="onFocus($event)"
-                    @input="clearError" v-model="nameShort">
-                  <div class="input-group-append" @mousedown="onClear('short')">
-                    <span class="input-group-text">&times;</span>
-                  </div>
-                  <div class="error" v-if="error.short_name">{{error.short_name[0]}}</div>
-                </div>
-
-                <div class="input-group">
                   <label>Выбрать руководителя <span class="error">*</span></label>
                   <div class="selectResponsible" style="background-color: transparent;" @click="clearError">
                     <ss-select v-model="leader_id" :options="usersNoGroup" track-by="name" search-by="name"
@@ -95,7 +83,6 @@
     SsSelectToggle,
     SsSelectOption,
   } from 'ss-select'
-  // SsSelectSearchInput
   import {
     ChevronDownIcon,
     AwardIcon
@@ -107,7 +94,6 @@
     props: ['open', 'val'],
     data: () => ({
       name: '',
-      nameShort: '',
       leader_id: '',
     }),
     components: {
@@ -117,17 +103,13 @@
       SsSelect,
       SsSelectToggle,
       SsSelectOption,
-      // SsSelectSearchInput
     },
     validations: {
       name: {
         minLength: minLength(3),
         maxLength: maxLength(100)
       },
-      nameShort: {
-        minLength: minLength(2),
-        maxLength: maxLength(10)
-      }
+
     },
     watch: {
       error() {}
@@ -147,19 +129,17 @@
       onFocus(event) {
         event.target.nextSibling.style.display = 'flex'
       },
-      onClear(type) {
-        type === 'name' ? this.name = '' : this.nameShort = ''
+      onClear() {
+        this.name = ''
       },
 
       async addGroup() {
         await this.$store.commit('setError404', '')
         await this.$store.dispatch('postGroup', {
           leader_id: this.leader_id,
-          name: this.name,
-          short_name: this.nameShort,
+          name: this.name
         }).then(() => {
           this.name = ''
-          this.nameShort = ''
           this.leader_id = ''
           this.$store.dispatch('getAllUsers')
 
