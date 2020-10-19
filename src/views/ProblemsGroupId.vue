@@ -2,7 +2,6 @@
   <div>
     <span class="empty" v-show="problems.length == 0 && _isMounted">Список проблем пуст...</span>
 
-    <div v-if="!userHasNoGroup">
       <div class="container" v-if="_isMounted">
         <div id="accordion">
           <div class="card" id="card" v-for="(problem, idx) in problems" :key="idx">
@@ -457,11 +456,7 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <div v-else>
-      <span class="empty">Вы не состоите ни в одном из подразделений. Обратитесь к администратору.</span>
-    </div>
 
     <PopupDelete v-if="openDelete" :val="paramsModal" @deleteProblem="deleteProblem(param = $event)" />
   </div>
@@ -549,6 +544,7 @@
     async mounted() {
       if (!this.userHasNoGroup) {
         await this.$store.dispatch('checkIsLeader')
+      }
 
         await this.$store.dispatch('getProblemsByGroups', {
           group: this.currentGroup,
@@ -557,9 +553,7 @@
           deadline: '',
           status: ''
         })
-        await this.$store.dispatch('getGroups').catch(() => this.$router.push('/login'))
-        await this.$store.dispatch('getAllUsers')
-      }
+     
 
       await this.$store.dispatch('getGroups').catch(() => this.$router.push('/login'))
       await this.$store.dispatch('getAllUsers')
