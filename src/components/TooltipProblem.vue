@@ -64,7 +64,6 @@
           event.target.style.display = 'none'
         })
         } 
-        
       },
 
       onEnterDesc(event) {
@@ -90,14 +89,13 @@
       async changePossible(id, creator_id, event) {
         await this.$store.commit('setError404', '')
         if (creator_id == this.currentUid || this.user.is_admin) {
+          this.isEditPossible = true
+          this.newInput = event.target.textContent
 
-        this.isEditPossible = true
-        this.newInput = event.target.textContent
-
-        this.$nextTick(() => {
-          event.target.style.display = 'none'
-          this.$refs['possibleInput' + id].focus()
-        })
+          this.$nextTick(() => {
+            this.$refs['possibleInput' + id].focus()
+            event.target.style.display = 'none'
+          })
         }
       },
 

@@ -878,12 +878,17 @@ export default {
           commit('changeProblemDescription', response.data)
           resolve(response.data)
         }).catch((error) => {
+          console.log(error.response);
+          console.log(error.response);
           if (error.response.status == 404) {
             commit('setError404', error.response.data.error)
             reject(error.response.data.error)
           } else if (error.response.status == 422) {
-            commit('setError404', error.response.data.error)
-            reject(error.response.data.error)
+            commit('setError404', error.response.data.errors.description[0])
+            reject(error.response.data.errors)
+          } else {
+            commit('setError404', error.response.data.message)
+            reject(error.response.data.message)
           }
         })
       })
@@ -905,7 +910,8 @@ export default {
             commit('setError404', error.response.data.error)
             reject(error.response.data.error)
           } else if (error.response.status == 422) {
-            commit('setError404', error.response.data.error)
+            // commit('setError404', error.response.data.error)
+            commit('setError404', error.response.data.errors.possible_solution[0])
             reject(error.response.data.error)
           }
         })
