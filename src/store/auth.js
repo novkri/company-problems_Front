@@ -25,8 +25,8 @@ export default {
     status: '',
     user: localStorage.getItem('user') || '',
     currentUid: localStorage.getItem('currentUid') || '',
-    isLeader: ''
-
+    isLeader: '',
+    userHasNoGroup: ''
   },
   getters: {
     user: state => {
@@ -51,8 +51,12 @@ export default {
       return !!state.token
     },
     authStatus: state => state.status,
+    userHasNoGroup: state => state.userHasNoGroup,
   },
   mutations: {
+    userHasNoGroup: (state, payload) => {
+      state.userHasNoGroup = payload
+    },
     addUser: (state, payload) => {
       state.user = payload
       state.currentUid = payload.id

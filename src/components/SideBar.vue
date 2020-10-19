@@ -1,6 +1,5 @@
 <template>
-  <div class="sidebar col"> 
-
+  <div class="sidebar col">
     <div class="links">
       <div class="addProblem">
         <button type="button" class="btn btnMainAdd" @click="create" data-toggle="modal" data-target="#popupCreate">
@@ -21,7 +20,7 @@
           </router-link>
         </a>
 
-        <a v-show="isLeader || isLeader && user.is_admin || user.is_admin">
+        <a v-show="isLeader && !userHasNoGroup || isLeader && user.is_admin && !userHasNoGroup || user.is_admin && !userHasNoGroup">
           <router-link to="/group-problems" exact>
             <eye-icon size="1.5x" class="custom-class"></eye-icon>На рассмотрении
             <span class="amount"
@@ -29,7 +28,7 @@
           </router-link>
         </a>
 
-        <a>
+        <a v-show="!userHasNoGroup">
           <router-link to="/problems-for-execution" exact>
             <flag-icon size="1.5x" class="custom-class"></flag-icon>Для исполнения
             <span class="amount"
@@ -50,7 +49,7 @@
 
             <a @click="getProblemsByGroups(group.id, group.name)" v-for="(group, idx) in groups" :key="idx">
               <router-link :to="'/problems-by-groups/'+group.id">{{group.name}}</router-link>
-             
+
             </a>
           </div>
         </transition>
@@ -66,6 +65,7 @@
           <bar-chart-2-icon size="1.5x" class="custom-class"></bar-chart-2-icon>Статистика
         </router-link>
 
+<!-- v-show="!userHasNoGroup" -->
         <a>
           <archive-icon size="1.5x" class="custom-class"></archive-icon>
           <router-link to="/problems-archive" exact>Архив проблем</router-link>
@@ -127,8 +127,9 @@
       PopupCreate
     },
     computed: {
-      ...mapGetters(['groups', 'user', 'amountOfProblemsForConfirmation', 'amountOfProblemsForExecution', 'amountOfProblemsForConfirmationAdmin',
-        'amountOfMyProblems', 'isLeader', 'user', 'currentUid'
+      ...mapGetters(['groups', 'user', 'amountOfProblemsForConfirmation', 'amountOfProblemsForExecution',
+        'amountOfProblemsForConfirmationAdmin',
+        'amountOfMyProblems', 'isLeader', 'user', 'currentUid', 'userHasNoGroup'
       ]),
       isLoggedIn: function () {
         return this.$store.getters.isLoggedIn
@@ -139,6 +140,34 @@
     },
 
     async mounted() {
+      if (!this.userHasNoGroup) {
+        // await this.$store.dispatch('countAmountOfMyProblems', {
+        //         urgency: '',
+        //         importance: '',
+        //         deadline: '',
+        //         status: 'На проверке заказчика'
+        //       })
+
+        await this.$store.dispatch('countAmountOfProblemsForExecution', {
+          urgency: '',
+          importance: '',
+          deadline: '',
+          status: ''
+        })
+
+        this.isLeader ? await this.$store.dispatch('countAmountOfProblemsForConfirmation', {
+          urgency: '',
+          importance: '',
+          deadline: '',
+          status: ''
+        }) : ''
+        this.user.is_admin ? await this.$store.dispatch('countAmountOfProblemsForConfirmationAdmin', {
+          urgency: '',
+          importance: '',
+          deadline: '',
+          status: ''
+        }) : ''
+      }
       await this.$store.dispatch('countAmountOfMyProblems', {
         urgency: '',
         importance: '',
@@ -146,25 +175,6 @@
         status: 'На проверке заказчика'
       })
 
-      await this.$store.dispatch('countAmountOfProblemsForExecution', {
-        urgency: '',
-        importance: '',
-        deadline: '',
-        status: ''
-      })
-
-      this.isLeader ? await this.$store.dispatch('countAmountOfProblemsForConfirmation', {
-        urgency: '',
-        importance: '',
-        deadline: '',
-        status: ''
-      }) : ''
-      this.user.is_admin ? await this.$store.dispatch('countAmountOfProblemsForConfirmationAdmin', {
-        urgency: '',
-        importance: '',
-        deadline: '',
-        status: ''
-      }) : ''
     },
     methods: {
       showLinks() {
@@ -528,10 +538,6 @@
   }
 
   @media (max-width: 480px) {
-    .sidebar {
-      display: none;
-    }
-
     * {
       font-size: 14px;
     }

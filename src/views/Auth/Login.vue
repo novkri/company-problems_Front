@@ -59,7 +59,7 @@
       },
     },
     computed: {
-      ...mapGetters(['errorU', 'error401', 'currentUid', 'groups', 'isLeader', 'user'])
+      ...mapGetters(['errorU', 'error401', 'currentUid', 'groups', 'isLeader', 'user', 'userHasNoGroup'])
     },
     mounted() {
       this.$store.commit('setError401', '')
@@ -78,11 +78,18 @@
           password: this.password,
         }
 
-        await this.$store.dispatch('login', formData).then(() => {
-          if (!this.errorU) {
-             
+        await this.$store.dispatch('login', formData).then((res) => {
+          console.log(res.user.group_id);
+
+
+
+          if (!this.errorU && res.user.group_id) {
+             this.$store.commit('userHasNoGroup', false)
+
+             console.log(this.userHasNoGroup);
           this.$store.dispatch('checkIsLeader').then((response) => {
               if (response) {
+                
                 this.$store.dispatch('getMembers', this.groups.find(g => g.leader_id == this.currentUid).id)
                  this.$store.dispatch('countAmountOfProblemsForConfirmation', {
               urgency: '',
@@ -101,14 +108,6 @@
               status: ''
             })
 
-            // this.isLeader || this.user.is_admin ? this.$store.dispatch('countAmountOfProblemsForConfirmation', {
-            //   urgency: '',
-            //   importance: '',
-            //   deadline: '',
-            //   status: ''
-            // }) : ''
-
-
             this.$store.dispatch('getMyProblems', {
               urgency: '',
               importance: '',
@@ -116,10 +115,10 @@
               status: ''
             })
             this.$router.push('/my-problems')
-
-
-           
-
+          } else {
+            this.$store.commit('userHasNoGroup', true)
+            this.$router.push('/my-problems')
+            console.log(this.userHasNoGroup);
           }
         })
       },

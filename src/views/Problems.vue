@@ -540,7 +540,7 @@
     },
     computed: {
       ...mapGetters(['problems', 'error', 'error404', 'allUsers', 'currentSolution', 'solutions', 'groups', 'user',
-        'currentUid', 'isLeader', 'members', 'currentTeam', 'teamExecutors', 'currentTeamUsers'
+        'currentUid', 'isLeader', 'members', 'currentTeam', 'teamExecutors', 'currentTeamUsers', 
       ]),
       validatedExecutorAndAdmin: function () {
         return this.solutions[0].executor_id == this.currentUid ? false : this.user.is_admin ? false : this

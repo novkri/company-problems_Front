@@ -172,22 +172,19 @@
                   <tr>
                     <td class="with_border">1. Проблема (проблемы) с наибольшим кол-во “лайков” </td>
                     <td><span v-for="(problem, idx) in statisticCategories[0][1]" :key="idx">
-                        {{problem.name}},
+                        {{problem.name}}, 
                       </span>
-                      <span>
+                      <span v-if="statisticCategories[0][1].length > 1">
                         {{ statisticCategories[0][1].reduce((acc, curr) => acc.likes_count > curr.likes_count ? acc.likes_count : curr.likes_count) }}
                         лайка(ов)
-                      </span></td>
+                      </span>
+                      <span v-else> {{ statisticCategories[0][1][0].likes_count }} лайка(ов)</span>
+                      </td>
                   </tr>
                   <tr>
                     <td class="with_border">2. Проблема, которая не решается дольше всего с указанием дней с момента
                       заведения в системе</td>
                     <td>
-                      {{ statisticCategories[1][1][0].name }}
-                      <!-- даты -->
-                      <!-- {{ new Date(statisticCategories[1][1][0].created_at).toLocaleString() }}
-                  {{ new Date().toLocaleString() }} -->
-
                       {{ ((new Date().getTime() - new Date(statisticCategories[1][1][0].created_at).getTime()) / (1000 * 60 * 60 * 24)).toFixed(0) }}
                       дней
                     </td>
@@ -200,10 +197,6 @@
                       {{ statisticCategories[2][1][0].father_name ? statisticCategories[2][1][0].name[0]+'.' : statisticCategories[2][1][0].name[0]+'.,'}}
                       {{ statisticCategories[2][1][0].father_name ? statisticCategories[2][1][0].father_name[0]+'.,' : '' }}
                       {{ statisticCategories[2][1][0].solutions_count}} проблем(ы)
-                      <!-- <br>
-<br>
-{{ statisticCategories[2][1]}}
-{{ statisticCategories[2][1].length - 1 }} -->
                     </td>
                   </tr>
                 </tbody>
