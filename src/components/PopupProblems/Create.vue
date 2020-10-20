@@ -104,8 +104,25 @@
           description: this.formData.description,
           possible_solution: this.formData.solution,
         }).then((r) => {
+          this.$store.dispatch('getMyProblems', {
+                    urgency: '',
+                    importance: '',
+                    deadline: '',
+                    status: ''
+                  }).catch(() => {
+                    this.$store.commit('setProblems', '')
+                  }).then(() => {
+                    this.$store.dispatch('countAmountOfMyProblems', {
+                      urgency: '',
+                      importance: '',
+                      deadline: '',
+                      status: 'На проверке заказчика'
+                    })
+                  })
 
           this.$route.path != '/my-problems' ? this.$router.push('/my-problems') : ''
+          // window.location.reload(false); 
+
           if (!this.error) {
             this.$store.dispatch('getThisProblem', r.id)
             this.$store.dispatch('countAmountOfMyProblems', {
@@ -118,18 +135,17 @@
 
 
           this.isLeader ? this.$store.dispatch('countAmountOfProblemsForConfirmation', {
-          urgency: '',
-          importance: '',
-          deadline: '',
-          status: ''
-        }) : ''
-        this.user.is_admin ? this.$store.dispatch('countAmountOfProblemsForConfirmationAdmin', {
-          urgency: '',
-          importance: '',
-          deadline: '',
-          status: ''
-        }) : ''
-
+            urgency: '',
+            importance: '',
+            deadline: '',
+            status: ''
+          }) : ''
+          this.user.is_admin ? this.$store.dispatch('countAmountOfProblemsForConfirmationAdmin', {
+            urgency: '',
+            importance: '',
+            deadline: '',
+            status: ''
+          }) : ''
 
             document.getElementById('close').click()
           } 

@@ -140,8 +140,9 @@
                   </div>
 
                   <div class="icons col-1">
+           
                     <div class="trash-icon">
-                      <trash-icon size="1.3x" class="custom-class" style="margin: auto;" v-show="isCreatorOrAdmin"
+                      <trash-icon size="1.3x" class="custom-class" style="margin: auto;" v-show="problem.creator == currentUid || user.is_admin"
                         @click="deleteP(problem.id, problem.name)" data-toggle="modal" data-target="#popupDelete">
                       </trash-icon>
                     </div>
@@ -822,11 +823,13 @@
 
       async onClickShow(problem) {
 
-
+console.log(problem);
         this.checkedGroups = []
         problem.groups ? problem.groups.forEach(element => {
           this.checkedGroups.push(element.id)
         }) : this.checkedGroups = []
+
+        console.log(this.checkedGroups.length, this.groups.length);
         this.checkedGroups.length < this.groups.length ? this.all = false : this.all = true
 
         this.currentProblemCreator = problem.creator_id
