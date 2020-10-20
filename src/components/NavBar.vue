@@ -187,7 +187,6 @@
             break;
           case '/my-problems':
             this.$store.dispatch('changeStatusesProblem', [
-
               {
                 name: "На рассмотрении"
               },
@@ -277,7 +276,7 @@
           case "Только важные":
             this.$store.dispatch('filterImportance', {
               path: this.$route.path,
-              urgency: '',
+              urgency: 'Обычная',
               importance: 'Важная',
               deadline: '',
               status: ''
@@ -287,7 +286,7 @@
             this.$store.dispatch('filterImportance', {
               path: this.$route.path,
               urgency: 'Срочная',
-              importance: '',
+              importance: 'Обычная',
               deadline: '',
               status: ''
             })
@@ -304,8 +303,8 @@
           case "Остальные":
             this.$store.dispatch('filterImportance', {
               path: this.$route.path,
-              urgency: '',
-              importance: '',
+              urgency: 'Обычная',
+              importance: 'Обычная',
               deadline: '',
               status: ''
             })

@@ -639,7 +639,6 @@
     },
 
     methods: {
-
       async removeUserFromTeam(id, solution) {
         await this.$store.commit('setError404', '')
         this.$store.dispatch('removeUserFromTeam', {
