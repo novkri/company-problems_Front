@@ -30,7 +30,7 @@
 
   .row {
     margin: 0;
-    height: 90vh;
+    height: 88vh;
   }
   .content {
     max-width: 81%;

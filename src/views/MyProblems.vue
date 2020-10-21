@@ -821,14 +821,11 @@
       },
 
       async onClickShow(problem) {
-
-console.log(problem);
         this.checkedGroups = []
         problem.groups ? problem.groups.forEach(element => {
           this.checkedGroups.push(element.id)
         }) : this.checkedGroups = []
 
-        console.log(this.checkedGroups.length, this.groups.length);
         this.checkedGroups.length < this.groups.length ? this.all = false : this.all = true
 
         this.currentProblemCreator = problem.creator_id
